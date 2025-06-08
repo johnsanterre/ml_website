@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Representations & Similarity Measures - ML2</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../main.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="file:///Users/john/Dropbox/_______Cursor/ml_website_2/output/ml2/lecture04/ml2_week04.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/drive/1lYmsqBIFpwokponP2kEvyBS7HB2EvxS_?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>Week 4: Vector Representations & Similarity Measures</h1>
+
+            <section>
+                <h2>Course Overview</h2>
+                <p>This week explores vector representations and similarity measures through practical examples and theoretical foundations.</p>
+            </section>
+
+            <section>
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand vector representations and their challenges</li>
+                    <li>Master cosine similarity calculations and interpretation</li>
+                    <li>Compare manual vs learned feature engineering</li>
+                    <li>Appreciate the role of representation granularity</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Topics Covered</h2>
+
+                <h3>1. Food Preference Vector Example</h3>
+                <ul>
+                    <li>Representing diets as vectors
+                        <ul>
+                            <li>Binary feature vectors</li>
+                            <li>Frequency-based vectors</li>
+                            <li>Rating-based vectors</li>
+                        </ul>
+                    </li>
+                    <li>Introduction to cosine similarity
+                        <ul>
+                            <li>Vector operations review</li>
+                            <li>Geometric interpretation</li>
+                            <li>Similarity calculations</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>2. The Problem of Sparse Representations</h3>
+                <ul>
+                    <li>Highly specific features
+                        <ul>
+                            <li>Individual ingredient level</li>
+                            <li>Brand-specific items</li>
+                            <li>Regional variations</li>
+                        </ul>
+                    </li>
+                    <li>Challenges with sparse vectors
+                        <ul>
+                            <li>Zero similarity problem</li>
+                            <li>Curse of dimensionality</li>
+                            <li>Missing relationships</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>3. Over-generalization Problems</h3>
+                <ul>
+                    <li>Too broad categories
+                        <ul>
+                            <li>"Protein" vs "Fish" vs "Wild-caught Salmon"</li>
+                            <li>Loss of meaningful distinctions</li>
+                        </ul>
+                    </li>
+                    <li>Impact on similarity measures
+                        <ul>
+                            <li>False equivalences</li>
+                            <li>Lost nuances</li>
+                            <li>Meaningless similarities</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>4. Traditional Survey Design Approaches</h3>
+                <ul>
+                    <li>Feature engineering through survey design
+                        <ul>
+                            <li>Likert scales</li>
+                            <li>Categorical hierarchies</li>
+                            <li>Controlled vocabularies</li>
+                        </ul>
+                    </li>
+                    <li>Statistical methods
+                        <ul>
+                            <li>Factor analysis</li>
+                            <li>Principal component analysis</li>
+                            <li>Traditional dimensionality reduction</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>5. Learning Representations</h3>
+                <ul>
+                    <li>Deep learning approach
+                        <ul>
+                            <li>From raw data to learned features</li>
+                            <li>Automatic feature extraction</li>
+                            <li>Hierarchical representations</li>
+                        </ul>
+                    </li>
+                    <li>Benefits of learned representations
+                        <ul>
+                            <li>Capturing natural relationships</li>
+                            <li>Finding optimal granularity</li>
+                            <li>Preserving important distinctions</li>
+                        </ul>
+                    </li>
+                    <li>Measuring success
+                        <ul>
+                            <li>Cosine similarity in learned space</li>
+                            <li>Validation through known relationships</li>
+                            <li>Discovering new patterns</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Required Reading</h2>
+                <ul>
+                    <li>"Feature Learning in Neural Networks"</li>
+                    <li>"Understanding Cosine Similarity and Its Applications"</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

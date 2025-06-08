@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoencoders & Embeddings - ML2</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../main.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="file:///Users/john/Dropbox/_______Cursor/ml_website_2/output/ml2/lecture05/ml2_week05.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>Week 5: Autoencoders & Embeddings</h1>
+
+            <section>
+                <h2>1. Introduction to Autoencoders</h2>
+                <ul>
+                    <li>Autoencoder architecture
+                        <ul>
+                            <li>Encoder structure</li>
+                            <li>Latent space</li>
+                            <li>Decoder structure</li>
+                        </ul>
+                    </li>
+                    <li>Types of autoencoders
+                        <ul>
+                            <li>Vanilla autoencoders</li>
+                            <li>Undercomplete autoencoders</li>
+                            <li>Denoising autoencoders</li>
+                        </ul>
+                    </li>
+                    <li>Loss functions for autoencoders
+                        <ul>
+                            <li>Reconstruction loss</li>
+                            <li>Regularization techniques</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. Understanding Embeddings</h2>
+                <ul>
+                    <li>What are embeddings?
+                        <ul>
+                            <li>From sparse to dense representations</li>
+                            <li>Dimensionality reduction</li>
+                            <li>Feature learning</li>
+                        </ul>
+                    </li>
+                    <li>Properties of good embeddings
+                        <ul>
+                            <li>Similarity preservation</li>
+                            <li>Semantic relationships</li>
+                            <li>Distance metrics</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. Practical Applications</h2>
+                <ul>
+                    <li>Dimensionality reduction
+                        <ul>
+                            <li>Comparison with PCA</li>
+                            <li>Visualization techniques</li>
+                            <li>t-SNE and UMAP with embeddings</li>
+                        </ul>
+                    </li>
+                    <li>Feature extraction
+                        <ul>
+                            <li>Transfer learning with encoders</li>
+                            <li>Using embedded representations</li>
+                        </ul>
+                    </li>
+                    <li>Real-world examples
+                        <ul>
+                            <li>Image compression</li>
+                            <li>Anomaly detection</li>
+                            <li>Data denoising</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Required Reading</h2>
+                <ul>
+                    <li>Deep Learning Book (Goodfellow et al.) - Chapter 14: Autoencoders</li>
+                    <li>"Reducing the Dimensionality of Data with Neural Networks" (Hinton & Salakhutdinov)</li>
+                </ul>
+
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand the theory and implementation of autoencoders</li>
+                    <li>Master the concept of embeddings and their applications</li>
+                    <li>Implement different types of autoencoders in PyTorch</li>
+                    <li>Visualize and interpret embedded representations</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

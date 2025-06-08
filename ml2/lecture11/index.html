@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical LLM Integration & API Development - ML2</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../main.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="output/ml2/lecture11/ml2_week11.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>Week 11: Practical LLM Integration & API Development</h1>
+
+            <section>
+                <h2>1. API Integration Fundamentals</h2>
+                <ul>
+                    <li>Working with LLM APIs
+                        <ul>
+                            <li>OpenAI API structure</li>
+                            <li>Anthropic Claude API</li>
+                            <li>Rate limits and costs</li>
+                        </ul>
+                    </li>
+                    <li>Prompt engineering basics
+                        <ul>
+                            <li>System prompts</li>
+                            <li>Few-shot examples</li>
+                            <li>Output formatting</li>
+                        </ul>
+                    </li>
+                    <li>Error handling
+                        <ul>
+                            <li>API failures</li>
+                            <li>Token limits</li>
+                            <li>Response validation</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. Systematic Prompt Development</h2>
+                <ul>
+                    <li>Chain-of-Thought prompting
+                        <ul>
+                            <li>Breaking down complex tasks</li>
+                            <li>Intermediate reasoning steps</li>
+                            <li>Validation checkpoints</li>
+                        </ul>
+                    </li>
+                    <li>Synoptic tagging workflows
+                        <ul>
+                            <li>Entity extraction</li>
+                            <li>Relationship identification</li>
+                            <li>Structured output generation</li>
+                        </ul>
+                    </li>
+                    <li>Quality assurance
+                        <ul>
+                            <li>Output verification</li>
+                            <li>Consistency checks</li>
+                            <li>Edge case handling</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. Building Reliable Systems</h2>
+                <ul>
+                    <li>Prompt templates
+                        <ul>
+                            <li>Version control for prompts</li>
+                            <li>Template management</li>
+                            <li>Dynamic content insertion</li>
+                        </ul>
+                    </li>
+                    <li>Fallback strategies
+                        <ul>
+                            <li>Multiple model approaches</li>
+                            <li>Graceful degradation</li>
+                            <li>Error recovery</li>
+                        </ul>
+                    </li>
+                    <li>Testing frameworks
+                        <ul>
+                            <li>Unit testing prompts</li>
+                            <li>Integration testing</li>
+                            <li>Regression testing</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Required Reading</h2>
+                <ul>
+                    <li>OpenAI API Documentation</li>
+                    <li>"Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"</li>
+                </ul>
+
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Master LLM API integration</li>
+                    <li>Develop robust prompt engineering skills</li>
+                    <li>Build reliable LLM-powered applications</li>
+                    <li>Implement systematic testing approaches</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Supervised to Generative Learning - ML2</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="output/ml2/lecture09/ml2_week09.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/drive/1P6ynRBU_O2sJpYLIbjnjEjVk42C0-_NP?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>Week 9: From Supervised to Generative Learning</h1>
+
+            <section>
+                <h2>1. Beyond Supervised Learning</h2>
+                <ul>
+                    <li>Limitations of labeled data
+                        <ul>
+                            <li>Cost of annotation</li>
+                            <li>Expert knowledge requirements</li>
+                            <li>Scale limitations</li>
+                        </ul>
+                    </li>
+                    <li>The generative alternative
+                        <ul>
+                            <li>Learning data distributions</li>
+                            <li>Self-supervised learning</li>
+                            <li>Implicit vs explicit modeling</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. <a href="https://claude.ai/public/artifacts/37d6a60e-57a7-419f-baa3-734b94643e3f">Diffusion Models: Core Concepts</a></h2>
+                <ul>
+                    <li>Forward process
+                        <ul>
+                            <li>Noise scheduling</li>
+                            <li>Gradual information destruction</li>
+                            <li>Markov chains</li>
+                        </ul>
+                    </li>
+                    <li>Reverse process
+                        <ul>
+                            <li>Denoising steps</li>
+                            <li>Score matching</li>
+                            <li>Time conditioning</li>
+                        </ul>
+                    </li>
+                    <li>Applications and use cases</li>
+                    <li>Implementation considerations</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. Self-Supervised Learning</h2>
+                <ul>
+                    <li>Masked prediction tasks
+                        <ul>
+                            <li>BERT-style masking</li>
+                            <li>Image patch prediction</li>
+                            <li>Corruption and reconstruction</li>
+                        </ul>
+                    </li>
+                    <li>Contrastive learning approaches
+                        <ul>
+                            <li>Positive/negative pairs</li>
+                            <li>SimCLR approach</li>
+                            <li>Momentum contrast</li>
+                        </ul>
+                    </li>
+                    <li>Connection to diffusion models
+                        <ul>
+                            <li>Denoising as self-supervision</li>
+                            <li>Learning without labels</li>
+                            <li>Representation quality</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Required Reading</h2>
+                <ul>
+                    <li>"Denoising Diffusion Probabilistic Models" (Ho et al.)</li>
+                    <li>"Understanding Diffusion Models: A Unified Perspective"</li>
+                </ul>
+
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand the transition from supervised to generative approaches</li>
+                    <li>Master the principles of diffusion models</li>
+                    <li>Grasp self-supervised learning techniques</li>
+                    <li>Connect diffusion concepts across modalities</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

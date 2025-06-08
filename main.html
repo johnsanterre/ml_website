@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning Course Series</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .course-selector {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .course-button {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid #2f2f2f;
+            border-radius: 8px;
+            background: #0f0f0f;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .course-button.active {
+            border-color: #ff9900;
+            background: #1f1f1f;
+        }
+
+        .course-button:hover {
+            border-color: #ff9900;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .course-content {
+            display: none;
+        }
+
+        .course-content.active {
+            display: block;
+        }
+
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .lesson-box {
+            border: 1px solid #2f2f2f;
+            border-radius: 8px;
+            padding: 16px;
+            background: #0f0f0f;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lesson-box:hover {
+            border-color: #ff9900;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 24px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+
+        h1, h2, h3 {
+            margin: 0.5em 0;
+            color: #ffffff;
+        }
+
+        p {
+            margin: 0.3em 0;
+        }
+
+        .description {
+            color: #ccc;
+            flex-grow: 1;
+        }
+
+        .button {
+            display: block;
+            text-decoration: none;
+            color: #ff9900;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .button:hover {
+            color: #ffb84d;
+        }
+
+        .resources {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .course-description {
+            margin: 20px 0;
+            padding: 20px;
+            background: #1f1f1f;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Machine Learning Course Series</h1>
+        
+        <!-- Course Selector -->
+        <div class="course-selector">
+            <div class="course-button active" onclick="switchCourse('ml1')">
+                <h2>ML1: Introduction to Machine Learning</h2>
+                <p>Fundamental concepts and foundations</p>
+            </div>
+            <div class="course-button" onclick="switchCourse('ml2')">
+                <h2>ML2: Advanced Machine Learning</h2>
+                <p>Advanced techniques and applications</p>
+            </div>
+        </div>
+
+        <!-- ML1 Content -->
+        <div id="ml1-content" class="course-content active">
+            <div class="course-description">
+                <h3>Introduction to Machine Learning</h3>
+                <p>Start your journey into machine learning with fundamental concepts, mathematical foundations, and practical implementations. This course provides a solid foundation for understanding modern ML techniques.</p>
+            </div>
+            
+            <div class="lesson-grid">
+                <!-- ML1 Lectures 1-15 -->
+                <div class="lesson-box">
+                    <a href="ml1/lecture01/index.html" class="button">1. Introduction to ML Fundamentals</a>
+                    <p class="description">Core concepts, terminology, and the ML pipeline.</p>
+                    <div class="resources">
+                        <a href="output/ml1/lecture01/textbook.pdf" class="textbook-button">📚 Textbook</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml1/lecture02/index.html" class="button">2. Linear Regression</a>
+                    <p class="description">Understanding and implementing basic regression models.</p>
+                    <div class="resources">
+                        <a href="output/ml1/lecture02/textbook.pdf" class="textbook-button">📚 Textbook</a>
+                    </div>
+                </div>
+
+                <!-- Add more ML1 lecture boxes here -->
+            </div>
+        </div>
+
+        <!-- ML2 Content -->
+        <div id="ml2-content" class="course-content">
+            <div class="course-description">
+                <h3>Advanced Machine Learning</h3>
+                <p>Dive deep into advanced ML concepts, neural architectures, and state-of-the-art techniques. This course builds on ML1 to explore cutting-edge applications, with a special focus on Large Language Models and modern architectures.</p>
+            </div>
+            
+            <div class="lesson-grid">
+                <div class="lesson-box">
+                    <a href="ml2/lecture01/index.html" class="button">1. Introduction to Deep Learning</a>
+                    <p class="description">History, evolution, neural network concepts, and framework comparisons.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture01/ml2_week01.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture02/index.html" class="button">2. Neural Networks & Backpropagation</a>
+                    <p class="description">Detailed backpropagation, gradient descent variations, and training challenges.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture02/ml2_week02.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture03/index.html" class="button">3. Building a Real-World Housing Price Predictor</a>
+                    <p class="description">Practical implementation of neural networks for housing price prediction using the California Housing Dataset.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture03/ml2_week03.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture04/index.html" class="button">4. Vector Representations & Similarity Measures</a>
+                    <p class="description">Explore vector representations and similarity measures through practical examples, including food preference vectors, sparse representation challenges, and learned representations.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture04/ml2_week04.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/drive/1lYmsqBIFpwokponP2kEvyBS7HB2EvxS_?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture05/index.html" class="button">5. Autoencoders & Embeddings</a>
+                    <p class="description">Autoencoder architectures, embedding spaces, and dimensionality reduction.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture05/ml2_week05.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture06/index.html" class="button">6. From Autoencoders to Embeddings</a>
+                    <p class="description">Explore the evolution from autoencoders to modern embedding techniques, focusing on Word2Vec, GloVe, and practical applications in recommendation systems.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture06/ml2_week06.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture07/index.html" class="button">7. Introduction to Transformers</a>
+                    <p class="description">Self-attention mechanism, transformer architecture, and positional encoding.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture07/ml2_week07.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture08/index.html" class="button">8. LLM Architecture Deep Dive</a>
+                    <p class="description">Detailed exploration of Large Language Model architectures.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture08/ml2_week08.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/drive/1QXEoP7ReX-Zvy3wJH4KKRp0lViR-4cKT?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture09/index.html" class="button">9. From Supervised to Generative Learning</a>
+                    <p class="description">Transition from supervised learning to generative approaches.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture09/ml2_week09.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/drive/1P6ynRBU_O2sJpYLIbjnjEjVk42C0-_NP?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture10/index.html" class="button">10. Introduction to Large Language Models</a>
+                    <p class="description">Evolution of language models, pre-training concepts, and capabilities.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture10/ml2_week10.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture11/index.html" class="button">11. Practical LLM Integration & API</a>
+                    <p class="description">API integration, prompt engineering, and production deployment.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture11/ml2_week11.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture12/index.html" class="button">12. Retrieval Augmented Generation</a>
+                    <p class="description">RAG architecture, document processing, and vector databases.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture12/ml2_week12.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture13/index.html" class="button">13. Evaluating LLMs</a>
+                    <p class="description">Evaluation metrics, benchmark suites, and quality assurance.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture13/ml2_week13.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="ml2/lecture14/index.html" class="button">14. LLMs as Decision Makers and Agents</a>
+                    <p class="description">Decision frameworks, routing, and agentic workflows.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="output/ml2/lecture14/ml2_week14.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchCourse(courseId) {
+            // Update course buttons
+            document.querySelectorAll('.course-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.course-button:nth-child(${courseId === 'ml1' ? '1' : '2'})`).classList.add('active');
+            
+            // Update course content
+            document.querySelectorAll('.course-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${courseId}-content`).classList.add('active');
+        }
+    </script>
+</body>
+</html> 

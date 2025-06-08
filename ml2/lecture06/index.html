@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Autoencoders to Embeddings - ML2</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../main.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="output/ml2/lecture06/ml2_week06.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>Week 6: From Autoencoders to Embeddings</h1>
+
+            <section>
+                <h2>1. Understanding Word Embeddings</h2>
+                <ul>
+                    <li>Word2Vec introduction
+                        <ul>
+                            <li>CBOW and Skip-gram models</li>
+                            <li>Context windows</li>
+                            <li>Negative sampling</li>
+                        </ul>
+                    </li>
+                    <li>Properties of word embeddings
+                        <ul>
+                            <li>Semantic relationships</li>
+                            <li>Arithmetic with word vectors</li>
+                            <li>Analogies (king - man + woman = queen)</li>
+                        </ul>
+                    </li>
+                    <li>Visualization techniques
+                        <ul>
+                            <li>t-SNE for word embeddings</li>
+                            <li>Exploring semantic spaces</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. Beyond Word2Vec</h2>
+                <ul>
+                    <li>Modern embedding approaches
+                        <ul>
+                            <li>GloVe embeddings</li>
+                            <li>FastText and subword information</li>
+                            <li>Contextual vs static embeddings</li>
+                        </ul>
+                    </li>
+                    <li>Multi-modal embeddings
+                        <ul>
+                            <li>Image and text</li>
+                            <li>Cross-modal relationships</li>
+                            <li>Joint embedding spaces</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. Training Embeddings</h2>
+                <ul>
+                    <li>Architecture considerations
+                        <ul>
+                            <li>Embedding layer implementation</li>
+                            <li>Loss functions for embeddings</li>
+                            <li>Batch construction</li>
+                        </ul>
+                    </li>
+                    <li>Training strategies
+                        <ul>
+                            <li>Pre-training vs task-specific</li>
+                            <li>Fine-tuning embeddings</li>
+                            <li>Transfer learning with embeddings</li>
+                        </ul>
+                    </li>
+                    <li>Handling challenges
+                        <ul>
+                            <li>Rare words</li>
+                            <li>Out-of-vocabulary words</li>
+                            <li>Domain adaptation</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>4. Practical Applications</h2>
+                <ul>
+                    <li>Recommendation systems
+                        <ul>
+                            <li>User-item embeddings</li>
+                            <li>Collaborative filtering</li>
+                            <li>Cold start problems</li>
+                        </ul>
+                    </li>
+                    <li>Information retrieval
+                        <ul>
+                            <li>Document similarity</li>
+                            <li>Semantic search</li>
+                            <li>Cross-lingual applications</li>
+                        </ul>
+                    </li>
+                    <li>Analysis tools
+                        <ul>
+                            <li>Bias detection</li>
+                            <li>Embedding probing tasks</li>
+                            <li>Quality evaluation</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Required Reading</h2>
+                <ul>
+                    <li>"Efficient Estimation of Word Representations in Vector Space" (Mikolov et al.)</li>
+                    <li>"GloVe: Global Vectors for Word Representation" (Pennington et al.)</li>
+                </ul>
+
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand the transition from autoencoders to embeddings</li>
+                    <li>Master word embedding concepts and training</li>
+                    <li>Implement embedding-based applications</li>
+                    <li>Evaluate embedding quality and characteristics</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

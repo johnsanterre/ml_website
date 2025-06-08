@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convolutional Neural Networks - ML2</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../main.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="output/ml2/lecture08/ml2_week08.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/drive/1QXEoP7ReX-Zvy3wJH4KKRp0lViR-4cKT?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>Week 8: Convolutional Neural Networks</h1>
+
+            <section>
+                <h2>1. From Fully Connected to Convolutional</h2>
+                <ul>
+                    <li>Motivation for CNNs
+                        <ul>
+                            <li>Parameter efficiency</li>
+                            <li>Spatial relationships</li>
+                            <li>Translation invariance</li>
+                        </ul>
+                    </li>
+                    <li>Basic CNN operations
+                        <ul>
+                            <li>Convolution filters</li>
+                            <li>Feature maps</li>
+                            <li>Receptive fields</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. Core CNN Components</h2>
+                <ul>
+                    <li>Convolutional layers
+                        <ul>
+                            <li>Kernel size and stride</li>
+                            <li>Padding options</li>
+                            <li>Channel dimensions</li>
+                        </ul>
+                    </li>
+                    <li>Pooling operations
+                        <ul>
+                            <li>Max pooling</li>
+                            <li>Average pooling</li>
+                            <li>Spatial reduction</li>
+                        </ul>
+                    </li>
+                    <li>Activation functions
+                        <ul>
+                            <li>ReLU in CNNs</li>
+                            <li>Feature map activation</li>
+                            <li>Non-linearity importance</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. ResNet Architecture</h2>
+                <ul>
+                    <li>Residual Learning
+                        <ul>
+                            <li>Skip connections</li>
+                            <li>Identity mappings</li>
+                            <li>Gradient flow benefits</li>
+                        </ul>
+                    </li>
+                    <li>ResNet Variants
+                        <ul>
+                            <li>ResNet-50</li>
+                            <li>ResNet-101</li>
+                            <li>ResNet-152</li>
+                        </ul>
+                    </li>
+                    <li>Impact on Deep Learning
+                        <ul>
+                            <li>Solving vanishing gradients</li>
+                            <li>Training very deep networks</li>
+                            <li>Feature hierarchy</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>4. Transfer Learning with CNNs</h2>
+                <ul>
+                    <li>Pre-trained Models
+                        <ul>
+                            <li>ImageNet models</li>
+                            <li>Feature extractors</li>
+                            <li>Layer freezing strategies</li>
+                        </ul>
+                    </li>
+                    <li>Fine-tuning Approaches
+                        <ul>
+                            <li>Full fine-tuning</li>
+                            <li>Partial fine-tuning</li>
+                            <li>Linear probing</li>
+                        </ul>
+                    </li>
+                    <li>Domain Adaptation
+                        <ul>
+                            <li>Cross-domain transfer</li>
+                            <li>Few-shot learning</li>
+                            <li>Handling domain shift</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Required Reading</h2>
+                <ul>
+                    <li>"Gradient-Based Learning Applied to Document Recognition" (LeCun et al.)</li>
+                    <li>"Deep Residual Learning for Image Recognition" (He et al.)</li>
+                    <li>"How transferable are features in deep neural networks?" (Yosinski et al.)</li>
+                </ul>
+
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand CNN fundamentals and operations</li>
+                    <li>Master different types of CNN layers</li>
+                    <li>Grasp ResNet architecture and its importance</li>
+                    <li>Apply transfer learning effectively</li>
+                    <li>Adapt pre-trained models to new tasks</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

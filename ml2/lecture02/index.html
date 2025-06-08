@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Networks & Backpropagation - ML2</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../main.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="file:///Users/john/Dropbox/_______Cursor/ml_website_2/output/ml2/lecture02/ml2_week02.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>Week 2: Neural Networks Fundamentals & Backpropagation</h1>
+
+            <section>
+                <h2>1. Neural Network Training</h2>
+                <ul>
+                    <li>Detailed look at forward propagation
+                        <ul>
+                            <li>Building on single neuron concept</li>
+                            <li>Matrix operations in neural networks</li>
+                            <li>Computational graphs</li>
+                        </ul>
+                    </li>
+                    <li>Introduction to backpropagation
+                        <ul>
+                            <li>Chain rule application</li>
+                            <li>Computing gradients</li>
+                            <li>Error propagation through layers</li>
+                        </ul>
+                    </li>
+                    <li>Gradient descent fundamentals
+                        <ul>
+                            <li>Step sizes</li>
+                            <li>Learning rate concept</li>
+                            <li>Batch vs mini-batch vs stochastic</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. Loss Functions in Depth</h2>
+                <ul>
+                    <li>Mean Squared Error (MSE)
+                        <ul>
+                            <li>Mathematical formulation</li>
+                            <li>Use cases in regression</li>
+                        </ul>
+                    </li>
+                    <li>Cross-Entropy Loss
+                        <ul>
+                            <li>Binary cross-entropy</li>
+                            <li>Categorical cross-entropy</li>
+                            <li>Use cases in classification</li>
+                        </ul>
+                    </li>
+                    <li>Implementing loss functions in PyTorch</li>
+                    <li>Loss function selection criteria</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. Gradient-Based Optimization</h2>
+                <ul>
+                    <li>Computing gradients
+                        <ul>
+                            <li>Automatic differentiation</li>
+                            <li>Manual gradient calculation examples</li>
+                        </ul>
+                    </li>
+                    <li>Gradient descent variations
+                        <ul>
+                            <li>Stochastic Gradient Descent (SGD)</li>
+                            <li>Mini-batch gradient descent</li>
+                        </ul>
+                    </li>
+                    <li>Common challenges
+                        <ul>
+                            <li>Vanishing gradients</li>
+                            <li>Exploding gradients</li>
+                            <li>Local minima and saddle points</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Required Reading</h2>
+                <ul>
+                    <li>Deep Learning Book (Goodfellow et al.) - Chapter 6: Deep Feedforward Networks</li>
+                    <li>Deep Learning Book (Goodfellow et al.) - Chapter 8: Optimization for Training Deep Models</li>
+                </ul>
+
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Master the mathematics behind forward and backward propagation</li>
+                    <li>Understand different loss functions and their applications</li>
+                    <li>Implement basic gradient descent optimization</li>
+                    <li>Identify and address common training challenges</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
