@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Bias in Deep Learning Systems - ML1</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="output/ml1/lecture14/ml1_week14.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>Week 14: Understanding Bias in Deep Learning Systems</h1>
+
+            <section>
+                <h2>Overview</h2>
+                <p>This week examines how bias can be introduced, detected, and mitigated in deep learning systems, from data collection through model deployment.</p>
+            </section>
+
+            <section>
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Identify sources of bias in deep learning</li>
+                    <li>Understand data representation issues</li>
+                    <li>Recognize model architecture biases</li>
+                    <li>Implement bias detection methods</li>
+                    <li>Apply bias mitigation strategies</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>1. Data-Level Bias</h2>
+                <ul>
+                    <li>Collection Bias
+                        <ul>
+                            <li>Sampling methods</li>
+                            <li>Historical prejudices</li>
+                            <li>Representation issues</li>
+                            <li>Coverage gaps</li>
+                        </ul>
+                    </li>
+                    <li>Preprocessing Bias
+                        <ul>
+                            <li>Feature selection</li>
+                            <li>Normalization choices</li>
+                            <li>Missing data handling</li>
+                            <li>Labeling practices</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. Detection and Mitigation</h2>
+                <ul>
+                    <li>Bias Detection
+                        <ul>
+                            <li>Statistical measures</li>
+                            <li>Performance disparities</li>
+                            <li>Fairness metrics</li>
+                            <li>Monitoring systems</li>
+                        </ul>
+                    </li>
+                    <li>Mitigation Strategies
+                        <ul>
+                            <li>Data augmentation</li>
+                            <li>Model constraints</li>
+                            <li>Ensemble methods</li>
+                            <li>Post-processing techniques</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Key Takeaways</h2>
+                <ul>
+                    <li>Data collection and preprocessing significantly impact bias</li>
+                    <li>Statistical measures can reveal hidden biases</li>
+                    <li>Multiple mitigation strategies are often needed</li>
+                    <li>Ongoing monitoring is essential for bias control</li>
+                </ul>
+
+                <h2>Practical Exercises</h2>
+                <ul>
+                    <li>Identify bias in data collection methods</li>
+                    <li>Apply statistical bias detection</li>
+                    <li>Compare mitigation strategies</li>
+                    <li>Build bias monitoring systems</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

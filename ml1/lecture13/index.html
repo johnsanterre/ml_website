@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Neural Networks for ML Practitioners - ML1</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="output/ml1/lecture13/ml1_week13.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>Week 13: Introduction to Neural Networks for ML Practitioners</h1>
+
+            <section>
+                <h2>Overview</h2>
+                <p>This week bridges traditional machine learning approaches with neural networks, focusing on parallels between familiar sklearn-style workflows and modern deep learning frameworks like PyTorch and TensorFlow.</p>
+            </section>
+
+            <section>
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand neural network fundamentals</li>
+                    <li>Compare ML and DL workflows</li>
+                    <li>Implement basic neural networks</li>
+                    <li>Transition from sklearn to deep learning</li>
+                    <li>Master basic framework operations</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>1. Neural Network Fundamentals</h2>
+                <ul>
+                    <li>Basic Components
+                        <ul>
+                            <li>Neurons and layers</li>
+                            <li>Activation functions</li>
+                            <li>Weights and biases</li>
+                        </ul>
+                    </li>
+                    <li>Comparison with Traditional ML
+                        <ul>
+                            <li>Linear models connection</li>
+                            <li>Feature transformation</li>
+                            <li>Model complexity</li>
+                            <li>Parameter learning</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>2. Framework Introduction</h2>
+                <ul>
+                    <li>TensorFlow
+                        <ul>
+                            <li>Keras interface</li>
+                            <li>Model building</li>
+                            <li>Training API</li>
+                            <li>Data pipelines</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. From Sklearn to Deep Learning</h2>
+                <ul>
+                    <li>Workflow Comparison
+                        <ul>
+                            <li>Model instantiation</li>
+                            <li>Fitting process</li>
+                            <li>Prediction methods</li>
+                            <li>Parameter tuning</li>
+                        </ul>
+                    </li>
+                    <li>Framework Differences
+                        <ul>
+                            <li>Model definition</li>
+                            <li>Training approach</li>
+                            <li>Data handling</li>
+                            <li>Customization options</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>4. Practical Considerations</h2>
+                <ul>
+                    <li>Model Construction
+                        <ul>
+                            <li>Layer selection</li>
+                            <li>Architecture design</li>
+                            <li>Hyperparameter choice</li>
+                        </ul>
+                    </li>
+                    <li>Training Process
+                        <ul>
+                            <li>Loss functions</li>
+                            <li>Optimizers</li>
+                            <li>Batch processing</li>
+                            <li>Validation approaches</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Key Takeaways</h2>
+                <ul>
+                    <li>Neural networks extend traditional ML concepts</li>
+                    <li>Modern frameworks simplify implementation</li>
+                    <li>Basic principles remain consistent</li>
+                    <li>Framework choice affects workflow</li>
+                </ul>
+
+                <h2>Practical Exercises</h2>
+                <ul>
+                    <li>Convert sklearn model to TensorFlow</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

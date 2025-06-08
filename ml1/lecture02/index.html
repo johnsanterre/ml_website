@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Pipelines and Data Analysis - ML1</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3, h4 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            color: #ffd699;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="textbook-button" target="_blank">Videos</a>
+            <a href="output/ml1/lecture02/ml1_week02.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+        </div>
+
+        <div class="content-box">
+            <h1>ML1 Week 2: ML Pipelines and Data Analysis</h1>
+
+            <section>
+                <h2>Overview</h2>
+                <p>This week introduces the fundamental components of machine learning pipelines and essential data analysis techniques through visualization.</p>
+            </section>
+
+            <section>
+                <h2>Learning Objectives</h2>
+                <p>By the end of this session, students will:</p>
+                <ul>
+                    <li>Understand each component of an ML pipeline</li>
+                    <li>Master the process of feature engineering</li>
+                    <li>Implement training and inference procedures</li>
+                    <li>Evaluate model performance effectively</li>
+                    <li>Create insightful data visualizations</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Topics Covered</h2>
+
+                <h3>1. ML Pipeline Components</h3>
+                <ul>
+                    <li>Model Architecture
+                        <ul>
+                            <li>Model selection</li>
+                            <li>Architecture design</li>
+                            <li>Component integration</li>
+                            <li>Hyperparameter configuration</li>
+                        </ul>
+                    </li>
+                    <li>Feature Engineering
+                        <ul>
+                            <li>Data preprocessing</li>
+                            <li>Feature selection</li>
+                            <li>Feature transformation</li>
+                            <li>Feature validation</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>2. Pipeline Execution</h3>
+                <ul>
+                    <li>Training Process
+                        <ul>
+                            <li>Data splitting</li>
+                            <li>Model fitting</li>
+                            <li>Parameter optimization</li>
+                            <li>Validation procedures</li>
+                        </ul>
+                    </li>
+                    <li>Inference
+                        <ul>
+                            <li>Prediction generation</li>
+                            <li>Runtime optimization</li>
+                            <li>Batch processing</li>
+                            <li>Real-time inference</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>3. Pipeline Evaluation</h3>
+                <ul>
+                    <li>Performance Metrics
+                        <ul>
+                            <li>Accuracy measures</li>
+                            <li>Error analysis</li>
+                            <li>Model comparison</li>
+                            <li>Validation strategies</li>
+                        </ul>
+                    </li>
+                    <li>Bias Analysis
+                        <ul>
+                            <li>Bias identification</li>
+                            <li>Fairness metrics</li>
+                            <li>Bias mitigation</li>
+                            <li>Model auditing</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>4. Data Analysis Through Plots</h3>
+                <ul>
+                    <li>Distribution Analysis
+                        <ul>
+                            <li>Histograms</li>
+                            <li>Density plots</li>
+                            <li>Box plots</li>
+                            <li>Violin plots</li>
+                        </ul>
+                    </li>
+                    <li>Relationship Visualization
+                        <ul>
+                            <li>Scatter plots</li>
+                            <li>Correlation matrices</li>
+                            <li>Pair plots</li>
+                            <li>Heat maps</li>
+                        </ul>
+                    </li>
+                    <li>Time Series Analysis
+                        <ul>
+                            <li>Line plots</li>
+                            <li>Trend visualization</li>
+                            <li>Seasonal decomposition</li>
+                            <li>Autocorrelation plots</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Key Takeaways</h2>
+                <ol>
+                    <li>Pipeline structure determines project success</li>
+                    <li>Feature engineering is crucial for model performance</li>
+                    <li>Proper evaluation ensures reliable results</li>
+                    <li>Visualization aids in understanding data patterns</li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Practical Exercises</h2>
+                <ol>
+                    <li>Build an end-to-end ML pipeline</li>
+                    <li>Implement feature engineering techniques</li>
+                    <li>Create comprehensive visualizations</li>
+                    <li>Evaluate model bias and performance</li>
+                </ol>
+            </section>
+
+            <div class="resources">
+                <h2>Additional Resources</h2>
+                <ul>
+                    <li><a href="#" target="_blank">ML Pipeline Best Practices Guide</a></li>
+                    <li><a href="#" target="_blank">Data Visualization Techniques</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

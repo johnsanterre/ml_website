@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrieval Augmented Generation (RAG) - ML Topics</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+
+        <div class="content-box">
+            <h1>Retrieval Augmented Generation (RAG)</h1>
+
+            <section>
+                <h2>Overview</h2>
+                <p>Retrieval Augmented Generation (RAG) is a powerful approach that combines the strengths of large language models with the ability to access and utilize external knowledge. By retrieving relevant information before generation, RAG models can produce more accurate, factual, and contextually appropriate responses.</p>
+            </section>
+
+            <section>
+                <h2>Core Components</h2>
+                <ul>
+                    <li>Architecture
+                        <ul>
+                            <li>Retriever module</li>
+                            <li>Generator module</li>
+                            <li>Integration mechanisms</li>
+                        </ul>
+                    </li>
+                    <li>Knowledge Storage
+                        <ul>
+                            <li>Vector databases</li>
+                            <li>Document processing</li>
+                            <li>Embedding strategies</li>
+                        </ul>
+                    </li>
+                    <li>Retrieval Methods
+                        <ul>
+                            <li>Dense retrieval</li>
+                            <li>Sparse retrieval</li>
+                            <li>Hybrid approaches</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Implementation Strategies</h2>
+                <ul>
+                    <li>Document Processing
+                        <ul>
+                            <li>Text chunking</li>
+                            <li>Metadata extraction</li>
+                            <li>Embedding generation</li>
+                        </ul>
+                    </li>
+                    <li>Retrieval Optimization
+                        <ul>
+                            <li>Query formulation</li>
+                            <li>Context window management</li>
+                            <li>Re-ranking strategies</li>
+                        </ul>
+                    </li>
+                    <li>Generation Enhancement
+                        <ul>
+                            <li>Prompt engineering</li>
+                            <li>Context integration</li>
+                            <li>Output verification</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Advanced Topics</h2>
+                <ul>
+                    <li>Performance Optimization
+                        <ul>
+                            <li>Caching strategies</li>
+                            <li>Batch processing</li>
+                            <li>Parallel retrieval</li>
+                        </ul>
+                    </li>
+                    <li>Quality Control
+                        <ul>
+                            <li>Source attribution</li>
+                            <li>Fact verification</li>
+                            <li>Consistency checking</li>
+                        </ul>
+                    </li>
+                    <li>System Integration
+                        <ul>
+                            <li>API design</li>
+                            <li>Error handling</li>
+                            <li>Monitoring and logging</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand RAG architecture and components</li>
+                    <li>Master document processing and retrieval techniques</li>
+                    <li>Implement efficient RAG systems</li>
+                    <li>Optimize retrieval and generation quality</li>
+                </ul>
+
+                <h2>Practical Examples</h2>
+                <ul>
+                    <li><a href="https://python.langchain.com/docs/use_cases/question_answering/" target="_blank">LangChain RAG Implementation</a> - Building a question-answering system with RAG</li>
+                    <li><a href="https://www.pinecone.io/learn/retrieval-augmented-generation/" target="_blank">Pinecone RAG Tutorial</a> - Implementing RAG with vector databases</li>
+                    <li><a href="https://www.llamaindex.ai/examples" target="_blank">LlamaIndex Examples</a> - Various RAG patterns and implementations</li>
+                </ul>
+
+                <h2>Additional Resources</h2>
+                <ul>
+                    <li><a href="https://arxiv.org/abs/2005.11401" target="_blank">RAG: Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a> - The original RAG paper</li>
+                    <li><a href="https://arxiv.org/abs/2312.10997" target="_blank">RAG Survey</a> - A comprehensive survey of RAG methods and applications</li>
+                    <li><a href="https://blog.langchain.dev/applying-chat-templates-to-rag/" target="_blank">Advanced RAG Patterns</a> - Modern techniques and best practices</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
