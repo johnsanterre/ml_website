@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markov Processes - ML Topics</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+
+        <div class="content-box">
+            <h1>Markov Processes</h1>
+
+            <section>
+                <h2>Overview</h2>
+                <p>Markov processes are mathematical models that describe sequences of events where the probability of each event depends only on the state of the previous event. These processes form the foundation for many machine learning algorithms and are crucial in modeling sequential data.</p>
+            </section>
+
+            <section>
+                <h2>Fundamental Concepts</h2>
+                <ul>
+                    <li>Core Properties
+                        <ul>
+                            <li>Markov Property</li>
+                            <li>State Space</li>
+                            <li>Transition Probabilities</li>
+                            <li>Stationary Distribution</li>
+                        </ul>
+                    </li>
+                    <li>Types of Markov Processes
+                        <ul>
+                            <li>Discrete-Time Markov Chains</li>
+                            <li>Continuous-Time Markov Chains</li>
+                            <li>Hidden Markov Models (HMMs)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Mathematical Foundations</h2>
+                <ul>
+                    <li>Probability Theory
+                        <ul>
+                            <li>Conditional Probability</li>
+                            <li>Chapman-Kolmogorov Equations</li>
+                            <li>Ergodicity</li>
+                        </ul>
+                    </li>
+                    <li>Linear Algebra Concepts
+                        <ul>
+                            <li>Transition Matrices</li>
+                            <li>Eigenvalue Analysis</li>
+                            <li>Steady-State Solutions</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Applications in Machine Learning</h2>
+                <ul>
+                    <li>Sequential Data Modeling
+                        <ul>
+                            <li>Natural Language Processing</li>
+                            <li>Time Series Analysis</li>
+                            <li>Speech Recognition</li>
+                        </ul>
+                    </li>
+                    <li>Advanced Applications
+                        <ul>
+                            <li>Reinforcement Learning</li>
+                            <li>Probabilistic Graphical Models</li>
+                            <li>Monte Carlo Methods</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand the fundamental principles of Markov processes</li>
+                    <li>Master the mathematical foundations of state transitions</li>
+                    <li>Apply Markov models to real-world sequential data</li>
+                    <li>Implement HMMs and analyze their results</li>
+                </ul>
+
+                <h2>Practical Examples</h2>
+                <ul>
+                    <li>Text Generation with Markov Chains</li>
+                    <li>Weather Prediction Models</li>
+                    <li>Financial Market Analysis</li>
+                    <li>Biological Sequence Analysis</li>
+                </ul>
+
+                <h2>Additional Resources</h2>
+                <ul>
+                    <li><a href="https://en.m.wikipedia.org/wiki/General_linear_group" target="_blank">General Linear Group</a> - Mathematical foundations related to state transformations in Markov processes</li>
+                    <li><a href="https://arxiv.org/pdf/2005.04301.pdf" target="_blank">Is Deep Reinforcement Learning Ready for Practical Applications in Healthcare?</a> - A detailed case study of Markov Decision Processes applied to medical decision-making</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
