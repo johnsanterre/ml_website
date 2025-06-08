@@ -70,11 +70,14 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .lesson-box:hover {
             border-color: #ff9900;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+            transform: translateY(-2px);
         }
 
         .content-box {
@@ -161,6 +164,10 @@
         
         <!-- Course Selector -->
         <div class="course-selector">
+            <div class="course-button" onclick="switchCourse('python')">
+                <h2>Python Fundamentals</h2>
+                <p>Essential Python programming for ML</p>
+            </div>
             <div class="course-button" onclick="switchCourse('ml1')">
                 <h2>ML1: Introduction to Machine Learning</h2>
                 <p>Built by Nedelina Teneva and John Santerre</p>
@@ -172,6 +179,48 @@
             <div class="course-button" onclick="switchCourse('mltopics')">
                 <h2>ML Topics</h2>
                 <p>Special Topics in Machine Learning</p>
+            </div>
+        </div>
+
+        <!-- Python Fundamentals Content -->
+        <div id="python-content" class="course-content">
+            <div class="course-description">
+                <h3>Python Fundamentals</h3>
+                <p>Master the essential Python programming concepts and tools needed for machine learning. This course covers data structures, functions, libraries, and best practices for ML development.</p>
+            </div>
+            
+            <div class="lesson-grid">
+                <div class="lesson-box">
+                    <a href="python/lecture01/index.html" class="button">1. Python Basics</a>
+                    <p class="description">Variables, data types, control flow, and functions.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Textbook</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="python/lecture02/index.html" class="button">2. Data Structures</a>
+                    <p class="description">Lists, dictionaries, sets, and their applications in ML.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Textbook</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="python/lecture03/index.html" class="button">3. NumPy Essentials</a>
+                    <p class="description">Array operations, broadcasting, and numerical computing.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Textbook</a>
+                    </div>
+                </div>
+
+                <div class="lesson-box">
+                    <a href="python/lecture04/index.html" class="button">4. Data Processing with Python</a>
+                    <p class="description">File I/O, data cleaning, and preprocessing techniques.</p>
+                    <div class="resources">
+                        <a href="#" class="textbook-button" target="_blank">Textbook</a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -188,7 +237,7 @@
                     <a href="ml1/lecture01/index.html" class="button">1. Introduction to ML Fundamentals</a>
                     <p class="description">Core concepts, terminology, and the ML pipeline.</p>
                     <div class="resources">
-                        <a href="output/ml1/lecture01/textbook.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1F_tcE-b4OQPlZ2GcSG3aThnozR1Jpj_3nqTROHzv1qg/edit#heading=h.3vm0hw1mzk46" class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
@@ -196,7 +245,7 @@
                     <a href="ml1/lecture02/index.html" class="button">2. Linear Regression</a>
                     <p class="description">Understanding and implementing basic regression models.</p>
                     <div class="resources">
-                        <a href="output/ml1/lecture02/textbook.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1_oHxPswyWDfqh1RjePiVqQAZMAqimM73xGo6MjdhA04/edit#heading=h.9ufxgi9bwhd2" class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
@@ -212,7 +261,7 @@
                     <a href="ml1/lecture04/index.html" class="button">4. Matrix Structures in Machine Learning</a>
                     <p class="description">Understanding different matrix structures and their applications in ML.</p>
                     <div class="resources">
-                        <a href="output/ml1/lecture04/ml1_week04.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1YItb8e5QlXqFZhWx5YMgpk0ienb_rLz2fVGHEpZT20c/edit#heading=h.h3ezv654rmer" class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
@@ -220,7 +269,7 @@
                     <a href="ml1/lecture05/index.html" class="button">5. Regression Methods: From Linear to Logistic</a>
                     <p class="description">Exploring regression methods, from linear regression solutions to logistic regression and optimization.</p>
                     <div class="resources">
-                        <a href="output/ml1/lecture05/ml1_week05.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1pJM8fde5s1UQ8HtSxtx107p7LSvFzWbACbIylEUAB78/edit#heading=h.b7962tul55t4" class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
@@ -228,7 +277,7 @@
                     <a href="ml1/lecture06/index.html" class="button">6. Decision Trees and Random Forests</a>
                     <p class="description">Understanding tree-based methods, from basic decision trees to ensemble techniques.</p>
                     <div class="resources">
-                        <a href="output/ml1/lecture06/ml1_week06.pdf" class="textbook-button">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1lfRDEskg-aA1h15DmUDUwboQcuVRrEZyAqxkcLiVNss/edit#heading=h.4ehef0kr5sb7" class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
