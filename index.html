@@ -132,6 +132,21 @@
             background: #ffb84d;
         }
 
+        .video-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #666666;
+            color: #999999;
+            text-decoration: line-through;
+            text-decoration-thickness: 2px;
+            text-decoration-color: #ff0000;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
         .course-description {
             margin: 20px 0;
             padding: 20px;
@@ -146,18 +161,18 @@
         
         <!-- Course Selector -->
         <div class="course-selector">
-            <div class="course-button active" onclick="switchCourse('ml1')">
+            <div class="course-button" onclick="switchCourse('ml1')">
                 <h2>ML1: Introduction to Machine Learning</h2>
                 <p>Fundamental concepts and foundations</p>
             </div>
-            <div class="course-button" onclick="switchCourse('ml2')">
+            <div class="course-button active" onclick="switchCourse('ml2')">
                 <h2>ML2: Advanced Machine Learning</h2>
                 <p>Advanced techniques and applications</p>
             </div>
         </div>
 
         <!-- ML1 Content -->
-        <div id="ml1-content" class="course-content active">
+        <div id="ml1-content" class="course-content">
             <div class="course-description">
                 <h3>Introduction to Machine Learning</h3>
                 <p>Start your journey into machine learning with fundamental concepts, mathematical foundations, and practical implementations. This course provides a solid foundation for understanding modern ML techniques.</p>
@@ -186,7 +201,7 @@
         </div>
 
         <!-- ML2 Content -->
-        <div id="ml2-content" class="course-content">
+        <div id="ml2-content" class="course-content active">
             <div class="course-description">
                 <h3>Advanced Machine Learning</h3>
                 <p>Dive deep into advanced ML concepts, neural architectures, and state-of-the-art techniques. This course builds on ML1 to explore cutting-edge applications, with a special focus on Large Language Models and modern architectures.</p>
@@ -197,7 +212,7 @@
                     <a href="ml2/lecture01/index.html" class="button">1. Introduction to Deep Learning</a>
                     <p class="description">History, evolution, neural network concepts, and framework comparisons.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture01/ml2_week01.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -207,7 +222,7 @@
                     <a href="ml2/lecture02/index.html" class="button">2. Neural Networks & Backpropagation</a>
                     <p class="description">Detailed backpropagation, gradient descent variations, and training challenges.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture02/ml2_week02.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -217,7 +232,7 @@
                     <a href="ml2/lecture03/index.html" class="button">3. Building a Real-World Housing Price Predictor</a>
                     <p class="description">Practical implementation of neural networks for housing price prediction using the California Housing Dataset.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture03/ml2_week03.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -227,7 +242,7 @@
                     <a href="ml2/lecture04/index.html" class="button">4. Vector Representations & Similarity Measures</a>
                     <p class="description">Explore vector representations and similarity measures through practical examples, including food preference vectors, sparse representation challenges, and learned representations.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture04/ml2_week04.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/drive/1lYmsqBIFpwokponP2kEvyBS7HB2EvxS_?usp=sharing" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -237,7 +252,7 @@
                     <a href="ml2/lecture05/index.html" class="button">5. Autoencoders & Embeddings</a>
                     <p class="description">Autoencoder architectures, embedding spaces, and dimensionality reduction.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture05/ml2_week05.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -247,7 +262,7 @@
                     <a href="ml2/lecture06/index.html" class="button">6. From Autoencoders to Embeddings</a>
                     <p class="description">Explore the evolution from autoencoders to modern embedding techniques, focusing on Word2Vec, GloVe, and practical applications in recommendation systems.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture06/ml2_week06.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -257,7 +272,7 @@
                     <a href="ml2/lecture07/index.html" class="button">7. Sequence Models & Attention</a>
                     <p class="description">Understanding sequence models, attention mechanisms, and their applications.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture07/ml2_week07.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -267,7 +282,7 @@
                     <a href="ml2/lecture08/index.html" class="button">8. Convolutional Neural Networks</a>
                     <p class="description">Deep dive into CNNs, their architectures, and applications.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture08/ml2_week08.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -277,7 +292,7 @@
                     <a href="ml2/lecture09/index.html" class="button">9. From Supervised to Generative Learning</a>
                     <p class="description">Exploring the transition from supervised learning to generative models.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture09/ml2_week09.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/drive/1P6ynRBU_O2sJpYLIbjnjEjVk42C0-_NP?usp=sharing" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -287,7 +302,7 @@
                     <a href="ml2/lecture10/index.html" class="button">10. Introduction to Large Language Models</a>
                     <p class="description">Understanding the fundamentals of LLMs and their capabilities.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture10/ml2_week10.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -297,7 +312,7 @@
                     <a href="ml2/lecture11/index.html" class="button">11. Practical LLM Integration & API Development</a>
                     <p class="description">Learn to integrate and develop with LLM APIs effectively.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture11/ml2_week11.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -307,7 +322,7 @@
                     <a href="ml2/lecture12/index.html" class="button">12. Retrieval Augmented Generation (RAG)</a>
                     <p class="description">Deep dive into RAG architecture and implementation.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture12/ml2_week12.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -317,7 +332,7 @@
                     <a href="ml2/lecture13/index.html" class="button">13. Evaluating LLMs - Metrics and Methods</a>
                     <p class="description">Learn comprehensive approaches to evaluating LLM performance.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture13/ml2_week13.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -327,7 +342,7 @@
                     <a href="ml2/lecture14/index.html" class="button">14. LLMs as Decision Makers and Agents</a>
                     <p class="description">Explore how LLMs can be used for decision-making and autonomous tasks.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture14/ml2_week14.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -337,7 +352,7 @@
                     <a href="ml2/lecture15/index.html" class="button">15. Future Trends in LLMs</a>
                     <p class="description">Looking ahead at emerging developments in LLM technology.</p>
                     <div class="resources">
-                        <a href="#" class="textbook-button" target="_blank">Videos</a>
+                        <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture15/ml2_week15.pdf" class="textbook-button">Textbook</a>
                         <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
                     </div>

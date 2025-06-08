@@ -25,5 +25,4 @@ build/
 Thumbs.db
 
 # Project specific
-output/
-*.pdf 
+# Removing output/ and *.pdf to allow them in the repository 
