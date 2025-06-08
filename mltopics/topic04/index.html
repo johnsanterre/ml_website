@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reinforcement Learning - ML Topics</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+
+        <div class="content-box">
+            <h1>Reinforcement Learning</h1>
+
+            <section>
+                <h2>Overview</h2>
+                <p>Reinforcement Learning (RL) is a type of machine learning where agents learn to make decisions by interacting with an environment. Through trial and error, agents learn to take actions that maximize cumulative rewards over time.</p>
+            </section>
+
+            <section>
+                <h2>Fundamental Concepts</h2>
+                <ul>
+                    <li>Core Components
+                        <ul>
+                            <li>Agents and Environments</li>
+                            <li>States and Actions</li>
+                            <li>Rewards and Returns</li>
+                            <li>Policies and Value Functions</li>
+                        </ul>
+                    </li>
+                    <li>Key Frameworks
+                        <ul>
+                            <li>Markov Decision Processes (MDPs)</li>
+                            <li>Partially Observable MDPs</li>
+                            <li>Multi-agent Systems</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Classical Algorithms</h2>
+                <ul>
+                    <li>Value-Based Methods
+                        <ul>
+                            <li>Q-Learning</li>
+                            <li>SARSA</li>
+                            <li>TD-Learning</li>
+                        </ul>
+                    </li>
+                    <li>Policy-Based Methods
+                        <ul>
+                            <li>Policy Gradients</li>
+                            <li>Actor-Critic Methods</li>
+                            <li>REINFORCE Algorithm</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Deep Reinforcement Learning</h2>
+                <ul>
+                    <li>Modern Architectures
+                        <ul>
+                            <li>Deep Q-Networks (DQN)</li>
+                            <li>Proximal Policy Optimization (PPO)</li>
+                            <li>Soft Actor-Critic (SAC)</li>
+                        </ul>
+                    </li>
+                    <li>Advanced Concepts
+                        <ul>
+                            <li>Experience Replay</li>
+                            <li>Exploration vs. Exploitation</li>
+                            <li>Curriculum Learning</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Applications</h2>
+                <ul>
+                    <li>Game Playing
+                        <ul>
+                            <li>AlphaGo and AlphaZero</li>
+                            <li>Atari Games</li>
+                            <li>Real-time Strategy Games</li>
+                        </ul>
+                    </li>
+                    <li>Robotics
+                        <ul>
+                            <li>Robot Navigation</li>
+                            <li>Manipulation Tasks</li>
+                            <li>Autonomous Systems</li>
+                        </ul>
+                    </li>
+                    <li>Real-World Applications
+                        <ul>
+                            <li>Resource Management</li>
+                            <li>Recommendation Systems</li>
+                            <li>Trading Strategies</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Core Resources</h2>
+                <ul>
+                    <li><a href="https://www.alexirpan.com/2018/02/14/rl-hard.html" target="_blank">Deep Reinforcement Learning Doesn't Work Yet</a> - A comprehensive analysis of deep RL's challenges and limitations</li>
+                </ul>
+
+                <h2>Research Papers</h2>
+                <ul>
+                    <li><a href="https://iclr.cc/virtual_2020/poster_SJeD3CEFPH.html" target="_blank">Meta-Q-Learning</a> - Novel off-policy algorithm for meta-Reinforcement Learning, introducing efficient methods for multi-task RL and policy adaptation</li>
+                </ul>
+
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand the fundamental principles of reinforcement learning</li>
+                    <li>Master Q-learning and policy gradient methods</li>
+                    <li>Learn meta-learning approaches in RL</li>
+                    <li>Apply RL algorithms to real-world problems</li>
+                </ul>
+
+                <h2>Practical Examples</h2>
+                <ul>
+                    <li>CartPole balancing implementation</li>
+                    <li>Grid world navigation</li>
+                    <li>Custom environment creation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

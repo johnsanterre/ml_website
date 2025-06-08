@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVD: Theory & Applications - ML Topics</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .math {
+            font-family: "Computer Modern", serif;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+
+        <div class="content-box">
+            <h1>SVD: Theory & Applications</h1>
+
+            <section>
+                <h2>Overview</h2>
+                <p>Singular Value Decomposition (SVD) is a fundamental matrix factorization method with widespread applications in machine learning, data compression, and dimensionality reduction. This topic explores both the mathematical foundations and practical applications of SVD.</p>
+            </section>
+
+            <section>
+                <h2>Mathematical Foundations</h2>
+                <ul>
+                    <li>Matrix Decomposition
+                        <ul>
+                            <li>Factorization into U, Σ, and V<sup>T</sup></li>
+                            <li>Properties of singular values and vectors</li>
+                            <li>Relationship to eigendecomposition</li>
+                        </ul>
+                    </li>
+                    <li>Theoretical Aspects
+                        <ul>
+                            <li>Existence and uniqueness</li>
+                            <li>Geometric interpretation</li>
+                            <li>Connection to principal components</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Applications in Machine Learning</h2>
+                <ul>
+                    <li>Dimensionality Reduction
+                        <ul>
+                            <li>Low-rank approximations</li>
+                            <li>Feature extraction</li>
+                            <li>Data compression</li>
+                        </ul>
+                    </li>
+                    <li>Recommendation Systems
+                        <ul>
+                            <li>Matrix factorization for collaborative filtering</li>
+                            <li>Latent factor models</li>
+                            <li>Cold start problem solutions</li>
+                        </ul>
+                    </li>
+                    <li>Image Processing
+                        <ul>
+                            <li>Image compression</li>
+                            <li>Noise reduction</li>
+                            <li>Face recognition</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Implementation Considerations</h2>
+                <ul>
+                    <li>Computational Methods
+                        <ul>
+                            <li>Full SVD vs. truncated SVD</li>
+                            <li>Randomized algorithms</li>
+                            <li>Numerical stability</li>
+                        </ul>
+                    </li>
+                    <li>Scalability
+                        <ul>
+                            <li>Large-scale implementations</li>
+                            <li>Distributed computing approaches</li>
+                            <li>Memory-efficient methods</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="resources">
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Master the mathematical foundations of SVD</li>
+                    <li>Understand key applications in machine learning</li>
+                    <li>Implement SVD-based solutions efficiently</li>
+                    <li>Apply SVD to real-world problems</li>
+                </ul>
+
+                <h2>Practical Examples</h2>
+                <ul>
+                    <li>Image compression demonstration</li>
+                    <li>Recommendation system implementation</li>
+                    <li>Dimensionality reduction case study</li>
+                </ul>
+
+                <h2>Additional Resources</h2>
+                <ul>
+                    <li><a href="https://jeremykun.com/2016/04/18/singular-value-decomposition-part-1-perspectives-on-linear-algebra/" target="_blank">Perspectives on Linear Algebra: SVD Part 1</a> - An excellent intuitive explanation of SVD's mathematical foundations and practical implications</li>
+                    <li>Interactive Colab notebooks (coming soon)</li>
+                    <li>Implementation guides</li>
+                    <li>Further reading materials</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
