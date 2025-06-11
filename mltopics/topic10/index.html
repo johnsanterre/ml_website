@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Examples - ML Topics</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.8em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .dataset-entry {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .dataset-title {
+            font-size: 1.2em;
+            color: #ff9900;
+            margin-bottom: 10px;
+        }
+
+        .dataset-description {
+            margin-bottom: 15px;
+            color: #cccccc;
+        }
+
+        .notebook-link {
+            color: #4a9eff;
+            text-decoration: underline;
+        }
+
+        .notebook-link:hover {
+            color: #7cb8ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+
+        <div class="content-box">
+            <h1>Applied Examples</h1>
+
+            <section>
+                <h2>Overview</h2>
+                <p>This section provides hands-on examples using real-world datasets. Each example includes a detailed notebook demonstrating data analysis, model development, and evaluation techniques.</p>
+            </section>
+
+            <section>
+                <h2>Available Datasets</h2>
+
+                <div class="dataset-entry">
+                    <div class="dataset-title">UCI Wine Quality Dataset</div>
+                    <div class="dataset-description">
+                        A dataset related to red and white variants of Portuguese "Vinho Verde" wine. The dataset includes various physicochemical properties and quality ratings, making it perfect for regression and classification tasks.
+                        <ul>
+                            <li>Input variables: fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulphates, alcohol</li>
+                            <li>Output variable: quality (score between 0 and 10)</li>
+                            <li>Number of instances: 4,898 (1,599 red wines, 3,299 white wines)</li>
+                        </ul>
+                    </div>
+                    <a href="https://colab.research.google.com/drive/1TauP465AXs7Ai9MtjNmdHhZyx2h2ArWF?usp=sharing" class="notebook-link" target="_blank">View Notebook →</a>
+                </div>
+
+                <div class="dataset-entry">
+                    <div class="dataset-title">Dimensionality Reduction and Clustering</div>
+                    <div class="dataset-description">
+                        An interactive exploration of dimensionality reduction techniques (t-SNE and PCA) for data visualization and clustering. This example demonstrates:
+                        <ul>
+                            <li>Applying PCA and t-SNE for dimensionality reduction</li>
+                            <li>Visualizing high-dimensional data in 2D and 3D</li>
+                            <li>Comparing different clustering approaches</li>
+                            <li>Interactive parameter tuning and analysis</li>
+                        </ul>
+                    </div>
+                    <a href="https://colab.research.google.com/drive/1BzDyzIIhuk7gP27deSccHrZsONKrnJ0Y?usp=sharing" class="notebook-link" target="_blank">View Notebook →</a>
+                </div>
+
+                <div class="dataset-entry">
+                    <h3>Movie Descriptions TFIDF Analysis</h3>
+                    <p>This dataset demonstrates the application of TF-IDF (Term Frequency-Inverse Document Frequency) on movie descriptions, showing how to:</p>
+                    <ul>
+                        <li>Process and clean text data from movie descriptions</li>
+                        <li>Implement and apply TF-IDF vectorization</li>
+                        <li>Analyze similarity between movies based on their descriptions</li>
+                        <li>Visualize relationships between movies using TF-IDF features</li>
+                    </ul>
+                    <p>Explore the implementation in this <a href="https://colab.research.google.com/drive/1BzDyzIIhuk7gP27deSccHrZsONKrnJ0Y?usp=sharing" target="_blank">Colab notebook →</a></p>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html> 
