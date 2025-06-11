@@ -115,6 +115,22 @@
             background: #ffb84d;
         }
 
+        .colab-button-disabled {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #666666;
+            color: #999999;
+            text-decoration: line-through;
+            text-decoration-thickness: 2px;
+            text-decoration-color: #ff0000;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
         .top-resources {
             display: flex;
             gap: 10px;
@@ -129,7 +145,7 @@
         <div class="top-resources">
             <a href="#" class="textbook-button" target="_blank">Videos</a>
             <a href="output/ml2/lecture07/ml2_week07.pdf" class="textbook-button">Textbook</a>
-            <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+            <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
         </div>
 
         <div class="content-box">
@@ -235,7 +251,7 @@
                 <div style="margin-top: 20px;">
                     <a href="#" class="textbook-button" target="_blank">Videos</a>
                     <a href="output/ml2/lecture07/ml2_week07.pdf" class="textbook-button">Textbook</a>
-                    <a href="https://colab.research.google.com/" class="textbook-button" target="_blank">Colab</a>
+                    <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
                 </div>
 
                 <h2>Additional Resources</h2>
