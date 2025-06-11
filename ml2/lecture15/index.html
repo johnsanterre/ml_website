@@ -1,141 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Week 15: Future Directions and Emerging Trends in LLMs</title>
-  <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f9f9fb; color: #222; }
-    .container { max-width: 800px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 40px 32px; }
-    h1 { color: #2a4d7a; margin-top: 0; }
-    h2 { color: #3a6ea5; margin-top: 2em; }
-    h3 { color: #4a90e2; margin-top: 1.5em; }
-    ul, ol { margin-left: 1.5em; }
-    li { margin-bottom: 0.4em; }
-    .section { margin-bottom: 2em; }
-    .resources, .assessment { background: #f1f6fa; border-radius: 6px; padding: 1em 1.5em; margin-top: 1.5em; }
-    .resources ul, .assessment ul { margin-left: 1em; }
-    .practical { background: #f8f6f1; border-radius: 6px; padding: 1em 1.5em; margin-top: 1.5em; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Trends in LLMs - ML2</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-box {
+            background: #0f0f0f;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 0.3em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #ffb84d;
+        }
+
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+
+        li {
+            margin: 0.5em 0;
+        }
+
+        ul ul {
+            margin: 0.2em 0;
+        }
+
+        a {
+            color: #ff9900;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffb84d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: none;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff9900;
+            color: #000000;
+        }
+
+        .resources {
+            background: #1f1f1f;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 2em;
+        }
+
+        .resources h2 {
+            margin-top: 0;
+        }
+
+        .textbook-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff9900;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .textbook-button:hover {
+            background: #ffb84d;
+        }
+
+        .video-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #666666;
+            color: #999999;
+            text-decoration: line-through;
+            text-decoration-thickness: 2px;
+            text-decoration-color: #ff0000;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .colab-button-disabled {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #666666;
+            color: #999999;
+            text-decoration: line-through;
+            text-decoration-thickness: 2px;
+            text-decoration-color: #ff0000;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>WEEK 15: FUTURE DIRECTIONS AND EMERGING TRENDS IN LLMs</h1>
+    <div class="container">
+        <a href="../../index.html" class="back-button">← Back to Course List</a>
+        
+        <div class="top-resources">
+            <a href="#" class="video-button" target="_blank">Videos</a>
+            <a href="../../output/ml2/lecture15/ml2_week15.pdf" class="textbook-button">Textbook</a>
+            <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
+        </div>
 
-    <div class="section">
-      <h2>Overview</h2>
-      <p>This final week explores emerging trends, research directions, and future applications of LLMs, while synthesizing key concepts from the entire course sequence.</p>
-    </div>
+        <div class="content-box">
+            <h1>Week 15: Future Trends in LLMs</h1>
 
-    <div class="section">
-      <h2>Learning Objectives</h2>
-      <ul>
-        <li>Understand current research frontiers</li>
-        <li>Identify emerging applications</li>
-        <li>Evaluate future challenges</li>
-        <li>Synthesize course concepts</li>
-        <li>Develop forward-looking perspectives</li>
-      </ul>
-    </div>
+            <section>
+                <h2>Overview</h2>
+                <p>This final week explores emerging trends, research directions, and future applications of LLMs, while synthesizing key concepts from the entire course sequence.</p>
+            </section>
 
-    <div class="section">
-      <h2>Topics Covered</h2>
-      <h3>1. Emerging Research Directions</h3>
-      <ul>
-        <li>Model Architecture Evolution
-          <ul>
-            <li>Sparse models</li>
-            <li>Mixture of experts</li>
-            <li>Memory-augmented systems</li>
-            <li>Multimodal architectures</li>
-          </ul>
-        </li>
-        <li>Training Innovations
-          <ul>
-            <li>Constitutional training</li>
-            <li>Reward modeling</li>
-            <li>Efficient fine-tuning</li>
-            <li>Few-shot learning advances</li>
-          </ul>
-        </li>
-      </ul>
-      <h3>2. Future Applications</h3>
-      <ul>
-        <li>Cross-Modal Systems
-          <ul>
-            <li>Vision-language models</li>
-            <li>Audio-text integration</li>
-            <li>Multimodal reasoning</li>
-            <li>Unified representations</li>
-          </ul>
-        </li>
-        <li>Specialized Domains
-          <ul>
-            <li>Scientific discovery</li>
-            <li>Code generation</li>
-            <li>Mathematical reasoning</li>
-            <li>Creative applications</li>
-          </ul>
-        </li>
-      </ul>
-      <h3>3. Challenges and Opportunities</h3>
-      <ul>
-        <li>Technical Frontiers
-          <ul>
-            <li>Model efficiency</li>
-            <li>Reasoning capabilities</li>
-            <li>Knowledge integration</li>
-            <li>Architectural scaling</li>
-          </ul>
-        </li>
-        <li>Ethical Considerations
-          <ul>
-            <li>AI governance</li>
-            <li>Responsible deployment</li>
-            <li>Societal impact</li>
-            <li>Safety frameworks</li>
-          </ul>
-        </li>
-      </ul>
-      <h3>4. Integration and Synthesis</h3>
-      <ul>
-        <li>Course Connections
-          <ul>
-            <li>From ML basics to LLMs</li>
-            <li>Evolution of techniques</li>
-            <li>Unified perspectives</li>
-            <li>Future learning paths</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+            <section>
+                <h2>Learning Objectives</h2>
+                <ul>
+                    <li>Understand current research frontiers</li>
+                    <li>Identify emerging applications</li>
+                    <li>Evaluate future challenges</li>
+                    <li>Synthesize course concepts</li>
+                    <li>Develop forward-looking perspectives</li>
+                </ul>
+            </section>
 
-    <div class="resources section">
-      <h2>Required Reading</h2>
-      <ul>
-        <li>"Language Models: Past, Present, and Future"</li>
-        <li>Recent papers from leading AI conferences</li>
-      </ul>
-    </div>
+            <section>
+                <h2>Topics Covered</h2>
+                
+                <h3>1. Emerging Research Directions</h3>
+                <ul>
+                    <li>Model Architecture Evolution
+                        <ul>
+                            <li>Sparse models</li>
+                            <li>Mixture of experts</li>
+                            <li>Memory-augmented systems</li>
+                            <li>Multimodal architectures</li>
+                        </ul>
+                    </li>
+                    <li>Training Innovations
+                        <ul>
+                            <li>Constitutional training</li>
+                            <li>Reward modeling</li>
+                            <li>Efficient fine-tuning</li>
+                            <li>Few-shot learning advances</li>
+                        </ul>
+                    </li>
+                </ul>
 
-    <div class="practical section">
-      <h2>Practical Exercises</h2>
-      <ol>
-        <li>Design future LLM application</li>
-        <li>Analyze emerging techniques</li>
-        <li>Evaluate potential impacts</li>
-        <li>Create research proposal</li>
-      </ol>
-    </div>
+                <h3>2. Future Applications</h3>
+                <ul>
+                    <li>Cross-Modal Systems
+                        <ul>
+                            <li>Vision-language models</li>
+                            <li>Audio-text integration</li>
+                            <li>Multimodal reasoning</li>
+                            <li>Unified representations</li>
+                        </ul>
+                    </li>
+                    <li>Specialized Domains
+                        <ul>
+                            <li>Scientific discovery</li>
+                            <li>Code generation</li>
+                            <li>Mathematical reasoning</li>
+                            <li>Creative applications</li>
+                        </ul>
+                    </li>
+                </ul>
 
-    <div class="assessment section">
-      <h2>Assessment</h2>
-      <ul>
-        <li>Future applications design (40%)</li>
-        <li>Technical analysis (30%)</li>
-        <li>Impact assessment (30%)</li>
-      </ul>
+                <h3>3. Challenges and Opportunities</h3>
+                <ul>
+                    <li>Technical Frontiers
+                        <ul>
+                            <li>Model efficiency</li>
+                            <li>Reasoning capabilities</li>
+                            <li>Knowledge integration</li>
+                            <li>Architectural scaling</li>
+                        </ul>
+                    </li>
+                    <li>Ethical Considerations
+                        <ul>
+                            <li>AI governance</li>
+                            <li>Responsible deployment</li>
+                            <li>Societal impact</li>
+                            <li>Safety frameworks</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>4. Integration and Synthesis</h3>
+                <ul>
+                    <li>Course Connections
+                        <ul>
+                            <li>From ML basics to LLMs</li>
+                            <li>Evolution of techniques</li>
+                            <li>Unified perspectives</li>
+                            <li>Future learning paths</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="resources">
+                <h2>Required Reading</h2>
+                <ul>
+                    <li>"Language Models: Past, Present, and Future"</li>
+                    <li>Recent papers from leading AI conferences</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Practical Exercises</h2>
+                <ol>
+                    <li>Design future LLM application</li>
+                    <li>Analyze emerging techniques</li>
+                    <li>Evaluate potential impacts</li>
+                    <li>Create research proposal</li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Assessment</h2>
+                <ul>
+                    <li>Future applications design (40%)</li>
+                    <li>Technical analysis (30%)</li>
+                    <li>Impact assessment (30%)</li>
+                </ul>
+            </section>
+        </div>
     </div>
-  </div>
 </body>
 </html> 
