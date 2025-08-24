@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CART Algorithm - Decision Trees</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .slide {
+            display: none;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .slide.active {
+            display: block;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .progress {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .example {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .visualization {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+            background-color: #f8f9fa;
+        }
+    </style>
+    <!-- MathJax Configuration -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide active" id="slide1">
+        <h1>CART Algorithm</h1>
+        <h2>Classification and Regression Trees</h2>
+        <p>A fundamental algorithm for decision tree learning</p>
+        <div class="example">
+            <strong>Key Idea:</strong> Recursive binary partitioning of feature space to create decision rules
+        </div>
+        <p><strong>What is binary partitioning?</strong> Think of it as repeatedly dividing your data into two groups:</p>
+        <ul>
+            <li>"Binary" means we always split into exactly two parts (e.g., "Age > 30" and "Age ≤ 30")</li>
+            <li>"Partitioning" means dividing the data based on features (like age, income, etc.)</li>
+            <li>"Recursive" means we keep dividing each group further until we're done</li>
+        </ul>
+        <p>Imagine sorting people into rooms by asking yes/no questions - that's what CART does with data!</p>
+    </div>
+
+    <!-- Slide 2: Introduction to CART -->
+    <div class="slide" id="slide2">
+        <h1>Introduction to CART</h1>
+        <h2>Classification and Regression Trees</h2>
+        <ul>
+            <li><strong>What is CART?</strong> A decision tree algorithm that can be used for both classification and regression tasks</li>
+            <li><strong>Key Idea:</strong> Recursive binary partitioning of feature space</li>
+            <li><strong>Two Types:</strong>
+                <ul>
+                    <li>Classification trees (categorical outcomes)</li>
+                    <li>Regression trees (continuous outcomes)</li>
+                </ul>
+            </li>
+            <li><strong>Advantages:</strong>
+                <ul>
+                    <li>Interpretable models</li>
+                    <li>Handles mixed data types</li>
+                    <li>No assumptions about data distribution</li>
+                    <li>Automatically handles feature interactions</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Slide 3: Binary Splitting Mechanism -->
+    <div class="slide" id="slide3">
+        <h1>Binary Splitting Mechanism</h1>
+        <h2>How CART Builds Trees</h2>
+        <ul>
+            <li><strong>Recursive Partitioning:</strong> Start with all data, split into two subsets</li>
+            <li><strong>Split Criteria:</strong> Find the best feature and threshold that maximizes information gain</li>
+            <li><strong>Mathematical Form:</strong> $x_j \leq t$ vs $x_j > t$ for feature $j$ and threshold $t$</li>
+            <li><strong>Stopping Conditions:</strong>
+                <ul>
+                    <li>Maximum depth reached</li>
+                    <li>Minimum samples per leaf</li>
+                    <li>Minimum impurity decrease</li>
+                </ul>
+            </li>
+        </ul>
+        <div id="binary-split-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 4: Tree Structure -->
+    <div class="slide" id="slide4">
+        <h1>Tree Structure</h1>
+        <h2>Anatomy of a Decision Tree</h2>
+        <ul>
+            <li><strong>Root Node:</strong> Contains all training samples</li>
+            <li><strong>Internal Nodes:</strong> Decision points based on feature values</li>
+            <li><strong>Leaf Nodes:</strong> Final predictions
+                <ul>
+                    <li>Classification: Class probabilities or majority class</li>
+                    <li>Regression: Mean value of samples in the leaf</li>
+                </ul>
+            </li>
+            <li><strong>Decision Path:</strong> Root → Internal Nodes → Leaf</li>
+        </ul>
+        <div id="tree-structure-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 5: Impurity Measures for Classification -->
+    <div class="slide" id="slide5">
+        <h1>Impurity Measures</h1>
+        <h2>Classification Trees</h2>
+        <p>Two common impurity measures for classification tasks:</p>
+        <div class="example">
+            <strong>Gini Impurity:</strong> $$G = 1 - \sum_{i=1}^{c} p_i^2$$
+            <p>Where $p_i$ is the proportion of class $i$ in the node</p>
+        </div>
+        <div class="example">
+            <strong>Entropy:</strong> $$H = -\sum_{i=1}^{c} p_i \log_2(p_i)$$
+            <p>Where $p_i$ is the proportion of class $i$ in the node</p>
+        </div>
+        <p><strong>Goal:</strong> Minimize impurity in child nodes after splitting</p>
+        <div id="impurity-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 6: Impurity Measures for Regression -->
+    <div class="slide" id="slide6">
+        <h1>Impurity Measures</h1>
+        <h2>Regression Trees</h2>
+        <p>For regression tasks, we use variance-based measures:</p>
+        <div class="example">
+            <strong>Mean Squared Error (MSE):</strong> $$\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \bar{y})^2$$
+            <p>Where $y_i$ are the target values and $\bar{y}$ is their mean</p>
+        </div>
+        <p><strong>Alternative measures:</strong></p>
+        <ul>
+            <li>Mean Absolute Error (MAE)</li>
+            <li>Friedman's Mean Squared Error</li>
+            <li>Poisson deviance (for count data)</li>
+        </ul>
+        <div id="regression-impurity-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 7: Information Gain -->
+    <div class="slide" id="slide7">
+        <h1>Information Gain</h1>
+        <h2>Evaluating Split Quality</h2>
+        <div class="example">
+            <strong>Information Gain:</strong> $$\text{IG} = \text{Impurity(parent)} - \sum_{j=1}^{k} \frac{n_j}{n} \text{Impurity(child}_j)$$
+            <p>Where $n_j$ is the number of samples in child $j$</p>
+        </div>
+        <p><strong>Split Selection:</strong></p>
+        <ul>
+            <li>Evaluate all possible feature-threshold combinations</li>
+            <li>Choose the split with maximum information gain</li>
+            <li>Computational complexity: $O(n \cdot m \cdot \log n)$ for $n$ samples and $m$ features</li>
+        </ul>
+        <div id="information-gain-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 8: Algorithm Implementation -->
+    <div class="slide" id="slide8">
+        <h1>Algorithm Implementation</h1>
+        <h2>CART in Practice</h2>
+        <ol>
+            <li> Calculate impurity for current node</li>
+            <li> For each feature, find optimal split threshold</li>
+            <li> Select split with maximum information gain</li>
+            <li> Create child nodes and recurse</li>
+            <li> Assign predictions to leaf nodes</li>
+        </ol>
+        <div class="example">
+                        <strong>Pseudocode:</strong><br>
+                <code>
+                    function BuildTree(data, depth):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if StoppingCriteriaMet(data, depth):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return LeafNode(data)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;bestFeature, bestThreshold = FindBestSplit(data)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;leftData, rightData = SplitData(data, bestFeature, bestThreshold)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;leftChild = BuildTree(leftData, depth+1)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;rightChild = BuildTree(rightData, depth+1)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return Node(bestFeature, bestThreshold, leftChild, rightChild)<br>
+                </code>
+                <br>
+                <code>
+                    # Node function creates a decision node in the tree<br>
+                    # function Node(feature, threshold, leftChild, rightChild):<br>
+                    #     return {'feature': feature, 'threshold': threshold,<br>
+                    #             'left': leftChild, 'right': rightChild, 'isLeaf': false}
+                </code>
+        </div>
+    </div>
+
+    <!-- Slide 9: Practical Example - Classification -->
+    <div class="slide" id="slide9">
+        <h1>Practical Example</h1>
+        <h2>Classification Problem</h2>
+        <p>Let's see how CART partitions a 2D feature space for classification:</p>
+        <div id="classification-example-viz" class="visualization"></div>
+        <div class="example">
+            <strong>Decision Boundaries:</strong> Notice how CART creates axis-parallel decision boundaries, resulting in a rectangular partition of the feature space.
+        </div>
+    </div>
+
+    <!-- Slide 10: Practical Example - Decision Path -->
+    <div class="slide" id="slide10">
+        <h1>Decision Path</h1>
+        <h2>Following a Sample Through the Tree</h2>
+        <div id="decision-path-viz" class="visualization"></div>
+        <div class="example">
+            <strong>Interpretation:</strong> Each decision path forms a rule that can be easily understood and explained:
+            <br><code>IF age > 30 AND income <= 50K AND education_years > 12 THEN class = 1</code>
+        </div>
+    </div>
+
+    <!-- Slide 11: Practical Considerations -->
+    <div class="slide" id="slide11">
+        <h1>Practical Considerations</h1>
+        <h2>Working with CART</h2>
+        <ul>
+            <li><strong>Feature Scaling:</strong> Not required (invariant to monotonic transformations)</li>
+            <li><strong>Missing Values:</strong> Handled through surrogate splits</li>
+            <li><strong>Computational Efficiency:</strong> $O(n \log n)$ per split</li>
+            <li><strong>Memory Efficiency:</strong> Scales well for large datasets</li>
+            <li><strong>Overfitting:</strong> Control through:
+                <ul>
+                    <li>Maximum depth</li>
+                    <li>Minimum samples per leaf</li>
+                    <li>Pruning techniques</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Slide 12: Pruning -->
+    <div class="slide" id="slide12">
+        <h1>Pruning</h1>
+        <h2>Controlling Complexity</h2>
+        <p><strong>Cost-Complexity Pruning (Minimal Cost-Complexity Pruning):</strong></p>
+        <div class="example">
+            $$R_\alpha(T) = R(T) + \alpha \cdot |T|$$
+            <p>Where $R(T)$ is the error of tree $T$, $|T|$ is the number of leaf nodes, and $\alpha$ is the complexity parameter</p>
+        </div>
+        <ul>
+            <li><strong>Pre-pruning:</strong> Stop growing the tree early</li>
+            <li><strong>Post-pruning:</strong> Grow a full tree, then prune back</li>
+            <li><strong>Reduced Error Pruning:</strong> Use validation set to evaluate pruning candidates</li>
+        </ul>
+        <div id="pruning-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 13: Key Takeaways -->
+    <div class="slide" id="slide13">
+        <h1>Key Takeaways</h1>
+        <h2>CART Algorithm</h2>
+        <ul>
+            <li>CART uses recursive binary splitting to partition feature space</li>
+            <li>Impurity measures guide optimal split selection:
+                <ul>
+                    <li>Gini impurity or entropy for classification</li>
+                    <li>MSE for regression</li>
+                </ul>
+            </li>
+            <li>Information gain quantifies the quality of splits</li>
+            <li>Trees provide interpretable decision rules</li>
+            <li>Stopping criteria and pruning prevent overfitting</li>
+            <li>CART forms the foundation for advanced ensemble methods (Random Forests, Gradient Boosting)</li>
+        </ul>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button onclick="prevSlide()">Previous</button>
+        <div class="progress">Slide <span id="current">1</span> of <span id="total">13</span></div>
+        <button onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 13;  // Updated with total number of slides
+
+        function showSlide(n) {
+            console.log('Showing slide', n);
+            // Hide all slides
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show the current slide
+            document.getElementById('slide' + n).classList.add('active');
+            document.getElementById('current').textContent = n;
+            
+            // Initialize visualizations for the current slide if needed
+            console.log('Initializing visualization for slide', n);
+            
+            // Add a slight delay to ensure the slide is visible before initializing visualization
+            setTimeout(() => {
+                initializeVisualizationForSlide(n);
+            }, 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+        
+        // Initialize all visualizations when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM content loaded');
+            // Wait for MathJax to finish rendering
+            setTimeout(() => {
+                initializeAllVisualizations();
+            }, 1000);
+            
+            // Ensure the current slide's visualization is initialized
+            setTimeout(() => {
+                console.log('Initializing visualization for current slide:', currentSlide);
+                initializeVisualizationForSlide(currentSlide);
+            }, 1500);
+        });
+        
+        function initializeAllVisualizations() {
+            try {
+                console.log('Initializing all visualizations...');
+                initBinarySplitViz();
+                initTreeStructureViz();
+                initImpurityViz();
+                initRegressionImpurityViz();
+                initInformationGainViz();
+                initClassificationExampleViz();
+                initDecisionPathViz();
+                initPruningViz();
+                console.log('All visualizations initialized');
+            } catch (error) {
+                console.error('Error initializing visualizations:', error);
+            }
+        }
+        
+        // Binary Split Visualization
+        function initBinarySplitViz() {
+            console.log('Initializing binary split visualization');
+            const container = d3.select('#binary-split-viz');
+            console.log('Container found:', !container.empty());
+            if (!container.empty()) {
+                container.html(''); // Clear previous content
+                
+                // Set up SVG
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Create scales
+                const xScale = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range([innerHeight, 0]);
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale))
+                    .append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 35)
+                    .attr('fill', 'black')
+                    .text('Feature X');
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale))
+                    .append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -35)
+                    .attr('x', -innerHeight / 2)
+                    .attr('fill', 'black')
+                    .attr('text-anchor', 'middle')
+                    .text('Feature Y');
+                
+                // Generate sample data
+                const classA = [];
+                const classB = [];
+                
+                // Class A: mostly in top-right and bottom-left
+                for (let i = 0; i < 30; i++) {
+                    if (Math.random() < 0.7) {
+                        // Top-right cluster
+                        classA.push({
+                            x: 6 + Math.random() * 3,
+                            y: 6 + Math.random() * 3
+                        });
+                    } else {
+                        // Bottom-left cluster
+                        classA.push({
+                            x: 1 + Math.random() * 3,
+                            y: 1 + Math.random() * 3
+                        });
+                    }
+                }
+                
+                // Class B: mostly in top-left and bottom-right
+                for (let i = 0; i < 30; i++) {
+                    if (Math.random() < 0.7) {
+                        // Top-left cluster
+                        classB.push({
+                            x: 1 + Math.random() * 3,
+                            y: 6 + Math.random() * 3
+                        });
+                    } else {
+                        // Bottom-right cluster
+                        classB.push({
+                            x: 6 + Math.random() * 3,
+                            y: 1 + Math.random() * 3
+                        });
+                    }
+                }
+                
+                // Draw data points
+                g.selectAll('.point-a')
+                    .data(classA)
+                    .enter()
+                    .append('circle')
+                    .attr('class', 'point-a')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 4)
+                    .attr('fill', '#3498db');
+                
+                g.selectAll('.point-b')
+                    .data(classB)
+                    .enter()
+                    .append('circle')
+                    .attr('class', 'point-b')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 4)
+                    .attr('fill', '#e74c3c');
+                
+                // First split - vertical line at x = 5
+                g.append('line')
+                    .attr('x1', xScale(5))
+                    .attr('y1', 0)
+                    .attr('x2', xScale(5))
+                    .attr('y2', innerHeight)
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+                
+                g.append('text')
+                    .attr('x', xScale(5) + 5)
+                    .attr('y', 15)
+                    .attr('text-anchor', 'start')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('X ≤ 5');
+                
+                // Second split - horizontal line at y = 5 in the left region
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', yScale(5))
+                    .attr('x2', xScale(5))
+                    .attr('y2', yScale(5))
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+                
+                g.append('text')
+                    .attr('x', xScale(2.5))
+                    .attr('y', yScale(5) - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Y ≤ 5');
+                
+                // Legend
+                const legend = svg.append('g')
+                    .attr('transform', `translate(${width - 100}, 20)`);
+                
+                legend.append('circle')
+                    .attr('cx', 0)
+                    .attr('cy', 0)
+                    .attr('r', 5)
+                    .attr('fill', '#3498db');
+                
+                legend.append('text')
+                    .attr('x', 12)
+                    .attr('y', 4)
+                    .attr('font-size', '12px')
+                    .text('Class A');
+                
+                legend.append('circle')
+                    .attr('cx', 0)
+                    .attr('cy', 20)
+                    .attr('r', 5)
+                    .attr('fill', '#e74c3c');
+                
+                legend.append('text')
+                    .attr('x', 12)
+                    .attr('y', 24)
+                    .attr('font-size', '12px')
+                    .text('Class B');
+            }
+        }
+        
+        // Placeholder functions for other visualizations
+        function initTreeStructureViz() {
+            console.log('Initializing tree structure visualization');
+            const container = d3.select('#tree-structure-viz');
+            console.log('Container found:', !container.empty());
+            if (!container.empty()) {
+                container.html(''); // Clear previous content
+                
+                // Set up SVG
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Tree structure data
+                const treeData = {
+                    name: "Root Node",
+                    attribute: "X ≤ 5",
+                    children: [
+                        {
+                            name: "Internal Node",
+                            attribute: "Y ≤ 5",
+                            children: [
+                                {
+                                    name: "Leaf Node",
+                                    value: "Class B",
+                                    color: "#e74c3c"
+                                },
+                                {
+                                    name: "Leaf Node",
+                                    value: "Class A",
+                                    color: "#3498db"
+                                }
+                            ]
+                        },
+                        {
+                            name: "Leaf Node",
+                            value: "Class C",
+                            color: "#2ecc71"
+                        }
+                    ]
+                };
+                
+                // Set up tree layout
+                const treeLayout = d3.tree()
+                    .size([innerWidth, innerHeight - 60]);
+                
+                // Convert data to hierarchy
+                const root = d3.hierarchy(treeData);
+                
+                // Compute the tree layout
+                treeLayout(root);
+                
+                // Draw links
+                g.selectAll('.link')
+                    .data(root.links())
+                    .enter()
+                    .append('path')
+                    .attr('class', 'link')
+                    .attr('d', d => {
+                        return `M${d.source.x},${d.source.y}
+                                C${d.source.x},${(d.source.y + d.target.y) / 2}
+                                 ${d.target.x},${(d.source.y + d.target.y) / 2}
+                                 ${d.target.x},${d.target.y}`;
+                    })
+                    .attr('fill', 'none')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 1.5);
+                
+                // Draw nodes
+                const nodes = g.selectAll('.node')
+                    .data(root.descendants())
+                    .enter()
+                    .append('g')
+                    .attr('class', d => `node ${d.children ? 'node-internal' : 'node-leaf'}`)
+                    .attr('transform', d => `translate(${d.x},${d.y})`);
+                
+                // Add node circles
+                nodes.append('circle')
+                    .attr('r', d => d.data.name === "Leaf Node" ? 30 : 40)
+                    .attr('fill', d => d.data.color || '#fff')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                // Add node labels
+                nodes.append('text')
+                    .attr('dy', '.35em')
+                    .attr('y', d => d.data.name === "Leaf Node" ? -12 : -15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .text(d => d.data.name);
+                
+                // Add attribute/value labels
+                nodes.append('text')
+                    .attr('dy', '.35em')
+                    .attr('y', d => d.data.name === "Leaf Node" ? 12 : 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', 'bold')
+                    .text(d => d.data.attribute || d.data.value || "");
+                
+                // Add legend
+                const legend = svg.append('g')
+                    .attr('transform', `translate(${width - 100}, 20)`);
+                
+                // Node types
+                legend.append('circle')
+                    .attr('cx', 0)
+                    .attr('cy', 0)
+                    .attr('r', 6)
+                    .attr('fill', '#fff')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                legend.append('text')
+                    .attr('x', 15)
+                    .attr('y', 4)
+                    .attr('font-size', '12px')
+                    .text('Decision Node');
+                
+                // Classes
+                const classes = [
+                    { name: 'Class A', color: '#3498db' },
+                    { name: 'Class B', color: '#e74c3c' },
+                    { name: 'Class C', color: '#2ecc71' }
+                ];
+                
+                classes.forEach((cls, i) => {
+                    legend.append('circle')
+                        .attr('cx', 0)
+                        .attr('cy', 25 + i * 20)
+                        .attr('r', 6)
+                        .attr('fill', cls.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1);
+                    
+                    legend.append('text')
+                        .attr('x', 15)
+                        .attr('y', 25 + i * 20 + 4)
+                        .attr('font-size', '12px')
+                        .text(cls.name);
+                });
+            }
+        }
+        
+        function initImpurityViz() {
+            console.log('Initializing impurity visualization');
+            const container = d3.select('#impurity-viz');
+            console.log('Container found:', !container.empty());
+            if (!container.empty()) {
+                container.html(''); // Clear previous content
+                
+                // Set up SVG
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Create scales
+                const xScale = d3.scaleLinear()
+                    .domain([0, 1])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 0.5])
+                    .range([innerHeight, 0]);
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale))
+                    .append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 35)
+                    .attr('fill', 'black')
+                    .attr('text-anchor', 'middle')
+                    .text('Class Probability (p)');
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale))
+                    .append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -35)
+                    .attr('x', -innerHeight / 2)
+                    .attr('fill', 'black')
+                    .attr('text-anchor', 'middle')
+                    .text('Impurity Value');
+                
+                // Generate data points
+                const giniData = [];
+                const entropyData = [];
+                
+                for (let p = 0; p <= 1; p += 0.01) {
+                    // Gini impurity: G = 1 - (p^2 + (1-p)^2) = 2p(1-p)
+                    const gini = 2 * p * (1 - p);
+                    giniData.push({p, impurity: gini});
+                    
+                    // Entropy: H = -p*log2(p) - (1-p)*log2(1-p)
+                    let entropy = 0;
+                    if (p > 0 && p < 1) {
+                        entropy = -p * Math.log2(p) - (1-p) * Math.log2(1-p);
+                    }
+                    entropyData.push({p, impurity: entropy});
+                }
+                
+                // Create line generators
+                const giniLine = d3.line()
+                    .x(d => xScale(d.p))
+                    .y(d => yScale(d.impurity))
+                    .curve(d3.curveBasis);
+                
+                const entropyLine = d3.line()
+                    .x(d => xScale(d.p))
+                    .y(d => yScale(d.impurity))
+                    .curve(d3.curveBasis);
+                
+                // Draw lines
+                g.append('path')
+                    .datum(giniData)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 3)
+                    .attr('d', giniLine);
+                
+                g.append('path')
+                    .datum(entropyData)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3)
+                    .attr('d', entropyLine);
+                
+                // Add labels
+                g.append('text')
+                    .attr('x', xScale(0.7))
+                    .attr('y', yScale(0.35))
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#e74c3c')
+                    .text('Entropy');
+                
+                g.append('text')
+                    .attr('x', xScale(0.7))
+                    .attr('y', yScale(0.25))
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#3498db')
+                    .text('Gini Impurity');
+                
+                // Add title
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', -30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Impurity Measures for Binary Classification');
+                
+                // Add maximum impurity markers
+                g.append('circle')
+                    .attr('cx', xScale(0.5))
+                    .attr('cy', yScale(0.5))
+                    .attr('r', 5)
+                    .attr('fill', '#e74c3c');
+                
+                g.append('circle')
+                    .attr('cx', xScale(0.5))
+                    .attr('cy', yScale(0.5))
+                    .attr('r', 5)
+                    .attr('fill', '#3498db');
+                
+                // Add vertical line at p=0.5
+                g.append('line')
+                    .attr('x1', xScale(0.5))
+                    .attr('y1', yScale(0))
+                    .attr('x2', xScale(0.5))
+                    .attr('y2', yScale(0.5))
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 1)
+                    .attr('stroke-dasharray', '3,3');
+                
+                // Add text for maximum impurity
+                g.append('text')
+                    .attr('x', xScale(0.5))
+                    .attr('y', yScale(0.5) - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Maximum Impurity');
+            }
+        }
+        
+        function initRegressionImpurityViz() {
+            console.log('Initializing regression impurity visualization');
+            const container = d3.select('#regression-impurity-viz');
+            console.log('Container found:', !container.empty());
+            if (!container.empty()) {
+                container.html(''); // Clear previous content
+                
+                // Set up SVG
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Create scales
+                const xScale = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range([innerHeight, 0]);
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale))
+                    .append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 35)
+                    .attr('fill', 'black')
+                    .attr('text-anchor', 'middle')
+                    .text('Feature Value');
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale))
+                    .append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -35)
+                    .attr('x', -innerHeight / 2)
+                    .attr('fill', 'black')
+                    .attr('text-anchor', 'middle')
+                    .text('Target Value');
+                
+                // Generate data
+                const data = [];
+                const splitPoint = 5;
+                
+                // Left group
+                for (let i = 0; i < 20; i++) {
+                    data.push({
+                        x: Math.random() * 4.5,
+                        y: 3 + Math.random() * 2
+                    });
+                }
+                
+                // Right group
+                for (let i = 0; i < 20; i++) {
+                    data.push({
+                        x: 5.5 + Math.random() * 4,
+                        y: 7 + Math.random() * 2
+                    });
+                }
+                
+                // Calculate means and errors
+                const leftData = data.filter(d => d.x < splitPoint);
+                const rightData = data.filter(d => d.x >= splitPoint);
+                
+                const leftMean = d3.mean(leftData, d => d.y);
+                const rightMean = d3.mean(rightData, d => d.y);
+                const totalMean = d3.mean(data, d => d.y);
+                
+                // Calculate MSE before and after split
+                const mseBefore = d3.sum(data, d => Math.pow(d.y - totalMean, 2)) / data.length;
+                const mseAfterLeft = d3.sum(leftData, d => Math.pow(d.y - leftMean, 2)) / leftData.length;
+                const mseAfterRight = d3.sum(rightData, d => Math.pow(d.y - rightMean, 2)) / rightData.length;
+                const mseAfter = (leftData.length * mseAfterLeft + rightData.length * mseAfterRight) / data.length;
+                const mseReduction = ((mseBefore - mseAfter) / mseBefore * 100).toFixed(1);
+                
+                // Draw data points
+                g.selectAll('.point')
+                    .data(data)
+                    .enter()
+                    .append('circle')
+                    .attr('class', 'point')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 4)
+                    .attr('fill', d => d.x < splitPoint ? '#3498db' : '#e74c3c');
+                
+                // Draw split line
+                g.append('line')
+                    .attr('x1', xScale(splitPoint))
+                    .attr('y1', 0)
+                    .attr('x2', xScale(splitPoint))
+                    .attr('y2', innerHeight)
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+                
+                // Draw mean lines
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', yScale(totalMean))
+                    .attr('x2', innerWidth)
+                    .attr('y2', yScale(totalMean))
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('opacity', 0.5);
+                
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', yScale(leftMean))
+                    .attr('x2', xScale(splitPoint))
+                    .attr('y2', yScale(leftMean))
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 2);
+                
+                g.append('line')
+                    .attr('x1', xScale(splitPoint))
+                    .attr('y1', yScale(rightMean))
+                    .attr('x2', innerWidth)
+                    .attr('y2', yScale(rightMean))
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 2);
+                
+                // Add error visualization
+                // Draw some error lines from points to the mean line
+                const errorPoints = [3, 7, 12, 16, 23, 27, 32, 36];
+                
+                // Before split - errors to overall mean
+                g.selectAll('.error-before')
+                    .data(errorPoints)
+                    .enter()
+                    .append('line')
+                    .attr('class', 'error-before')
+                    .attr('x1', i => xScale(data[i].x))
+                    .attr('y1', i => yScale(data[i].y))
+                    .attr('x2', i => xScale(data[i].x))
+                    .attr('y2', yScale(totalMean))
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 1.5)
+                    .attr('stroke-dasharray', '3,3')
+                    .attr('opacity', 0.6);
+                
+                // After split - errors to split means
+                g.selectAll('.error-after')
+                    .data(errorPoints)
+                    .enter()
+                    .append('line')
+                    .attr('class', 'error-after')
+                    .attr('x1', i => xScale(data[i].x))
+                    .attr('y1', i => yScale(data[i].y))
+                    .attr('x2', i => xScale(data[i].x))
+                    .attr('y2', i => data[i].x < splitPoint ? yScale(leftMean) : yScale(rightMean))
+                    .attr('stroke', i => data[i].x < splitPoint ? '#3498db' : '#e74c3c')
+                    .attr('stroke-width', 1.5)
+                    .attr('stroke-dasharray', '3,3')
+                    .attr('opacity', 0.6);
+                
+                // Add labels
+                g.append('text')
+                    .attr('x', xScale(2.5))
+                    .attr('y', yScale(leftMean) - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#3498db')
+                    .text(`Left Mean = ${leftMean.toFixed(2)}`);
+                
+                g.append('text')
+                    .attr('x', xScale(7.5))
+                    .attr('y', yScale(rightMean) - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#e74c3c')
+                    .text(`Right Mean = ${rightMean.toFixed(2)}`);
+                
+                g.append('text')
+                    .attr('x', xScale(5))
+                    .attr('y', yScale(totalMean) - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#2c3e50')
+                    .text(`Overall Mean = ${totalMean.toFixed(2)}`);
+                
+                // Add MSE information
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '13px')
+                    .attr('font-weight', 'bold')
+                    .text(`MSE Reduction: ${mseReduction}% (${mseBefore.toFixed(2)} → ${mseAfter.toFixed(2)})`);
+                
+                // Add title
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', -30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('MSE Reduction with Binary Split');
+                
+                // Add legend
+                const legend = svg.append('g')
+                    .attr('transform', `translate(${width - 180}, 20)`);
+                
+                // Error to overall mean
+                legend.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', 0)
+                    .attr('x2', 20)
+                    .attr('y2', 0)
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 1.5)
+                    .attr('stroke-dasharray', '3,3');
+                
+                legend.append('text')
+                    .attr('x', 25)
+                    .attr('y', 4)
+                    .attr('font-size', '10px')
+                    .text('Error to Overall Mean');
+                
+                // Error to split means
+                legend.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', 20)
+                    .attr('x2', 20)
+                    .attr('y2', 20)
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 1.5)
+                    .attr('stroke-dasharray', '3,3');
+                
+                legend.append('text')
+                    .attr('x', 25)
+                    .attr('y', 24)
+                    .attr('font-size', '10px')
+                    .text('Error to Split Mean');
+                
+                // Add split point label
+                g.append('text')
+                    .attr('x', xScale(splitPoint))
+                    .attr('y', 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-weight', 'bold')
+                    .text('Split Point');
+            }
+        }
+        
+        function initInformationGainViz() {
+            console.log('Initializing information gain visualization');
+            const container = d3.select('#information-gain-viz');
+            console.log('Container found:', !container.empty());
+            if (!container.empty()) {
+                container.html(''); // Clear previous content
+                
+                // Set up SVG
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Create scales
+                const xScale = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 0.5])
+                    .range([innerHeight, 0]);
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale))
+                    .append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 35)
+                    .attr('fill', 'black')
+                    .attr('text-anchor', 'middle')
+                    .text('Split Threshold');
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale))
+                    .append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -35)
+                    .attr('x', -innerHeight / 2)
+                    .attr('fill', 'black')
+                    .attr('text-anchor', 'middle')
+                    .text('Information Gain');
+                
+                // Generate data
+                const gainData = [];
+                for (let x = 0.5; x < 9.5; x += 0.1) {
+                    // Create a curve with a peak at x = 5
+                    const gain = 0.4 * Math.exp(-0.3 * Math.pow(x - 5, 2));
+                    gainData.push({x, gain});
+                }
+                
+                // Create line generator
+                const line = d3.line()
+                    .x(d => xScale(d.x))
+                    .y(d => yScale(d.gain))
+                    .curve(d3.curveBasis);
+                
+                // Draw line
+                g.append('path')
+                    .datum(gainData)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 3)
+                    .attr('d', line);
+                
+                // Find maximum gain point
+                const maxGainPoint = gainData.reduce((max, current) => 
+                    current.gain > max.gain ? current : max, gainData[0]);
+                
+                // Mark maximum gain point
+                g.append('circle')
+                    .attr('cx', xScale(maxGainPoint.x))
+                    .attr('cy', yScale(maxGainPoint.gain))
+                    .attr('r', 6)
+                    .attr('fill', '#e74c3c');
+                
+                // Add vertical line at maximum
+                g.append('line')
+                    .attr('x1', xScale(maxGainPoint.x))
+                    .attr('y1', yScale(0))
+                    .attr('x2', xScale(maxGainPoint.x))
+                    .attr('y2', yScale(maxGainPoint.gain))
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+                
+                // Add labels
+                g.append('text')
+                    .attr('x', xScale(maxGainPoint.x))
+                    .attr('y', yScale(maxGainPoint.gain) - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#e74c3c')
+                    .text(`Maximum Gain: ${maxGainPoint.gain.toFixed(3)}`);
+                
+                g.append('text')
+                    .attr('x', xScale(maxGainPoint.x))
+                    .attr('y', yScale(0) + 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#e74c3c')
+                    .text(`Optimal Split: ${maxGainPoint.x.toFixed(1)}`);
+                
+                // Add title
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', -30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Information Gain vs. Split Threshold');
+                
+                // Add annotations
+                g.append('text')
+                    .attr('x', xScale(2))
+                    .attr('y', yScale(0.1))
+                    .attr('text-anchor', 'start')
+                    .attr('font-size', '12px')
+                    .text('Low Information Gain');
+                
+                g.append('text')
+                    .attr('x', xScale(8))
+                    .attr('y', yScale(0.1))
+                    .attr('text-anchor', 'end')
+                    .attr('font-size', '12px')
+                    .text('Low Information Gain');
+            }
+        }
+        
+        function initClassificationExampleViz() {
+            console.log('Initializing classification example visualization');
+            const container = d3.select('#classification-example-viz');
+            console.log('Container found:', !container.empty());
+            if (!container.empty()) {
+                container.html(''); // Clear previous content
+                
+                // Set up SVG
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Create scales
+                const xScale = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range([innerHeight, 0]);
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale))
+                    .append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 35)
+                    .attr('fill', 'black')
+                    .text('Feature X');
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale))
+                    .append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -35)
+                    .attr('x', -innerHeight / 2)
+                    .attr('fill', 'black')
+                    .attr('text-anchor', 'middle')
+                    .text('Feature Y');
+                
+                // Generate sample data
+                const classA = [];
+                const classB = [];
+                const classC = [];
+                
+                // Class A: top-left
+                for (let i = 0; i < 25; i++) {
+                    classA.push({
+                        x: 1 + Math.random() * 3.5,
+                        y: 6 + Math.random() * 3.5
+                    });
+                }
+                
+                // Class B: bottom-left
+                for (let i = 0; i < 25; i++) {
+                    classB.push({
+                        x: 1 + Math.random() * 3.5,
+                        y: 1 + Math.random() * 3.5
+                    });
+                }
+                
+                // Class C: right side
+                for (let i = 0; i < 25; i++) {
+                    classC.push({
+                        x: 6 + Math.random() * 3.5,
+                        y: 1 + Math.random() * 8.5
+                    });
+                }
+                
+                // Draw data points
+                g.selectAll('.point-a')
+                    .data(classA)
+                    .enter()
+                    .append('circle')
+                    .attr('class', 'point-a')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 4)
+                    .attr('fill', '#3498db');
+                
+                g.selectAll('.point-b')
+                    .data(classB)
+                    .enter()
+                    .append('circle')
+                    .attr('class', 'point-b')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 4)
+                    .attr('fill', '#e74c3c');
+                    
+                g.selectAll('.point-c')
+                    .data(classC)
+                    .enter()
+                    .append('circle')
+                    .attr('class', 'point-c')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 4)
+                    .attr('fill', '#2ecc71');
+                
+                // First split - vertical line at x = 5
+                g.append('line')
+                    .attr('x1', xScale(5))
+                    .attr('y1', 0)
+                    .attr('x2', xScale(5))
+                    .attr('y2', innerHeight)
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                // Second split - horizontal line at y = 5 in the left region
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', yScale(5))
+                    .attr('x2', xScale(5))
+                    .attr('y2', yScale(5))
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                // Add region labels
+                g.append('text')
+                    .attr('x', xScale(2.5))
+                    .attr('y', yScale(7.5))
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#3498db')
+                    .attr('font-weight', 'bold')
+                    .attr('font-size', '14px')
+                    .text('Class A');
+                
+                g.append('text')
+                    .attr('x', xScale(2.5))
+                    .attr('y', yScale(2.5))
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#e74c3c')
+                    .attr('font-weight', 'bold')
+                    .attr('font-size', '14px')
+                    .text('Class B');
+                
+                g.append('text')
+                    .attr('x', xScale(7.5))
+                    .attr('y', yScale(5))
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#2ecc71')
+                    .attr('font-weight', 'bold')
+                    .attr('font-size', '14px')
+                    .text('Class C');
+                
+                // Decision rules
+                g.append('text')
+                    .attr('x', xScale(5) + 5)
+                    .attr('y', 15)
+                    .attr('text-anchor', 'start')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('X ≤ 5');
+                
+                g.append('text')
+                    .attr('x', xScale(2.5))
+                    .attr('y', yScale(5) - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Y ≤ 5');
+                
+                // Legend
+                const legend = svg.append('g')
+                    .attr('transform', `translate(${width - 100}, 20)`);
+                
+                legend.append('circle')
+                    .attr('cx', 0)
+                    .attr('cy', 0)
+                    .attr('r', 5)
+                    .attr('fill', '#3498db');
+                
+                legend.append('text')
+                    .attr('x', 12)
+                    .attr('y', 4)
+                    .attr('font-size', '12px')
+                    .text('Class A');
+                
+                legend.append('circle')
+                    .attr('cx', 0)
+                    .attr('cy', 20)
+                    .attr('r', 5)
+                    .attr('fill', '#e74c3c');
+                
+                legend.append('text')
+                    .attr('x', 12)
+                    .attr('y', 24)
+                    .attr('font-size', '12px')
+                    .text('Class B');
+                    
+                legend.append('circle')
+                    .attr('cx', 0)
+                    .attr('cy', 40)
+                    .attr('r', 5)
+                    .attr('fill', '#2ecc71');
+                
+                legend.append('text')
+                    .attr('x', 12)
+                    .attr('y', 44)
+                    .attr('font-size', '12px')
+                    .text('Class C');
+            }
+        }
+        
+        function initDecisionPathViz() {
+            console.log('Initializing decision path visualization');
+            const container = d3.select('#decision-path-viz');
+            console.log('Container found:', !container.empty());
+            if (!container.empty()) {
+                container.html(''); // Clear previous content
+                
+                // Set up SVG
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Define tree data structure
+                const treeData = {
+                    name: "Root",
+                    rule: "Age > 30?",
+                    children: [
+                        {
+                            name: "No",
+                            rule: "Education > 12?",
+                            children: [
+                                {
+                                    name: "No",
+                                    class: "Class A",
+                                    color: "#3498db"
+                                },
+                                {
+                                    name: "Yes",
+                                    rule: "Income > 50K?",
+                                    children: [
+                                        {
+                                            name: "No",
+                                            class: "Class B",
+                                            color: "#e74c3c"
+                                        },
+                                        {
+                                            name: "Yes",
+                                            class: "Class A",
+                                            color: "#3498db"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "Yes",
+                            rule: "Income > 70K?",
+                            children: [
+                                {
+                                    name: "No",
+                                    class: "Class B",
+                                    color: "#e74c3c"
+                                },
+                                {
+                                    name: "Yes",
+                                    class: "Class C",
+                                    color: "#2ecc71"
+                                }
+                            ]
+                        }
+                    ]
+                };
+                
+                // Set up tree layout
+                const treeLayout = d3.tree()
+                    .size([innerWidth, innerHeight]);
+                
+                // Create hierarchy
+                const root = d3.hierarchy(treeData);
+                
+                // Compute layout
+                treeLayout(root);
+                
+                // Create links
+                g.selectAll('.link')
+                    .data(root.links())
+                    .enter()
+                    .append('path')
+                    .attr('class', 'link')
+                    .attr('d', d => {
+                        return `M${d.source.x},${d.source.y}
+                                C${d.source.x},${(d.source.y + d.target.y) / 2}
+                                 ${d.target.x},${(d.source.y + d.target.y) / 2}
+                                 ${d.target.x},${d.target.y}`;
+                    })
+                    .attr('fill', 'none')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 1.5);
+                
+                // Create nodes
+                const nodes = g.selectAll('.node')
+                    .data(root.descendants())
+                    .enter()
+                    .append('g')
+                    .attr('class', d => `node ${d.children ? 'node-internal' : 'node-leaf'}`)
+                    .attr('transform', d => `translate(${d.x},${d.y})`);
+                
+                // Add highlight path
+                const highlightPath = [root.descendants()[0], root.descendants()[1], root.descendants()[4], root.descendants()[10]];
+                
+                highlightPath.forEach((node, i) => {
+                    if (i < highlightPath.length - 1) {
+                        g.append('path')
+                            .attr('d', `M${node.x},${node.y}
+                                      C${node.x},${(node.y + highlightPath[i+1].y) / 2}
+                                       ${highlightPath[i+1].x},${(node.y + highlightPath[i+1].y) / 2}
+                                       ${highlightPath[i+1].x},${highlightPath[i+1].y}`)
+                            .attr('fill', 'none')
+                            .attr('stroke', '#f39c12')
+                            .attr('stroke-width', 3);
+                    }
+                });
+                
+                // Add circles for nodes
+                nodes.append('circle')
+                    .attr('r', d => d.data.class ? 20 : 15)
+                    .attr('fill', d => d.data.color || '#fff')
+                    .attr('stroke', d => highlightPath.includes(d) ? '#f39c12' : '#2c3e50')
+                    .attr('stroke-width', d => highlightPath.includes(d) ? 3 : 1.5);
+                
+                // Add node text
+                nodes.append('text')
+                    .attr('dy', '.35em')
+                    .attr('y', d => d.data.class ? 0 : -20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .text(d => d.data.name);
+                
+                // Add rule text
+                nodes.filter(d => d.data.rule)
+                    .append('text')
+                    .attr('dy', '.35em')
+                    .attr('y', 0)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .text(d => d.data.rule);
+                
+                // Add class text
+                nodes.filter(d => d.data.class)
+                    .append('text')
+                    .attr('dy', '.35em')
+                    .attr('y', 0)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#fff')
+                    .text(d => d.data.class);
+                
+                // Add title
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', -30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Decision Path Example');
+                
+                // Add path explanation
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#f39c12')
+                    .attr('font-weight', 'bold')
+                    .text('IF Age > 30 AND Income > 70K THEN Class C');
+            }
+        }
+        
+        function initPruningViz() {
+            console.log('Initializing pruning visualization');
+            const container = d3.select('#pruning-viz');
+            console.log('Container found:', !container.empty());
+            if (!container.empty()) {
+                container.html(''); // Clear previous content
+                
+                // Set up SVG
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Create two side-by-side visualizations
+                const leftG = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                const rightG = svg.append('g')
+                    .attr('transform', `translate(${margin.left + innerWidth/2 + 20},${margin.top})`);
+                
+                // Define tree data structure for unpruned tree
+                const unprunedTree = {
+                    name: "Root",
+                    children: [
+                        {
+                            name: "Node 1",
+                            children: [
+                                {
+                                    name: "Node 3",
+                                    children: [
+                                        { name: "Leaf 1", color: "#3498db" },
+                                        { name: "Leaf 2", color: "#e74c3c" }
+                                    ]
+                                },
+                                {
+                                    name: "Node 4",
+                                    children: [
+                                        { name: "Leaf 3", color: "#3498db" },
+                                        { name: "Leaf 4", color: "#3498db" }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: "Node 2",
+                            children: [
+                                { name: "Leaf 5", color: "#e74c3c" },
+                                {
+                                    name: "Node 5",
+                                    children: [
+                                        { name: "Leaf 6", color: "#2ecc71" },
+                                        { name: "Leaf 7", color: "#2ecc71" }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                };
+                
+                // Define pruned tree structure
+                const prunedTree = {
+                    name: "Root",
+                    children: [
+                        {
+                            name: "Node 1",
+                            children: [
+                                { name: "Leaf 1", color: "#3498db" },
+                                { name: "Leaf 2", color: "#3498db" }
+                            ]
+                        },
+                        {
+                            name: "Node 2",
+                            children: [
+                                { name: "Leaf 3", color: "#e74c3c" },
+                                { name: "Leaf 4", color: "#2ecc71" }
+                            ]
+                        }
+                    ]
+                };
+                
+                // Set up tree layouts
+                const treeWidth = innerWidth / 2 - 30;
+                const treeHeight = innerHeight - 20;
+                
+                const treeLayout = d3.tree()
+                    .size([treeWidth, treeHeight]);
+                
+                // Create hierarchies
+                const unprunedRoot = d3.hierarchy(unprunedTree);
+                const prunedRoot = d3.hierarchy(prunedTree);
+                
+                // Compute layouts
+                treeLayout(unprunedRoot);
+                treeLayout(prunedRoot);
+                
+                // Draw unpruned tree
+                drawTree(leftG, unprunedRoot, "Before Pruning");
+                
+                // Draw pruned tree
+                drawTree(rightG, prunedRoot, "After Pruning");
+                
+                // Add main title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '16px')
+                    .attr('font-weight', 'bold')
+                    .text('Cost-Complexity Pruning');
+                
+                // Add metrics
+                leftG.append('text')
+                    .attr('x', treeWidth / 2)
+                    .attr('y', innerHeight + 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .text('Nodes: 11, Training Error: 2%, Test Error: 15%');
+                
+                rightG.append('text')
+                    .attr('x', treeWidth / 2)
+                    .attr('y', innerHeight + 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .text('Nodes: 7, Training Error: 5%, Test Error: 8%');
+                
+                // Helper function to draw a tree
+                function drawTree(g, root, title) {
+                    // Add title
+                    g.append('text')
+                        .attr('x', treeWidth / 2)
+                        .attr('y', -30)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '14px')
+                        .attr('font-weight', 'bold')
+                        .text(title);
+                    
+                    // Draw links
+                    g.selectAll('.link')
+                        .data(root.links())
+                        .enter()
+                        .append('path')
+                        .attr('class', 'link')
+                        .attr('d', d => {
+                            return `M${d.source.x},${d.source.y}
+                                    C${d.source.x},${(d.source.y + d.target.y) / 2}
+                                     ${d.target.x},${(d.source.y + d.target.y) / 2}
+                                     ${d.target.x},${d.target.y}`;
+                        })
+                        .attr('fill', 'none')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1.5);
+                    
+                    // Draw nodes
+                    const nodes = g.selectAll('.node')
+                        .data(root.descendants())
+                        .enter()
+                        .append('g')
+                        .attr('class', d => `node ${d.children ? 'node-internal' : 'node-leaf'}`)
+                        .attr('transform', d => `translate(${d.x},${d.y})`);
+                    
+                    // Add circles
+                    nodes.append('circle')
+                        .attr('r', d => d.data.color ? 12 : 10)
+                        .attr('fill', d => d.data.color || '#fff')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1.5);
+                    
+                    // Add labels
+                    nodes.append('text')
+                        .attr('dy', '.35em')
+                        .attr('y', d => d.children ? -15 : 0)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '9px')
+                        .attr('fill', d => d.data.color ? '#fff' : '#000')
+                        .text(d => d.data.name);
+                }
+            }
+        }
+        
+        function initializeVisualizationForSlide(slideNumber) {
+            try {
+                switch (slideNumber) {
+                    case 3:
+                        console.log('Initializing binary split viz for slide 3');
+                        if (document.getElementById('binary-split-viz')) {
+                            console.log('Binary split container found, initializing');
+                            initBinarySplitViz();
+                        } else {
+                            console.error('Binary split container not found!');
+                        }
+                        break;
+                    case 4:
+                        console.log('Initializing tree structure viz for slide 4');
+                        if (document.getElementById('tree-structure-viz')) {
+                            console.log('Tree structure container found, initializing');
+                            initTreeStructureViz();
+                        } else {
+                            console.error('Tree structure container not found!');
+                        }
+                        break;
+                    case 5:
+                        console.log('Initializing impurity viz for slide 5');
+                        if (document.getElementById('impurity-viz')) {
+                            console.log('Impurity container found, initializing');
+                            initImpurityViz();
+                        } else {
+                            console.error('Impurity container not found!');
+                        }
+                        break;
+                    case 6:
+                        console.log('Initializing regression impurity viz for slide 6');
+                        if (document.getElementById('regression-impurity-viz')) {
+                            console.log('Regression impurity container found, initializing');
+                            initRegressionImpurityViz();
+                        } else {
+                            console.error('Regression impurity container not found!');
+                        }
+                        break;
+                    case 7:
+                        console.log('Initializing information gain viz for slide 7');
+                        if (document.getElementById('information-gain-viz')) {
+                            console.log('Information gain container found, initializing');
+                            initInformationGainViz();
+                        } else {
+                            console.error('Information gain container not found!');
+                        }
+                        break;
+                    case 9:
+                        console.log('Initializing classification example viz for slide 9');
+                        if (document.getElementById('classification-example-viz')) {
+                            console.log('Classification example container found, initializing');
+                            initClassificationExampleViz();
+                        } else {
+                            console.error('Classification example container not found!');
+                        }
+                        break;
+                    case 10:
+                        console.log('Initializing decision path viz for slide 10');
+                        if (document.getElementById('decision-path-viz')) {
+                            console.log('Decision path container found, initializing');
+                            initDecisionPathViz();
+                        } else {
+                            console.error('Decision path container not found!');
+                        }
+                        break;
+                    case 12:
+                        console.log('Initializing pruning viz for slide 12');
+                        if (document.getElementById('pruning-viz')) {
+                            console.log('Pruning container found, initializing');
+                            initPruningViz();
+                        } else {
+                            console.error('Pruning container not found!');
+                        }
+                        break;
+                }
+            } catch (error) {
+                console.error(`Error initializing visualization for slide ${slideNumber}:`, error);
+            }
+        }
+    </script>
+</body>
+</html>

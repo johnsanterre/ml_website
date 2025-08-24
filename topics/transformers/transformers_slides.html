@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformers: Attention is All You Need</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .slide {
+            display: none;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .slide.active {
+            display: block;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .progress {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .example {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .formula {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 16px;
+        }
+        .architecture {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: monospace;
+            border: 2px solid #bdc3c7;
+        }
+        .visualization {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+            background-color: #f8f9fa;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .innovation {
+            background-color: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .problem {
+            background-color: #fdeaea;
+            border-left: 4px solid #e74c3c;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #3498db;
+            color: white;
+        }
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .attention-matrix {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .model-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .model-card {
+            background-color: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .model-card h4 {
+            color: #3498db;
+            margin: 0 0 10px 0;
+        }
+    </style>
+    <!-- MathJax Configuration -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide active" id="slide1">
+        <h1>Transformers: Attention is All You Need</h1>
+        <h2>Revolutionizing Sequence Modeling</h2>
+        <div class="formula">
+            $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+        </div>
+        <div class="example">
+            <strong>Key Innovation:</strong> Self-attention mechanism enables parallel processing of sequences
+        </div>
+        <ul>
+            <li><strong>Paper:</strong> "Attention is All You Need" (Vaswani et al., 2017)</li>
+            <li><strong>Problem Solved:</strong> Sequential bottleneck in RNNs and LSTMs</li>
+            <li><strong>Key Benefit:</strong> Parallelizable training with long-range dependencies</li>
+            <li><strong>Impact:</strong> Foundation for GPT, BERT, and modern large language models</li>
+        </ul>
+        <div class="highlight">
+            <strong>Revolutionary Insight:</strong> You don't need recurrence or convolution—attention alone is sufficient for sequence modeling
+        </div>
+    </div>
+
+    <!-- Slide 2: Problems with Traditional Approaches -->
+    <div class="slide" id="slide2">
+        <h1>Problems with RNNs and CNNs</h1>
+        <h2>Why We Needed Something Better</h2>
+        <div class="problem">
+            <strong>RNN/LSTM Limitations:</strong>
+        </div>
+        <ul>
+            <li><strong>Sequential Processing:</strong> Can't parallelize—must process tokens one by one</li>
+            <li><strong>Vanishing Gradients:</strong> Difficulty learning long-range dependencies</li>
+            <li><strong>Memory Bottleneck:</strong> Fixed hidden state size limits information flow</li>
+            <li><strong>Training Time:</strong> Sequential nature makes training slow</li>
+        </ul>
+        <div class="problem">
+            <strong>CNN Limitations for Sequences:</strong>
+        </div>
+        <ul>
+            <li><strong>Fixed Receptive Field:</strong> Need many layers for long-range dependencies</li>
+            <li><strong>Position Sensitivity:</strong> Not naturally suited for variable-length sequences</li>
+            <li><strong>Locality Bias:</strong> Assumes local patterns, but language has global structure</li>
+        </ul>
+        <div class="innovation">
+            <strong>Transformer Solution:</strong> Direct connections between any two positions with self-attention
+        </div>
+        <div id="problems-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 3: The Attention Mechanism -->
+    <div class="slide" id="slide3">
+        <h1>The Attention Mechanism</h1>
+        <h2>Query, Key, Value Paradigm</h2>
+        <div class="example">
+            <strong>Intuition:</strong> Like searching a database with query-key matching
+        </div>
+        <div class="formula">
+            $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+        </div>
+        <ul>
+            <li><strong>Query (Q):</strong> "What am I looking for?"
+                <ul><li>Representation of the current position/token</li></ul>
+            </li>
+            <li><strong>Key (K):</strong> "What do I have available?"
+                <ul><li>Representations of all positions that can be attended to</li></ul>
+            </li>
+            <li><strong>Value (V):</strong> "What information do I get?"
+                <ul><li>Actual information to be retrieved from attended positions</li></ul>
+            </li>
+        </ul>
+        <div class="attention-matrix">
+            Attention Weight = Query · Key<br>
+            Output = Σ (Attention Weight × Value)
+        </div>
+        <div class="highlight">
+            <strong>Scaling Factor $\sqrt{d_k}$:</strong> Prevents softmax from saturating when $d_k$ is large
+        </div>
+        <div id="attention-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 4: Self-Attention -->
+    <div class="slide" id="slide4">
+        <h1>Self-Attention</h1>
+        <h2>Tokens Attending to Themselves</h2>
+        <div class="example">
+            <strong>Key Idea:</strong> Each token in a sequence attends to all other tokens (including itself)
+        </div>
+        <div class="architecture">
+            Input: "The cat sat on the mat"<br><br>
+            Self-attention allows:<br>
+            • "cat" to attend to "sat" (subject-verb relationship)<br>
+            • "sat" to attend to "mat" (verb-object relationship)<br>
+            • "the" to attend to "cat" and "mat" (determiner-noun)<br>
+            • All tokens to build contextual representations
+        </div>
+        <div class="formula">
+            $$Q = XW_Q, \quad K = XW_K, \quad V = XW_V$$
+            $$\text{where } X \text{ is the input sequence}$$
+        </div>
+        <ul>
+            <li><strong>Input:</strong> Sequence of token embeddings $X \in \mathbb{R}^{n \times d}$</li>
+            <li><strong>Linear Projections:</strong> $W_Q, W_K, W_V \in \mathbb{R}^{d \times d_k}$</li>
+            <li><strong>Attention Matrix:</strong> $A_{ij}$ = how much token $i$ attends to token $j$</li>
+            <li><strong>Output:</strong> Contextual representations for each token</li>
+        </ul>
+        <div class="highlight">
+            <strong>Complexity:</strong> $O(n^2 \cdot d)$ where $n$ is sequence length, $d$ is dimension
+        </div>
+        <div id="self-attention-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 5: Multi-Head Attention -->
+    <div class="slide" id="slide5">
+        <h1>Multi-Head Attention</h1>
+        <h2>Multiple Attention Mechanisms in Parallel</h2>
+        <div class="innovation">
+            <strong>Motivation:</strong> Different heads can capture different types of relationships
+        </div>
+        <div class="formula">
+            $$\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, ..., \text{head}_h)W^O$$
+            $$\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$
+        </div>
+        <div class="example">
+            <strong>Why Multiple Heads?</strong>
+            <ul>
+                <li><strong>Head 1:</strong> Syntactic relationships (subject-verb, noun-adjective)</li>
+                <li><strong>Head 2:</strong> Semantic relationships (word similarity, coreference)</li>
+                <li><strong>Head 3:</strong> Positional relationships (nearby words, discourse)</li>
+                <li><strong>Head 4:</strong> Long-range dependencies (sentence-level structure)</li>
+            </ul>
+        </div>
+        <ul>
+            <li><strong>Parallel Processing:</strong> All heads computed simultaneously</li>
+            <li><strong>Different Subspaces:</strong> Each head learns different representation</li>
+            <li><strong>Concatenation:</strong> Combine all head outputs</li>
+            <li><strong>Final Projection:</strong> $W^O$ learns to combine head information</li>
+        </ul>
+        <div class="architecture">
+            Typical Configuration: 8-16 heads, $d_{model} = 512$, $d_k = d_v = 64$
+        </div>
+        <div id="multihead-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 6: The Transformer Block -->
+    <div class="slide" id="slide6">
+        <h1>The Transformer Block</h1>
+        <h2>Complete Layer Architecture</h2>
+        <div class="architecture">
+            Input<br>
+            ↓<br>
+            Multi-Head Self-Attention<br>
+            ↓<br>
+            Add & Norm (Residual Connection + Layer Norm)<br>
+            ↓<br>
+            Feed-Forward Network<br>
+            ↓<br>
+            Add & Norm (Residual Connection + Layer Norm)<br>
+            ↓<br>
+            Output
+        </div>
+        <div class="example">
+            <strong>Key Components:</strong>
+        </div>
+        <ul>
+            <li><strong>Multi-Head Attention:</strong> Self-attention with multiple heads</li>
+            <li><strong>Residual Connections:</strong> $\text{output} = \text{sublayer}(\text{input}) + \text{input}$</li>
+            <li><strong>Layer Normalization:</strong> Stabilizes training, applied after residual</li>
+            <li><strong>Feed-Forward Network:</strong> Position-wise fully connected layers</li>
+        </ul>
+        <div class="formula">
+            $$\text{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2$$
+            $$\text{LayerNorm}(x + \text{Sublayer}(x))$$
+        </div>
+        <div class="highlight">
+            <strong>Stacking:</strong> Typically 6-12 transformer blocks for encoder, 6-12 for decoder
+        </div>
+        <div id="transformer-block-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 7: Positional Encoding -->
+    <div class="slide" id="slide7">
+        <h1>Positional Encoding</h1>
+        <h2>Adding Position Information</h2>
+        <div class="problem">
+            <strong>Problem:</strong> Self-attention is permutation invariant—no inherent position information
+        </div>
+        <div class="innovation">
+            <strong>Solution:</strong> Add positional encodings to input embeddings
+        </div>
+        <div class="formula">
+            $$PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+            $$PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+        </div>
+        <div class="example">
+            <strong>Sinusoidal Encoding Properties:</strong>
+            <ul>
+                <li><strong>Unique:</strong> Each position gets a unique encoding</li>
+                <li><strong>Relative:</strong> Model can learn relative positions</li>
+                <li><strong>Extrapolation:</strong> Can handle longer sequences than seen in training</li>
+                <li><strong>Smooth:</strong> Similar positions have similar encodings</li>
+            </ul>
+        </div>
+        <div class="architecture">
+            Final Input = Token Embedding + Positional Encoding<br>
+            Both have same dimension $d_{model}$, so they can be added
+        </div>
+        <div class="highlight">
+            <strong>Alternative:</strong> Learned positional embeddings (used in BERT, GPT)
+        </div>
+        <div id="positional-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 8: Encoder-Decoder Architecture -->
+    <div class="slide" id="slide8">
+        <h1>Encoder-Decoder Architecture</h1>
+        <h2>Original Transformer Design</h2>
+        <div class="example">
+            <strong>Use Case:</strong> Machine translation (e.g., English → French)
+        </div>
+        <div class="architecture">
+            Encoder Stack (6 layers):<br>
+            • Processes input sequence (English)<br>
+            • Self-attention looks at all input tokens<br>
+            • Produces contextual representations<br><br>
+            
+            Decoder Stack (6 layers):<br>
+            • Generates output sequence (French)<br>
+            • Masked self-attention (can't see future)<br>
+            • Cross-attention to encoder output<br>
+            • Autoregressive generation
+        </div>
+        <table class="comparison-table">
+            <tr>
+                <th>Component</th>
+                <th>Encoder</th>
+                <th>Decoder</th>
+            </tr>
+            <tr>
+                <td>Self-Attention</td>
+                <td>Full attention (bidirectional)</td>
+                <td>Masked attention (causal)</td>
+            </tr>
+            <tr>
+                <td>Cross-Attention</td>
+                <td>None</td>
+                <td>Attends to encoder output</td>
+            </tr>
+            <tr>
+                <td>Input</td>
+                <td>Source sequence</td>
+                <td>Target sequence (shifted)</td>
+            </tr>
+            <tr>
+                <td>Output</td>
+                <td>Contextual representations</td>
+                <td>Next token probabilities</td>
+            </tr>
+        </table>
+        <div id="encoder-decoder-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 9: Modern Transformer Variants -->
+    <div class="slide" id="slide9">
+        <h1>Modern Transformer Variants</h1>
+        <h2>Evolution Beyond the Original</h2>
+        <div class="model-list">
+            <div class="model-card">
+                <h4>BERT (2018)</h4>
+                <p><strong>Encoder-only</strong><br>
+                Bidirectional training<br>
+                Masked language modeling<br>
+                Classification tasks</p>
+            </div>
+            <div class="model-card">
+                <h4>GPT (2018)</h4>
+                <p><strong>Decoder-only</strong><br>
+                Autoregressive generation<br>
+                Causal language modeling<br>
+                Text generation</p>
+            </div>
+            <div class="model-card">
+                <h4>T5 (2019)</h4>
+                <p><strong>Encoder-decoder</strong><br>
+                Text-to-text framework<br>
+                All tasks as generation<br>
+                Unified approach</p>
+            </div>
+            <div class="model-card">
+                <h4>Vision Transformer (2020)</h4>
+                <p><strong>Encoder-only</strong><br>
+                Image patches as tokens<br>
+                Self-attention for vision<br>
+                Beyond NLP applications</p>
+            </div>
+        </div>
+        <div class="example">
+            <strong>Key Innovations by Model:</strong>
+            <ul>
+                <li><strong>BERT:</strong> Bidirectional context, pre-training + fine-tuning</li>
+                <li><strong>GPT:</strong> Scaling laws, in-context learning, emergent abilities</li>
+                <li><strong>T5:</strong> Text-to-text unified framework</li>
+                <li><strong>ViT:</strong> Transformers for computer vision</li>
+            </ul>
+        </div>
+        <div class="highlight">
+            <strong>Modern Trend:</strong> Larger models (GPT-3: 175B parameters, GPT-4: ~1.7T parameters)
+        </div>
+    </div>
+
+    <!-- Slide 10: Training and Optimization -->
+    <div class="slide" id="slide10">
+        <h1>Training and Optimization</h1>
+        <h2>Making Transformers Work at Scale</h2>
+        <div class="example">
+            <strong>Pre-training Objectives:</strong>
+        </div>
+        <ul>
+            <li><strong>Masked Language Model (MLM):</strong> Predict masked tokens (BERT)</li>
+            <li><strong>Causal Language Model:</strong> Predict next token (GPT)</li>
+            <li><strong>Sequence-to-Sequence:</strong> Denoising objectives (T5)</li>
+            <li><strong>Prefix LM:</strong> Bidirectional encoder + autoregressive decoder</li>
+        </ul>
+        <div class="problem">
+            <strong>Optimization Challenges:</strong>
+        </div>
+        <ul>
+            <li><strong>Memory:</strong> $O(n^2)$ attention matrix storage</li>
+            <li><strong>Computation:</strong> $O(n^2 \cdot d)$ attention complexity</li>
+            <li><strong>Gradient Flow:</strong> Deep networks need careful initialization</li>
+            <li><strong>Training Stability:</strong> Layer norm, residual connections crucial</li>
+        </ul>
+        <div class="innovation">
+            <strong>Solutions:</strong>
+        </div>
+        <ul>
+            <li><strong>Gradient Checkpointing:</strong> Trade computation for memory</li>
+            <li><strong>Mixed Precision:</strong> FP16/BF16 training</li>
+            <li><strong>Efficient Attention:</strong> Linear attention, sparse attention patterns</li>
+            <li><strong>Model Parallelism:</strong> Distribute large models across devices</li>
+        </ul>
+        <div class="formula">
+            $$\text{Training Cost} \propto \text{Parameters} \times \text{Data} \times \text{Compute}$$
+        </div>
+    </div>
+
+    <!-- Slide 11: Key Takeaways -->
+    <div class="slide" id="slide11">
+        <h1>Key Takeaways</h1>
+        <h2>Why Transformers Changed Everything</h2>
+        <ul>
+            <li><strong>Parallelization:</strong>
+                <ul><li>Self-attention enables parallel processing of sequences</li></ul>
+            </li>
+            <li><strong>Long-Range Dependencies:</strong>
+                <ul><li>Direct connections between any two positions</li></ul>
+            </li>
+            <li><strong>Scalability:</strong>
+                <ul><li>Architecture scales well with data and compute</li></ul>
+            </li>
+            <li><strong>Transfer Learning:</strong>
+                <ul><li>Pre-train on large corpora, fine-tune for specific tasks</li></ul>
+            </li>
+            <li><strong>Versatility:</strong>
+                <ul><li>Works for NLP, vision, multimodal tasks</li></ul>
+            </li>
+            <li><strong>Emergent Abilities:</strong>
+                <ul><li>Large models show unexpected capabilities</li></ul>
+            </li>
+        </ul>
+        <div class="innovation">
+            <strong>Impact:</strong> Transformers are the foundation of modern AI—from ChatGPT to DALL-E to AlphaFold
+        </div>
+        <div class="formula">
+            $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+            <div style="margin-top: 10px; font-size: 14px;">
+                <em>This simple equation revolutionized artificial intelligence</em>
+            </div>
+        </div>
+        <div class="highlight">
+            <strong>Future Directions:</strong> Efficient attention mechanisms, multimodal transformers, reasoning capabilities
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button onclick="prevSlide()">Previous</button>
+        <div class="progress">Slide <span id="current">1</span> of <span id="total">11</span></div>
+        <button onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 11;
+
+        function showSlide(n) {
+            // Hide all slides
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show the current slide
+            document.getElementById('slide' + n).classList.add('active');
+            document.getElementById('current').textContent = n;
+            
+            // Initialize visualizations for the current slide if needed
+            setTimeout(() => {
+                initializeVisualizationForSlide(n);
+            }, 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+        
+        // Initialize all visualizations when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initializeAllVisualizations();
+            }, 1000);
+            
+            setTimeout(() => {
+                initializeVisualizationForSlide(currentSlide);
+            }, 1500);
+        });
+        
+        function initializeAllVisualizations() {
+            try {
+                initProblemsViz();
+                initAttentionViz();
+                initSelfAttentionViz();
+                initMultiheadViz();
+                initTransformerBlockViz();
+                initPositionalViz();
+                initEncoderDecoderViz();
+            } catch (error) {
+                console.error('Error initializing visualizations:', error);
+            }
+        }
+        
+        // Visualization functions
+        function initProblemsViz() {
+            const container = d3.select('#problems-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('RNN vs Transformer: Sequential vs Parallel Processing');
+                
+                // RNN side (left)
+                const rnnX = width * 0.25;
+                const transformerX = width * 0.75;
+                const centerY = height / 2;
+                
+                // RNN Sequential Processing
+                svg.append('text')
+                    .attr('x', rnnX)
+                    .attr('y', 60)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('RNN: Sequential');
+                
+                const tokens = ['The', 'cat', 'sat'];
+                tokens.forEach((token, i) => {
+                    const y = 80 + i * 50;
+                    
+                    // Token box
+                    svg.append('rect')
+                        .attr('x', rnnX - 30)
+                        .attr('y', y)
+                        .attr('width', 60)
+                        .attr('height', 30)
+                        .attr('fill', '#e74c3c')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2)
+                        .attr('rx', 5);
+                    
+                    svg.append('text')
+                        .attr('x', rnnX)
+                        .attr('y', y + 20)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('fill', 'white')
+                        .attr('font-weight', 'bold')
+                        .text(token);
+                    
+                    // Arrow to next (except last)
+                    if (i < tokens.length - 1) {
+                        svg.append('line')
+                            .attr('x1', rnnX)
+                            .attr('y1', y + 35)
+                            .attr('x2', rnnX)
+                            .attr('y2', y + 45)
+                            .attr('stroke', '#34495e')
+                            .attr('stroke-width', 3)
+                            .attr('marker-end', 'url(#arrow)');
+                    }
+                    
+                    // Time step label
+                    svg.append('text')
+                        .attr('x', rnnX + 50)
+                        .attr('y', y + 20)
+                        .attr('font-size', '10px')
+                        .attr('fill', '#7f8c8d')
+                        .text(`t=${i+1}`);
+                });
+                
+                // Transformer Parallel Processing
+                svg.append('text')
+                    .attr('x', transformerX)
+                    .attr('y', 60)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('Transformer: Parallel');
+                
+                // All tokens at once
+                tokens.forEach((token, i) => {
+                    const x = transformerX - 60 + i * 40;
+                    const y = 100;
+                    
+                    // Token box
+                    svg.append('rect')
+                        .attr('x', x - 15)
+                        .attr('y', y)
+                        .attr('width', 30)
+                        .attr('height', 30)
+                        .attr('fill', '#27ae60')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2)
+                        .attr('rx', 5);
+                    
+                    svg.append('text')
+                        .attr('x', x)
+                        .attr('y', y + 20)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '8px')
+                        .attr('fill', 'white')
+                        .attr('font-weight', 'bold')
+                        .text(token);
+                });
+                
+                // Attention connections (all-to-all)
+                tokens.forEach((_, i) => {
+                    tokens.forEach((_, j) => {
+                        if (i !== j) {
+                            const x1 = transformerX - 60 + i * 40;
+                            const x2 = transformerX - 60 + j * 40;
+                            const y = 115;
+                            
+                            svg.append('line')
+                                .attr('x1', x1)
+                                .attr('y1', y + 15)
+                                .attr('x2', x2)
+                                .attr('y2', y + 15)
+                                .attr('stroke', '#3498db')
+                                .attr('stroke-width', 1)
+                                .attr('stroke-dasharray', '2,2')
+                                .attr('opacity', 0.6);
+                        }
+                    });
+                });
+                
+                svg.append('text')
+                    .attr('x', transformerX)
+                    .attr('y', 170)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#3498db')
+                    .text('All tokens attend to each other');
+                
+                // Comparison labels
+                svg.append('text')
+                    .attr('x', rnnX)
+                    .attr('y', height - 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#e74c3c')
+                    .text('❌ Sequential, Slow');
+                
+                svg.append('text')
+                    .attr('x', transformerX)
+                    .attr('y', height - 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#27ae60')
+                    .text('✅ Parallel, Fast');
+                
+                // Define arrow marker
+                svg.append('defs')
+                    .append('marker')
+                    .attr('id', 'arrow')
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 8)
+                    .attr('refY', 0)
+                    .attr('markerWidth', 6)
+                    .attr('markerHeight', 6)
+                    .attr('orient', 'auto')
+                    .append('path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#34495e');
+            }
+        }
+        
+        function initAttentionViz() {
+            const container = d3.select('#attention-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Query-Key-Value Attention Mechanism');
+                
+                const centerY = height / 2;
+                const qx = width * 0.15;
+                const kx = width * 0.4;
+                const vx = width * 0.65;
+                const outx = width * 0.85;
+                
+                // Query
+                svg.append('rect')
+                    .attr('x', qx - 40)
+                    .attr('y', centerY - 25)
+                    .attr('width', 80)
+                    .attr('height', 50)
+                    .attr('fill', '#3498db')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 8);
+                
+                svg.append('text')
+                    .attr('x', qx)
+                    .attr('y', centerY - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('Query');
+                
+                svg.append('text')
+                    .attr('x', qx)
+                    .attr('y', centerY + 8)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .text('Q');
+                
+                svg.append('text')
+                    .attr('x', qx)
+                    .attr('y', centerY + 45)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#2c3e50')
+                    .text('"What am I looking for?"');
+                
+                // Key
+                svg.append('rect')
+                    .attr('x', kx - 40)
+                    .attr('y', centerY - 25)
+                    .attr('width', 80)
+                    .attr('height', 50)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 8);
+                
+                svg.append('text')
+                    .attr('x', kx)
+                    .attr('y', centerY - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('Key');
+                
+                svg.append('text')
+                    .attr('x', kx)
+                    .attr('y', centerY + 8)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .text('K');
+                
+                svg.append('text')
+                    .attr('x', kx)
+                    .attr('y', centerY + 45)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#2c3e50')
+                    .text('"What do I match?"');
+                
+                // Value
+                svg.append('rect')
+                    .attr('x', vx - 40)
+                    .attr('y', centerY - 25)
+                    .attr('width', 80)
+                    .attr('height', 50)
+                    .attr('fill', '#27ae60')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 8);
+                
+                svg.append('text')
+                    .attr('x', vx)
+                    .attr('y', centerY - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('Value');
+                
+                svg.append('text')
+                    .attr('x', vx)
+                    .attr('y', centerY + 8)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .text('V');
+                
+                svg.append('text')
+                    .attr('x', vx)
+                    .attr('y', centerY + 45)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#2c3e50')
+                    .text('"What info to get?"');
+                
+                // Output
+                svg.append('rect')
+                    .attr('x', outx - 40)
+                    .attr('y', centerY - 25)
+                    .attr('width', 80)
+                    .attr('height', 50)
+                    .attr('fill', '#9b59b6')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 8);
+                
+                svg.append('text')
+                    .attr('x', outx)
+                    .attr('y', centerY - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('Output');
+                
+                svg.append('text')
+                    .attr('x', outx)
+                    .attr('y', centerY + 8)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .text('O');
+                
+                // Computation steps
+                svg.append('text')
+                    .attr('x', (qx + kx) / 2)
+                    .attr('y', centerY - 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#f39c12')
+                    .attr('font-weight', 'bold')
+                    .text('Q·K^T');
+                
+                svg.append('text')
+                    .attr('x', (qx + kx) / 2)
+                    .attr('y', centerY - 45)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '8px')
+                    .attr('fill', '#f39c12')
+                    .text('similarity');
+                
+                svg.append('text')
+                    .attr('x', (kx + vx) / 2)
+                    .attr('y', centerY - 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#f39c12')
+                    .attr('font-weight', 'bold')
+                    .text('softmax');
+                
+                svg.append('text')
+                    .attr('x', (kx + vx) / 2)
+                    .attr('y', centerY - 45)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '8px')
+                    .attr('fill', '#f39c12')
+                    .text('weights');
+                
+                svg.append('text')
+                    .attr('x', (vx + outx) / 2)
+                    .attr('y', centerY - 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#f39c12')
+                    .attr('font-weight', 'bold')
+                    .text('×V');
+                
+                svg.append('text')
+                    .attr('x', (vx + outx) / 2)
+                    .attr('y', centerY - 45)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '8px')
+                    .attr('fill', '#f39c12')
+                    .text('weighted sum');
+                
+                // Arrows
+                svg.append('line')
+                    .attr('x1', qx + 40)
+                    .attr('y1', centerY)
+                    .attr('x2', kx - 40)
+                    .attr('y2', centerY)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 3)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                svg.append('line')
+                    .attr('x1', kx + 40)
+                    .attr('y1', centerY)
+                    .attr('x2', vx - 40)
+                    .attr('y2', centerY)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 3)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                svg.append('line')
+                    .attr('x1', vx + 40)
+                    .attr('y1', centerY)
+                    .attr('x2', outx - 40)
+                    .attr('y2', centerY)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 3)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                // Formula at bottom
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-weight', 'bold')
+                    .text('Attention(Q,K,V) = softmax(QK^T/√d_k)V');
+            }
+        }
+        
+        function initSelfAttentionViz() {
+            const container = d3.select('#self-attention-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Self-Attention Matrix: "The cat sat"');
+                
+                const tokens = ['The', 'cat', 'sat'];
+                const attentionMatrix = [
+                    [0.1, 0.7, 0.2],  // "The" attention to [The, cat, sat]
+                    [0.3, 0.4, 0.3],  // "cat" attention to [The, cat, sat]  
+                    [0.2, 0.6, 0.2]   // "sat" attention to [The, cat, sat]
+                ];
+                
+                const cellSize = 60;
+                const startX = width / 2 - (tokens.length * cellSize) / 2;
+                const startY = height / 2 - (tokens.length * cellSize) / 2;
+                
+                // Draw attention matrix
+                tokens.forEach((rowToken, i) => {
+                    tokens.forEach((colToken, j) => {
+                        const x = startX + j * cellSize;
+                        const y = startY + i * cellSize;
+                        const attention = attentionMatrix[i][j];
+                        
+                        // Color intensity based on attention weight
+                        const intensity = Math.floor(attention * 255);
+                        const color = d3.interpolateBlues(attention);
+                        
+                        svg.append('rect')
+                            .attr('x', x)
+                            .attr('y', y)
+                            .attr('width', cellSize)
+                            .attr('height', cellSize)
+                            .attr('fill', color)
+                            .attr('stroke', '#2c3e50')
+                            .attr('stroke-width', 2);
+                        
+                        // Attention weight text
+                        svg.append('text')
+                            .attr('x', x + cellSize / 2)
+                            .attr('y', y + cellSize / 2 + 4)
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '14px')
+                            .attr('font-weight', 'bold')
+                            .attr('fill', attention > 0.4 ? 'white' : '#2c3e50')
+                            .text(attention.toFixed(1));
+                    });
+                });
+                
+                // Row labels (Query tokens)
+                tokens.forEach((token, i) => {
+                    const y = startY + i * cellSize + cellSize / 2;
+                    svg.append('text')
+                        .attr('x', startX - 15)
+                        .attr('y', y + 4)
+                        .attr('text-anchor', 'end')
+                        .attr('font-size', '12px')
+                        .attr('font-weight', 'bold')
+                        .attr('fill', '#3498db')
+                        .text(token);
+                });
+                
+                // Column labels (Key tokens)
+                tokens.forEach((token, j) => {
+                    const x = startX + j * cellSize + cellSize / 2;
+                    svg.append('text')
+                        .attr('x', x)
+                        .attr('y', startY - 10)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '12px')
+                        .attr('font-weight', 'bold')
+                        .attr('fill', '#e74c3c')
+                        .text(token);
+                });
+                
+                // Labels
+                svg.append('text')
+                    .attr('x', startX - 40)
+                    .attr('y', startY + (tokens.length * cellSize) / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#3498db')
+                    .attr('transform', `rotate(-90, ${startX - 40}, ${startY + (tokens.length * cellSize) / 2})`)
+                    .text('Query');
+                
+                svg.append('text')
+                    .attr('x', startX + (tokens.length * cellSize) / 2)
+                    .attr('y', startY - 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('Key');
+                
+                // Explanation
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height - 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Each cell shows how much token i attends to token j');
+                
+                // Color scale legend
+                const legendY = startY + tokens.length * cellSize + 20;
+                const legendWidth = 100;
+                const legendX = width / 2 - legendWidth / 2;
+                
+                const gradient = svg.append('defs')
+                    .append('linearGradient')
+                    .attr('id', 'attention-gradient')
+                    .attr('x1', '0%')
+                    .attr('x2', '100%');
+                
+                gradient.append('stop')
+                    .attr('offset', '0%')
+                    .attr('stop-color', d3.interpolateBlues(0));
+                
+                gradient.append('stop')
+                    .attr('offset', '100%')
+                    .attr('stop-color', d3.interpolateBlues(1));
+                
+                svg.append('rect')
+                    .attr('x', legendX)
+                    .attr('y', legendY)
+                    .attr('width', legendWidth)
+                    .attr('height', 15)
+                    .attr('fill', 'url(#attention-gradient)')
+                    .attr('stroke', '#2c3e50');
+                
+                svg.append('text')
+                    .attr('x', legendX - 5)
+                    .attr('y', legendY + 12)
+                    .attr('text-anchor', 'end')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#2c3e50')
+                    .text('0');
+                
+                svg.append('text')
+                    .attr('x', legendX + legendWidth + 5)
+                    .attr('y', legendY + 12)
+                    .attr('text-anchor', 'start')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#2c3e50')
+                    .text('1');
+                
+                svg.append('text')
+                    .attr('x', legendX + legendWidth / 2)
+                    .attr('y', legendY - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#2c3e50')
+                    .text('Attention Weight');
+            }
+        }
+        
+        function initMultiheadViz() {
+            const container = d3.select('#multihead-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Multi-Head Attention: 4 Parallel Heads');
+                
+                const heads = [
+                    {name: 'Head 1', color: '#3498db', focus: 'Syntax'},
+                    {name: 'Head 2', color: '#e74c3c', focus: 'Semantics'},
+                    {name: 'Head 3', color: '#27ae60', focus: 'Position'},
+                    {name: 'Head 4', color: '#f39c12', focus: 'Long-range'}
+                ];
+                
+                const headWidth = (width - 100) / heads.length;
+                const startX = 50;
+                const centerY = height / 2;
+                
+                heads.forEach((head, i) => {
+                    const x = startX + i * headWidth + headWidth / 2;
+                    
+                    // Head box
+                    svg.append('rect')
+                        .attr('x', x - 40)
+                        .attr('y', centerY - 40)
+                        .attr('width', 80)
+                        .attr('height', 80)
+                        .attr('fill', head.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2)
+                        .attr('rx', 8);
+                    
+                    // Head name
+                    svg.append('text')
+                        .attr('x', x)
+                        .attr('y', centerY - 15)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '11px')
+                        .attr('font-weight', 'bold')
+                        .attr('fill', 'white')
+                        .text(head.name);
+                    
+                    // Focus area
+                    svg.append('text')
+                        .attr('x', x)
+                        .attr('y', centerY)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('fill', 'white')
+                        .text(head.focus);
+                    
+                    // Attention pattern (simplified)
+                    for (let j = 0; j < 3; j++) {
+                        const dotY = centerY + 10 + j * 8;
+                        const opacity = Math.random() * 0.8 + 0.2;
+                        svg.append('circle')
+                            .attr('cx', x - 15 + j * 15)
+                            .attr('cy', dotY)
+                            .attr('r', 3)
+                            .attr('fill', 'white')
+                            .attr('opacity', opacity);
+                    }
+                    
+                    // Arrow down to concatenation
+                    svg.append('line')
+                        .attr('x1', x)
+                        .attr('y1', centerY + 45)
+                        .attr('x2', x)
+                        .attr('y2', centerY + 65)
+                        .attr('stroke', '#34495e')
+                        .attr('stroke-width', 2)
+                        .attr('marker-end', 'url(#arrow)');
+                });
+                
+                // Concatenation box
+                svg.append('rect')
+                    .attr('x', width / 2 - 80)
+                    .attr('y', centerY + 70)
+                    .attr('width', 160)
+                    .attr('height', 40)
+                    .attr('fill', '#9b59b6')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 8);
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', centerY + 85)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('Concatenate');
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', centerY + 98)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .text('+ Linear Projection');
+                
+                // Example relationships
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height - 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Each head learns different types of relationships in parallel');
+            }
+        }
+        
+        function initTransformerBlockViz() {
+            const container = d3.select('#transformer-block-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Transformer Block Architecture');
+                
+                const centerX = width / 2;
+                const blockWidth = 140;
+                const blockHeight = 35;
+                const spacing = 15;
+                
+                // Define the flow components
+                const components = [
+                    {name: 'Input', y: 50, color: '#95a5a6', textColor: 'white'},
+                    {name: 'Multi-Head\nSelf-Attention', y: 90, color: '#3498db', textColor: 'white'},
+                    {name: 'Add & Norm', y: 130, color: '#e67e22', textColor: 'white'},
+                    {name: 'Feed-Forward\nNetwork', y: 170, color: '#e74c3c', textColor: 'white'},
+                    {name: 'Add & Norm', y: 210, color: '#e67e22', textColor: 'white'},
+                    {name: 'Output', y: 250, color: '#27ae60', textColor: 'white'}
+                ];
+                
+                // Draw components
+                components.forEach((comp, i) => {
+                    // Main block
+                    svg.append('rect')
+                        .attr('x', centerX - blockWidth/2)
+                        .attr('y', comp.y - blockHeight/2)
+                        .attr('width', blockWidth)
+                        .attr('height', blockHeight)
+                        .attr('fill', comp.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2)
+                        .attr('rx', 6);
+                    
+                    // Component text
+                    const lines = comp.name.split('\n');
+                    lines.forEach((line, lineIdx) => {
+                        svg.append('text')
+                            .attr('x', centerX)
+                            .attr('y', comp.y + (lines.length === 1 ? 4 : -6 + lineIdx * 12))
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '11px')
+                            .attr('font-weight', 'bold')
+                            .attr('fill', comp.textColor)
+                            .text(line);
+                    });
+                    
+                    // Arrow to next component (except last)
+                    if (i < components.length - 1) {
+                        svg.append('line')
+                            .attr('x1', centerX)
+                            .attr('y1', comp.y + blockHeight/2 + 3)
+                            .attr('x2', centerX)
+                            .attr('y2', components[i + 1].y - blockHeight/2 - 3)
+                            .attr('stroke', '#34495e')
+                            .attr('stroke-width', 3)
+                            .attr('marker-end', 'url(#arrow)');
+                    }
+                });
+                
+                // Residual connections (curved arrows)
+                // First residual connection (around attention)
+                const path1 = d3.path();
+                path1.moveTo(centerX + blockWidth/2 + 10, components[0].y);
+                path1.bezierCurveTo(
+                    centerX + blockWidth/2 + 30, components[0].y,
+                    centerX + blockWidth/2 + 30, components[2].y,
+                    centerX + blockWidth/2 + 10, components[2].y
+                );
+                
+                svg.append('path')
+                    .attr('d', path1)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#9b59b6')
+                    .attr('stroke-width', 3)
+                    .attr('stroke-dasharray', '5,5')
+                    .attr('marker-end', 'url(#arrow)');
+                
+                // Second residual connection (around FFN)
+                const path2 = d3.path();
+                path2.moveTo(centerX + blockWidth/2 + 10, components[2].y);
+                path2.bezierCurveTo(
+                    centerX + blockWidth/2 + 30, components[2].y,
+                    centerX + blockWidth/2 + 30, components[4].y,
+                    centerX + blockWidth/2 + 10, components[4].y
+                );
+                
+                svg.append('path')
+                    .attr('d', path2)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#9b59b6')
+                    .attr('stroke-width', 3)
+                    .attr('stroke-dasharray', '5,5')
+                    .attr('marker-end', 'url(#arrow)');
+                
+                // Residual connection labels
+                svg.append('text')
+                    .attr('x', centerX + blockWidth/2 + 40)
+                    .attr('y', (components[0].y + components[2].y) / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#9b59b6')
+                    .attr('font-weight', 'bold')
+                    .text('Residual');
+                
+                svg.append('text')
+                    .attr('x', centerX + blockWidth/2 + 40)
+                    .attr('y', (components[2].y + components[4].y) / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#9b59b6')
+                    .attr('font-weight', 'bold')
+                    .text('Residual');
+                
+                // Add mathematical notation
+                svg.append('text')
+                    .attr('x', centerX - blockWidth/2 - 5)
+                    .attr('y', components[2].y + 4)
+                    .attr('text-anchor', 'end')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('x + Attn(x)');
+                
+                svg.append('text')
+                    .attr('x', centerX - blockWidth/2 - 5)
+                    .attr('y', components[4].y + 4)
+                    .attr('text-anchor', 'end')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('x + FFN(x)');
+                
+                // Layer info
+                svg.append('text')
+                    .attr('x', centerX - blockWidth/2 - 60)
+                    .attr('y', height / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-weight', 'bold')
+                    .attr('transform', `rotate(-90, ${centerX - blockWidth/2 - 60}, ${height / 2})`)
+                    .text('Stack 6-12 Layers');
+                
+                // Arrow marker definition (if not already defined)
+                if (svg.select('#arrow').empty()) {
+                    svg.append('defs')
+                        .append('marker')
+                        .attr('id', 'arrow')
+                        .attr('viewBox', '0 -5 10 10')
+                        .attr('refX', 8)
+                        .attr('refY', 0)
+                        .attr('markerWidth', 6)
+                        .attr('markerHeight', 6)
+                        .attr('orient', 'auto')
+                        .append('path')
+                        .attr('d', 'M0,-5L10,0L0,5')
+                        .attr('fill', '#34495e');
+                }
+            }
+        }
+        
+        function initPositionalViz() {
+            const container = d3.select('#positional-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Sinusoidal Positional Encoding Patterns');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Generate positional encoding data
+                const maxPos = 50;
+                const dModel = 8; // Simplified dimension
+                const positions = d3.range(maxPos);
+                
+                // Create scales
+                const xScale = d3.scaleLinear()
+                    .domain([0, maxPos - 1])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, dModel - 1])
+                    .range([0, innerHeight]);
+                
+                // Generate encoding patterns for different dimensions
+                for (let dim = 0; dim < dModel; dim++) {
+                    const isEven = dim % 2 === 0;
+                    const i = Math.floor(dim / 2);
+                    
+                    const line = d3.line()
+                        .x(d => xScale(d))
+                        .y(d => {
+                            const pos = d;
+                            const angle = pos / Math.pow(10000, 2 * i / dModel);
+                            let value = isEven ? Math.sin(angle) : Math.cos(angle);
+                            // Normalize to [0,1] and scale to position
+                            value = (value + 1) / 2;
+                            return yScale(dim) + value * 20 - 10;
+                        });
+                    
+                    const color = d3.interpolateViridis(dim / (dModel - 1));
+                    
+                    g.append('path')
+                        .datum(positions)
+                        .attr('fill', 'none')
+                        .attr('stroke', color)
+                        .attr('stroke-width', 2)
+                        .attr('d', line);
+                    
+                    // Dimension label
+                    g.append('text')
+                        .attr('x', -10)
+                        .attr('y', yScale(dim) + 4)
+                        .attr('text-anchor', 'end')
+                        .attr('font-size', '10px')
+                        .attr('fill', color)
+                        .text(`d${dim}`);
+                }
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale).ticks(5))
+                    .append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-size', '12px')
+                    .text('Position');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -35)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-size', '12px')
+                    .text('Encoding Dimensions');
+                
+                // Formula
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#2c3e50')
+                    .text('PE(pos,2i) = sin(pos/10000^(2i/d_model))  PE(pos,2i+1) = cos(pos/10000^(2i/d_model))');
+            }
+        }
+        
+        function initEncoderDecoderViz() {
+            const container = d3.select('#encoder-decoder-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Encoder-Decoder Architecture');
+                
+                const encoderX = width * 0.25;
+                const decoderX = width * 0.75;
+                const centerY = height / 2;
+                
+                // Encoder Stack
+                svg.append('rect')
+                    .attr('x', encoderX - 60)
+                    .attr('y', centerY - 60)
+                    .attr('width', 120)
+                    .attr('height', 120)
+                    .attr('fill', '#3498db')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 3)
+                    .attr('rx', 8);
+                
+                svg.append('text')
+                    .attr('x', encoderX)
+                    .attr('y', centerY - 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('ENCODER');
+                
+                svg.append('text')
+                    .attr('x', encoderX)
+                    .attr('y', centerY - 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .text('6 Layers');
+                
+                svg.append('text')
+                    .attr('x', encoderX)
+                    .attr('y', centerY)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', 'white')
+                    .text('Self-Attention');
+                
+                svg.append('text')
+                    .attr('x', encoderX)
+                    .attr('y', centerY + 12)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', 'white')
+                    .text('Feed Forward');
+                
+                svg.append('text')
+                    .attr('x', encoderX)
+                    .attr('y', centerY + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', 'white')
+                    .text('Bidirectional');
+                
+                // Decoder Stack
+                svg.append('rect')
+                    .attr('x', decoderX - 60)
+                    .attr('y', centerY - 60)
+                    .attr('width', 120)
+                    .attr('height', 120)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 3)
+                    .attr('rx', 8);
+                
+                svg.append('text')
+                    .attr('x', decoderX)
+                    .attr('y', centerY - 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('DECODER');
+                
+                svg.append('text')
+                    .attr('x', decoderX)
+                    .attr('y', centerY - 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .text('6 Layers');
+                
+                svg.append('text')
+                    .attr('x', decoderX)
+                    .attr('y', centerY - 3)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', 'white')
+                    .text('Masked Self-Attn');
+                
+                svg.append('text')
+                    .attr('x', decoderX)
+                    .attr('y', centerY + 9)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', 'white')
+                    .text('Cross-Attention');
+                
+                svg.append('text')
+                    .attr('x', decoderX)
+                    .attr('y', centerY + 21)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', 'white')
+                    .text('Feed Forward');
+                
+                svg.append('text')
+                    .attr('x', decoderX)
+                    .attr('y', centerY + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', 'white')
+                    .text('Autoregressive');
+                
+                // Cross-attention connection
+                svg.append('line')
+                    .attr('x1', encoderX + 65)
+                    .attr('y1', centerY)
+                    .attr('x2', decoderX - 65)
+                    .attr('y2', centerY)
+                    .attr('stroke', '#f39c12')
+                    .attr('stroke-width', 4)
+                    .attr('stroke-dasharray', '10,5')
+                    .attr('marker-end', 'url(#arrow)');
+                
+                svg.append('text')
+                    .attr('x', (encoderX + decoderX) / 2)
+                    .attr('y', centerY - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#f39c12')
+                    .text('Cross-Attention');
+                
+                // Input and Output
+                svg.append('text')
+                    .attr('x', encoderX)
+                    .attr('y', centerY + 85)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-weight', 'bold')
+                    .text('Input Sequence');
+                
+                svg.append('text')
+                    .attr('x', encoderX)
+                    .attr('y', centerY + 100)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('"The cat sat"');
+                
+                svg.append('text')
+                    .attr('x', decoderX)
+                    .attr('y', centerY + 85)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-weight', 'bold')
+                    .text('Output Sequence');
+                
+                svg.append('text')
+                    .attr('x', decoderX)
+                    .attr('y', centerY + 100)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('"Le chat était assis"');
+                
+                // Key differences box
+                svg.append('rect')
+                    .attr('x', width / 2 - 80)
+                    .attr('y', 45)
+                    .attr('width', 160)
+                    .attr('height', 60)
+                    .attr('fill', '#ecf0f1')
+                    .attr('stroke', '#bdc3c7')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 5);
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 60)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#2c3e50')
+                    .text('Key Differences:');
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 75)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#2c3e50')
+                    .text('Encoder: Bidirectional');
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 87)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#2c3e50')
+                    .text('Decoder: Causal + Cross-Attn');
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 99)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#2c3e50')
+                    .text('Translation: EN → FR');
+            }
+        }
+        
+        function initializeVisualizationForSlide(slideNumber) {
+            try {
+                switch (slideNumber) {
+                    case 2:
+                        initProblemsViz();
+                        break;
+                    case 3:
+                        initAttentionViz();
+                        break;
+                    case 4:
+                        initSelfAttentionViz();
+                        break;
+                    case 5:
+                        initMultiheadViz();
+                        break;
+                    case 6:
+                        initTransformerBlockViz();
+                        break;
+                    case 7:
+                        initPositionalViz();
+                        break;
+                    case 8:
+                        initEncoderDecoderViz();
+                        break;
+                }
+            } catch (error) {
+                console.error(`Error initializing visualization for slide ${slideNumber}:`, error);
+            }
+        }
+    </script>
+</body>
+</html>

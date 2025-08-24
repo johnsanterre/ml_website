@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoencoders</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            padding: 60px;
+            min-height: 600px;
+            position: relative;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        .slide h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 20px;
+        }
+        
+        .slide h2 {
+            color: #34495e;
+            font-size: 2em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .slide h3 {
+            color: #2980b9;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        
+        .slide p, .slide li {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .slide ul {
+            padding-left: 30px;
+        }
+        
+        .example {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+            margin: 20px 0;
+        }
+        
+        .formula {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .nav-btn:hover {
+            background: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .viz-container {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .comparison-table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Slide 1: Title -->
+        <div class="slide active" id="slide1">
+            <h1>Autoencoders</h1>
+            <h2>Neural Networks for Unsupervised Representation Learning</h2>
+            <p>Learning compressed representations through reconstruction</p>
+            <div class="example">
+                <strong>Core Concept:</strong> Train neural networks to copy their input to output through a bottleneck layer
+            </div>
+            <div class="highlight">
+                <strong>Learning Goals:</strong>
+                <ul>
+                    <li>Understand autoencoder architecture and motivation</li>
+                    <li>Learn different types and their applications</li>
+                    <li>Compare with other dimensionality reduction methods</li>
+                    <li>Apply autoencoders to real-world problems</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 2: Motivation -->
+        <div class="slide" id="slide2">
+            <h2>Why Autoencoders?</h2>
+            <div class="two-column">
+                <div>
+                    <h3>The Challenge</h3>
+                    <ul>
+                        <li><strong>High-dimensional data:</strong> Images, text, sensor data</li>
+                        <li><strong>Hidden structure:</strong> Meaningful patterns in complex data</li>
+                        <li><strong>Unlabeled data:</strong> Most real-world data lacks labels</li>
+                        <li><strong>Feature learning:</strong> Manual feature engineering is difficult</li>
+                    </ul>
+                    <div class="formula">
+                        <strong>Goal:</strong> Learn function $f: \mathbb{R}^d \rightarrow \mathbb{R}^k$<br>
+                        where $k < d$ (compression)
+                    </div>
+                </div>
+                <div>
+                    <div id="motivation-viz" class="viz-container"></div>
+                </div>
+            </div>
+            <div class="example">
+                <strong>Applications:</strong> Dimensionality reduction, denoising, anomaly detection, feature learning, data generation
+            </div>
+        </div>
+
+        <!-- Slide 3: Basic Architecture -->
+        <div class="slide" id="slide3">
+            <h2>Autoencoder Architecture</h2>
+            <div id="architecture-viz" class="viz-container"></div>
+            <div class="two-column">
+                <div>
+                    <h3>Encoder Network</h3>
+                    <div class="formula">
+                        $z = f_\theta(x)$
+                    </div>
+                    <ul>
+                        <li>Maps input $x \in \mathbb{R}^d$ to latent code $z \in \mathbb{R}^k$</li>
+                        <li>Typically $k < d$ for compression</li>
+                        <li>Uses standard activation functions (ReLU, tanh)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Decoder Network</h3>
+                    <div class="formula">
+                        $\hat{x} = g_\phi(z)$
+                    </div>
+                    <ul>
+                        <li>Maps latent code back to reconstruction $\hat{x}$</li>
+                        <li>Often mirrors encoder architecture</li>
+                        <li>Output activation depends on data type</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="highlight">
+                <strong>Key Insight:</strong> Bottleneck forces network to learn compressed, meaningful representations
+            </div>
+        </div>
+
+        <!-- Slide 4: Loss Functions and Training -->
+        <div class="slide" id="slide4">
+            <h2>Training Autoencoders</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Reconstruction Loss</h3>
+                    <div class="formula">
+                        <strong>MSE:</strong> $L = \frac{1}{n}\sum_{i=1}^{n}||x_i - \hat{x}_i||^2$
+                    </div>
+                    <div class="formula">
+                        <strong>Binary CE:</strong> $L = -\sum_{i=1}^{d}[x_i \log(\hat{x}_i) + (1-x_i)\log(1-\hat{x}_i)]$
+                    </div>
+                    <p>Choice depends on input data type:</p>
+                    <ul>
+                        <li><strong>Continuous data:</strong> MSE, MAE</li>
+                        <li><strong>Binary data:</strong> Binary cross-entropy</li>
+                        <li><strong>Categorical:</strong> Categorical cross-entropy</li>
+                    </ul>
+                </div>
+                <div>
+                    <div id="training-viz" class="viz-container"></div>
+                </div>
+            </div>
+            <div class="example">
+                <strong>Training Process:</strong> Standard backpropagation, no labels required, minimize reconstruction error
+            </div>
+        </div>
+
+        <!-- Slide 5: Undercomplete vs Overcomplete -->
+        <div class="slide" id="slide5">
+            <h2>Undercomplete vs Overcomplete Autoencoders</h2>
+            <div id="complete-viz" class="viz-container"></div>
+            <div class="two-column">
+                <div>
+                    <h3>Undercomplete ($k < d$)</h3>
+                    <ul>
+                        <li><strong>Natural compression:</strong> Bottleneck smaller than input</li>
+                        <li><strong>Forces feature extraction:</strong> Cannot simply copy</li>
+                        <li><strong>Risk:</strong> May learn trivial features if too constrained</li>
+                        <li><strong>Good for:</strong> Dimensionality reduction, visualization</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Overcomplete ($k > d$)</h3>
+                    <ul>
+                        <li><strong>Potential copying:</strong> Could learn identity function</li>
+                        <li><strong>Requires regularization:</strong> Prevent trivial solutions</li>
+                        <li><strong>Techniques:</strong> Sparsity, noise, weight decay</li>
+                        <li><strong>Good for:</strong> Feature learning with constraints</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="formula">
+                <strong>Key Trade-off:</strong> Compression vs. Reconstruction Quality
+            </div>
+        </div>
+
+        <!-- Slide 6: Sparse Autoencoders -->
+        <div class="slide" id="slide6">
+            <h2>Sparse Autoencoders</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Sparsity Constraint</h3>
+                    <div class="formula">
+                        $L = L_{recon} + \lambda \sum_j |h_j|$
+                    </div>
+                    <p>Or KL-divergence sparsity:</p>
+                    <div class="formula">
+                        $L = L_{recon} + \beta \sum_j KL(\rho || \hat{\rho}_j)$
+                    </div>
+                    <ul>
+                        <li><strong>$\rho$:</strong> Target sparsity (e.g., 0.05)</li>
+                        <li><strong>$\hat{\rho}_j$:</strong> Average activation of neuron $j$</li>
+                        <li><strong>$\beta$:</strong> Sparsity weight</li>
+                    </ul>
+                </div>
+                <div>
+                    <div id="sparse-viz" class="viz-container"></div>
+                </div>
+            </div>
+            <div class="example">
+                <strong>Benefits:</strong> Learns distributed but sparse representations, prevents overfitting, interpretable features
+            </div>
+            <div class="highlight">
+                <strong>Biological Inspiration:</strong> Neurons in the brain are typically sparsely active
+            </div>
+        </div>
+
+        <!-- Slide 7: Denoising Autoencoders -->
+        <div class="slide" id="slide7">
+            <h2>Denoising Autoencoders (DAE)</h2>
+            <div id="denoising-viz" class="viz-container"></div>
+            <div class="two-column">
+                <div>
+                    <h3>Training Process</h3>
+                    <ol>
+                        <li><strong>Corrupt input:</strong> $\tilde{x} = x + \epsilon$</li>
+                        <li><strong>Encode corrupted:</strong> $z = f_\theta(\tilde{x})$</li>
+                        <li><strong>Decode to clean:</strong> $\hat{x} = g_\phi(z)$</li>
+                        <li><strong>Loss vs. original:</strong> $L = ||x - \hat{x}||^2$</li>
+                    </ol>
+                    <h3>Corruption Types</h3>
+                    <ul>
+                        <li><strong>Gaussian noise:</strong> $\tilde{x} = x + \mathcal{N}(0, \sigma^2)$</li>
+                        <li><strong>Masking:</strong> Set random pixels to 0</li>
+                        <li><strong>Salt-and-pepper:</strong> Random black/white pixels</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Benefits</h3>
+                    <ul>
+                        <li><strong>Robust features:</strong> Invariant to small perturbations</li>
+                        <li><strong>Prevents copying:</strong> Must learn meaningful structure</li>
+                        <li><strong>Data augmentation:</strong> Implicit regularization</li>
+                        <li><strong>Real-world noise:</strong> Handles imperfect data</li>
+                    </ul>
+                    <div class="formula">
+                        <strong>Key Insight:</strong> Corruption forces extraction of robust, essential features
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Advanced Variants -->
+        <div class="slide" id="slide8">
+            <h2>Advanced Autoencoder Variants</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Variational Autoencoders (VAE)</h3>
+                    <div class="formula">
+                        $L = L_{recon} + \beta D_{KL}(q_\phi(z|x)||p(z))$
+                    </div>
+                    <ul>
+                        <li><strong>Probabilistic encoding:</strong> $q_\phi(z|x) = \mathcal{N}(\mu, \sigma^2)$</li>
+                        <li><strong>Regularized latent space:</strong> KL divergence term</li>
+                        <li><strong>Generation capability:</strong> Sample from $p(z)$ and decode</li>
+                        <li><strong>Smooth interpolation:</strong> Continuous latent space</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Convolutional Autoencoders</h3>
+                    <ul>
+                        <li><strong>Spatial structure:</strong> Preserve image topology</li>
+                        <li><strong>Encoder:</strong> Conv + pooling layers</li>
+                        <li><strong>Decoder:</strong> Transposed conv + upsampling</li>
+                        <li><strong>Applications:</strong> Image compression, super-resolution</li>
+                    </ul>
+                    <h3>Sequence Autoencoders</h3>
+                    <ul>
+                        <li><strong>RNN/LSTM based:</strong> Handle temporal data</li>
+                        <li><strong>Encoder:</strong> Sequence → Fixed vector</li>
+                        <li><strong>Decoder:</strong> Vector → Sequence</li>
+                        <li><strong>Applications:</strong> Text, time series, speech</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="variants-viz" class="viz-container"></div>
+        </div>
+
+        <!-- Slide 9: Comparison with Other Methods -->
+        <div class="slide" id="slide9">
+            <h2>Autoencoders vs Other Methods</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Type</th>
+                        <th>Advantages</th>
+                        <th>Disadvantages</th>
+                        <th>Best For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PCA</strong></td>
+                        <td>Linear</td>
+                        <td>Fast, closed-form, interpretable</td>
+                        <td>Linear only, global transformation</td>
+                        <td>Linear relationships, quick analysis</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Autoencoders</strong></td>
+                        <td>Non-linear</td>
+                        <td>Complex manifolds, invertible, flexible</td>
+                        <td>Requires training, local minima</td>
+                        <td>Complex data, feature learning</td>
+                    </tr>
+                    <tr>
+                        <td><strong>t-SNE/UMAP</strong></td>
+                        <td>Non-linear</td>
+                        <td>Great visualization, local structure</td>
+                        <td>Not invertible, slow, 2D/3D only</td>
+                        <td>Data visualization, exploration</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="comparison-viz" class="viz-container"></div>
+            <div class="highlight">
+                <strong>When to Use Autoencoders:</strong> Need non-linear reduction + invertible transformation + feature learning
+            </div>
+        </div>
+
+        <!-- Slide 10: Applications -->
+        <div class="slide" id="slide10">
+            <h2>Real-World Applications</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Image Processing</h3>
+                    <ul>
+                        <li><strong>Compression:</strong> Better than JPEG for specific domains</li>
+                        <li><strong>Denoising:</strong> Medical images, old photos</li>
+                        <li><strong>Super-resolution:</strong> Enhance low-res images</li>
+                        <li><strong>Inpainting:</strong> Fill missing image regions</li>
+                    </ul>
+                    <h3>Anomaly Detection</h3>
+                    <ul>
+                        <li><strong>Fraud detection:</strong> Unusual transaction patterns</li>
+                        <li><strong>System monitoring:</strong> Network intrusion detection</li>
+                        <li><strong>Quality control:</strong> Manufacturing defects</li>
+                        <li><strong>Medical diagnosis:</strong> Abnormal scan patterns</li>
+                    </ul>
+                </div>
+                <div>
+                    <div id="applications-viz" class="viz-container"></div>
+                </div>
+            </div>
+            <div class="example">
+                <strong>Anomaly Detection Process:</strong> Train on normal data → High reconstruction error indicates anomaly
+            </div>
+            <div class="formula">
+                <strong>Anomaly Score:</strong> $S(x) = ||x - \hat{x}||^2$
+            </div>
+        </div>
+
+        <!-- Slide 11: Key Takeaways -->
+        <div class="slide" id="slide11">
+            <h2>Key Takeaways</h2>
+            <div class="highlight">
+                <h3>🎯 Core Concepts</h3>
+                <ul>
+                    <li><strong>Autoencoders learn compressed representations through reconstruction</strong></li>
+                    <li><strong>Bottleneck architecture forces meaningful feature extraction</strong></li>
+                    <li><strong>Unsupervised learning - no labels required</strong></li>
+                    <li><strong>Balance between compression and reconstruction quality</strong></li>
+                </ul>
+            </div>
+            
+            <div class="two-column">
+                <div>
+                    <h3>🔧 Design Choices</h3>
+                    <ul>
+                        <li><strong>Architecture:</strong> Undercomplete vs overcomplete</li>
+                        <li><strong>Regularization:</strong> Sparsity, denoising, variational</li>
+                        <li><strong>Loss function:</strong> MSE, cross-entropy, KL divergence</li>
+                        <li><strong>Network type:</strong> Dense, convolutional, recurrent</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🎨 Applications</h3>
+                    <ul>
+                        <li><strong>Dimensionality reduction:</strong> Non-linear alternative to PCA</li>
+                        <li><strong>Feature learning:</strong> Pre-training for downstream tasks</li>
+                        <li><strong>Data cleaning:</strong> Denoising and reconstruction</li>
+                        <li><strong>Anomaly detection:</strong> Outlier identification</li>
+                        <li><strong>Generation:</strong> VAEs for new sample creation</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="formula">
+                <strong>Remember:</strong> Autoencoders provide flexible, learnable dimensionality reduction but require careful design and training
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">11</span>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="previousSlide()">Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 11;
+
+        // MathJax configuration
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide;
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+            
+            // Initialize visualization for current slide
+            setTimeout(() => {
+                initializeVisualizationForSlide(currentSlide);
+            }, 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // D3.js Visualizations
+        function initMotivationViz() {
+            const container = d3.select('#motivation-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('High-Dimensional Data Problem');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // High-dimensional space visualization
+                const dims = [2, 10, 100, 1000];
+                const complexity = dims.map(d => Math.pow(d, 3));
+                
+                const xScale = d3.scaleLog()
+                    .domain([2, 1000])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLog()
+                    .domain([8, 1000000000])
+                    .range([innerHeight, 0]);
+                
+                // Draw exponential curve
+                const line = d3.line()
+                    .x(d => xScale(d))
+                    .y(d => yScale(Math.pow(d, 3)));
+                
+                const lineData = d3.range(2, 1000, 20);
+                
+                g.append('path')
+                    .datum(lineData)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3)
+                    .attr('d', line);
+                
+                // Data points
+                g.selectAll('.complexity-point')
+                    .data(dims)
+                    .enter().append('circle')
+                    .attr('class', 'complexity-point')
+                    .attr('cx', d => xScale(d))
+                    .attr('cy', d => yScale(Math.pow(d, 3)))
+                    .attr('r', 6)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 2);
+                
+                // Labels for key points
+                const labels = [
+                    {x: 2, y: 8, text: '2D: 8 voxels'},
+                    {x: 10, y: 1000, text: '10D: 1K voxels'},
+                    {x: 100, y: 1000000, text: '100D: 1M voxels'},
+                    {x: 1000, y: 1000000000, text: '1000D: 1B voxels'}
+                ];
+                
+                labels.forEach(label => {
+                    g.append('text')
+                        .attr('x', xScale(label.x) + 10)
+                        .attr('y', yScale(label.y) - 10)
+                        .attr('font-size', '10px')
+                        .attr('fill', '#2c3e50')
+                        .text(label.text);
+                });
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale).tickFormat(d3.format('d')));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale).tickFormat(d3.format('.0e')));
+                
+                // Labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Dimensions');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Data Complexity');
+                
+                // Problem annotation
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Exponential growth in data complexity with dimensions');
+            }
+        }
+
+        function initArchitectureViz() {
+            const container = d3.select('#architecture-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Autoencoder Architecture');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Network layers
+                const layers = [
+                    {name: 'Input', neurons: 8, x: 50, color: '#95a5a6'},
+                    {name: 'Hidden 1', neurons: 6, x: 150, color: '#3498db'},
+                    {name: 'Bottleneck', neurons: 3, x: 250, color: '#e74c3c'},
+                    {name: 'Hidden 2', neurons: 6, x: 350, color: '#27ae60'},
+                    {name: 'Output', neurons: 8, x: 450, color: '#95a5a6'}
+                ];
+                
+                const neuronRadius = 12;
+                const layerHeight = innerHeight - 80;
+                
+                // Draw connections
+                for (let i = 0; i < layers.length - 1; i++) {
+                    const currentLayer = layers[i];
+                    const nextLayer = layers[i + 1];
+                    
+                    for (let j = 0; j < currentLayer.neurons; j++) {
+                        for (let k = 0; k < nextLayer.neurons; k++) {
+                            const y1 = 60 + (j * layerHeight / (currentLayer.neurons - 1));
+                            const y2 = 60 + (k * layerHeight / (nextLayer.neurons - 1));
+                            
+                            g.append('line')
+                                .attr('x1', currentLayer.x + neuronRadius)
+                                .attr('y1', y1)
+                                .attr('x2', nextLayer.x - neuronRadius)
+                                .attr('y2', y2)
+                                .attr('stroke', '#bdc3c7')
+                                .attr('stroke-width', 1)
+                                .attr('opacity', 0.6);
+                        }
+                    }
+                }
+                
+                // Draw neurons
+                layers.forEach(layer => {
+                    for (let i = 0; i < layer.neurons; i++) {
+                        const y = 60 + (i * layerHeight / (layer.neurons - 1));
+                        
+                        g.append('circle')
+                            .attr('cx', layer.x)
+                            .attr('cy', y)
+                            .attr('r', neuronRadius)
+                            .attr('fill', layer.color)
+                            .attr('stroke', '#2c3e50')
+                            .attr('stroke-width', 2);
+                    }
+                    
+                    // Layer labels
+                    g.append('text')
+                        .attr('x', layer.x)
+                        .attr('y', 40)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '11px')
+                        .attr('font-weight', 'bold')
+                        .text(layer.name);
+                    
+                    g.append('text')
+                        .attr('x', layer.x)
+                        .attr('y', layerHeight + 90)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('fill', '#7f8c8d')
+                        .text(`${layer.neurons} units`);
+                });
+                
+                // Section labels
+                g.append('text')
+                    .attr('x', 125)
+                    .attr('y', 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#3498db')
+                    .text('ENCODER');
+                
+                g.append('text')
+                    .attr('x', 375)
+                    .attr('y', 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('DECODER');
+                
+                // Bottleneck annotation
+                g.append('line')
+                    .attr('x1', 250)
+                    .attr('y1', layerHeight + 100)
+                    .attr('x2', 250)
+                    .attr('y2', layerHeight + 120)
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 2)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                g.append('text')
+                    .attr('x', 250)
+                    .attr('y', layerHeight + 140)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#e74c3c')
+                    .attr('font-weight', 'bold')
+                    .text('Compression');
+                
+                // Arrow marker
+                const defs = svg.append('defs');
+                defs.append('marker')
+                    .attr('id', 'arrow')
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 8)
+                    .attr('refY', 0)
+                    .attr('markerWidth', 6)
+                    .attr('markerHeight', 6)
+                    .attr('orient', 'auto')
+                    .append('path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#e74c3c');
+            }
+        }
+
+        function initTrainingViz() {
+            const container = d3.select('#training-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Training Loss Convergence');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Generate training loss curve
+                const epochs = d3.range(0, 101, 5);
+                const lossData = epochs.map(epoch => ({
+                    epoch: epoch,
+                    loss: 2.0 * Math.exp(-epoch / 30) + 0.1 + Math.random() * 0.05
+                }));
+                
+                const xScale = d3.scaleLinear()
+                    .domain([0, 100])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 2.5])
+                    .range([innerHeight, 0]);
+                
+                // Loss curve
+                const line = d3.line()
+                    .x(d => xScale(d.epoch))
+                    .y(d => yScale(d.loss))
+                    .curve(d3.curveMonotoneX);
+                
+                g.append('path')
+                    .datum(lossData)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3)
+                    .attr('d', line);
+                
+                // Points
+                g.selectAll('.loss-point')
+                    .data(lossData.filter((d, i) => i % 3 === 0))
+                    .enter().append('circle')
+                    .attr('class', 'loss-point')
+                    .attr('cx', d => xScale(d.epoch))
+                    .attr('cy', d => yScale(d.loss))
+                    .attr('r', 3)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 1);
+                
+                // Convergence annotation
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('x2', innerWidth)
+                    .attr('y1', yScale(0.1))
+                    .attr('y2', yScale(0.1))
+                    .attr('stroke', '#27ae60')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+                
+                g.append('text')
+                    .attr('x', innerWidth - 100)
+                    .attr('y', yScale(0.1) - 5)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#27ae60')
+                    .attr('font-weight', 'bold')
+                    .text('Convergence');
+                
+                // Phases annotation
+                g.append('text')
+                    .attr('x', xScale(20))
+                    .attr('y', yScale(1.5))
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Fast learning');
+                
+                g.append('text')
+                    .attr('x', xScale(70))
+                    .attr('y', yScale(0.3))
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Fine-tuning');
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale));
+                
+                // Labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Training Epochs');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Reconstruction Loss');
+            }
+        }
+
+        function initCompleteViz() {
+            const container = d3.select('#complete-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Undercomplete vs Overcomplete Architectures');
+                
+                // Undercomplete (left side)
+                const leftG = svg.append('g')
+                    .attr('transform', 'translate(50, 60)');
+                
+                leftG.append('text')
+                    .attr('x', 100)
+                    .attr('y', 0)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '13px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('Undercomplete (k < d)');
+                
+                // Draw undercomplete network
+                const underLayers = [8, 5, 3, 5, 8];
+                underLayers.forEach((neurons, i) => {
+                    const x = i * 40 + 20;
+                    const layerHeight = 120;
+                    
+                    for (let j = 0; j < neurons; j++) {
+                        const y = 30 + (j * layerHeight / (neurons - 1));
+                        const color = i === 2 ? '#e74c3c' : '#3498db';
+                        
+                        leftG.append('circle')
+                            .attr('cx', x)
+                            .attr('cy', y)
+                            .attr('r', 6)
+                            .attr('fill', color)
+                            .attr('stroke', '#2c3e50')
+                            .attr('stroke-width', 1);
+                    }
+                    
+                    // Connections
+                    if (i < underLayers.length - 1) {
+                        for (let j = 0; j < neurons; j++) {
+                            for (let k = 0; k < underLayers[i + 1]; k++) {
+                                const y1 = 30 + (j * layerHeight / (neurons - 1));
+                                const y2 = 30 + (k * layerHeight / (underLayers[i + 1] - 1));
+                                
+                                leftG.append('line')
+                                    .attr('x1', x + 6)
+                                    .attr('y1', y1)
+                                    .attr('x2', (i + 1) * 40 + 20 - 6)
+                                    .attr('y2', y2)
+                                    .attr('stroke', '#bdc3c7')
+                                    .attr('stroke-width', 0.5)
+                                    .attr('opacity', 0.6);
+                            }
+                        }
+                    }
+                    
+                    // Layer size labels
+                    leftG.append('text')
+                        .attr('x', x)
+                        .attr('y', 170)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .text(neurons);
+                });
+                
+                // Overcomplete (right side)
+                const rightG = svg.append('g')
+                    .attr('transform', 'translate(350, 60)');
+                
+                rightG.append('text')
+                    .attr('x', 100)
+                    .attr('y', 0)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '13px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('Overcomplete (k > d)');
+                
+                // Draw overcomplete network
+                const overLayers = [8, 12, 16, 12, 8];
+                overLayers.forEach((neurons, i) => {
+                    const x = i * 40 + 20;
+                    const layerHeight = 120;
+                    const maxNeurons = Math.max(...overLayers);
+                    
+                    for (let j = 0; j < neurons; j++) {
+                        const y = 30 + (j * layerHeight / (neurons - 1));
+                        const color = i === 2 ? '#27ae60' : '#3498db';
+                        
+                        rightG.append('circle')
+                            .attr('cx', x)
+                            .attr('cy', y)
+                            .attr('r', 5)
+                            .attr('fill', color)
+                            .attr('stroke', '#2c3e50')
+                            .attr('stroke-width', 1);
+                    }
+                    
+                    // Layer size labels
+                    rightG.append('text')
+                        .attr('x', x)
+                        .attr('y', 170)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .text(neurons);
+                });
+                
+                // Key differences
+                svg.append('text')
+                    .attr('x', 150)
+                    .attr('y', 250)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#e74c3c')
+                    .text('Natural compression');
+                
+                svg.append('text')
+                    .attr('x', 450)
+                    .attr('y', 250)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#27ae60')
+                    .text('Requires regularization');
+            }
+        }
+
+        function initSparseViz() {
+            const container = d3.select('#sparse-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Sparse vs Dense Activations');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Dense activation pattern (left)
+                const denseG = g.append('g')
+                    .attr('transform', 'translate(0, 20)');
+                
+                denseG.append('text')
+                    .attr('x', 80)
+                    .attr('y', 0)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('Dense Activations');
+                
+                // Create dense activation heatmap
+                const denseData = [];
+                for (let i = 0; i < 8; i++) {
+                    for (let j = 0; j < 8; j++) {
+                        denseData.push({
+                            x: j,
+                            y: i,
+                            value: 0.3 + Math.random() * 0.7
+                        });
+                    }
+                }
+                
+                const cellSize = 12;
+                const colorScale = d3.scaleSequential(d3.interpolateReds)
+                    .domain([0, 1]);
+                
+                denseG.selectAll('.dense-cell')
+                    .data(denseData)
+                    .enter().append('rect')
+                    .attr('class', 'dense-cell')
+                    .attr('x', d => d.x * cellSize + 20)
+                    .attr('y', d => d.y * cellSize + 20)
+                    .attr('width', cellSize - 1)
+                    .attr('height', cellSize - 1)
+                    .attr('fill', d => colorScale(d.value));
+                
+                // Sparse activation pattern (right)
+                const sparseG = g.append('g')
+                    .attr('transform', 'translate(200, 20)');
+                
+                sparseG.append('text')
+                    .attr('x', 80)
+                    .attr('y', 0)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('Sparse Activations (5% active)');
+                
+                // Create sparse activation heatmap
+                const sparseData = [];
+                for (let i = 0; i < 8; i++) {
+                    for (let j = 0; j < 8; j++) {
+                        sparseData.push({
+                            x: j,
+                            y: i,
+                            value: Math.random() < 0.05 ? 0.8 + Math.random() * 0.2 : 0
+                        });
+                    }
+                }
+                
+                sparseG.selectAll('.sparse-cell')
+                    .data(sparseData)
+                    .enter().append('rect')
+                    .attr('class', 'sparse-cell')
+                    .attr('x', d => d.x * cellSize + 20)
+                    .attr('y', d => d.y * cellSize + 20)
+                    .attr('width', cellSize - 1)
+                    .attr('height', cellSize - 1)
+                    .attr('fill', d => colorScale(d.value));
+                
+                // Statistics
+                g.append('text')
+                    .attr('x', 80)
+                    .attr('y', 160)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .text('Average activation: 0.65');
+                
+                g.append('text')
+                    .attr('x', 280)
+                    .attr('y', 160)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .text('Average activation: 0.04');
+                
+                // Benefits comparison
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 190)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Sparsity Benefits');
+                
+                const benefits = [
+                    'More interpretable features',
+                    'Better generalization',
+                    'Reduced overfitting',
+                    'Biological plausibility'
+                ];
+                
+                benefits.forEach((benefit, i) => {
+                    g.append('text')
+                        .attr('x', innerWidth / 2)
+                        .attr('y', 210 + i * 15)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('fill', '#27ae60')
+                        .text(`• ${benefit}`);
+                });
+            }
+        }
+
+        function initDenoisingViz() {
+            const container = d3.select('#denoising-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Denoising Autoencoder Process');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Three panels: Original, Corrupted, Reconstructed
+                const panelWidth = innerWidth / 3 - 20;
+                const panelHeight = 120;
+                const panelY = 40;
+                
+                // Original image (simulated as grid)
+                const originalG = g.append('g')
+                    .attr('transform', 'translate(0, 0)');
+                
+                originalG.append('text')
+                    .attr('x', panelWidth / 2)
+                    .attr('y', 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Original');
+                
+                // Create clean pattern
+                const gridSize = 8;
+                const cellSize = panelWidth / gridSize;
+                
+                for (let i = 0; i < gridSize; i++) {
+                    for (let j = 0; j < gridSize; j++) {
+                        const isPattern = (i + j) % 2 === 0 || (i === j) || (i + j === gridSize - 1);
+                        originalG.append('rect')
+                            .attr('x', j * cellSize)
+                            .attr('y', panelY + i * cellSize)
+                            .attr('width', cellSize - 1)
+                            .attr('height', cellSize - 1)
+                            .attr('fill', isPattern ? '#2c3e50' : '#ecf0f1')
+                            .attr('stroke', '#bdc3c7')
+                            .attr('stroke-width', 0.5);
+                    }
+                }
+                
+                // Corrupted image
+                const corruptedG = g.append('g')
+                    .attr('transform', `translate(${panelWidth + 30}, 0)`);
+                
+                corruptedG.append('text')
+                    .attr('x', panelWidth / 2)
+                    .attr('y', 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Corrupted');
+                
+                for (let i = 0; i < gridSize; i++) {
+                    for (let j = 0; j < gridSize; j++) {
+                        const isPattern = (i + j) % 2 === 0 || (i === j) || (i + j === gridSize - 1);
+                        const isNoise = Math.random() < 0.3;
+                        
+                        let fill;
+                        if (isNoise) {
+                            fill = Math.random() < 0.5 ? '#e74c3c' : '#f39c12';
+                        } else {
+                            fill = isPattern ? '#2c3e50' : '#ecf0f1';
+                        }
+                        
+                        corruptedG.append('rect')
+                            .attr('x', j * cellSize)
+                            .attr('y', panelY + i * cellSize)
+                            .attr('width', cellSize - 1)
+                            .attr('height', cellSize - 1)
+                            .attr('fill', fill)
+                            .attr('stroke', '#bdc3c7')
+                            .attr('stroke-width', 0.5);
+                    }
+                }
+                
+                // Reconstructed image
+                const reconstructedG = g.append('g')
+                    .attr('transform', `translate(${2 * (panelWidth + 30)}, 0)`);
+                
+                reconstructedG.append('text')
+                    .attr('x', panelWidth / 2)
+                    .attr('y', 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Reconstructed');
+                
+                for (let i = 0; i < gridSize; i++) {
+                    for (let j = 0; j < gridSize; j++) {
+                        const isPattern = (i + j) % 2 === 0 || (i === j) || (i + j === gridSize - 1);
+                        // Small amount of noise in reconstruction
+                        const reconstructionNoise = Math.random() < 0.05;
+                        
+                        let fill;
+                        if (reconstructionNoise) {
+                            fill = '#95a5a6';
+                        } else {
+                            fill = isPattern ? '#2c3e50' : '#ecf0f1';
+                        }
+                        
+                        reconstructedG.append('rect')
+                            .attr('x', j * cellSize)
+                            .attr('y', panelY + i * cellSize)
+                            .attr('width', cellSize - 1)
+                            .attr('height', cellSize - 1)
+                            .attr('fill', fill)
+                            .attr('stroke', '#bdc3c7')
+                            .attr('stroke-width', 0.5);
+                    }
+                }
+                
+                // Arrows between panels
+                const arrowY = panelY + panelHeight / 2;
+                
+                // Arrow 1
+                g.append('line')
+                    .attr('x1', panelWidth + 5)
+                    .attr('y1', arrowY)
+                    .attr('x2', panelWidth + 20)
+                    .attr('y2', arrowY)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                g.append('text')
+                    .attr('x', panelWidth + 12)
+                    .attr('y', arrowY - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#7f8c8d')
+                    .text('noise');
+                
+                // Arrow 2
+                g.append('line')
+                    .attr('x1', 2 * panelWidth + 35)
+                    .attr('y1', arrowY)
+                    .attr('x2', 2 * panelWidth + 50)
+                    .attr('y2', arrowY)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                g.append('text')
+                    .attr('x', 2 * panelWidth + 42)
+                    .attr('y', arrowY - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#7f8c8d')
+                    .text('denoise');
+                
+                // Arrow marker
+                const defs = svg.append('defs');
+                defs.append('marker')
+                    .attr('id', 'arrow')
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 8)
+                    .attr('refY', 0)
+                    .attr('markerWidth', 6)
+                    .attr('markerHeight', 6)
+                    .attr('orient', 'auto')
+                    .append('path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#34495e');
+                
+                // Loss information
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', panelY + panelHeight + 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', 'bold')
+                    .text('Loss = ||Original - Reconstructed||²');
+                
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', panelY + panelHeight + 50)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Network learns to remove noise while preserving structure');
+            }
+        }
+
+        function initVariantsViz() {
+            const container = d3.select('#variants-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Advanced Autoencoder Architectures');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Three variants: VAE, Convolutional, Sequence
+                const variantWidth = innerWidth / 3 - 20;
+                const variantHeight = 150;
+                
+                // VAE
+                const vaeG = g.append('g')
+                    .attr('transform', 'translate(0, 20)');
+                
+                vaeG.append('text')
+                    .attr('x', variantWidth / 2)
+                    .attr('y', 0)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#9b59b6')
+                    .text('Variational AE');
+                
+                // VAE architecture with probability distributions
+                const vaeNodes = [
+                    {x: 20, y: 40, label: 'x', color: '#95a5a6'},
+                    {x: 60, y: 30, label: 'μ', color: '#3498db'},
+                    {x: 60, y: 50, label: 'σ', color: '#3498db'},
+                    {x: 100, y: 40, label: 'z~N', color: '#e74c3c'},
+                    {x: 140, y: 40, label: 'x̂', color: '#95a5a6'}
+                ];
+                
+                vaeNodes.forEach(node => {
+                    vaeG.append('circle')
+                        .attr('cx', node.x)
+                        .attr('cy', node.y)
+                        .attr('r', 12)
+                        .attr('fill', node.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1);
+                    
+                    vaeG.append('text')
+                        .attr('x', node.x)
+                        .attr('y', node.y + 3)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '9px')
+                        .attr('font-weight', 'bold')
+                        .attr('fill', 'white')
+                        .text(node.label);
+                });
+                
+                // Connections
+                const vaeConnections = [
+                    [0, 1], [0, 2], [1, 3], [2, 3], [3, 4]
+                ];
+                
+                vaeConnections.forEach(conn => {
+                    const [from, to] = conn;
+                    vaeG.append('line')
+                        .attr('x1', vaeNodes[from].x + 12)
+                        .attr('y1', vaeNodes[from].y)
+                        .attr('x2', vaeNodes[to].x - 12)
+                        .attr('y2', vaeNodes[to].y)
+                        .attr('stroke', '#34495e')
+                        .attr('stroke-width', 2);
+                });
+                
+                vaeG.append('text')
+                    .attr('x', variantWidth / 2)
+                    .attr('y', 80)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Probabilistic latent space');
+                
+                // Convolutional AE
+                const convG = g.append('g')
+                    .attr('transform', `translate(${variantWidth + 30}, 20)`);
+                
+                convG.append('text')
+                    .attr('x', variantWidth / 2)
+                    .attr('y', 0)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('Convolutional AE');
+                
+                // Conv layers representation
+                const convLayers = [
+                    {x: 20, size: 32, color: '#3498db'},
+                    {x: 50, size: 24, color: '#3498db'},
+                    {x: 80, size: 16, color: '#e74c3c'},
+                    {x: 110, size: 24, color: '#27ae60'},
+                    {x: 140, size: 32, color: '#27ae60'}
+                ];
+                
+                convLayers.forEach(layer => {
+                    convG.append('rect')
+                        .attr('x', layer.x - layer.size/8)
+                        .attr('y', 60 - layer.size/4)
+                        .attr('width', layer.size/4)
+                        .attr('height', layer.size/2)
+                        .attr('fill', layer.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1)
+                        .attr('opacity', 0.8);
+                });
+                
+                convG.append('text')
+                    .attr('x', variantWidth / 2)
+                    .attr('y', 80)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Preserves spatial structure');
+                
+                // Sequence AE
+                const seqG = g.append('g')
+                    .attr('transform', `translate(${2 * (variantWidth + 30)}, 20)`);
+                
+                seqG.append('text')
+                    .attr('x', variantWidth / 2)
+                    .attr('y', 0)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('Sequence AE');
+                
+                // RNN representation
+                const seqSteps = [20, 40, 60, 80, 100, 120, 140];
+                seqSteps.forEach((x, i) => {
+                    const isBottleneck = i === 3;
+                    const color = isBottleneck ? '#e74c3c' : '#27ae60';
+                    
+                    seqG.append('rect')
+                        .attr('x', x - 8)
+                        .attr('y', 35)
+                        .attr('width', 16)
+                        .attr('height', 20)
+                        .attr('fill', color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1);
+                    
+                    if (i < seqSteps.length - 1) {
+                        seqG.append('line')
+                            .attr('x1', x + 8)
+                            .attr('y1', 45)
+                            .attr('x2', seqSteps[i + 1] - 8)
+                            .attr('y2', 45)
+                            .attr('stroke', '#34495e')
+                            .attr('stroke-width', 2)
+                            .attr('marker-end', 'url(#small-arrow)');
+                    }
+                });
+                
+                seqG.append('text')
+                    .attr('x', variantWidth / 2)
+                    .attr('y', 80)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Temporal dependencies');
+                
+                // Small arrow marker
+                const defs = svg.append('defs');
+                defs.append('marker')
+                    .attr('id', 'small-arrow')
+                    .attr('viewBox', '0 -3 6 6')
+                    .attr('refX', 5)
+                    .attr('refY', 0)
+                    .attr('markerWidth', 4)
+                    .attr('markerHeight', 4)
+                    .attr('orient', 'auto')
+                    .append('path')
+                    .attr('d', 'M0,-3L6,0L0,3')
+                    .attr('fill', '#34495e');
+                
+                // Applications summary
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 120)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', 'bold')
+                    .text('Specialized for Different Data Types and Applications');
+            }
+        }
+
+        function initComparisonViz() {
+            const container = d3.select('#comparison-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Dimensionality Reduction Methods Comparison');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Radar chart for comparison
+                const methods = ['PCA', 'Autoencoder', 't-SNE'];
+                const criteria = ['Speed', 'Non-linearity', 'Invertibility', 'Interpretability', 'Scalability'];
+                
+                const scores = {
+                    'PCA': [5, 1, 5, 5, 5],
+                    'Autoencoder': [3, 5, 5, 2, 4],
+                    't-SNE': [2, 5, 1, 3, 2]
+                };
+                
+                const colors = {
+                    'PCA': '#3498db',
+                    'Autoencoder': '#e74c3c',
+                    't-SNE': '#27ae60'
+                };
+                
+                const numCriteria = criteria.length;
+                const radius = Math.min(innerWidth, innerHeight) / 3;
+                const centerX = innerWidth / 2;
+                const centerY = innerHeight / 2;
+                
+                // Draw radar chart axes
+                for (let i = 0; i < numCriteria; i++) {
+                    const angle = (i * 2 * Math.PI) / numCriteria - Math.PI / 2;
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    
+                    g.append('line')
+                        .attr('x1', centerX)
+                        .attr('y1', centerY)
+                        .attr('x2', x)
+                        .attr('y2', y)
+                        .attr('stroke', '#bdc3c7')
+                        .attr('stroke-width', 1);
+                    
+                    // Criteria labels
+                    const labelX = centerX + (radius + 20) * Math.cos(angle);
+                    const labelY = centerY + (radius + 20) * Math.sin(angle);
+                    
+                    g.append('text')
+                        .attr('x', labelX)
+                        .attr('y', labelY)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('font-weight', 'bold')
+                        .text(criteria[i]);
+                }
+                
+                // Draw concentric circles for scale
+                for (let r = 1; r <= 5; r++) {
+                    g.append('circle')
+                        .attr('cx', centerX)
+                        .attr('cy', centerY)
+                        .attr('r', (r * radius) / 5)
+                        .attr('fill', 'none')
+                        .attr('stroke', '#ecf0f1')
+                        .attr('stroke-width', 1);
+                }
+                
+                // Draw method polygons
+                methods.forEach(method => {
+                    const points = scores[method].map((score, i) => {
+                        const angle = (i * 2 * Math.PI) / numCriteria - Math.PI / 2;
+                        const r = (score * radius) / 5;
+                        return [
+                            centerX + r * Math.cos(angle),
+                            centerY + r * Math.sin(angle)
+                        ];
+                    });
+                    
+                    const pathData = points.map((point, i) => 
+                        `${i === 0 ? 'M' : 'L'} ${point[0]} ${point[1]}`
+                    ).join(' ') + ' Z';
+                    
+                    g.append('path')
+                        .attr('d', pathData)
+                        .attr('fill', colors[method])
+                        .attr('fill-opacity', 0.2)
+                        .attr('stroke', colors[method])
+                        .attr('stroke-width', 2);
+                    
+                    // Points
+                    points.forEach(point => {
+                        g.append('circle')
+                            .attr('cx', point[0])
+                            .attr('cy', point[1])
+                            .attr('r', 3)
+                            .attr('fill', colors[method])
+                            .attr('stroke', '#fff')
+                            .attr('stroke-width', 1);
+                    });
+                });
+                
+                // Legend
+                const legend = g.append('g')
+                    .attr('transform', `translate(${innerWidth - 100}, 20)`);
+                
+                methods.forEach((method, i) => {
+                    legend.append('circle')
+                        .attr('cx', 5)
+                        .attr('cy', i * 20)
+                        .attr('r', 4)
+                        .attr('fill', colors[method]);
+                    
+                    legend.append('text')
+                        .attr('x', 15)
+                        .attr('y', i * 20 + 4)
+                        .attr('font-size', '10px')
+                        .text(method);
+                });
+                
+                // Scale reference
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', 20)
+                    .attr('font-size', '9px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Scale: 1 (poor) to 5 (excellent)');
+            }
+        }
+
+        function initApplicationsViz() {
+            const container = d3.select('#applications-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Anomaly Detection with Autoencoders');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Reconstruction error distribution
+                const normalData = d3.range(100).map(() => ({
+                    error: Math.abs(d3.randomNormal(0.1, 0.05)()),
+                    type: 'normal'
+                }));
+                
+                const anomalyData = d3.range(20).map(() => ({
+                    error: Math.abs(d3.randomNormal(0.4, 0.1)()),
+                    type: 'anomaly'
+                }));
+                
+                const allData = [...normalData, ...anomalyData];
+                
+                const xScale = d3.scaleLinear()
+                    .domain([0, 0.8])
+                    .range([0, innerWidth]);
+                
+                const histogram = d3.histogram()
+                    .value(d => d.error)
+                    .domain(xScale.domain())
+                    .thresholds(xScale.ticks(20));
+                
+                const normalBins = histogram(normalData);
+                const anomalyBins = histogram(anomalyData);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, d3.max([...normalBins, ...anomalyBins], d => d.length)])
+                    .range([innerHeight, 0]);
+                
+                // Normal distribution bars
+                g.selectAll('.normal-bar')
+                    .data(normalBins)
+                    .enter().append('rect')
+                    .attr('class', 'normal-bar')
+                    .attr('x', d => xScale(d.x0))
+                    .attr('y', d => yScale(d.length))
+                    .attr('width', d => xScale(d.x1) - xScale(d.x0) - 1)
+                    .attr('height', d => innerHeight - yScale(d.length))
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.7);
+                
+                // Anomaly distribution bars
+                g.selectAll('.anomaly-bar')
+                    .data(anomalyBins)
+                    .enter().append('rect')
+                    .attr('class', 'anomaly-bar')
+                    .attr('x', d => xScale(d.x0))
+                    .attr('y', d => yScale(d.length))
+                    .attr('width', d => xScale(d.x1) - xScale(d.x0) - 1)
+                    .attr('height', d => innerHeight - yScale(d.length))
+                    .attr('fill', '#e74c3c')
+                    .attr('opacity', 0.7);
+                
+                // Threshold line
+                const threshold = 0.25;
+                g.append('line')
+                    .attr('x1', xScale(threshold))
+                    .attr('x2', xScale(threshold))
+                    .attr('y1', 0)
+                    .attr('y2', innerHeight)
+                    .attr('stroke', '#f39c12')
+                    .attr('stroke-width', 3)
+                    .attr('stroke-dasharray', '5,5');
+                
+                g.append('text')
+                    .attr('x', xScale(threshold) + 5)
+                    .attr('y', 20)
+                    .attr('font-size', '11px')
+                    .attr('fill', '#f39c12')
+                    .attr('font-weight', 'bold')
+                    .text('Anomaly Threshold');
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale));
+                
+                // Labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Reconstruction Error');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Frequency');
+                
+                // Legend
+                const legend = g.append('g')
+                    .attr('transform', `translate(${innerWidth - 120}, 30)`);
+                
+                legend.append('rect')
+                    .attr('x', 0)
+                    .attr('y', 0)
+                    .attr('width', 15)
+                    .attr('height', 15)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.7);
+                
+                legend.append('text')
+                    .attr('x', 20)
+                    .attr('y', 12)
+                    .attr('font-size', '10px')
+                    .text('Normal Data');
+                
+                legend.append('rect')
+                    .attr('x', 0)
+                    .attr('y', 20)
+                    .attr('width', 15)
+                    .attr('height', 15)
+                    .attr('fill', '#e74c3c')
+                    .attr('opacity', 0.7);
+                
+                legend.append('text')
+                    .attr('x', 20)
+                    .attr('y', 32)
+                    .attr('font-size', '10px')
+                    .text('Anomalies');
+                
+                // Process explanation
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', innerHeight - 60)
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .text('Anomaly Detection Process:');
+                
+                const steps = [
+                    '1. Train autoencoder on normal data only',
+                    '2. Set threshold based on normal reconstruction errors',
+                    '3. Flag high reconstruction error as anomalies'
+                ];
+                
+                steps.forEach((step, i) => {
+                    g.append('text')
+                        .attr('x', 10)
+                        .attr('y', innerHeight - 40 + i * 12)
+                        .attr('font-size', '9px')
+                        .attr('fill', '#7f8c8d')
+                        .text(step);
+                });
+            }
+        }
+
+        function initializeVisualizationForSlide(slideNumber) {
+            try {
+                switch (slideNumber) {
+                    case 2:
+                        console.log('Initializing motivation visualization');
+                        setTimeout(() => initMotivationViz(), 100);
+                        break;
+                    case 3:
+                        console.log('Initializing architecture visualization');
+                        setTimeout(() => initArchitectureViz(), 100);
+                        break;
+                    case 4:
+                        console.log('Initializing training visualization');
+                        setTimeout(() => initTrainingViz(), 100);
+                        break;
+                    case 5:
+                        console.log('Initializing complete visualization');
+                        setTimeout(() => initCompleteViz(), 100);
+                        break;
+                    case 6:
+                        console.log('Initializing sparse visualization');
+                        setTimeout(() => initSparseViz(), 100);
+                        break;
+                    case 7:
+                        console.log('Initializing denoising visualization');
+                        setTimeout(() => initDenoisingViz(), 100);
+                        break;
+                    case 8:
+                        console.log('Initializing variants visualization');
+                        setTimeout(() => initVariantsViz(), 100);
+                        break;
+                    case 9:
+                        console.log('Initializing comparison visualization');
+                        setTimeout(() => initComparisonViz(), 100);
+                        break;
+                    case 10:
+                        console.log('Initializing applications visualization');
+                        setTimeout(() => initApplicationsViz(), 100);
+                        break;
+                }
+            } catch (error) {
+                console.error('Error initializing visualization:', error);
+            }
+        }
+
+        function initializeAllVisualizations() {
+            for (let i = 1; i <= totalSlides; i++) {
+                initializeVisualizationForSlide(i);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            showSlide(1);
+            setTimeout(() => {
+                initializeAllVisualizations();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

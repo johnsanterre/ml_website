@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross Validation: Model Selection and Performance Estimation</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .slide {
+            display: none;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .slide.active {
+            display: block;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .progress {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .example {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .formula {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 16px;
+        }
+        .code {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: monospace;
+            border: 2px solid #bdc3c7;
+        }
+        .visualization {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+            background-color: #f8f9fa;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .problem {
+            background-color: #fdeaea;
+            border-left: 4px solid #e74c3c;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .solution {
+            background-color: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #3498db;
+            color: white;
+        }
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .metric-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .metric-card {
+            background-color: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .metric-card h4 {
+            color: #3498db;
+            margin: 0 0 10px 0;
+        }
+        .pitfall {
+            background-color: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .best-practice {
+            background-color: #f0fff4;
+            border-left: 4px solid #38a169;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+    </style>
+    <!-- MathJax Configuration -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide active" id="slide1">
+        <h1>Cross Validation</h1>
+        <h2>Model Selection and Performance Estimation</h2>
+        <div class="formula">
+            $$CV_k = \frac{1}{k} \sum_{i=1}^k L(f^{(-i)}, D_i)$$
+        </div>
+        <div class="example">
+            <strong>Core Problem:</strong> How do we reliably estimate model performance with limited data?
+        </div>
+        <ul>
+            <li><strong>Challenge:</strong> Data is precious—we need it for both training and evaluation</li>
+            <li><strong>Goal:</strong> Unbiased estimate of model performance on unseen data</li>
+            <li><strong>Solution:</strong> Systematically split data multiple times</li>
+            <li><strong>Applications:</strong> Model selection, hyperparameter tuning, performance reporting</li>
+        </ul>
+        <div class="highlight">
+            <strong>Key Insight:</strong> Cross validation provides a more robust and less biased estimate of model performance than a single train-test split
+        </div>
+    </div>
+
+    <!-- Slide 2: The Data Splitting Problem -->
+    <div class="slide" id="slide2">
+        <h1>The Data Splitting Problem</h1>
+        <h2>Why Simple Train-Test Splits Are Insufficient</h2>
+        <div class="problem">
+            <strong>Problems with Simple Train-Test Split:</strong>
+        </div>
+        <ul>
+            <li><strong>High Variance:</strong> Performance estimate depends heavily on specific split</li>
+            <li><strong>Data Waste:</strong> Only use part of data for training</li>
+            <li><strong>Selection Bias:</strong> May get lucky/unlucky with test set</li>
+            <li><strong>No Hyperparameter Tuning:</strong> Can't optimize model without overfitting</li>
+        </ul>
+        <div class="example">
+            <strong>Example Scenario:</strong> 1000 samples, 80-20 split
+            <ul>
+                <li>Training: 800 samples</li>
+                <li>Testing: 200 samples</li>
+                <li>What if test set is unrepresentative?</li>
+                <li>How do we tune hyperparameters?</li>
+            </ul>
+        </div>
+        <div class="solution">
+            <strong>Cross Validation Solution:</strong> Use all data for both training and validation through systematic resampling
+        </div>
+        <div id="splitting-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 3: K-Fold Cross Validation -->
+    <div class="slide" id="slide3">
+        <h1>K-Fold Cross Validation</h1>
+        <h2>The Standard Approach</h2>
+        <div class="formula">
+            $$CV_k = \frac{1}{k} \sum_{i=1}^k L(f^{(-i)}, D_i)$$
+            $$\text{where } f^{(-i)} \text{ is trained on all folds except } i$$
+        </div>
+        <div class="example">
+            <strong>K-Fold Procedure:</strong>
+        </div>
+        <ol>
+            <li><strong>Split:</strong> Divide dataset into k equal-sized folds</li>
+            <li><strong>Iterate:</strong> For each fold i = 1, ..., k:
+                <ul>
+                    <li>Use fold i as validation set</li>
+                    <li>Use remaining k-1 folds as training set</li>
+                    <li>Train model and evaluate on fold i</li>
+                </ul>
+            </li>
+            <li><strong>Average:</strong> Compute mean performance across all folds</li>
+        </ol>
+        <div class="highlight">
+            <strong>Common Choices:</strong>
+            <ul>
+                <li><strong>k = 5:</strong> Good bias-variance trade-off, computationally efficient</li>
+                <li><strong>k = 10:</strong> Lower bias, higher variance, more computation</li>
+                <li><strong>k = n (LOOCV):</strong> Lowest bias, highest variance</li>
+            </ul>
+        </div>
+        <div id="kfold-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 4: Cross Validation Variants -->
+    <div class="slide" id="slide4">
+        <h1>Cross Validation Variants</h1>
+        <h2>Adapting to Different Data Types</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Method</th>
+                <th>Use Case</th>
+                <th>Pros</th>
+                <th>Cons</th>
+            </tr>
+            <tr>
+                <td><strong>Standard k-Fold</strong></td>
+                <td>General purpose</td>
+                <td>Balanced bias-variance</td>
+                <td>Random splits may not preserve structure</td>
+            </tr>
+            <tr>
+                <td><strong>Stratified k-Fold</strong></td>
+                <td>Classification with imbalanced classes</td>
+                <td>Preserves class distribution</td>
+                <td>Only for classification</td>
+            </tr>
+            <tr>
+                <td><strong>Leave-One-Out (LOOCV)</strong></td>
+                <td>Very small datasets</td>
+                <td>Maximum use of data</td>
+                <td>High variance, expensive</td>
+            </tr>
+            <tr>
+                <td><strong>Time Series CV</strong></td>
+                <td>Temporal data</td>
+                <td>Respects temporal order</td>
+                <td>Less data for validation</td>
+            </tr>
+            <tr>
+                <td><strong>Group k-Fold</strong></td>
+                <td>Grouped/clustered data</td>
+                <td>Avoids data leakage</td>
+                <td>Uneven fold sizes</td>
+            </tr>
+        </table>
+        <div class="example">
+            <strong>Time Series Example:</strong> Predict stock prices
+            <ul>
+                <li>Cannot use future data to predict past</li>
+                <li>Use expanding or rolling window validation</li>
+                <li>Respect temporal dependencies</li>
+            </ul>
+        </div>
+        <div id="variants-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 5: Nested Cross Validation -->
+    <div class="slide" id="slide5">
+        <h1>Nested Cross Validation</h1>
+        <h2>Unbiased Model Selection</h2>
+        <div class="problem">
+            <strong>Problem:</strong> Using cross validation for both hyperparameter tuning AND performance estimation introduces optimistic bias
+        </div>
+        <div class="solution">
+            <strong>Solution:</strong> Two-level cross validation
+        </div>
+        <div class="example">
+            <strong>Nested CV Structure:</strong>
+            <ul>
+                <li><strong>Outer Loop:</strong> Performance estimation (k₁ folds)</li>
+                <li><strong>Inner Loop:</strong> Hyperparameter selection (k₂ folds)</li>
+            </ul>
+        </div>
+        <div class="code">
+            For each outer fold i = 1, ..., k₁:
+                For each hyperparameter configuration h:
+                    Inner CV score = k₂-fold CV on training data
+                Select best h* based on inner CV
+                Train model with h* on full training data
+                Evaluate on outer test fold i
+            Return: Average performance across outer folds
+        </div>
+        <div class="formula">
+            $$\text{Unbiased Estimate} = \frac{1}{k_1} \sum_{i=1}^{k_1} L(f^*_{(-i)}, D_i^{test})$$
+        </div>
+        <div class="highlight">
+            <strong>Cost:</strong> k₁ × k₂ × |hyperparameters| model trainings
+        </div>
+        <div id="nested-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 6: Evaluation Metrics -->
+    <div class="slide" id="slide6">
+        <h1>Evaluation Metrics in Cross Validation</h1>
+        <h2>Choosing the Right Metric</h2>
+        <div class="metric-list">
+            <div class="metric-card">
+                <h4>Classification</h4>
+                <ul>
+                    <li><strong>Accuracy:</strong> Overall correctness</li>
+                    <li><strong>Precision:</strong> True positive rate</li>
+                    <li><strong>Recall:</strong> Sensitivity</li>
+                    <li><strong>F1-Score:</strong> Harmonic mean</li>
+                    <li><strong>AUC-ROC:</strong> Ranking quality</li>
+                </ul>
+            </div>
+            <div class="metric-card">
+                <h4>Regression</h4>
+                <ul>
+                    <li><strong>MAE:</strong> Mean Absolute Error</li>
+                    <li><strong>MSE:</strong> Mean Squared Error</li>
+                    <li><strong>RMSE:</strong> Root MSE</li>
+                    <li><strong>R²:</strong> Coefficient of determination</li>
+                    <li><strong>MAPE:</strong> Mean Absolute Percentage Error</li>
+                </ul>
+            </div>
+        </div>
+        <div class="example">
+            <strong>Metric Selection Guidelines:</strong>
+        </div>
+        <ul>
+            <li><strong>Imbalanced Classification:</strong> F1-score, AUC-ROC over accuracy</li>
+            <li><strong>Cost-Sensitive:</strong> Custom metrics reflecting business costs</li>
+            <li><strong>Regression with Outliers:</strong> MAE over MSE</li>
+            <li><strong>Interpretability:</strong> R² for explained variance</li>
+        </ul>
+        <div class="formula">
+            $$F1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$$
+        </div>
+        <div id="metrics-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 7: Statistical Considerations -->
+    <div class="slide" id="slide7">
+        <h1>Statistical Considerations</h1>
+        <h2>Confidence and Significance</h2>
+        <div class="example">
+            <strong>Key Statistical Concepts:</strong>
+        </div>
+        <ul>
+            <li><strong>Confidence Intervals:</strong> Uncertainty in CV estimates</li>
+            <li><strong>Model Comparison:</strong> Paired t-tests for significance</li>
+            <li><strong>Variance Estimation:</strong> Standard error of CV scores</li>
+            <li><strong>Multiple Comparisons:</strong> Bonferroni correction</li>
+        </ul>
+        <div class="formula">
+            $$\text{CI} = \bar{s} \pm t_{\alpha/2, k-1} \cdot \frac{\sigma_s}{\sqrt{k}}$$
+            $$\text{where } \bar{s} = \frac{1}{k}\sum_{i=1}^k s_i$$
+        </div>
+        <div class="example">
+            <strong>Paired t-test for Model Comparison:</strong>
+            <ul>
+                <li>Same CV folds for both models</li>
+                <li>Compute difference in performance per fold</li>
+                <li>Test if mean difference is significantly different from 0</li>
+                <li>Accounts for fold-to-fold correlation</li>
+            </ul>
+        </div>
+        <div class="highlight">
+            <strong>Rule of Thumb:</strong> CV score ± 2×standard_error gives ~95% confidence interval
+        </div>
+        <div id="statistics-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 8: Common Pitfalls -->
+    <div class="slide" id="slide8">
+        <h1>Common Pitfalls and How to Avoid Them</h1>
+        <h2>Cross Validation Mistakes</h2>
+        <div class="pitfall">
+            <strong>❌ Data Leakage in Preprocessing</strong>
+            <ul>
+                <li>Fitting scalers/transformers on entire dataset</li>
+                <li>Feature selection before CV split</li>
+                <li>Using target variable in feature engineering</li>
+            </ul>
+        </div>
+        <div class="best-practice">
+            <strong>✅ Correct Approach:</strong> Fit preprocessing only on training folds
+        </div>
+        <div class="pitfall">
+            <strong>❌ Ignoring Temporal Dependencies</strong>
+            <ul>
+                <li>Random splits in time series data</li>
+                <li>Using future information to predict past</li>
+                <li>Ignoring autocorrelation</li>
+            </ul>
+        </div>
+        <div class="best-practice">
+            <strong>✅ Correct Approach:</strong> Use time-aware validation strategies
+        </div>
+        <div class="pitfall">
+            <strong>❌ Inappropriate for Imbalanced Data</strong>
+            <ul>
+                <li>Standard k-fold with severe class imbalance</li>
+                <li>Folds may have no examples of minority class</li>
+            </ul>
+        </div>
+        <div class="best-practice">
+            <strong>✅ Correct Approach:</strong> Use stratified k-fold to preserve class distribution
+        </div>
+        <div id="pitfalls-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 9: Implementation Best Practices -->
+    <div class="slide" id="slide9">
+        <h1>Implementation Best Practices</h1>
+        <h2>Practical Cross Validation</h2>
+        <div class="code">
+from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+
+# Correct: Preprocessing inside pipeline
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('classifier', RandomForestClassifier())
+])
+
+# Stratified k-fold for classification
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+scores = cross_val_score(pipeline, X, y, cv=cv, scoring='f1_macro')
+
+print(f"CV Score: {scores.mean():.3f} ± {scores.std():.3f}")
+        </div>
+        <div class="example">
+            <strong>Key Implementation Points:</strong>
+        </div>
+        <ul>
+            <li><strong>Use Pipelines:</strong> Ensure preprocessing is done correctly</li>
+            <li><strong>Set Random Seeds:</strong> Reproducible results</li>
+            <li><strong>Parallelize:</strong> Use n_jobs for faster computation</li>
+            <li><strong>Save Fold Assignments:</strong> For model comparison and debugging</li>
+            <li><strong>Monitor Variance:</strong> High variance may indicate unstable model</li>
+        </ul>
+        <div class="highlight">
+            <strong>Pro Tip:</strong> Always use the same CV folds when comparing different models
+        </div>
+        <div id="implementation-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 10: Key Takeaways -->
+    <div class="slide" id="slide10">
+        <h1>Key Takeaways</h1>
+        <h2>Cross Validation Essentials</h2>
+        <ul>
+            <li><strong>Robust Estimation:</strong>
+                <ul><li>CV provides more reliable performance estimates than single splits</li></ul>
+            </li>
+            <li><strong>Method Selection:</strong>
+                <ul><li>Choose CV strategy based on data characteristics and problem type</li></ul>
+            </li>
+            <li><strong>Avoid Bias:</strong>
+                <ul><li>Use nested CV for unbiased model selection</li></ul>
+            </li>
+            <li><strong>Statistical Rigor:</strong>
+                <ul><li>Report confidence intervals and use proper significance testing</li></ul>
+            </li>
+            <li><strong>Implementation Matters:</strong>
+                <ul><li>Correct preprocessing and avoiding data leakage is crucial</li></ul>
+            </li>
+            <li><strong>Computational Trade-offs:</strong>
+                <ul><li>Balance statistical rigor with computational resources</li></ul>
+            </li>
+        </ul>
+        <div class="solution">
+            <strong>Golden Rule:</strong> Cross validation is essential for reliable machine learning, but must be implemented correctly to avoid subtle biases
+        </div>
+        <div class="formula">
+            $$\text{Good ML Practice} = \text{Proper CV} + \text{Appropriate Metrics} + \text{Statistical Rigor}$$
+        </div>
+        <div class="highlight">
+            <strong>Remember:</strong> The goal is not just to get a number, but to get a trustworthy estimate of how your model will perform on new, unseen data
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button onclick="prevSlide()">Previous</button>
+        <div class="progress">Slide <span id="current">1</span> of <span id="total">10</span></div>
+        <button onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            // Hide all slides
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show the current slide
+            document.getElementById('slide' + n).classList.add('active');
+            document.getElementById('current').textContent = n;
+            
+            // Initialize visualizations for the current slide if needed
+            setTimeout(() => {
+                initializeVisualizationForSlide(n);
+            }, 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+        
+        // Initialize all visualizations when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initializeAllVisualizations();
+            }, 1000);
+            
+            setTimeout(() => {
+                initializeVisualizationForSlide(currentSlide);
+            }, 1500);
+        });
+        
+        function initializeAllVisualizations() {
+            try {
+                initSplittingViz();
+                initKfoldViz();
+                initVariantsViz();
+                initNestedViz();
+                initMetricsViz();
+                initStatisticsViz();
+                initPitfallsViz();
+                initImplementationViz();
+            } catch (error) {
+                console.error('Error initializing visualizations:', error);
+            }
+        }
+        
+        // Visualization functions
+        function initSplittingViz() {
+            const container = d3.select('#splitting-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Train-Test Split vs Cross Validation');
+                
+                const leftX = width * 0.25;
+                const rightX = width * 0.75;
+                const centerY = height / 2;
+                
+                // Simple train-test split (left side)
+                svg.append('text')
+                    .attr('x', leftX)
+                    .attr('y', 60)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('Simple Train-Test Split');
+                
+                // Train set
+                svg.append('rect')
+                    .attr('x', leftX - 80)
+                    .attr('y', 80)
+                    .attr('width', 120)
+                    .attr('height', 30)
+                    .attr('fill', '#3498db')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                svg.append('text')
+                    .attr('x', leftX - 20)
+                    .attr('y', 100)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', 'white')
+                    .attr('font-weight', 'bold')
+                    .text('Train (80%)');
+                
+                // Test set
+                svg.append('rect')
+                    .attr('x', leftX + 40)
+                    .attr('y', 80)
+                    .attr('width', 40)
+                    .attr('height', 30)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                svg.append('text')
+                    .attr('x', leftX + 60)
+                    .attr('y', 100)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', 'white')
+                    .attr('font-weight', 'bold')
+                    .text('Test');
+                
+                // Problems
+                svg.append('text')
+                    .attr('x', leftX)
+                    .attr('y', 140)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#e74c3c')
+                    .text('❌ High variance');
+                
+                svg.append('text')
+                    .attr('x', leftX)
+                    .attr('y', 155)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#e74c3c')
+                    .text('❌ Data waste');
+                
+                // Cross validation (right side)
+                svg.append('text')
+                    .attr('x', rightX)
+                    .attr('y', 60)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('5-Fold Cross Validation');
+                
+                // 5 folds
+                const foldWidth = 24;
+                for (let i = 0; i < 5; i++) {
+                    const x = rightX - 60 + i * foldWidth;
+                    const color = i === 2 ? '#e74c3c' : '#3498db'; // Middle fold as test
+                    
+                    svg.append('rect')
+                        .attr('x', x)
+                        .attr('y', 80)
+                        .attr('width', foldWidth)
+                        .attr('height', 30)
+                        .attr('fill', color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2);
+                    
+                    svg.append('text')
+                        .attr('x', x + foldWidth/2)
+                        .attr('y', 100)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '9px')
+                        .attr('fill', 'white')
+                        .attr('font-weight', 'bold')
+                        .text(i === 2 ? 'Val' : 'Tr');
+                }
+                
+                // Benefits
+                svg.append('text')
+                    .attr('x', rightX)
+                    .attr('y', 140)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#27ae60')
+                    .text('✅ Lower variance');
+                
+                svg.append('text')
+                    .attr('x', rightX)
+                    .attr('y', 155)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#27ae60')
+                    .text('✅ Use all data');
+                
+                // Arrow showing iteration
+                svg.append('text')
+                    .attr('x', rightX)
+                    .attr('y', 180)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Repeat 5 times, average results');
+            }
+        }
+        
+        function initKfoldViz() {
+            const container = d3.select('#kfold-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('5-Fold Cross Validation Process');
+                
+                const folds = 5;
+                const foldWidth = (width - 200) / folds;
+                const startX = 100;
+                
+                // Draw each iteration
+                for (let iter = 0; iter < folds; iter++) {
+                    const y = 60 + iter * 35;
+                    
+                    // Iteration label
+                    svg.append('text')
+                        .attr('x', 20)
+                        .attr('y', y + 20)
+                        .attr('font-size', '11px')
+                        .attr('font-weight', 'bold')
+                        .attr('fill', '#2c3e50')
+                        .text(`Fold ${iter + 1}:`);
+                    
+                    // Draw folds
+                    for (let fold = 0; fold < folds; fold++) {
+                        const x = startX + fold * foldWidth;
+                        const isValidation = fold === iter;
+                        const color = isValidation ? '#e74c3c' : '#3498db';
+                        const label = isValidation ? 'Val' : 'Train';
+                        
+                        svg.append('rect')
+                            .attr('x', x)
+                            .attr('y', y)
+                            .attr('width', foldWidth - 2)
+                            .attr('height', 25)
+                            .attr('fill', color)
+                            .attr('stroke', '#2c3e50')
+                            .attr('stroke-width', 1);
+                        
+                        svg.append('text')
+                            .attr('x', x + foldWidth/2)
+                            .attr('y', y + 17)
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '10px')
+                            .attr('fill', 'white')
+                            .attr('font-weight', 'bold')
+                            .text(label);
+                    }
+                    
+                    // Score
+                    svg.append('text')
+                        .attr('x', startX + folds * foldWidth + 20)
+                        .attr('y', y + 17)
+                        .attr('font-size', '10px')
+                        .attr('fill', '#7f8c8d')
+                        .text(`Score: ${(0.85 + Math.random() * 0.1).toFixed(3)}`);
+                }
+                
+                // Final average
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height - 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('Final CV Score: Average of all fold scores');
+                
+                // Legend
+                svg.append('rect')
+                    .attr('x', startX)
+                    .attr('y', height - 15)
+                    .attr('width', 15)
+                    .attr('height', 10)
+                    .attr('fill', '#3498db');
+                
+                svg.append('text')
+                    .attr('x', startX + 20)
+                    .attr('y', height - 7)
+                    .attr('font-size', '10px')
+                    .text('Training');
+                
+                svg.append('rect')
+                    .attr('x', startX + 80)
+                    .attr('y', height - 15)
+                    .attr('width', 15)
+                    .attr('height', 10)
+                    .attr('fill', '#e74c3c');
+                
+                svg.append('text')
+                    .attr('x', startX + 100)
+                    .attr('y', height - 7)
+                    .attr('font-size', '10px')
+                    .text('Validation');
+            }
+        }
+        
+        // Placeholder functions for remaining visualizations
+        function initVariantsViz() {
+            const container = d3.select('#variants-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Cross Validation Variants');
+                
+                const methods = [
+                    {name: 'Standard\nk-Fold', x: width * 0.2, color: '#3498db'},
+                    {name: 'Stratified\nk-Fold', x: width * 0.4, color: '#e74c3c'},
+                    {name: 'Time Series\nCV', x: width * 0.6, color: '#27ae60'},
+                    {name: 'Group\nk-Fold', x: width * 0.8, color: '#f39c12'}
+                ];
+                
+                const dataY = 80;
+                const foldsY = 140;
+                
+                methods.forEach((method, methodIdx) => {
+                    // Method title
+                    const lines = method.name.split('\n');
+                    lines.forEach((line, i) => {
+                        svg.append('text')
+                            .attr('x', method.x)
+                            .attr('y', 50 + i * 12)
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '11px')
+                            .attr('font-weight', 'bold')
+                            .attr('fill', method.color)
+                            .text(line);
+                    });
+                    
+                    if (methodIdx === 0) { // Standard k-fold
+                        // Random data points
+                        for (let i = 0; i < 20; i++) {
+                            svg.append('circle')
+                                .attr('cx', method.x - 40 + Math.random() * 80)
+                                .attr('cy', dataY + Math.random() * 20)
+                                .attr('r', 3)
+                                .attr('fill', Math.random() > 0.5 ? '#3498db' : '#e74c3c')
+                                .attr('opacity', 0.7);
+                        }
+                        
+                        // 5 equal folds
+                        for (let i = 0; i < 5; i++) {
+                            svg.append('rect')
+                                .attr('x', method.x - 50 + i * 20)
+                                .attr('y', foldsY)
+                                .attr('width', 18)
+                                .attr('height', 25)
+                                .attr('fill', i === 2 ? '#e74c3c' : '#3498db')
+                                .attr('stroke', '#2c3e50')
+                                .attr('stroke-width', 1);
+                        }
+                    } else if (methodIdx === 1) { // Stratified k-fold
+                        // Stratified data points (maintaining class distribution)
+                        for (let i = 0; i < 5; i++) {
+                            const foldX = method.x - 50 + i * 20;
+                            // 3 blue, 1 red per fold
+                            for (let j = 0; j < 3; j++) {
+                                svg.append('circle')
+                                    .attr('cx', foldX + 5 + j * 3)
+                                    .attr('cy', dataY + 5)
+                                    .attr('r', 2)
+                                    .attr('fill', '#3498db');
+                            }
+                            svg.append('circle')
+                                .attr('cx', foldX + 14)
+                                .attr('cy', dataY + 5)
+                                .attr('r', 2)
+                                .attr('fill', '#e74c3c');
+                        }
+                        
+                        // 5 stratified folds
+                        for (let i = 0; i < 5; i++) {
+                            svg.append('rect')
+                                .attr('x', method.x - 50 + i * 20)
+                                .attr('y', foldsY)
+                                .attr('width', 18)
+                                .attr('height', 25)
+                                .attr('fill', i === 2 ? '#e74c3c' : '#3498db')
+                                .attr('stroke', '#2c3e50')
+                                .attr('stroke-width', 1);
+                            
+                            // Class proportion indicator
+                            svg.append('rect')
+                                .attr('x', method.x - 50 + i * 20)
+                                .attr('y', foldsY + 20)
+                                .attr('width', 14)
+                                .attr('height', 5)
+                                .attr('fill', '#3498db');
+                            
+                            svg.append('rect')
+                                .attr('x', method.x - 50 + i * 20 + 14)
+                                .attr('y', foldsY + 20)
+                                .attr('width', 4)
+                                .attr('height', 5)
+                                .attr('fill', '#e74c3c');
+                        }
+                    } else if (methodIdx === 2) { // Time series
+                        // Time series data (increasing trend)
+                        const timeData = d3.range(20).map(i => ({
+                            x: method.x - 50 + i * 5,
+                            y: dataY + 10 + Math.sin(i * 0.3) * 8 + i * 0.3
+                        }));
+                        
+                        const line = d3.line()
+                            .x(d => d.x)
+                            .y(d => d.y);
+                        
+                        svg.append('path')
+                            .datum(timeData)
+                            .attr('fill', 'none')
+                            .attr('stroke', '#27ae60')
+                            .attr('stroke-width', 2)
+                            .attr('d', line);
+                        
+                        timeData.forEach(d => {
+                            svg.append('circle')
+                                .attr('cx', d.x)
+                                .attr('cy', d.y)
+                                .attr('r', 2)
+                                .attr('fill', '#27ae60');
+                        });
+                        
+                        // Expanding window folds
+                        for (let i = 0; i < 4; i++) {
+                            const width_fold = 20 + i * 5;
+                            svg.append('rect')
+                                .attr('x', method.x - 50 + i * 25)
+                                .attr('y', foldsY)
+                                .attr('width', width_fold)
+                                .attr('height', 25)
+                                .attr('fill', '#27ae60')
+                                .attr('stroke', '#2c3e50')
+                                .attr('stroke-width', 1)
+                                .attr('opacity', 0.7);
+                            
+                            // Test period
+                            svg.append('rect')
+                                .attr('x', method.x - 50 + i * 25 + width_fold)
+                                .attr('y', foldsY)
+                                .attr('width', 10)
+                                .attr('height', 25)
+                                .attr('fill', '#e74c3c')
+                                .attr('stroke', '#2c3e50')
+                                .attr('stroke-width', 1);
+                        }
+                    } else if (methodIdx === 3) { // Group k-fold
+                        // Grouped data points
+                        const groups = ['A', 'B', 'C', 'A', 'B'];
+                        const groupColors = {'A': '#f39c12', 'B': '#9b59b6', 'C': '#e67e22'};
+                        
+                        groups.forEach((group, i) => {
+                            for (let j = 0; j < 4; j++) {
+                                svg.append('circle')
+                                    .attr('cx', method.x - 50 + i * 20 + j * 4)
+                                    .attr('cy', dataY + 5 + (j % 2) * 8)
+                                    .attr('r', 2)
+                                    .attr('fill', groupColors[group]);
+                            }
+                            
+                            // Group label
+                            svg.append('text')
+                                .attr('x', method.x - 50 + i * 20 + 8)
+                                .attr('y', dataY - 5)
+                                .attr('text-anchor', 'middle')
+                                .attr('font-size', '9px')
+                                .attr('font-weight', 'bold')
+                                .attr('fill', groupColors[group])
+                                .text(group);
+                        });
+                        
+                        // Group-based folds
+                        for (let i = 0; i < 5; i++) {
+                            const group = groups[i];
+                            svg.append('rect')
+                                .attr('x', method.x - 50 + i * 20)
+                                .attr('y', foldsY)
+                                .attr('width', 18)
+                                .attr('height', 25)
+                                .attr('fill', i === 2 ? '#e74c3c' : groupColors[group])
+                                .attr('stroke', '#2c3e50')
+                                .attr('stroke-width', 1)
+                                .attr('opacity', 0.8);
+                        }
+                    }
+                });
+                
+                // Labels
+                svg.append('text')
+                    .attr('x', 20)
+                    .attr('y', dataY + 10)
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#2c3e50')
+                    .text('Data:');
+                
+                svg.append('text')
+                    .attr('x', 20)
+                    .attr('y', foldsY + 15)
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#2c3e50')
+                    .text('Folds:');
+                
+                // Legend
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Choose CV strategy based on data characteristics');
+            }
+        }
+        
+        function initNestedViz() {
+            const container = d3.select('#nested-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Nested Cross Validation Structure');
+                
+                const centerX = width / 2;
+                const outerY = 70;
+                const innerY = 150;
+                
+                // Outer loop
+                svg.append('text')
+                    .attr('x', 30)
+                    .attr('y', outerY - 10)
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#3498db')
+                    .text('Outer Loop (Performance Estimation):');
+                
+                // 5 outer folds
+                const outerFolds = 5;
+                const outerFoldWidth = (width - 120) / outerFolds;
+                for (let i = 0; i < outerFolds; i++) {
+                    const x = 60 + i * outerFoldWidth;
+                    const isTest = i === 2; // Middle fold as test
+                    
+                    svg.append('rect')
+                        .attr('x', x)
+                        .attr('y', outerY)
+                        .attr('width', outerFoldWidth - 5)
+                        .attr('height', 30)
+                        .attr('fill', isTest ? '#e74c3c' : '#3498db')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2)
+                        .attr('rx', 3);
+                    
+                    svg.append('text')
+                        .attr('x', x + outerFoldWidth/2)
+                        .attr('y', outerY + 20)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('fill', 'white')
+                        .attr('font-weight', 'bold')
+                        .text(isTest ? 'Test' : `Train ${i+1}`);
+                }
+                
+                // Arrow pointing down to inner loop
+                svg.append('line')
+                    .attr('x1', centerX)
+                    .attr('y1', outerY + 35)
+                    .attr('x2', centerX)
+                    .attr('y2', innerY - 25)
+                    .attr('stroke', '#f39c12')
+                    .attr('stroke-width', 3)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                svg.append('text')
+                    .attr('x', centerX + 10)
+                    .attr('y', outerY + 55)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#f39c12')
+                    .attr('font-weight', 'bold')
+                    .text('For each outer fold');
+                
+                // Inner loop
+                svg.append('text')
+                    .attr('x', 30)
+                    .attr('y', innerY - 10)
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('Inner Loop (Hyperparameter Selection):');
+                
+                // 4 inner folds (using training data from outer loop)
+                const innerFolds = 4;
+                const innerFoldWidth = (width - 200) / innerFolds;
+                for (let i = 0; i < innerFolds; i++) {
+                    const x = 100 + i * innerFoldWidth;
+                    const isValidation = i === 1; // Second fold as validation
+                    
+                    svg.append('rect')
+                        .attr('x', x)
+                        .attr('y', innerY)
+                        .attr('width', innerFoldWidth - 3)
+                        .attr('height', 25)
+                        .attr('fill', isValidation ? '#e74c3c' : '#27ae60')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1)
+                        .attr('rx', 2);
+                    
+                    svg.append('text')
+                        .attr('x', x + innerFoldWidth/2)
+                        .attr('y', innerY + 16)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '9px')
+                        .attr('fill', 'white')
+                        .attr('font-weight', 'bold')
+                        .text(isValidation ? 'Val' : 'Tr');
+                }
+                
+                // Hyperparameter boxes
+                const hyperParams = ['α=0.1', 'α=0.01', 'α=0.001'];
+                hyperParams.forEach((param, i) => {
+                    const x = width - 150 + i * 40;
+                    svg.append('rect')
+                        .attr('x', x)
+                        .attr('y', innerY + 40)
+                        .attr('width', 35)
+                        .attr('height', 20)
+                        .attr('fill', i === 1 ? '#f39c12' : '#ecf0f1')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1)
+                        .attr('rx', 3);
+                    
+                    svg.append('text')
+                        .attr('x', x + 17.5)
+                        .attr('y', innerY + 53)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '8px')
+                        .attr('fill', i === 1 ? 'white' : '#2c3e50')
+                        .attr('font-weight', 'bold')
+                        .text(param);
+                });
+                
+                svg.append('text')
+                    .attr('x', width - 110)
+                    .attr('y', innerY + 75)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#f39c12')
+                    .attr('font-weight', 'bold')
+                    .text('Best α selected');
+                
+                // Process description
+                svg.append('text')
+                    .attr('x', 30)
+                    .attr('y', height - 30)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('1. Inner CV finds best hyperparameters');
+                
+                svg.append('text')
+                    .attr('x', 30)
+                    .attr('y', height - 15)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('2. Train final model with best params on outer training set');
+                
+                svg.append('text')
+                    .attr('x', 30)
+                    .attr('y', height - 2)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('3. Evaluate on outer test set → Unbiased performance estimate');
+                
+                // Arrow marker definition
+                if (svg.select('#arrow').empty()) {
+                    svg.append('defs')
+                        .append('marker')
+                        .attr('id', 'arrow')
+                        .attr('viewBox', '0 -5 10 10')
+                        .attr('refX', 8)
+                        .attr('refY', 0)
+                        .attr('markerWidth', 6)
+                        .attr('markerHeight', 6)
+                        .attr('orient', 'auto')
+                        .append('path')
+                        .attr('d', 'M0,-5L10,0L0,5')
+                        .attr('fill', '#f39c12');
+                }
+            }
+        }
+        
+        function initMetricsViz() {
+            const container = d3.select('#metrics-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Cross Validation with Different Metrics');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Sample data for different metrics across 5 folds
+                const metrics = ['Accuracy', 'Precision', 'Recall', 'F1-Score'];
+                const folds = ['Fold 1', 'Fold 2', 'Fold 3', 'Fold 4', 'Fold 5'];
+                const data = {
+                    'Accuracy': [0.85, 0.87, 0.83, 0.86, 0.84],
+                    'Precision': [0.82, 0.84, 0.80, 0.83, 0.81],
+                    'Recall': [0.88, 0.89, 0.85, 0.87, 0.86],
+                    'F1-Score': [0.85, 0.86, 0.82, 0.85, 0.83]
+                };
+                
+                const xScale = d3.scaleBand()
+                    .domain(folds)
+                    .range([0, innerWidth])
+                    .padding(0.1);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0.75, 0.92])
+                    .range([innerHeight, 0]);
+                
+                const colorScale = d3.scaleOrdinal()
+                    .domain(metrics)
+                    .range(['#3498db', '#e74c3c', '#27ae60', '#f39c12']);
+                
+                // Draw lines for each metric
+                metrics.forEach(metric => {
+                    const line = d3.line()
+                        .x((d, i) => xScale(folds[i]) + xScale.bandwidth() / 2)
+                        .y(d => yScale(d));
+                    
+                    g.append('path')
+                        .datum(data[metric])
+                        .attr('fill', 'none')
+                        .attr('stroke', colorScale(metric))
+                        .attr('stroke-width', 3)
+                        .attr('d', line);
+                    
+                    // Add points
+                    data[metric].forEach((value, i) => {
+                        g.append('circle')
+                            .attr('cx', xScale(folds[i]) + xScale.bandwidth() / 2)
+                            .attr('cy', yScale(value))
+                            .attr('r', 4)
+                            .attr('fill', colorScale(metric))
+                            .attr('stroke', '#fff')
+                            .attr('stroke-width', 2);
+                    });
+                });
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale).tickFormat(d3.format('.2f')));
+                
+                // Add axis labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Cross Validation Folds');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Metric Value');
+                
+                // Legend
+                const legend = g.append('g')
+                    .attr('transform', `translate(${innerWidth - 100}, 20)`);
+                
+                metrics.forEach((metric, i) => {
+                    const legendRow = legend.append('g')
+                        .attr('transform', `translate(0, ${i * 20})`);
+                    
+                    legendRow.append('rect')
+                        .attr('width', 15)
+                        .attr('height', 3)
+                        .attr('fill', colorScale(metric));
+                    
+                    legendRow.append('text')
+                        .attr('x', 20)
+                        .attr('y', 0)
+                        .attr('dy', '0.35em')
+                        .attr('font-size', '11px')
+                        .text(metric);
+                });
+            }
+        }
+        
+        function initStatisticsViz() {
+            const container = d3.select('#statistics-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 80};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Cross Validation: Confidence Intervals');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Sample data for different models
+                const models = ['Model A', 'Model B', 'Model C', 'Model D'];
+                const cvScores = [
+                    {model: 'Model A', mean: 0.85, std: 0.02, scores: [0.83, 0.86, 0.84, 0.87, 0.85]},
+                    {model: 'Model B', mean: 0.82, std: 0.04, scores: [0.78, 0.84, 0.80, 0.86, 0.82]},
+                    {model: 'Model C', mean: 0.88, std: 0.01, scores: [0.87, 0.89, 0.88, 0.88, 0.88]},
+                    {model: 'Model D', mean: 0.79, std: 0.03, scores: [0.76, 0.81, 0.78, 0.82, 0.78]}
+                ];
+                
+                const xScale = d3.scaleBand()
+                    .domain(models)
+                    .range([0, innerWidth])
+                    .padding(0.2);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0.7, 0.95])
+                    .range([innerHeight, 0]);
+                
+                // Draw confidence intervals
+                cvScores.forEach(d => {
+                    const x = xScale(d.model) + xScale.bandwidth() / 2;
+                    const ciLower = d.mean - 1.96 * d.std / Math.sqrt(5); // 95% CI
+                    const ciUpper = d.mean + 1.96 * d.std / Math.sqrt(5);
+                    
+                    // Confidence interval line
+                    g.append('line')
+                        .attr('x1', x)
+                        .attr('x2', x)
+                        .attr('y1', yScale(ciLower))
+                        .attr('y2', yScale(ciUpper))
+                        .attr('stroke', '#3498db')
+                        .attr('stroke-width', 3);
+                    
+                    // CI caps
+                    g.append('line')
+                        .attr('x1', x - 10)
+                        .attr('x2', x + 10)
+                        .attr('y1', yScale(ciLower))
+                        .attr('y2', yScale(ciLower))
+                        .attr('stroke', '#3498db')
+                        .attr('stroke-width', 3);
+                    
+                    g.append('line')
+                        .attr('x1', x - 10)
+                        .attr('x2', x + 10)
+                        .attr('y1', yScale(ciUpper))
+                        .attr('y2', yScale(ciUpper))
+                        .attr('stroke', '#3498db')
+                        .attr('stroke-width', 3);
+                    
+                    // Mean point
+                    g.append('circle')
+                        .attr('cx', x)
+                        .attr('cy', yScale(d.mean))
+                        .attr('r', 6)
+                        .attr('fill', '#e74c3c')
+                        .attr('stroke', '#fff')
+                        .attr('stroke-width', 2);
+                    
+                    // Individual fold scores
+                    d.scores.forEach((score, i) => {
+                        g.append('circle')
+                            .attr('cx', x - 30 + i * 15)
+                            .attr('cy', yScale(score))
+                            .attr('r', 3)
+                            .attr('fill', '#27ae60')
+                            .attr('opacity', 0.7);
+                    });
+                    
+                    // Add significance indicators
+                    if (d.model === 'Model C') {
+                        g.append('text')
+                            .attr('x', x)
+                            .attr('y', yScale(d.mean) - 15)
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '12px')
+                            .attr('fill', '#f39c12')
+                            .attr('font-weight', 'bold')
+                            .text('★');
+                        
+                        g.append('text')
+                            .attr('x', x)
+                            .attr('y', yScale(d.mean) - 25)
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '8px')
+                            .attr('fill', '#f39c12')
+                            .text('Best');
+                    }
+                });
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale).tickFormat(d3.format('.2f')));
+                
+                // Add axis labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Models');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -50)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('CV Score');
+                
+                // Legend
+                const legend = g.append('g')
+                    .attr('transform', `translate(${innerWidth - 120}, 20)`);
+                
+                legend.append('circle')
+                    .attr('cx', 5)
+                    .attr('cy', 0)
+                    .attr('r', 4)
+                    .attr('fill', '#e74c3c');
+                
+                legend.append('text')
+                    .attr('x', 15)
+                    .attr('y', 4)
+                    .attr('font-size', '10px')
+                    .text('Mean CV Score');
+                
+                legend.append('circle')
+                    .attr('cx', 5)
+                    .attr('cy', 15)
+                    .attr('r', 3)
+                    .attr('fill', '#27ae60');
+                
+                legend.append('text')
+                    .attr('x', 15)
+                    .attr('y', 19)
+                    .attr('font-size', '10px')
+                    .text('Individual Folds');
+                
+                legend.append('line')
+                    .attr('x1', 0)
+                    .attr('x2', 10)
+                    .attr('y1', 30)
+                    .attr('y2', 30)
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 3);
+                
+                legend.append('text')
+                    .attr('x', 15)
+                    .attr('y', 34)
+                    .attr('font-size', '10px')
+                    .text('95% CI');
+                
+                // Statistical interpretation
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 55)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Model C shows significantly better performance (non-overlapping CI)');
+            }
+        }
+        
+        function initPitfallsViz() {
+            const container = d3.select('#pitfalls-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Common Cross Validation Pitfalls');
+                
+                // Data Leakage (left side)
+                svg.append('text')
+                    .attr('x', width * 0.25)
+                    .attr('y', 50)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('❌ Data Leakage');
+                
+                // Wrong way: preprocessing before split
+                svg.append('text')
+                    .attr('x', width * 0.25)
+                    .attr('y', 80)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('WRONG: Scale entire dataset first');
+                
+                // Dataset
+                svg.append('rect')
+                    .attr('x', width * 0.25 - 60)
+                    .attr('y', 90)
+                    .attr('width', 120)
+                    .attr('height', 20)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                svg.append('text')
+                    .attr('x', width * 0.25)
+                    .attr('y', 105)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .attr('font-weight', 'bold')
+                    .text('Scaled Data');
+                
+                // Split after scaling
+                for (let i = 0; i < 5; i++) {
+                    svg.append('rect')
+                        .attr('x', width * 0.25 - 60 + i * 24)
+                        .attr('y', 130)
+                        .attr('width', 22)
+                        .attr('height', 20)
+                        .attr('fill', i === 2 ? '#e74c3c' : '#3498db')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1);
+                }
+                
+                svg.append('text')
+                    .attr('x', width * 0.25)
+                    .attr('y', 165)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#e74c3c')
+                    .text('Test data influenced training');
+                
+                // Temporal Issues (right side)
+                svg.append('text')
+                    .attr('x', width * 0.75)
+                    .attr('y', 50)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#f39c12')
+                    .text('⚠️ Temporal Issues');
+                
+                svg.append('text')
+                    .attr('x', width * 0.75)
+                    .attr('y', 80)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#f39c12')
+                    .text('WRONG: Random splits in time series');
+                
+                // Timeline
+                svg.append('line')
+                    .attr('x1', width * 0.75 - 60)
+                    .attr('x2', width * 0.75 + 60)
+                    .attr('y1', 100)
+                    .attr('y2', 100)
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                // Time points with random colors (wrong)
+                for (let i = 0; i < 12; i++) {
+                    const colors = ['#3498db', '#e74c3c'];
+                    const color = colors[Math.floor(Math.random() * 2)];
+                    svg.append('circle')
+                        .attr('cx', width * 0.75 - 60 + i * 10)
+                        .attr('cy', 100)
+                        .attr('r', 4)
+                        .attr('fill', color);
+                }
+                
+                svg.append('text')
+                    .attr('x', width * 0.75)
+                    .attr('y', 125)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#f39c12')
+                    .text('Future data leaks to past');
+                
+                // Correct way
+                svg.append('text')
+                    .attr('x', width * 0.75)
+                    .attr('y', 145)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('CORRECT: Respect temporal order');
+                
+                // Correct timeline
+                svg.append('line')
+                    .attr('x1', width * 0.75 - 60)
+                    .attr('x2', width * 0.75 + 60)
+                    .attr('y1', 165)
+                    .attr('y2', 165)
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                // Chronological splits
+                for (let i = 0; i < 12; i++) {
+                    const color = i < 8 ? '#3498db' : '#e74c3c';
+                    svg.append('circle')
+                        .attr('cx', width * 0.75 - 60 + i * 10)
+                        .attr('cy', 165)
+                        .attr('r', 4)
+                        .attr('fill', color);
+                }
+                
+                // Best practices
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 220)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('✅ Best Practices');
+                
+                const practices = ['Use pipelines', 'Respect temporal order', 'Stratify imbalanced data'];
+                practices.forEach((practice, i) => {
+                    svg.append('text')
+                        .attr('x', width / 2)
+                        .attr('y', 240 + i * 15)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('fill', '#27ae60')
+                        .text(`• ${practice}`);
+                });
+            }
+        }
+        
+        function initImplementationViz() {
+            const container = d3.select('#implementation-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Cross Validation Implementation Workflow');
+                
+                const steps = [
+                    {name: 'Data\nPreparation', x: width * 0.15, y: 80, color: '#3498db'},
+                    {name: 'CV Strategy\nSelection', x: width * 0.35, y: 80, color: '#e74c3c'},
+                    {name: 'Pipeline\nCreation', x: width * 0.55, y: 80, color: '#27ae60'},
+                    {name: 'Model\nTraining', x: width * 0.75, y: 80, color: '#f39c12'},
+                    {name: 'Results\nAnalysis', x: width * 0.45, y: 160, color: '#9b59b6'}
+                ];
+                
+                // Draw workflow steps
+                steps.forEach((step, i) => {
+                    // Step circle
+                    svg.append('circle')
+                        .attr('cx', step.x)
+                        .attr('cy', step.y)
+                        .attr('r', 25)
+                        .attr('fill', step.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 3);
+                    
+                    // Step number
+                    svg.append('text')
+                        .attr('x', step.x)
+                        .attr('y', step.y - 5)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '12px')
+                        .attr('font-weight', 'bold')
+                        .attr('fill', 'white')
+                        .text(i + 1);
+                    
+                    // Step name
+                    const lines = step.name.split('\n');
+                    lines.forEach((line, lineIdx) => {
+                        svg.append('text')
+                            .attr('x', step.x)
+                            .attr('y', step.y + 40 + lineIdx * 12)
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '11px')
+                            .attr('font-weight', 'bold')
+                            .attr('fill', step.color)
+                            .text(line);
+                    });
+                    
+                    // Arrows between steps
+                    if (i < 3) {
+                        svg.append('line')
+                            .attr('x1', step.x + 30)
+                            .attr('y1', step.y)
+                            .attr('x2', steps[i + 1].x - 30)
+                            .attr('y2', steps[i + 1].y)
+                            .attr('stroke', '#34495e')
+                            .attr('stroke-width', 3)
+                            .attr('marker-end', 'url(#arrow)');
+                    } else if (i === 3) {
+                        // Arrow from step 4 to step 5
+                        svg.append('line')
+                            .attr('x1', step.x)
+                            .attr('y1', step.y + 30)
+                            .attr('x2', steps[4].x)
+                            .attr('y2', steps[4].y - 30)
+                            .attr('stroke', '#34495e')
+                            .attr('stroke-width', 3)
+                            .attr('marker-end', 'url(#arrow)');
+                    }
+                });
+                
+                // Add code example box
+                svg.append('rect')
+                    .attr('x', width * 0.05)
+                    .attr('y', 195)
+                    .attr('width', width * 0.9)
+                    .attr('height', 75)
+                    .attr('fill', '#2c3e50')
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 5);
+                
+                svg.append('text')
+                    .attr('x', width * 0.07)
+                    .attr('y', 210)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#ecf0f1')
+                    .attr('font-family', 'monospace')
+                    .text('from sklearn.model_selection import cross_val_score, StratifiedKFold');
+                
+                svg.append('text')
+                    .attr('x', width * 0.07)
+                    .attr('y', 225)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#ecf0f1')
+                    .attr('font-family', 'monospace')
+                    .text('from sklearn.pipeline import Pipeline');
+                
+                svg.append('text')
+                    .attr('x', width * 0.07)
+                    .attr('y', 240)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#ecf0f1')
+                    .attr('font-family', 'monospace')
+                    .text('pipeline = Pipeline([(\'scaler\', StandardScaler()), (\'clf\', RandomForest())])');
+                
+                svg.append('text')
+                    .attr('x', width * 0.07)
+                    .attr('y', 255)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#ecf0f1')
+                    .attr('font-family', 'monospace')
+                    .text('scores = cross_val_score(pipeline, X, y, cv=StratifiedKFold(5), scoring=\'f1_macro\')');
+                
+                // Best practices checkmarks
+                const practices = [
+                    '✅ Use pipelines for preprocessing',
+                    '✅ Set random seeds for reproducibility', 
+                    '✅ Same folds for model comparison',
+                    '✅ Report confidence intervals'
+                ];
+                
+                practices.forEach((practice, i) => {
+                    svg.append('text')
+                        .attr('x', width * 0.85)
+                        .attr('y', 80 + i * 15)
+                        .attr('font-size', '9px')
+                        .attr('fill', '#27ae60')
+                        .attr('font-weight', 'bold')
+                        .text(practice);
+                });
+                
+                // Arrow marker definition (if not already defined)
+                if (svg.select('#arrow').empty()) {
+                    svg.append('defs')
+                        .append('marker')
+                        .attr('id', 'arrow')
+                        .attr('viewBox', '0 -5 10 10')
+                        .attr('refX', 8)
+                        .attr('refY', 0)
+                        .attr('markerWidth', 6)
+                        .attr('markerHeight', 6)
+                        .attr('orient', 'auto')
+                        .append('path')
+                        .attr('d', 'M0,-5L10,0L0,5')
+                        .attr('fill', '#34495e');
+                }
+            }
+        }
+        
+        function initializeVisualizationForSlide(slideNumber) {
+            try {
+                switch (slideNumber) {
+                    case 2:
+                        initSplittingViz();
+                        break;
+                    case 3:
+                        initKfoldViz();
+                        break;
+                    case 4:
+                        initVariantsViz();
+                        break;
+                    case 5:
+                        initNestedViz();
+                        break;
+                    case 6:
+                        initMetricsViz();
+                        break;
+                    case 7:
+                        initStatisticsViz();
+                        break;
+                    case 8:
+                        initPitfallsViz();
+                        break;
+                    case 9:
+                        initImplementationViz();
+                        break;
+                }
+            } catch (error) {
+                console.error(`Error initializing visualization for slide ${slideNumber}:`, error);
+            }
+        }
+    </script>
+</body>
+</html>

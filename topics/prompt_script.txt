@@ -1,0 +1,87 @@
+PROMPT FOR GENERATING LECTURE SCRIPTS
+
+## AUDIENCE AND PURPOSE
+- Target: PhD-level students in machine learning/computer science
+- Format: Exactly what will be spoken (not notes or bullet points)
+- Goal: 15-minute lecture with clear learning objectives
+
+## TIMING AND PACING
+- Speaking rate: 150 words per minute
+- Slide duration: 1.5-2 minutes per slide
+- Words per slide: 225-300 words
+- Total script length: ~3,900 words for 15-minute lecture
+
+## CONTENT STRUCTURE
+- Start with clear learning objectives
+- Build concepts progressively from simple to complex
+- Include concrete examples (e.g., house price prediction)
+- Connect mathematical notation to intuitive understanding
+- End with summary and forward-looking connections
+
+## WRITING STYLE
+- Use natural speaking language (not academic writing)
+- Include mathematical notation that can be read aloud
+- Use "we" and "our" to create inclusive tone
+- Include transitions between concepts
+- Avoid jargon without explanation
+- Use active voice and present tense
+
+## TECHNICAL DEPTH
+- Assume familiarity with calculus, linear algebra, and statistics
+- Explain why concepts matter, not just what they are
+- Connect theoretical concepts to practical applications
+- Include computational complexity considerations
+- Discuss assumptions and limitations honestly
+
+## MATHEMATICAL NOTATION
+- Write equations in spoken form: "y equals mx plus b"
+- Use "beta" for Greek letters, "x-sub-i" for subscripts
+- Explain what each symbol represents before using it
+- Connect mathematical concepts to geometric intuition
+
+## VISUAL INTEGRATION
+- Reference visualizations naturally in the script
+- Explain what students should observe in each graph
+- Connect visual patterns to mathematical concepts
+- Use visual examples to build intuition
+
+## EXAMPLE INTEGRATION
+- Use consistent examples throughout (e.g., house prices)
+- Make examples concrete and relatable
+- Show progression from simple to complex scenarios
+- Connect examples to theoretical concepts
+
+## TRANSITIONS AND FLOW
+- Use phrases like "Now let's extend to..." and "This brings us to..."
+- Connect each slide to the previous and next
+- Build narrative arc from fundamentals to applications
+- Include brief recaps of key points
+
+## QUALITY CHECKS
+- Each slide should be self-contained but connected
+- Mathematical accuracy is paramount
+- Language should flow naturally when spoken aloud
+- Technical depth should match audience expectations
+- Include both theoretical foundations and practical insights
+
+## COMMON PITFALLS TO AVOID
+- Don't write academic papers - write for speaking
+- Don't assume students will read equations - explain them
+- Don't skip the "why" - always explain significance
+- Don't make slides too dense - one main concept per slide
+- Don't forget to connect concepts across slides
+
+## TEMPLATE STRUCTURE
+1. Introduction with learning objectives
+2. Fundamental definitions and concepts
+3. Mathematical foundations
+4. Methods and algorithms
+5. Evaluation and metrics
+6. Practical considerations and limitations
+7. Summary with forward-looking connections
+
+## LENGTH GUIDELINES
+- Title slide: 250-300 words
+- Content slides: 275-300 words
+- Summary slide: 250-300 words
+- Allow 10-15% extra for natural speaking variations

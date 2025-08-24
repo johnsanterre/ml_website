@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayes' Theorem</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .slide {
+            display: none;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .slide.active {
+            display: block;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .progress {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .example {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .formula {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 18px;
+        }
+        .calculation {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: monospace;
+            border: 2px solid #bdc3c7;
+        }
+        .visualization {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+            background-color: #f8f9fa;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .definition {
+            background-color: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .misconception {
+            background-color: #fdeaea;
+            border-left: 4px solid #e74c3c;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #3498db;
+            color: white;
+        }
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+    </style>
+    <!-- MathJax Configuration -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide active" id="slide1">
+        <h1>Bayes' Theorem</h1>
+        <h2>The Foundation of Probabilistic Reasoning</h2>
+        <div class="formula">
+            $$P(A|B) = \frac{P(B|A) \times P(A)}{P(B)}$$
+        </div>
+        <p><strong>Named after:</strong> Reverend Thomas Bayes (1701-1761)</p>
+        <div class="example">
+            <strong>Core Principle:</strong> How to update our beliefs when we observe new evidence
+        </div>
+        <ul>
+            <li><strong>Foundation</strong> of machine learning and artificial intelligence</li>
+            <li><strong>Bridges</strong> prior knowledge with observed data</li>
+            <li><strong>Quantifies</strong> uncertainty in a principled way</li>
+            <li><strong>Essential</strong> for probabilistic models and decision making</li>
+        </ul>
+    </div>
+
+    <!-- Slide 2: Conditional Probability Refresher -->
+    <div class="slide" id="slide2">
+        <h1>Conditional Probability</h1>
+        <h2>The Building Block</h2>
+        <div class="definition">
+            <strong>Conditional Probability:</strong> The probability of event A occurring given that event B has occurred
+            $$P(A|B) = \frac{P(A \cap B)}{P(B)}$$
+        </div>
+        <div class="example">
+            <strong>Example:</strong> What's the probability it's raining given that you see people with umbrellas?
+            <ul>
+                <li>$P(\text{Rain}|\text{Umbrellas})$ = ?</li>
+                <li>We need to consider how often people carry umbrellas when it rains</li>
+                <li>And how often it rains in general</li>
+            </ul>
+        </div>
+        <div class="highlight">
+            <strong>Key Insight:</strong> $P(A|B) \neq P(B|A)$ in general<br>
+            The probability of rain given umbrellas ≠ probability of umbrellas given rain
+        </div>
+        <div id="conditional-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 3: Deriving Bayes' Theorem -->
+    <div class="slide" id="slide3">
+        <h1>Deriving Bayes' Theorem</h1>
+        <h2>From Basic Probability Rules</h2>
+        <div class="example">
+            <strong>Starting with conditional probability:</strong>
+        </div>
+        <div class="calculation">
+            1. P(A|B) = P(A ∩ B) / P(B)<br>
+            2. P(B|A) = P(A ∩ B) / P(A)<br><br>
+            3. From (2): P(A ∩ B) = P(B|A) × P(A)<br><br>
+            4. Substitute into (1):<br>
+               P(A|B) = [P(B|A) × P(A)] / P(B)
+        </div>
+        <div class="formula">
+            $$P(A|B) = \frac{P(B|A) \times P(A)}{P(B)}$$
+        </div>
+        <div class="highlight">
+            <strong>This is Bayes' Theorem!</strong> A simple rearrangement of conditional probability definitions
+        </div>
+        <div id="derivation-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 4: Components of Bayes' Theorem -->
+    <div class="slide" id="slide4">
+        <h1>Components of Bayes' Theorem</h1>
+        <h2>Understanding Each Term</h2>
+        <div class="formula">
+            $$P(\text{Hypothesis}|\text{Evidence}) = \frac{P(\text{Evidence}|\text{Hypothesis}) \times P(\text{Hypothesis})}{P(\text{Evidence})}$$
+        </div>
+        <div class="example">
+            <strong>Four Key Components:</strong>
+        </div>
+        <ul>
+            <li><strong>Prior P(A):</strong> What we believe before seeing evidence
+                <ul><li>Our initial belief about the hypothesis</li></ul>
+            </li>
+            <li><strong>Likelihood P(B|A):</strong> How well the evidence fits our hypothesis
+                <ul><li>How probable is this evidence if our hypothesis is true?</li></ul>
+            </li>
+            <li><strong>Evidence P(B):</strong> The probability of observing the evidence
+                <ul><li>Normalizing constant (often computed via law of total probability)</li></ul>
+            </li>
+            <li><strong>Posterior P(A|B):</strong> Updated belief after seeing evidence
+                <ul><li>What we believe after incorporating the new information</li></ul>
+            </li>
+        </ul>
+        <div class="highlight">
+            <strong>Intuition:</strong> Posterior ∝ Likelihood × Prior
+        </div>
+        <div id="components-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 5: Medical Diagnosis Example -->
+    <div class="slide" id="slide5">
+        <h1>Medical Diagnosis Example</h1>
+        <h2>Disease Testing Scenario</h2>
+        <div class="example">
+            <strong>Problem Setup:</strong>
+            <ul>
+                <li>Disease affects 1% of population (base rate)</li>
+                <li>Test is 95% accurate (both sensitivity and specificity)</li>
+                <li>You test positive. What's the probability you have the disease?</li>
+            </ul>
+        </div>
+        <div class="calculation">
+            Given information:<br>
+            • P(Disease) = 0.01 (prior)<br>
+            • P(Positive|Disease) = 0.95 (likelihood)<br>
+            • P(Positive|No Disease) = 0.05<br><br>
+            
+            Need to find: P(Disease|Positive) = ?
+        </div>
+        <div class="formula">
+            $$P(\text{Disease}|\text{Positive}) = \frac{P(\text{Positive}|\text{Disease}) \times P(\text{Disease})}{P(\text{Positive})}$$
+        </div>
+        <div class="highlight">
+            <strong>Intuitive guess:</strong> 95%? <strong>Actual answer:</strong> Much lower!
+        </div>
+        <div id="medical-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 6: Medical Example Calculation -->
+    <div class="slide" id="slide6">
+        <h1>Medical Example: Full Calculation</h1>
+        <h2>Step-by-Step Solution</h2>
+        <div class="calculation">
+            Step 1: Calculate P(Positive) using law of total probability<br>
+            P(Positive) = P(Positive|Disease) × P(Disease) + P(Positive|No Disease) × P(No Disease)<br>
+            P(Positive) = 0.95 × 0.01 + 0.05 × 0.99<br>
+            P(Positive) = 0.0095 + 0.0495 = 0.059<br><br>
+            
+            Step 2: Apply Bayes' theorem<br>
+            P(Disease|Positive) = P(Positive|Disease) × P(Disease) / P(Positive)<br>
+            P(Disease|Positive) = (0.95 × 0.01) / 0.059  ≈ 0.161
+        </div>
+        <div class="formula">
+            $$P(\text{Disease}|\text{Positive}) = 16.1\%$$
+        </div>
+        <div class="highlight">
+            <strong>Key Insight:</strong> Even with a 95% accurate test, a positive result only gives 16% chance of having the disease!
+        </div>
+        <div class="misconception">
+            <strong>Base Rate Fallacy:</strong> Ignoring the low prevalence (1%) leads to massive overestimation of risk
+        </div>
+        <div id="calculation-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 7: Bayesian vs. Frequentist -->
+    <div class="slide" id="slide7">
+        <h1>Bayesian vs. Frequentist Perspectives</h1>
+        <h2>Two Philosophies of Probability</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Aspect</th>
+                <th>Frequentist</th>
+                <th>Bayesian</th>
+            </tr>
+            <tr>
+                <td><strong>Probability</strong></td>
+                <td>Long-run frequency of events</td>
+                <td>Degree of belief or uncertainty</td>
+            </tr>
+            <tr>
+                <td><strong>Parameters</strong></td>
+                <td>Fixed but unknown constants</td>
+                <td>Random variables with distributions</td>
+            </tr>
+            <tr>
+                <td><strong>Prior Knowledge</strong></td>
+                <td>Not formally incorporated</td>
+                <td>Explicitly included via priors</td>
+            </tr>
+            <tr>
+                <td><strong>Inference</strong></td>
+                <td>Confidence intervals, p-values</td>
+                <td>Credible intervals, posterior distributions</td>
+            </tr>
+            <tr>
+                <td><strong>Uncertainty</strong></td>
+                <td>About the procedure</td>
+                <td>About the parameter values</td>
+            </tr>
+        </table>
+        <div class="example">
+            <strong>When to use each:</strong>
+            <ul>
+                <li><strong>Frequentist:</strong> Large datasets, objective analysis, regulatory approval</li>
+                <li><strong>Bayesian:</strong> Small datasets, prior knowledge available, decision making under uncertainty</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 8: Applications in Machine Learning -->
+    <div class="slide" id="slide8">
+        <h1>Applications in Machine Learning</h1>
+        <h2>Bayes' Theorem in Action</h2>
+        <div class="example">
+            <strong>Key Applications:</strong>
+        </div>
+        <ul>
+            <li><strong>Naive Bayes Classifier:</strong>
+                <ul><li>Text classification, spam detection</li>
+                <li>Assumes feature independence (hence "naive")</li></ul>
+            </li>
+            <li><strong>Bayesian Optimization:</strong>
+                <ul><li>Hyperparameter tuning</li>
+                <li>Expensive function optimization</li></ul>
+            </li>
+            <li><strong>Bayesian Neural Networks:</strong>
+                <ul><li>Uncertainty quantification in deep learning</li>
+                <li>Distributions over weights instead of point estimates</li></ul>
+            </li>
+            <li><strong>A/B Testing:</strong>
+                <ul><li>Online experimentation</li>
+                <li>Sequential decision making</li></ul>
+            </li>
+            <li><strong>Probabilistic Programming:</strong>
+                <ul><li>PyMC, Stan, Edward</li>
+                <li>Complex hierarchical models</li></ul>
+            </li>
+        </ul>
+        <div class="formula">
+            $$P(\text{Class}|\text{Features}) = \frac{P(\text{Features}|\text{Class}) \times P(\text{Class})}{P(\text{Features})}$$
+        </div>
+
+    </div>
+
+    <!-- Slide 9: Common Misconceptions -->
+    <div class="slide" id="slide9">
+        <h1>Common Misconceptions</h1>
+        <h2>Avoiding Pitfalls</h2>
+        <div class="misconception">
+            <strong>Misconception 1: Confusing P(A|B) with P(B|A)</strong>
+            <ul>
+                <li>P(Positive Test|Disease) ≠ P(Disease|Positive Test)</li>
+                <li>These can be dramatically different!</li>
+            </ul>
+        </div>
+        <div class="misconception">
+            <strong>Misconception 2: Ignoring Base Rates (Priors)</strong>
+            <ul>
+                <li>Rare events stay rare even with strong evidence</li>
+                <li>Prior probability matters enormously</li>
+            </ul>
+        </div>
+        <div class="misconception">
+            <strong>Misconception 3: Assuming Independence</strong>
+            <ul>
+                <li>Naive Bayes assumes features are independent</li>
+                <li>Often violated in practice, but algorithm still works well</li>
+            </ul>
+        </div>
+        <div class="example">
+            <strong>Pro Tips:</strong>
+            <ul>
+                <li>Always consider the base rate</li>
+                <li>Be careful about the direction of conditioning</li>
+                <li>Check independence assumptions</li>
+                <li>Use natural frequencies instead of percentages for intuition</li>
+            </ul>
+        </div>
+        <div id="misconceptions-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 10: Key Takeaways -->
+    <div class="slide" id="slide10">
+        <h1>Key Takeaways</h1>
+        <h2>Essential Points to Remember</h2>
+        <div class="formula">
+            $$P(\text{Hypothesis}|\text{Evidence}) = \frac{P(\text{Evidence}|\text{Hypothesis}) \times P(\text{Hypothesis})}{P(\text{Evidence})}$$
+        </div>
+        <ul>
+            <li><strong>Foundation of Probabilistic Reasoning:</strong>
+                <ul><li>Formalizes how to update beliefs with evidence</li></ul>
+            </li>
+            <li><strong>Prior Knowledge Matters:</strong>
+                <ul><li>Base rates and prior probabilities are crucial</li></ul>
+            </li>
+            <li><strong>Uncertainty Quantification:</strong>
+                <ul><li>Provides principled way to handle uncertainty</li></ul>
+            </li>
+            <li><strong>Machine Learning Foundation:</strong>
+                <ul><li>Underlies many algorithms and approaches</li></ul>
+            </li>
+            <li><strong>Decision Making Tool:</strong>
+                <ul><li>Optimal decisions under uncertainty</li></ul>
+            </li>
+        </ul>
+        <div class="highlight">
+            <strong>Remember:</strong> Bayes' theorem is not just a formula—it's a way of thinking about evidence, belief updating, and rational decision making in the face of uncertainty.
+        </div>
+        <div class="example">
+            <strong>Next Steps:</strong> Explore Bayesian statistics, probabilistic programming, and Bayesian machine learning methods
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button onclick="prevSlide()">Previous</button>
+        <div class="progress">Slide <span id="current">1</span> of <span id="total">10</span></div>
+        <button onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            // Hide all slides
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show the current slide
+            document.getElementById('slide' + n).classList.add('active');
+            document.getElementById('current').textContent = n;
+            
+            // Initialize visualizations for the current slide if needed
+            setTimeout(() => {
+                initializeVisualizationForSlide(n);
+            }, 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+        
+        // Initialize all visualizations when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initializeAllVisualizations();
+            }, 1000);
+            
+            setTimeout(() => {
+                initializeVisualizationForSlide(currentSlide);
+            }, 1500);
+        });
+        
+        function initializeAllVisualizations() {
+            try {
+                initConditionalViz();
+                initDerivationViz();
+                initComponentsViz();
+                initMedicalViz();
+                initCalculationViz();
+                initMisconceptionsViz();
+            } catch (error) {
+                console.error('Error initializing visualizations:', error);
+            }
+        }
+        
+        // Visualization functions
+        function initConditionalViz() {
+            const container = d3.select('#conditional-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 40, right: 40, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Draw Venn diagram for conditional probability
+                const centerX = width / 2;
+                const centerY = height / 2;
+                
+                // Circle A (larger)
+                svg.append('circle')
+                    .attr('cx', centerX - 30)
+                    .attr('cy', centerY)
+                    .attr('r', 80)
+                    .attr('fill', 'rgba(52, 152, 219, 0.3)')
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 3);
+                
+                // Circle B (smaller, overlapping)
+                svg.append('circle')
+                    .attr('cx', centerX + 30)
+                    .attr('cy', centerY)
+                    .attr('r', 60)
+                    .attr('fill', 'rgba(231, 76, 60, 0.3)')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3);
+                
+                // Labels
+                svg.append('text')
+                    .attr('x', centerX - 60)
+                    .attr('y', centerY - 40)
+                    .attr('font-size', '16px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#3498db')
+                    .text('A');
+                
+                svg.append('text')
+                    .attr('x', centerX + 60)
+                    .attr('y', centerY - 30)
+                    .attr('font-size', '16px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('B');
+                
+                // Intersection label
+                svg.append('text')
+                    .attr('x', centerX)
+                    .attr('y', centerY + 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('A ∩ B');
+                
+                // Title
+                svg.append('text')
+                    .attr('x', centerX)
+                    .attr('y', 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('P(A|B) = P(A ∩ B) / P(B)');
+            }
+        }
+        
+        function initDerivationViz() {
+            const container = d3.select('#derivation-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                // Create a flowchart showing the derivation steps
+                const div = container.append('div')
+                    .style('padding', '20px')
+                    .style('text-align', 'center');
+                
+                div.append('div')
+                    .style('background-color', '#3498db')
+                    .style('color', 'white')
+                    .style('padding', '10px')
+                    .style('margin', '10px auto')
+                    .style('border-radius', '5px')
+                    .style('width', '300px')
+                    .text('P(A|B) = P(A ∩ B) / P(B)');
+                
+                div.append('div')
+                    .style('font-size', '24px')
+                    .style('margin', '10px')
+                    .text('↓');
+                
+                div.append('div')
+                    .style('background-color', '#e74c3c')
+                    .style('color', 'white')
+                    .style('padding', '10px')
+                    .style('margin', '10px auto')
+                    .style('border-radius', '5px')
+                    .style('width', '300px')
+                    .text('P(A ∩ B) = P(B|A) × P(A)');
+                
+                div.append('div')
+                    .style('font-size', '24px')
+                    .style('margin', '10px')
+                    .text('↓');
+                
+                div.append('div')
+                    .style('background-color', '#27ae60')
+                    .style('color', 'white')
+                    .style('padding', '10px')
+                    .style('margin', '10px auto')
+                    .style('border-radius', '5px')
+                    .style('width', '350px')
+                    .text('P(A|B) = P(B|A) × P(A) / P(B)');
+            }
+        }
+        
+        function initComponentsViz() {
+            const container = d3.select('#components-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Create boxes for each component
+                const components = [
+                    {name: 'Prior\nP(H)', x: 100, y: 80, color: '#3498db'},
+                    {name: 'Likelihood\nP(E|H)', x: 250, y: 80, color: '#e74c3c'},
+                    {name: 'Evidence\nP(E)', x: 400, y: 80, color: '#f39c12'},
+                    {name: 'Posterior\nP(H|E)', x: 250, y: 200, color: '#27ae60'}
+                ];
+                
+                components.forEach(comp => {
+                    svg.append('rect')
+                        .attr('x', comp.x - 40)
+                        .attr('y', comp.y - 30)
+                        .attr('width', 80)
+                        .attr('height', 60)
+                        .attr('fill', comp.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2)
+                        .attr('rx', 5);
+                    
+                    svg.append('text')
+                        .attr('x', comp.x)
+                        .attr('y', comp.y)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '12px')
+                        .attr('font-weight', 'bold')
+                        .attr('fill', 'white')
+                        .text(comp.name.split('\n')[0]);
+                    
+                    svg.append('text')
+                        .attr('x', comp.x)
+                        .attr('y', comp.y + 15)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '11px')
+                        .attr('fill', 'white')
+                        .text(comp.name.split('\n')[1]);
+                });
+                
+                // Draw arrows showing the flow
+                // Prior and Likelihood to Posterior
+                svg.append('line')
+                    .attr('x1', 140)
+                    .attr('y1', 110)
+                    .attr('x2', 210)
+                    .attr('y2', 170)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 3)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                svg.append('line')
+                    .attr('x1', 210)
+                    .attr('y1', 110)
+                    .attr('x2', 210)
+                    .attr('y2', 170)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 3)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                // Evidence normalization
+                svg.append('line')
+                    .attr('x1', 360)
+                    .attr('y1', 110)
+                    .attr('x2', 290)
+                    .attr('y2', 170)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 3)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                // Define arrow marker
+                svg.append('defs')
+                    .append('marker')
+                    .attr('id', 'arrow')
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 8)
+                    .attr('refY', 0)
+                    .attr('markerWidth', 6)
+                    .attr('markerHeight', 6)
+                    .attr('orient', 'auto')
+                    .append('path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#34495e');
+            }
+        }
+        
+        function initMedicalViz() {
+            const container = d3.select('#medical-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                // Create a visual representation of the medical test scenario
+                const div = container.append('div')
+                    .style('padding', '20px');
+                
+                div.append('h4')
+                    .style('text-align', 'center')
+                    .style('color', '#3498db')
+                    .text('Population of 10,000 People');
+                
+                // Create a grid representation
+                const gridContainer = div.append('div')
+                    .style('display', 'grid')
+                    .style('grid-template-columns', 'repeat(4, 1fr)')
+                    .style('gap', '10px')
+                    .style('margin', '20px 0');
+                
+                // Disease group (1%)
+                gridContainer.append('div')
+                    .style('background-color', '#e74c3c')
+                    .style('color', 'white')
+                    .style('padding', '15px')
+                    .style('text-align', 'center')
+                    .style('border-radius', '5px')
+                    .html('<strong>Have Disease</strong><br>100 people<br>(1%)');
+                
+                // No disease group (99%)
+                gridContainer.append('div')
+                    .style('background-color', '#27ae60')
+                    .style('color', 'white')
+                    .style('padding', '15px')
+                    .style('text-align', 'center')
+                    .style('border-radius', '5px')
+                    .html('<strong>No Disease</strong><br>9,900 people<br>(99%)');
+                
+                // Test positive with disease
+                gridContainer.append('div')
+                    .style('background-color', '#e74c3c')
+                    .style('color', 'white')
+                    .style('padding', '15px')
+                    .style('text-align', 'center')
+                    .style('border-radius', '5px')
+                    .style('border', '3px solid #f39c12')
+                    .html('<strong>True Positive</strong><br>95 people<br>(95% of 100)');
+                
+                // Test positive without disease
+                gridContainer.append('div')
+                    .style('background-color', '#e67e22')
+                    .style('color', 'white')
+                    .style('padding', '15px')
+                    .style('text-align', 'center')
+                    .style('border-radius', '5px')
+                    .style('border', '3px solid #f39c12')
+                    .html('<strong>False Positive</strong><br>495 people<br>(5% of 9,900)');
+                
+                div.append('div')
+                    .style('text-align', 'center')
+                    .style('margin-top', '20px')
+                    .style('font-weight', 'bold')
+                    .style('color', '#f39c12')
+                    .text('Total Positive Tests: 95 + 495 = 590 people');
+            }
+        }
+        
+        function initCalculationViz() {
+            const container = d3.select('#calculation-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Create a pie chart showing the breakdown
+                const data = [
+                    {label: 'True Positive', value: 95, color: '#e74c3c'},
+                    {label: 'False Positive', value: 495, color: '#e67e22'}
+                ];
+                
+                const total = data.reduce((sum, d) => sum + d.value, 0);
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const radius = 80;
+                
+                const pie = d3.pie()
+                    .value(d => d.value)
+                    .sort(null);
+                
+                const arc = d3.arc()
+                    .innerRadius(0)
+                    .outerRadius(radius);
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${centerX}, ${centerY})`);
+                
+                const arcs = g.selectAll('.arc')
+                    .data(pie(data))
+                    .enter()
+                    .append('g')
+                    .attr('class', 'arc');
+                
+                arcs.append('path')
+                    .attr('d', arc)
+                    .attr('fill', d => d.data.color)
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 2);
+                
+                arcs.append('text')
+                    .attr('transform', d => `translate(${arc.centroid(d)})`)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text(d => d.data.value);
+                
+                // Add title
+                svg.append('text')
+                    .attr('x', centerX)
+                    .attr('y', 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Positive Test Results Breakdown');
+                
+                // Add percentage
+                svg.append('text')
+                    .attr('x', centerX)
+                    .attr('y', height - 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '16px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('True Disease Rate: 95/590 = 16.1%');
+                
+                // Legend
+                const legend = svg.append('g')
+                    .attr('transform', `translate(${centerX + 120}, ${centerY - 20})`);
+                
+                data.forEach((d, i) => {
+                    legend.append('rect')
+                        .attr('x', 0)
+                        .attr('y', i * 25)
+                        .attr('width', 15)
+                        .attr('height', 15)
+                        .attr('fill', d.color);
+                    
+                    legend.append('text')
+                        .attr('x', 20)
+                        .attr('y', i * 25 + 12)
+                        .attr('font-size', '12px')
+                        .text(d.label);
+                });
+            }
+        }
+        
+        // Placeholder functions for remaining visualizations
+        function initApplicationsViz() {
+            const container = d3.select('#applications-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 40, right: 40, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Create a flowchart showing ML applications
+                const applications = [
+                    {name: 'Naive Bayes\nClassifier', x: 150, y: 80, color: '#3498db', desc: 'Text classification\nSpam detection'},
+                    {name: 'Bayesian\nOptimization', x: 400, y: 80, color: '#e74c3c', desc: 'Hyperparameter\ntuning'},
+                    {name: 'Bayesian\nNeural Nets', x: 150, y: 180, color: '#27ae60', desc: 'Uncertainty\nquantification'},
+                    {name: 'A/B Testing', x: 400, y: 180, color: '#f39c12', desc: 'Online\nexperimentation'}
+                ];
+                
+                // Draw application boxes
+                applications.forEach(app => {
+                    // Main box
+                    svg.append('rect')
+                        .attr('x', app.x - 60)
+                        .attr('y', app.y - 30)
+                        .attr('width', 120)
+                        .attr('height', 60)
+                        .attr('fill', app.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2)
+                        .attr('rx', 8);
+                    
+                    // Application name
+                    const lines = app.name.split('\n');
+                    lines.forEach((line, i) => {
+                        svg.append('text')
+                            .attr('x', app.x)
+                            .attr('y', app.y - 5 + (i * 12))
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '11px')
+                            .attr('font-weight', 'bold')
+                            .attr('fill', 'white')
+                            .text(line);
+                    });
+                    
+                    // Description box
+                    svg.append('rect')
+                        .attr('x', app.x - 45)
+                        .attr('y', app.y + 40)
+                        .attr('width', 90)
+                        .attr('height', 30)
+                        .attr('fill', '#ecf0f1')
+                        .attr('stroke', app.color)
+                        .attr('stroke-width', 1)
+                        .attr('rx', 4);
+                    
+                    // Description text
+                    const descLines = app.desc.split('\n');
+                    descLines.forEach((line, i) => {
+                        svg.append('text')
+                            .attr('x', app.x)
+                            .attr('y', app.y + 52 + (i * 10))
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '9px')
+                            .attr('fill', '#2c3e50')
+                            .text(line);
+                    });
+                });
+                
+                // Central Bayes theorem
+                svg.append('circle')
+                    .attr('cx', width / 2)
+                    .attr('cy', height / 2)
+                    .attr('r', 40)
+                    .attr('fill', '#9b59b6')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 3);
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height / 2 - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('Bayes\'');
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height / 2 + 8)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('Theorem');
+                
+                // Draw connecting lines
+                applications.forEach(app => {
+                    svg.append('line')
+                        .attr('x1', app.x)
+                        .attr('y1', app.y)
+                        .attr('x2', width / 2)
+                        .attr('y2', height / 2)
+                        .attr('stroke', '#95a5a6')
+                        .attr('stroke-width', 2)
+                        .attr('stroke-dasharray', '5,5');
+                });
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Bayes\' Theorem in Machine Learning');
+            }
+        }
+        
+        function initMisconceptionsViz() {
+            const container = d3.select('#misconceptions-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('P(A|B) ≠ P(B|A): Direction Matters!');
+                
+                // Left side: P(Positive|Disease)
+                const leftX = width * 0.25;
+                const rightX = width * 0.75;
+                const centerY = height / 2;
+                
+                // Left box: P(Positive|Disease) = 95%
+                svg.append('rect')
+                    .attr('x', leftX - 80)
+                    .attr('y', centerY - 50)
+                    .attr('width', 160)
+                    .attr('height', 100)
+                    .attr('fill', '#3498db')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 8);
+                
+                svg.append('text')
+                    .attr('x', leftX)
+                    .attr('y', centerY - 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('P(Positive|Disease)');
+                
+                svg.append('text')
+                    .attr('x', leftX)
+                    .attr('y', centerY)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '24px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('95%');
+                
+                svg.append('text')
+                    .attr('x', leftX)
+                    .attr('y', centerY + 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .text('Test accuracy');
+                
+                // Right box: P(Disease|Positive) = 16.1%
+                svg.append('rect')
+                    .attr('x', rightX - 80)
+                    .attr('y', centerY - 50)
+                    .attr('width', 160)
+                    .attr('height', 100)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 8);
+                
+                svg.append('text')
+                    .attr('x', rightX)
+                    .attr('y', centerY - 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('P(Disease|Positive)');
+                
+                svg.append('text')
+                    .attr('x', rightX)
+                    .attr('y', centerY)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '24px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('16.1%');
+                
+                svg.append('text')
+                    .attr('x', rightX)
+                    .attr('y', centerY + 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .text('Actual risk');
+                
+                // Arrow between them
+                svg.append('line')
+                    .attr('x1', leftX + 85)
+                    .attr('y1', centerY)
+                    .attr('x2', rightX - 85)
+                    .attr('y2', centerY)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 3);
+                
+                // Not equal sign
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', centerY - 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '20px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('≠');
+                
+                // Bottom explanation
+                svg.append('text')
+                    .attr('x', leftX)
+                    .attr('y', height - 40)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#2c3e50')
+                    .text('Given you have the disease,');
+                
+                svg.append('text')
+                    .attr('x', leftX)
+                    .attr('y', height - 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#2c3e50')
+                    .text('what\'s P(positive test)?');
+                
+                svg.append('text')
+                    .attr('x', rightX)
+                    .attr('y', height - 40)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#2c3e50')
+                    .text('Given positive test,');
+                
+                svg.append('text')
+                    .attr('x', rightX)
+                    .attr('y', height - 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#2c3e50')
+                    .text('what\'s P(disease)?');
+                
+                // Warning symbol
+                svg.append('polygon')
+                    .attr('points', `${width/2 - 15},${centerY + 40} ${width/2 + 15},${centerY + 40} ${width/2},${centerY + 60}`)
+                    .attr('fill', '#f39c12')
+                    .attr('stroke', '#e67e22')
+                    .attr('stroke-width', 2);
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', centerY + 54)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '16px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('!');
+            }
+        }
+        
+        function initializeVisualizationForSlide(slideNumber) {
+            try {
+                switch (slideNumber) {
+                    case 2:
+                        initConditionalViz();
+                        break;
+                    case 3:
+                        initDerivationViz();
+                        break;
+                    case 4:
+                        initComponentsViz();
+                        break;
+                    case 5:
+                        initMedicalViz();
+                        break;
+                    case 6:
+                        initCalculationViz();
+                        break;
+                    case 8:
+                        // No visualization for this slide
+                        break;
+                    case 9:
+                        initMisconceptionsViz();
+                        break;
+                }
+            } catch (error) {
+                console.error(`Error initializing visualization for slide ${slideNumber}:`, error);
+            }
+        }
+    </script>
+</body>
+</html>

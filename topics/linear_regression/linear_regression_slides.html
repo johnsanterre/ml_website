@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Regression</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90vw;
+            max-width: 1100px;
+            height: 80vh;
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 1.2rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 0.6rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .highlight {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 1.5rem 0;
+        }
+
+        .formula {
+            background: #fdfdfd;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1.2rem 0;
+            background: white;
+            min-height: 250px;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2.5rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .objective h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .objective p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 85vh;
+                padding: 25px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .grid-2, .grid-3, .objectives {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>Linear Regression</h1>
+            <p class="subtitle">Fundamentals of Supervised Learning</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>📈 Core Concepts</h3>
+                    <p>Understand linear relationships and mathematical foundations</p>
+                </div>
+                <div class="objective">
+                    <h3>🎯 Model Training</h3>
+                    <p>Learn ordinary least squares optimization</p>
+                </div>
+                <div class="objective">
+                    <h3>📊 Evaluation</h3>
+                    <p>Master R-squared, MSE, and error interpretation</p>
+                </div>
+                <div class="objective">
+                    <h3>🔍 Applications</h3>
+                    <p>Recognize when to use linear regression</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Definition -->
+        <div class="slide" id="slide2">
+            <h2>What is Linear Regression?</h2>
+            
+            <div class="highlight">
+                <p><strong>Linear regression models the relationship between variables using a straight line that minimizes prediction errors.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Key Properties</h3>
+                    <ul>
+                        <li>Supervised learning algorithm</li>
+                        <li>Predicts continuous values</li>
+                        <li>Assumes linear relationships</li>
+                        <li>Provides interpretable coefficients</li>
+                        <li>Fast training and prediction</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Applications:</strong> House prices, sales forecasting, medical outcomes, financial modeling
+                    </div>
+                </div>
+                <div>
+                    <div class="viz" id="regression-viz">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Visualization: Scatter plot with regression line
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Simple Linear Regression -->
+        <div class="slide" id="slide3">
+            <h2>Simple Linear Regression</h2>
+            
+            <div class="highlight">
+                <p><strong>Start with the simplest case: one feature predicting one target variable.</strong></p>
+            </div>
+            
+            <div class="formula">
+                $$y = \beta_0 + \beta_1 x + \varepsilon$$
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Components</h3>
+                    <ul>
+                        <li><strong>y:</strong> Target variable (dependent)</li>
+                        <li><strong>x:</strong> Input feature (independent)</li>
+                        <li><strong>β₀:</strong> Intercept (baseline prediction)</li>
+                        <li><strong>β₁:</strong> Slope (rate of change)</li>
+                        <li><strong>ε:</strong> Error term (noise)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Interpretation</h3>
+                    <ul>
+                        <li>For every unit increase in x, y changes by β₁ units</li>
+                        <li>β₀ represents y when x = 0</li>
+                        <li>ε captures measurement error and omitted factors</li>
+                        <li>Assumes constant rate of change (linearity)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="example">
+                <strong>Example:</strong> House Price = $150 × Square Footage + $50,000<br>
+                Each additional square foot adds $150 to the price.
+            </div>
+        </div>
+
+        <!-- Slide 4: Multiple Linear Regression -->
+        <div class="slide" id="slide4">
+            <h2>Multiple Linear Regression</h2>
+            
+            <div class="formula">
+                $$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon$$
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Key Differences</h3>
+                    <ul>
+                        <li><strong>Partial effects:</strong> Each β_i shows effect of x_i holding other features constant</li>
+                        <li><strong>Conditional relationships:</strong> Effects depend on other variables</li>
+                        <li><strong>More realistic:</strong> Real-world outcomes depend on multiple factors</li>
+                        <li><strong>Higher complexity:</strong> More parameters to estimate</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Error Term Properties</h3>
+                    <ul>
+                        <li>Captures omitted variables</li>
+                        <li>Includes measurement error</li>
+                        <li>Represents inherent randomness</li>
+                        <li>Assumed to be normally distributed</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="example">
+                <strong>Example:</strong> House Price = β₀ + β₁×Size + β₂×Bedrooms + β₃×Age + ε<br>
+                Each coefficient shows the effect of that feature, controlling for the others.
+            </div>
+        </div>
+
+        <!-- Slide 5: Matrix Notation -->
+        <div class="slide" id="slide5">
+            <h2>Matrix Notation</h2>
+            
+            <div class="highlight">
+                <p><strong>Compact representation enables efficient computation and theoretical analysis.</strong></p>
+            </div>
+            
+            <div class="formula">
+                $$\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$$
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Matrix Components</h3>
+                    <ul>
+                        <li><strong>y:</strong> n×1 vector of target values</li>
+                        <li><strong>X:</strong> n×p matrix of features</li>
+                        <li><strong>β:</strong> p×1 vector of coefficients</li>
+                        <li><strong>ε:</strong> n×1 vector of error terms</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Dimensions:</strong><br>
+                        n = number of observations<br>
+                        p = number of features
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Computational Advantages</h3>
+                    <ul>
+                        <li>Enables vectorized operations</li>
+                        <li>Scales to large datasets efficiently</li>
+                        <li>Provides unified treatment regardless of p</li>
+                        <li>Facilitates theoretical analysis</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Requirement:</strong> X must have full column rank (no multicollinearity)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Ordinary Least Squares -->
+        <div class="slide" id="slide6">
+            <h2>Ordinary Least Squares (OLS)</h2>
+            
+            <div class="highlight">
+                <p><strong>Find parameters that minimize the sum of squared residuals.</strong></p>
+            </div>
+            
+            <div class="formula">
+                $$\min_{\boldsymbol{\beta}} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Why Squared Errors?</h3>
+                    <ul>
+                        <li>Penalizes large errors more heavily</li>
+                        <li>Differentiable everywhere</li>
+                        <li>Leads to closed-form solution</li>
+                        <li>Maximum likelihood under normality</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Connection to Correlation</h3>
+                    <ul>
+                        <li>Strong correlation → small residuals</li>
+                        <li>Weak correlation → large residuals</li>
+                        <li>OLS finds the best possible linear fit</li>
+                        <li>Quality depends on data's linear structure</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: OLS Visualization -->
+        <div class="slide" id="slide7">
+            <h2>Error Minimization Visualization</h2>
+            
+            <div class="viz" id="ols-viz">
+                <div style="height: 280px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    Visualization: Error minimization with residual lines
+                </div>
+            </div>
+            
+            <p>The visualization shows how OLS finds the optimal line by minimizing the sum of squared residuals (vertical distances from points to the line).</p>
+        </div>
+
+        <!-- Slide 8: Training Methods -->
+        <div class="slide" id="slide8">
+            <h2>Training Methods</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Normal Equation</h3>
+                    <div class="formula">
+                        $$\hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}$$
+                    </div>
+                    
+                    <h4>✅ Advantages:</h4>
+                    <ul>
+                        <li>Exact global optimum</li>
+                        <li>No hyperparameters needed</li>
+                        <li>Single computation step</li>
+                        <li>Mathematically elegant</li>
+                    </ul>
+                    
+                    <h4>❌ Disadvantages:</h4>
+                    <ul>
+                        <li>O(p³) complexity</li>
+                        <li>Requires matrix inversion</li>
+                        <li>Memory intensive for large data</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Gradient Descent</h3>
+                    <div class="formula">
+                        $$\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \alpha \nabla J(\boldsymbol{\beta}_t)$$
+                    </div>
+                    
+                    <h4>✅ Advantages:</h4>
+                    <ul>
+                        <li>Scales to large datasets</li>
+                        <li>O(p) memory complexity</li>
+                        <li>Works with streaming data</li>
+                        <li>Extensible to other loss functions</li>
+                    </ul>
+                    
+                    <h4>❌ Disadvantages:</h4>
+                    <ul>
+                        <li>Requires tuning learning rate α</li>
+                        <li>May need many iterations</li>
+                        <li>Sensitive to feature scaling</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Cost Function - MSE -->
+        <div class="slide" id="slide9">
+            <h2>Cost Function: Mean Squared Error</h2>
+            
+            <div class="formula">
+                $$\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2$$
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Properties</h3>
+                    <ul>
+                        <li><strong>Always non-negative:</strong> Minimum value is 0</li>
+                        <li><strong>Differentiable:</strong> Enables gradient-based optimization</li>
+                        <li><strong>Convex:</strong> Guarantees global minimum</li>
+                        <li><strong>Outlier sensitive:</strong> Large errors dominate</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Alternative Loss Functions</h3>
+                    <ul>
+                        <li><strong>Mean Absolute Error (MAE):</strong> More robust to outliers</li>
+                        <li><strong>Huber Loss:</strong> Combines MSE and MAE benefits</li>
+                        <li><strong>Quantile Loss:</strong> For quantile regression</li>
+                        <li><strong>Custom losses:</strong> Domain-specific objectives</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>MSE is the maximum likelihood estimator under the assumption of normally distributed errors.</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Understanding Correlation -->
+        <div class="slide" id="slide10">
+            <h2>Understanding Correlation</h2>
+            
+            <div class="highlight">
+                <p><strong>The strength of linear correlation determines how well linear regression will perform.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Key Insights</h3>
+                    <ul>
+                        <li>Strong correlation means data points cluster tightly around a line</li>
+                        <li>Weak correlation means data points are scattered widely</li>
+                        <li>Linear regression works best with strong linear relationships</li>
+                        <li>Correlation coefficient ranges from -1 to +1</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Impact on Performance</h3>
+                    <ul>
+                        <li><strong>Strong correlation (|r| > 0.7):</strong> High R², low prediction error</li>
+                        <li><strong>Moderate correlation (0.3 < |r| < 0.7):</strong> Decent performance</li>
+                        <li><strong>Weak correlation (|r| < 0.3):</strong> Poor predictive power</li>
+                        <li><strong>No correlation (r ≈ 0):</strong> Linear regression ineffective</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Correlation Examples -->
+        <div class="slide" id="slide11">
+            <h2>Correlation Examples</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Weak Correlation (r ≈ 0.3)</h3>
+                    <div class="viz" id="weak-correlation-viz">
+                        <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Weak correlation scatter plot
+                        </div>
+                    </div>
+                    <p>Data forms a cloud pattern. Linear regression will have poor predictive power.</p>
+                </div>
+                
+                <div>
+                    <h3>Strong Correlation (r ≈ 0.9)</h3>
+                    <div class="viz" id="strong-correlation-viz">
+                        <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Strong correlation scatter plot
+                        </div>
+                    </div>
+                    <p>Data follows a clear linear pattern. Linear regression will provide accurate predictions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Feature Scaling and Practical Considerations -->
+        <div class="slide" id="slide12">
+            <h2>Feature Scaling & Practical Considerations</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Feature Scaling</h3>
+                    <ul>
+                        <li><strong>Why needed:</strong> Features with different scales can dominate</li>
+                        <li><strong>Standardization:</strong> (x - μ) / σ → mean=0, std=1</li>
+                        <li><strong>Normalization:</strong> (x - min) / (max - min) → range [0,1]</li>
+                        <li><strong>When to use:</strong> Always for gradient descent</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Example:</strong> House size (2000 sqft) vs bedrooms (3)<br>
+                        Without scaling, size dominates the optimization
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Handling Outliers</h3>
+                    <ul>
+                        <li><strong>Detection:</strong> Residual plots, leverage, Cook's distance</li>
+                        <li><strong>Impact:</strong> Can severely skew coefficient estimates</li>
+                        <li><strong>Options:</strong> Remove, transform, robust regression</li>
+                        <li><strong>Caution:</strong> Outliers might contain valuable information</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Trade-off:</strong> Robust fit vs. preserving data integrity
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: When Linear Regression Fails -->
+        <div class="slide" id="slide13">
+            <h2>When Linear Regression Fails</h2>
+            
+            <div class="highlight">
+                <p><strong>Recognizing limitations is crucial for appropriate model selection.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Common Failure Modes</h3>
+                    <ul>
+                        <li><strong>Nonlinear relationships:</strong> Polynomial, exponential, logarithmic patterns</li>
+                        <li><strong>Interaction effects:</strong> Features affect each other's impact</li>
+                        <li><strong>Heteroscedasticity:</strong> Non-constant error variance</li>
+                        <li><strong>Multicollinearity:</strong> Highly correlated features</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Alternative Approaches</h3>
+                    <ul>
+                        <li><strong>Polynomial regression:</strong> Add x², x³ terms</li>
+                        <li><strong>Regularization:</strong> Ridge, Lasso, Elastic Net</li>
+                        <li><strong>Nonlinear models:</strong> Decision trees, neural networks</li>
+                        <li><strong>Transformations:</strong> Log, square root, Box-Cox</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="example">
+                <strong>Rule of thumb:</strong> Always plot residuals vs. fitted values to check assumptions
+            </div>
+        </div>
+
+        <!-- Slide 14: Evaluation Metrics -->
+        <div class="slide" id="slide9">
+            <h2>Model Evaluation Metrics</h2>
+            
+            <div class="grid-3">
+                <div class="example">
+                    <h3>R-squared</h3>
+                    <div class="formula">
+                        $$R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}}$$
+                    </div>
+                    <p>Proportion of variance explained (0 to 1)</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Mean Squared Error</h3>
+                    <div class="formula">
+                        $$\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2$$
+                    </div>
+                    <p>Average squared prediction error</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Root MSE</h3>
+                    <div class="formula">
+                        $$\text{RMSE} = \sqrt{\text{MSE}}$$
+                    </div>
+                    <p>Error in original units</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Evaluation Visualization -->
+        <div class="slide" id="slide10">
+            <h2>Model Performance Comparison</h2>
+            
+            <div class="viz" id="eval-viz">
+                <div style="height: 280px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    Visualization: Model comparison metrics
+                </div>
+            </div>
+            
+            <p>Compare different models using R², MSE, and RMSE. Higher R² and lower MSE/RMSE indicate better performance.</p>
+        </div>
+
+        <!-- Slide 11: Model Assumptions -->
+        <div class="slide" id="slide11">
+            <h2>Linear Regression Assumptions</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="example">
+                        <strong>1. Linearity</strong><br>
+                        The relationship between features and target is linear.
+                    </div>
+                    
+                    <div class="example">
+                        <strong>2. Independence</strong><br>
+                        Observations are independent of each other.
+                    </div>
+                    
+                    <div class="example">
+                        <strong>3. Homoscedasticity</strong><br>
+                        Constant variance of residuals across predictions.
+                    </div>
+                    
+                    <div class="example">
+                        <strong>4. Normality</strong><br>
+                        Residuals are approximately normally distributed.
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="viz" id="assumptions-viz">
+                        <div style="height: 280px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Residual plot visualization
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Summary -->
+        <div class="slide" id="slide12">
+            <h2>Key Takeaways</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Strengths</h3>
+                    <ul>
+                        <li>Simple and interpretable</li>
+                        <li>Fast training and prediction</li>
+                        <li>No hyperparameter tuning</li>
+                        <li>Probabilistic interpretation</li>
+                        <li>Good baseline for comparison</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>Assumes linear relationships</li>
+                        <li>Sensitive to outliers</li>
+                        <li>Requires feature scaling for optimal performance</li>
+                        <li>Can overfit with many features</li>
+                        <li>Limited to linear decision boundaries</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Linear regression is fundamental to machine learning. Master it well as it forms the foundation for many advanced techniques including regularization, ensemble methods, and neural networks.</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">12</span>
+    </div>
+
+
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 12;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations
+            setTimeout(() => initViz(currentSlide), 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // D3.js Visualization Functions
+        function initRegressionViz() {
+            const container = d3.select('#regression-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width - 20;
+                const height = 250;
+                const margin = {top: 20, right: 20, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Generate sample data
+                const data = [];
+                for (let i = 0; i < 30; i++) {
+                    const x = Math.random() * 10;
+                    const y = 2 * x + 5 + (Math.random() - 0.5) * 6;
+                    data.push({x, y});
+                }
+                
+                const xScale = d3.scaleLinear()
+                    .domain(d3.extent(data, d => d.x))
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain(d3.extent(data, d => d.y))
+                    .range([innerHeight, 0]);
+                
+                // Draw points
+                g.selectAll('.point')
+                    .data(data)
+                    .enter().append('circle')
+                    .attr('class', 'point')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 4)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.7);
+                
+                // Calculate and draw regression line
+                const n = data.length;
+                const sumX = d3.sum(data, d => d.x);
+                const sumY = d3.sum(data, d => d.y);
+                const sumXY = d3.sum(data, d => d.x * d.y);
+                const sumX2 = d3.sum(data, d => d.x * d.x);
+                
+                const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                const intercept = (sumY - slope * sumX) / n;
+                
+                const lineData = [
+                    {x: d3.min(data, d => d.x), y: slope * d3.min(data, d => d.x) + intercept},
+                    {x: d3.max(data, d => d.x), y: slope * d3.max(data, d => d.x) + intercept}
+                ];
+                
+                const line = d3.line()
+                    .x(d => xScale(d.x))
+                    .y(d => yScale(d.y));
+                
+                g.append('path')
+                    .datum(lineData)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3)
+                    .attr('d', line);
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale));
+                
+                // Labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Feature (x)');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -30)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Target (y)');
+            }
+        }
+
+        function initOLSViz() {
+            const container = d3.select('#ols-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width - 20;
+                const height = 280;
+                const margin = {top: 20, right: 20, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Sample data with clear trend
+                const data = [
+                    {x: 1, y: 3}, {x: 2, y: 5.1}, {x: 3, y: 6.8}, {x: 4, y: 8.2},
+                    {x: 5, y: 10.3}, {x: 6, y: 12.1}, {x: 7, y: 13.9}, {x: 8, y: 15.8}
+                ];
+                
+                const xScale = d3.scaleLinear()
+                    .domain([0, 9])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 17])
+                    .range([innerHeight, 0]);
+                
+                // Calculate regression
+                const n = data.length;
+                const sumX = d3.sum(data, d => d.x);
+                const sumY = d3.sum(data, d => d.y);
+                const sumXY = d3.sum(data, d => d.x * d.y);
+                const sumX2 = d3.sum(data, d => d.x * d.x);
+                
+                const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                const intercept = (sumY - slope * sumX) / n;
+                
+                // Draw residual lines
+                data.forEach(d => {
+                    const predicted = slope * d.x + intercept;
+                    g.append('line')
+                        .attr('x1', xScale(d.x))
+                        .attr('y1', yScale(d.y))
+                        .attr('x2', xScale(d.x))
+                        .attr('y2', yScale(predicted))
+                        .attr('stroke', '#ff7f50')
+                        .attr('stroke-width', 2)
+                        .attr('stroke-dasharray', '4,4')
+                        .attr('opacity', 0.7);
+                });
+                
+                // Draw points
+                g.selectAll('.point')
+                    .data(data)
+                    .enter().append('circle')
+                    .attr('class', 'point')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 5)
+                    .attr('fill', '#3498db')
+                    .attr('stroke', 'white')
+                    .attr('stroke-width', 2);
+                
+                // Draw regression line
+                const lineData = [{x: 0, y: intercept}, {x: 9, y: slope * 9 + intercept}];
+                const line = d3.line()
+                    .x(d => xScale(d.x))
+                    .y(d => yScale(d.y));
+                
+                g.append('path')
+                    .datum(lineData)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3)
+                    .attr('d', line);
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale));
+                
+                // Equation
+                g.append('text')
+                    .attr('x', innerWidth - 10)
+                    .attr('y', 20)
+                    .attr('text-anchor', 'end')
+                    .attr('font-size', '14px')
+                    .attr('fill', '#e74c3c')
+                    .attr('font-weight', 'bold')
+                    .text(`y = ${slope.toFixed(2)}x + ${intercept.toFixed(2)}`);
+            }
+        }
+
+        function initWeakCorrelationViz() {
+            const container = d3.select('#weak-correlation-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width - 20;
+                const height = 200;
+                const margin = {top: 20, right: 20, bottom: 30, left: 30};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Generate weak correlation data
+                const data = [];
+                for (let i = 0; i < 40; i++) {
+                    const x = Math.random() * 10;
+                    const y = 0.3 * x + 5 + (Math.random() - 0.5) * 8;
+                    data.push({x, y});
+                }
+                
+                const xScale = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 12])
+                    .range([innerHeight, 0]);
+                
+                // Points
+                g.selectAll('.point')
+                    .data(data)
+                    .enter().append('circle')
+                    .attr('class', 'point')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 3)
+                    .attr('fill', '#e74c3c')
+                    .attr('opacity', 0.7);
+                
+                // Weak trend line
+                const line = d3.line()
+                    .x(d => xScale(d))
+                    .y(d => yScale(0.3 * d + 5));
+                
+                g.append('path')
+                    .datum([0, 10])
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5')
+                    .attr('d', line);
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale).ticks(5));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale).ticks(5));
+            }
+        }
+
+        function initStrongCorrelationViz() {
+            const container = d3.select('#strong-correlation-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width - 20;
+                const height = 200;
+                const margin = {top: 20, right: 20, bottom: 30, left: 30};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Generate strong correlation data
+                const data = [];
+                for (let i = 0; i < 30; i++) {
+                    const x = Math.random() * 8 + 1;
+                    const y = 1.2 * x + 1 + (Math.random() - 0.5) * 1.5;
+                    data.push({x, y});
+                }
+                
+                const xScale = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 12])
+                    .range([innerHeight, 0]);
+                
+                // Points
+                g.selectAll('.point')
+                    .data(data)
+                    .enter().append('circle')
+                    .attr('class', 'point')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 3)
+                    .attr('fill', '#27ae60')
+                    .attr('opacity', 0.8);
+                
+                // Strong trend line
+                const line = d3.line()
+                    .x(d => xScale(d))
+                    .y(d => yScale(1.2 * d + 1));
+                
+                g.append('path')
+                    .datum([0, 9])
+                    .attr('fill', 'none')
+                    .attr('stroke', '#27ae60')
+                    .attr('stroke-width', 3)
+                    .attr('d', line);
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale).ticks(5));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale).ticks(5));
+            }
+        }
+
+        function initEvalViz() {
+            const container = d3.select('#eval-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width - 20;
+                const height = 280;
+                const margin = {top: 40, right: 100, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Sample models with different performance
+                const models = [
+                    {name: 'Model A', r2: 0.95, mse: 0.8, color: '#27ae60'},
+                    {name: 'Model B', r2: 0.75, mse: 2.1, color: '#f39c12'},
+                    {name: 'Model C', r2: 0.45, mse: 4.5, color: '#e74c3c'}
+                ];
+                
+                const barWidth = innerWidth / models.length - 20;
+                const maxMSE = d3.max(models, d => d.mse);
+                
+                // R² bars (top half)
+                const r2Scale = d3.scaleLinear()
+                    .domain([0, 1])
+                    .range([innerHeight / 2, 0]);
+                
+                models.forEach((model, i) => {
+                    const x = i * (barWidth + 20);
+                    
+                    // R² bar
+                    g.append('rect')
+                        .attr('x', x)
+                        .attr('y', r2Scale(model.r2))
+                        .attr('width', barWidth)
+                        .attr('height', innerHeight / 2 - r2Scale(model.r2))
+                        .attr('fill', model.color)
+                        .attr('opacity', 0.8);
+                    
+                    // R² value
+                    g.append('text')
+                        .attr('x', x + barWidth / 2)
+                        .attr('y', r2Scale(model.r2) - 5)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '12px')
+                        .attr('font-weight', 'bold')
+                        .text(model.r2.toFixed(2));
+                    
+                    // Model name
+                    g.append('text')
+                        .attr('x', x + barWidth / 2)
+                        .attr('y', innerHeight / 2 + 15)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '12px')
+                        .attr('font-weight', 'bold')
+                        .text(model.name);
+                });
+                
+                // MSE bars (bottom half)
+                const mseScale = d3.scaleLinear()
+                    .domain([0, maxMSE])
+                    .range([0, innerHeight / 2 - 20]);
+                
+                models.forEach((model, i) => {
+                    const x = i * (barWidth + 20);
+                    const barHeight = mseScale(model.mse);
+                    
+                    g.append('rect')
+                        .attr('x', x)
+                        .attr('y', innerHeight / 2 + 25)
+                        .attr('width', barWidth)
+                        .attr('height', barHeight)
+                        .attr('fill', model.color)
+                        .attr('opacity', 0.6);
+                    
+                    // MSE value
+                    g.append('text')
+                        .attr('x', x + barWidth / 2)
+                        .attr('y', innerHeight / 2 + 25 + barHeight + 15)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '12px')
+                        .attr('font-weight', 'bold')
+                        .text(model.mse.toFixed(1));
+                });
+                
+                // Labels
+                g.append('text')
+                    .attr('x', -40)
+                    .attr('y', innerHeight / 4)
+                    .attr('text-anchor', 'middle')
+                    .attr('transform', `rotate(-90, -40, ${innerHeight / 4})`)
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('R² Score');
+                
+                g.append('text')
+                    .attr('x', -40)
+                    .attr('y', 3 * innerHeight / 4)
+                    .attr('text-anchor', 'middle')
+                    .attr('transform', `rotate(-90, -40, ${3 * innerHeight / 4})`)
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('MSE');
+                
+                // Legend
+                g.append('text')
+                    .attr('x', innerWidth + 10)
+                    .attr('y', 20)
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Higher R² = Better');
+                
+                g.append('text')
+                    .attr('x', innerWidth + 10)
+                    .attr('y', innerHeight - 20)
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Lower MSE = Better');
+            }
+        }
+
+        function initAssumptionsViz() {
+            const container = d3.select('#assumptions-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width - 20;
+                const height = 280;
+                const margin = {top: 20, right: 20, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Residual plot data
+                const data = [];
+                for (let i = 0; i < 50; i++) {
+                    const predicted = Math.random() * 10 + 2;
+                    const residual = (Math.random() - 0.5) * 4;
+                    data.push({predicted, residual});
+                }
+                
+                const xScale = d3.scaleLinear()
+                    .domain(d3.extent(data, d => d.predicted))
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain(d3.extent(data, d => d.residual))
+                    .range([innerHeight, 0]);
+                
+                // Zero line
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('x2', innerWidth)
+                    .attr('y1', yScale(0))
+                    .attr('y2', yScale(0))
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+                
+                // Residual points
+                g.selectAll('.residual')
+                    .data(data)
+                    .enter().append('circle')
+                    .attr('class', 'residual')
+                    .attr('cx', d => xScale(d.predicted))
+                    .attr('cy', d => yScale(d.residual))
+                    .attr('r', 3)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.7);
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale));
+                
+                // Labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Predicted Values');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -30)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Residuals');
+                
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', 20)
+                    .attr('font-size', '12px')
+                    .attr('fill', '#5a6c7d')
+                    .text('Good: Random scatter around zero line');
+            }
+        }
+
+        // Visualization initialization
+        function initViz(slideNum) {
+            try {
+                switch(slideNum) {
+                    case 2:
+                        setTimeout(() => initRegressionViz(), 100);
+                        break;
+                    case 5:
+                        setTimeout(() => initOLSViz(), 100);
+                        break;
+                    case 8:
+                        setTimeout(() => {
+                            initWeakCorrelationViz();
+                            initStrongCorrelationViz();
+                        }, 100);
+                        break;
+                    case 10:
+                        setTimeout(() => initEvalViz(), 100);
+                        break;
+                    case 11:
+                        setTimeout(() => initAssumptionsViz(), 100);
+                        break;
+                }
+            } catch (error) {
+                console.error('Error initializing visualization:', error);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>

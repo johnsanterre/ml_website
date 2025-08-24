@@ -1,0 +1,27 @@
+PROMPT FOR CREATING GOOD LECTURE TOPICS:
+
+When creating lecture topics for a concept, follow these rules:
+
+GOOD LECTURE TOPICS (DO):
+- Specific techniques/methods: "Leaky ReLU", "Parametric ReLU", "Binary Cross-Entropy"
+- Comparisons between methods: "ReLU vs Sigmoid", "Cross-Entropy vs MSE", "PCA vs LDA"
+- Specific variants: "K-Means++", "Beta-VAE", "Conditional VAE"
+- Specific problems/solutions: "Dead Neuron Problem", "Vanishing Gradients", "Catastrophic Forgetting"
+
+BAD LECTURE TOPICS (DON'T):
+- Generic aspects: "Mathematical Definition", "Properties and Behavior", "Implementation Details"
+- Implementation steps: "Algorithm Overview", "Implementation Steps", "Training Considerations"
+- Generic applications: "Real-World Applications", "Applications in Cybersecurity", "VAE Applications"
+- Generic considerations: "Computational Complexity", "Limitations and Assumptions", "Best Practices"
+- Generic techniques: "Feature Selection", "Data Processing", "Model Monitoring"
+- Specific applications: "HOG in Pedestrian Detection", "K-Means for Image Segmentation"
+
+THE RULE:
+Each lecture topic must be a DISTINCT, STANDALONE CONCEPT that can be taught independently. It should represent a fundamentally different idea, not just a different aspect or application of the same underlying concept.
+
+EXAMPLES:
+- ❌ "Computational Complexity" → ✅ "Convolution vs Correlation"
+- ❌ "Applications in Cybersecurity" → ✅ "Isolation Forest for Intrusion Detection"
+
+REMEMBER:
+Good lectures are like building blocks - each one is a complete, independent unit that can be reused and combined in different ways. Bad lectures are like fragments that only make sense as part of the whole concept.

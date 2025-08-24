@@ -1,0 +1,46 @@
+PROMPT FOR SETTING UP INDIVIDUAL LECTURE FOLDERS
+
+## FOLDER STRUCTURE
+- Create folder: `topics/[concept_name]/`
+- Use snake_case for folder names (e.g., `decision_trees`, `neural_networks`)
+- Place in the `topics/` directory
+
+## REQUIRED FILES
+1. `[lecture_name]_outline.md` - 15-minute lecture outline
+2. `[lecture_name]_slides.html` - Interactive HTML slides with D3.js visualizations
+3. `[lecture_name]_script.md` - Verbatim script (150 words/min, 300 words/slide)
+
+## NAMING CONVENTION
+- Folder: `topics/[concept_name]/`
+- Files: `[lecture_name]_outline.md`, `[lecture_name]_slides.html`, `[lecture_name]_script.md`
+- Use descriptive, specific names (e.g., `cart_algorithm`, `gini_impurity`)
+
+## OUTLINE STRUCTURE (15 minutes)
+- Clear learning objectives
+- Logical progression of concepts
+- One main concept per section
+- Include mathematical foundations
+- Include practical examples
+- Key takeaways at the end
+
+## SLIDE REQUIREMENTS
+- One concept per slide
+- Progressive reveal of content
+- MathJax for mathematical notation
+- D3.js for interactive visualizations
+- Professional styling and navigation
+
+## SCRIPT REQUIREMENTS
+- PhD-level audience
+- 150 words per minute
+- 1.5-2 minutes per slide (300 words per slide)
+- Exactly what will be spoken
+- Clear transitions between slides
+
+## WORKFLOW
+1. Create folder structure
+2. Create outline first
+3. Review and refine outline
+4. Create slides with visualizations
+5. Generate script from outline
+6. Final review and adjustments

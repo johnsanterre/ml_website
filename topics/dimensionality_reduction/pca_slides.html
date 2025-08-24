@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principal Component Analysis (PCA)</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            padding: 60px;
+            min-height: 600px;
+            position: relative;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        .slide h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 20px;
+        }
+        
+        .slide h2 {
+            color: #34495e;
+            font-size: 2em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .slide h3 {
+            color: #2980b9;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        
+        .slide p, .slide li {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .slide ul {
+            padding-left: 30px;
+        }
+        
+        .example {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+            margin: 20px 0;
+        }
+        
+        .formula {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .nav-btn:hover {
+            background: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .viz-container {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Slide 1: Title -->
+        <div class="slide active" id="slide1">
+            <h1>Principal Component Analysis (PCA)</h1>
+            <h2>Dimensionality Reduction through Variance Maximization</h2>
+            <p>A fundamental technique for reducing data dimensionality while preserving maximum variance</p>
+            <div class="example">
+                <strong>Key Concept:</strong> Find orthogonal directions of maximum variance in high-dimensional data
+            </div>
+            <div class="highlight">
+                <strong>Learning Goals:</strong>
+                <ul>
+                    <li>Understand the curse of dimensionality</li>
+                    <li>Master the mathematical foundations of PCA</li>
+                    <li>Interpret principal components geometrically</li>
+                    <li>Apply PCA for visualization and compression</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 2: Curse of Dimensionality -->
+        <div class="slide" id="slide2">
+            <h2>The Curse of Dimensionality</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Why High Dimensions Are Problematic</h3>
+                    <ul>
+                        <li><strong>Volume Explosion:</strong> Unit hypercube volume remains 1, but most points lie near edges</li>
+                        <li><strong>Distance Concentration:</strong> All pairwise distances become similar</li>
+                        <li><strong>Sparsity:</strong> Data points become isolated in high-dimensional space</li>
+                        <li><strong>Computational Cost:</strong> $O(d^3)$ algorithms become intractable</li>
+                    </ul>
+                    <div class="formula">
+                        Volume of d-dimensional unit sphere:<br>
+                        $V_d = \frac{\pi^{d/2}}{\Gamma(d/2 + 1)}$
+                    </div>
+                </div>
+                <div>
+                    <div id="curse-viz" class="viz-container"></div>
+                </div>
+            </div>
+            <div class="example">
+                <strong>Real Examples:</strong> Images (784D), Gene expression (20,000D), Text (vocabulary size)
+            </div>
+        </div>
+
+        <!-- Slide 3: Mathematical Foundation -->
+        <div class="slide" id="slide3">
+            <h2>Mathematical Foundation of PCA</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Covariance Matrix</h3>
+                    <div class="formula">
+                        $C = \frac{1}{n-1}X^T X$<br>
+                        <small>(for centered data $X$)</small>
+                    </div>
+                    <p>Captures linear relationships between features</p>
+                    
+                    <h3>Eigendecomposition</h3>
+                    <div class="formula">
+                        $C = Q\Lambda Q^T$<br>
+                        $C q_i = \lambda_i q_i$
+                    </div>
+                    <ul>
+                        <li>$\lambda_i$: variance along PC $i$</li>
+                        <li>$q_i$: direction of PC $i$</li>
+                        <li>$||q_i|| = 1$, $q_i^T q_j = 0$ for $i \neq j$</li>
+                    </ul>
+                </div>
+                <div>
+                    <div id="covariance-viz" class="viz-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Geometric Interpretation -->
+        <div class="slide" id="slide4">
+            <h2>Geometric Interpretation</h2>
+            <div id="geometric-viz" class="viz-container"></div>
+            <div class="two-column">
+                <div>
+                    <h3>Principal Components</h3>
+                    <ul>
+                        <li><strong>PC1:</strong> Direction of maximum variance</li>
+                        <li><strong>PC2:</strong> Orthogonal direction, next highest variance</li>
+                        <li><strong>PCk:</strong> Orthogonal to all previous, remaining variance</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Dimensionality Reduction</h3>
+                    <div class="formula">
+                        $Y = X Q_k$<br>
+                        <small>Project onto first $k$ components</small>
+                    </div>
+                    <p>Information loss in discarded components</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: PCA Algorithm -->
+        <div class="slide" id="slide5">
+            <h2>PCA Algorithm Steps</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Data Preprocessing</h3>
+                    <div class="example">
+                        <strong>Step 1:</strong> Center the data<br>
+                        $X_{centered} = X - \mu$<br><br>
+                        <strong>Step 2:</strong> Optional scaling<br>
+                        $X_{scaled} = \frac{X_{centered}}{\sigma}$
+                    </div>
+                    
+                    <h3>Eigendecomposition</h3>
+                    <div class="example">
+                        <strong>Step 3:</strong> Compute covariance<br>
+                        $C = \frac{1}{n-1}X^T X$<br><br>
+                        <strong>Step 4:</strong> Find eigenvalues/vectors<br>
+                        $C = Q\Lambda Q^T$<br><br>
+                        <strong>Step 5:</strong> Sort by eigenvalue<br>
+                        $\lambda_1 \geq \lambda_2 \geq ... \geq \lambda_d$
+                    </div>
+                </div>
+                <div>
+                    <div id="algorithm-viz" class="viz-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Choosing Number of Components -->
+        <div class="slide" id="slide6">
+            <h2>Choosing Number of Components</h2>
+            <div id="scree-viz" class="viz-container"></div>
+            <div class="two-column">
+                <div>
+                    <h3>Explained Variance Ratio</h3>
+                    <div class="formula">
+                        $EVR_i = \frac{\lambda_i}{\sum_{j=1}^d \lambda_j}$
+                    </div>
+                    <p>Proportion of variance explained by component $i$</p>
+                    
+                    <h3>Cumulative Variance</h3>
+                    <div class="formula">
+                        $CVR_k = \sum_{i=1}^k EVR_i$
+                    </div>
+                </div>
+                <div>
+                    <h3>Selection Criteria</h3>
+                    <ul>
+                        <li><strong>Threshold:</strong> 80-95% cumulative variance</li>
+                        <li><strong>Elbow Method:</strong> Look for "knee" in scree plot</li>
+                        <li><strong>Kaiser Rule:</strong> Keep $\lambda_i > 1$ (standardized data)</li>
+                        <li><strong>Cross-validation:</strong> Optimize for downstream task</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Implementation Considerations -->
+        <div class="slide" id="slide7">
+            <h2>Implementation Considerations</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Computational Approaches</h3>
+                    <div class="example">
+                        <strong>Full Eigendecomposition</strong><br>
+                        • Complexity: $O(d^3)$<br>
+                        • Exact solution<br>
+                        • Memory: $O(d^2)$<br><br>
+                        
+                        <strong>SVD Approach</strong><br>
+                        • $X = U\Sigma V^T$<br>
+                        • PCs are columns of $V$<br>
+                        • More numerically stable<br><br>
+                        
+                        <strong>Randomized PCA</strong><br>
+                        • Approximate top-k components<br>
+                        • $O(ndk)$ complexity<br>
+                        • Scalable to large datasets
+                    </div>
+                </div>
+                <div>
+                    <div id="implementation-viz" class="viz-container"></div>
+                </div>
+            </div>
+            <div class="highlight">
+                <strong>Key Decision:</strong> Standardization affects results significantly - use when features have different units/scales
+            </div>
+        </div>
+
+        <!-- Slide 8: Reconstruction and Error -->
+        <div class="slide" id="slide8">
+            <h2>Reconstruction and Information Loss</h2>
+            <div id="reconstruction-viz" class="viz-container"></div>
+            <div class="two-column">
+                <div>
+                    <h3>Data Reconstruction</h3>
+                    <div class="formula">
+                        $\tilde{X} = X Q_k Q_k^T$
+                    </div>
+                    <p>Approximate original data using first $k$ components</p>
+                    
+                    <h3>Reconstruction Error</h3>
+                    <div class="formula">
+                        $Error = ||X - \tilde{X}||_F^2 = \sum_{i=k+1}^d \lambda_i$
+                    </div>
+                </div>
+                <div>
+                    <h3>Information Preservation</h3>
+                    <ul>
+                        <li>Perfect reconstruction when $k = d$</li>
+                        <li>Error equals sum of discarded eigenvalues</li>
+                        <li>PCA minimizes reconstruction error (optimal linear projection)</li>
+                        <li>Trade-off: compression vs. information loss</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Practical Example -->
+        <div class="slide" id="slide9">
+            <h2>Practical Example: Iris Dataset</h2>
+            <div id="iris-viz" class="viz-container"></div>
+            <div class="two-column">
+                <div>
+                    <h3>Original Features (4D)</h3>
+                    <ul>
+                        <li>Sepal Length</li>
+                        <li>Sepal Width</li>
+                        <li>Petal Length</li>
+                        <li>Petal Width</li>
+                    </ul>
+                    
+                    <h3>PC Interpretation</h3>
+                    <div class="example">
+                        <strong>PC1:</strong> Overall size<br>
+                        <strong>PC2:</strong> Shape contrast<br>
+                        Together explain ~95% variance
+                    </div>
+                </div>
+                <div>
+                    <h3>Results</h3>
+                    <ul>
+                        <li><strong>Dimensionality:</strong> 4D → 2D</li>
+                        <li><strong>Variance Retained:</strong> 95.8%</li>
+                        <li><strong>Class Separation:</strong> Well preserved</li>
+                        <li><strong>Visualization:</strong> Clear clustering</li>
+                    </ul>
+                    
+                    <div class="formula">
+                        PC1: 72.9% variance<br>
+                        PC2: 22.9% variance
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Advantages and Limitations -->
+        <div class="slide" id="slide10">
+            <h2>PCA: Advantages and Limitations</h2>
+            <div class="two-column">
+                <div>
+                    <h3>✅ Advantages</h3>
+                    <ul>
+                        <li><strong>Optimal:</strong> Minimizes reconstruction error</li>
+                        <li><strong>Interpretable:</strong> Components show variance directions</li>
+                        <li><strong>Uncorrelated:</strong> Orthogonal components</li>
+                        <li><strong>Efficient:</strong> Fast computation with SVD</li>
+                        <li><strong>Versatile:</strong> Preprocessing, visualization, compression</li>
+                        <li><strong>Noise Reduction:</strong> Filters out low-variance directions</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Best Use Cases:</strong><br>
+                        • High-dimensional visualization<br>
+                        • Noise reduction<br>
+                        • Data compression<br>
+                        • Computational speedup
+                    </div>
+                </div>
+                <div>
+                    <h3>❌ Limitations</h3>
+                    <ul>
+                        <li><strong>Linear Only:</strong> Cannot capture nonlinear relationships</li>
+                        <li><strong>Variance ≠ Information:</strong> May discard useful low-variance features</li>
+                        <li><strong>Scaling Sensitive:</strong> Results depend on feature scales</li>
+                        <li><strong>Interpretation:</strong> Components may lack intuitive meaning</li>
+                        <li><strong>Outlier Sensitive:</strong> Extreme values affect directions</li>
+                        <li><strong>Global Method:</strong> Same transformation for all data points</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Alternatives:</strong><br>
+                        • t-SNE, UMAP (nonlinear)<br>
+                        • ICA (non-Gaussian)<br>
+                        • Autoencoders (neural)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Key Takeaways -->
+        <div class="slide" id="slide11">
+            <h2>Key Takeaways</h2>
+            <div class="highlight">
+                <h3>🎯 Core Concepts</h3>
+                <ul>
+                    <li><strong>PCA finds orthogonal directions of maximum variance</strong></li>
+                    <li><strong>Eigenvalues quantify component importance</strong></li>
+                    <li><strong>Trade-off between dimensionality and information retention</strong></li>
+                    <li><strong>Preprocessing (centering/scaling) critically affects results</strong></li>
+                </ul>
+            </div>
+            
+            <div class="two-column">
+                <div>
+                    <h3>🔧 Practical Guidelines</h3>
+                    <ul>
+                        <li>Always center data ($\mu = 0$)</li>
+                        <li>Standardize when features have different scales</li>
+                        <li>Use scree plot + variance threshold for component selection</li>
+                        <li>Consider SVD for numerical stability</li>
+                        <li>Validate with downstream task performance</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🎨 Applications</h3>
+                    <ul>
+                        <li><strong>Visualization:</strong> High-D → 2D/3D plots</li>
+                        <li><strong>Compression:</strong> Reduce storage/computation</li>
+                        <li><strong>Preprocessing:</strong> Noise reduction, decorrelation</li>
+                        <li><strong>Anomaly Detection:</strong> Reconstruction error</li>
+                        <li><strong>Feature Engineering:</strong> Principal component features</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="formula">
+                <strong>Remember:</strong> PCA is a linear method - consider nonlinear alternatives for complex manifold structures
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">11</span>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="previousSlide()">Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 11;
+
+        // MathJax configuration
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide;
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+            
+            // Initialize visualization for current slide
+            setTimeout(() => {
+                initializeVisualizationForSlide(currentSlide);
+            }, 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // D3.js Visualizations
+        function initCurseViz() {
+            const container = d3.select('#curse-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Distance Concentration in High Dimensions');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Data showing distance concentration
+                const dimensions = [2, 5, 10, 20, 50, 100];
+                const distanceData = dimensions.map(d => {
+                    // Simulate distance concentration: ratio of max to min distances approaches 1
+                    const concentration = 1 + 5 / Math.sqrt(d);
+                    const avgDistance = Math.sqrt(d);
+                    return {
+                        dim: d,
+                        maxDist: avgDistance * concentration,
+                        minDist: avgDistance / concentration,
+                        avgDist: avgDistance,
+                        ratio: concentration
+                    };
+                });
+                
+                const xScale = d3.scaleLog()
+                    .domain([2, 100])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([1, 6])
+                    .range([innerHeight, 0]);
+                
+                // Draw concentration ratio line
+                const line = d3.line()
+                    .x(d => xScale(d.dim))
+                    .y(d => yScale(d.ratio));
+                
+                g.append('path')
+                    .datum(distanceData)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3)
+                    .attr('d', line);
+                
+                // Points
+                g.selectAll('.distance-point')
+                    .data(distanceData)
+                    .enter().append('circle')
+                    .attr('class', 'distance-point')
+                    .attr('cx', d => xScale(d.dim))
+                    .attr('cy', d => yScale(d.ratio))
+                    .attr('r', 4)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 2);
+                
+                // Threshold line at y=1
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('x2', innerWidth)
+                    .attr('y1', yScale(1))
+                    .attr('y2', yScale(1))
+                    .attr('stroke', '#27ae60')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+                
+                g.append('text')
+                    .attr('x', innerWidth - 80)
+                    .attr('y', yScale(1) - 5)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#27ae60')
+                    .attr('font-weight', 'bold')
+                    .text('No concentration');
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale).tickFormat(d3.format('d')));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale).tickFormat(d3.format('.1f')));
+                
+                // Labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Dimensions (log scale)');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Max/Min Distance Ratio');
+                
+                // Illustration of curse effects
+                const effectsData = [
+                    {dim: 2, points: 20, spread: 1},
+                    {dim: 10, points: 20, spread: 0.3},
+                    {dim: 50, points: 20, spread: 0.1}
+                ];
+                
+                const illustrationY = innerHeight - 60;
+                effectsData.forEach((effect, i) => {
+                    const x = 50 + i * 120;
+                    
+                    // Draw points
+                    for (let j = 0; j < effect.points; j++) {
+                        const angle = (j / effect.points) * 2 * Math.PI;
+                        const radius = 15 + d3.randomNormal(0, effect.spread * 10)();
+                        const px = x + Math.cos(angle) * Math.max(5, Math.abs(radius));
+                        const py = illustrationY + Math.sin(angle) * Math.max(5, Math.abs(radius));
+                        
+                        g.append('circle')
+                            .attr('cx', px)
+                            .attr('cy', py)
+                            .attr('r', 2)
+                            .attr('fill', '#3498db')
+                            .attr('opacity', 0.8);
+                    }
+                    
+                    // Label
+                    g.append('text')
+                        .attr('x', x)
+                        .attr('y', illustrationY + 35)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('font-weight', 'bold')
+                        .text(`${effect.dim}D`);
+                });
+                
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', illustrationY - 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Data becomes increasingly sparse and uniform distances');
+            }
+        }
+
+        function initCovarianceViz() {
+            const container = d3.select('#covariance-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Sample Covariance Matrix Heatmap');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Create sample covariance matrix (4x4 for visualization)
+                const features = ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4'];
+                const covMatrix = [
+                    [2.1, 0.8, 1.2, 0.3],
+                    [0.8, 1.5, 0.4, 0.9],
+                    [1.2, 0.4, 1.8, 0.6],
+                    [0.3, 0.9, 0.6, 1.2]
+                ];
+                
+                const cellSize = Math.min((innerWidth - 100) / 4, (innerHeight - 100) / 4);
+                const matrixStartX = (innerWidth - cellSize * 4) / 2;
+                const matrixStartY = 40;
+                
+                // Color scale for covariance values
+                const colorScale = d3.scaleSequential(d3.interpolateRdBu)
+                    .domain([2.1, -0.5]); // Reverse for better visualization
+                
+                // Draw covariance matrix cells
+                for (let i = 0; i < 4; i++) {
+                    for (let j = 0; j < 4; j++) {
+                        const value = covMatrix[i][j];
+                        
+                        g.append('rect')
+                            .attr('x', matrixStartX + j * cellSize)
+                            .attr('y', matrixStartY + i * cellSize)
+                            .attr('width', cellSize)
+                            .attr('height', cellSize)
+                            .attr('fill', colorScale(value))
+                            .attr('stroke', '#2c3e50')
+                            .attr('stroke-width', 1);
+                        
+                        // Add value text
+                        g.append('text')
+                            .attr('x', matrixStartX + j * cellSize + cellSize/2)
+                            .attr('y', matrixStartY + i * cellSize + cellSize/2 + 4)
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '11px')
+                            .attr('font-weight', 'bold')
+                            .attr('fill', Math.abs(value) > 1.0 ? 'white' : 'black')
+                            .text(value.toFixed(1));
+                        
+                        // Highlight diagonal elements
+                        if (i === j) {
+                            g.append('rect')
+                                .attr('x', matrixStartX + j * cellSize)
+                                .attr('y', matrixStartY + i * cellSize)
+                                .attr('width', cellSize)
+                                .attr('height', cellSize)
+                                .attr('fill', 'none')
+                                .attr('stroke', '#f39c12')
+                                .attr('stroke-width', 3);
+                        }
+                    }
+                }
+                
+                // Row and column labels
+                features.forEach((feature, i) => {
+                    // Row labels
+                    g.append('text')
+                        .attr('x', matrixStartX - 10)
+                        .attr('y', matrixStartY + i * cellSize + cellSize/2 + 4)
+                        .attr('text-anchor', 'end')
+                        .attr('font-size', '10px')
+                        .attr('font-weight', 'bold')
+                        .text(feature);
+                    
+                    // Column labels
+                    g.append('text')
+                        .attr('x', matrixStartX + i * cellSize + cellSize/2)
+                        .attr('y', matrixStartY - 10)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('font-weight', 'bold')
+                        .text(feature);
+                });
+                
+                // Eigenvalue information
+                const eigenvalues = [4.2, 1.8, 0.9, 0.5];
+                const eigenInfoY = matrixStartY + 4 * cellSize + 40;
+                
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', eigenInfoY)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Eigenvalues: λ = [4.2, 1.8, 0.9, 0.5]');
+                
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', eigenInfoY + 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Diagonal elements are feature variances, off-diagonal are covariances');
+                
+                // Color legend
+                const legendWidth = 200;
+                const legendHeight = 15;
+                const legendX = (innerWidth - legendWidth) / 2;
+                const legendY = eigenInfoY + 45;
+                
+                // Create gradient for legend
+                const defs = svg.append('defs');
+                const gradient = defs.append('linearGradient')
+                    .attr('id', 'covariance-gradient');
+                
+                gradient.append('stop')
+                    .attr('offset', '0%')
+                    .attr('stop-color', colorScale(2.1));
+                
+                gradient.append('stop')
+                    .attr('offset', '50%')
+                    .attr('stop-color', colorScale(0.8));
+                
+                gradient.append('stop')
+                    .attr('offset', '100%')
+                    .attr('stop-color', colorScale(-0.5));
+                
+                g.append('rect')
+                    .attr('x', legendX)
+                    .attr('y', legendY)
+                    .attr('width', legendWidth)
+                    .attr('height', legendHeight)
+                    .attr('fill', 'url(#covariance-gradient)')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 1);
+                
+                g.append('text')
+                    .attr('x', legendX)
+                    .attr('y', legendY + legendHeight + 15)
+                    .attr('text-anchor', 'start')
+                    .attr('font-size', '9px')
+                    .text('High positive');
+                
+                g.append('text')
+                    .attr('x', legendX + legendWidth)
+                    .attr('y', legendY + legendHeight + 15)
+                    .attr('text-anchor', 'end')
+                    .attr('font-size', '9px')
+                    .text('Low/negative');
+                
+                g.append('text')
+                    .attr('x', legendX + legendWidth/2)
+                    .attr('y', legendY + legendHeight + 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .text('Covariance values');
+            }
+        }
+
+        function initGeometricViz() {
+            const container = d3.select('#geometric-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Principal Components as Variance Directions');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Generate correlated 2D data
+                const n = 40;
+                const data = [];
+                for (let i = 0; i < n; i++) {
+                    const x = d3.randomNormal(0, 1.2)();
+                    const y = 0.7 * x + d3.randomNormal(0, 0.5)();
+                    data.push({x: x, y: y});
+                }
+                
+                const xScale = d3.scaleLinear()
+                    .domain([-3, 3])
+                    .range([50, innerWidth - 50]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([-3, 3])
+                    .range([innerHeight - 50, 50]);
+                
+                // Draw coordinate grid
+                const gridLines = [-2, -1, 0, 1, 2];
+                gridLines.forEach(val => {
+                    // Vertical lines
+                    g.append('line')
+                        .attr('x1', xScale(val))
+                        .attr('x2', xScale(val))
+                        .attr('y1', yScale(-3))
+                        .attr('y2', yScale(3))
+                        .attr('stroke', '#ecf0f1')
+                        .attr('stroke-width', 1);
+                    
+                    // Horizontal lines
+                    g.append('line')
+                        .attr('x1', xScale(-3))
+                        .attr('x2', xScale(3))
+                        .attr('y1', yScale(val))
+                        .attr('y2', yScale(val))
+                        .attr('stroke', '#ecf0f1')
+                        .attr('stroke-width', 1);
+                });
+                
+                // Draw axes
+                g.append('line')
+                    .attr('x1', xScale(-3))
+                    .attr('x2', xScale(3))
+                    .attr('y1', yScale(0))
+                    .attr('y2', yScale(0))
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                g.append('line')
+                    .attr('x1', xScale(0))
+                    .attr('x2', xScale(0))
+                    .attr('y1', yScale(-3))
+                    .attr('y2', yScale(3))
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2);
+                
+                // Calculate mean
+                const meanX = d3.mean(data, d => d.x);
+                const meanY = d3.mean(data, d => d.y);
+                
+                const centerX = xScale(meanX);
+                const centerY = yScale(meanY);
+                
+                // Draw data ellipse (approximate)
+                const ellipseA = 1.8; // Major axis
+                const ellipseB = 0.8; // Minor axis
+                const ellipseAngle = 35; // degrees
+                
+                g.append('ellipse')
+                    .attr('cx', centerX)
+                    .attr('cy', centerY)
+                    .attr('rx', ellipseA * (xScale(1) - xScale(0)))
+                    .attr('ry', ellipseB * (yScale(0) - yScale(1)))
+                    .attr('transform', `rotate(${ellipseAngle}, ${centerX}, ${centerY})`)
+                    .attr('fill', '#3498db')
+                    .attr('fill-opacity', 0.2)
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '3,3');
+                
+                // Draw data points
+                g.selectAll('.data-point')
+                    .data(data)
+                    .enter().append('circle')
+                    .attr('class', 'data-point')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 3)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.8)
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 1);
+                
+                // Draw mean point
+                g.append('circle')
+                    .attr('cx', centerX)
+                    .attr('cy', centerY)
+                    .attr('r', 6)
+                    .attr('fill', '#f39c12')
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 2);
+                
+                // Principal component vectors
+                const pc1Length = 100;
+                const pc2Length = 60;
+                const pc1Angle = Math.PI/180 * 35; // 35 degrees
+                const pc2Angle = pc1Angle + Math.PI/2; // 90 degrees offset
+                
+                // PC1 vector (major axis)
+                g.append('line')
+                    .attr('x1', centerX - pc1Length * Math.cos(pc1Angle))
+                    .attr('y1', centerY + pc1Length * Math.sin(pc1Angle))
+                    .attr('x2', centerX + pc1Length * Math.cos(pc1Angle))
+                    .attr('y2', centerY - pc1Length * Math.sin(pc1Angle))
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 4)
+                    .attr('marker-end', 'url(#arrow-red)');
+                
+                // PC2 vector (minor axis)
+                g.append('line')
+                    .attr('x1', centerX - pc2Length * Math.cos(pc2Angle))
+                    .attr('y1', centerY + pc2Length * Math.sin(pc2Angle))
+                    .attr('x2', centerX + pc2Length * Math.cos(pc2Angle))
+                    .attr('y2', centerY - pc2Length * Math.sin(pc2Angle))
+                    .attr('stroke', '#27ae60')
+                    .attr('stroke-width', 4)
+                    .attr('marker-end', 'url(#arrow-green)');
+                
+                // Arrow markers
+                const defs = svg.append('defs');
+                
+                defs.append('marker')
+                    .attr('id', 'arrow-red')
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 8)
+                    .attr('refY', 0)
+                    .attr('markerWidth', 6)
+                    .attr('markerHeight', 6)
+                    .attr('orient', 'auto')
+                    .append('path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#e74c3c');
+                
+                defs.append('marker')
+                    .attr('id', 'arrow-green')
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 8)
+                    .attr('refY', 0)
+                    .attr('markerWidth', 6)
+                    .attr('markerHeight', 6)
+                    .attr('orient', 'auto')
+                    .append('path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#27ae60');
+                
+                // Labels with eigenvalues
+                g.append('text')
+                    .attr('x', centerX + pc1Length * Math.cos(pc1Angle) + 15)
+                    .attr('y', centerY - pc1Length * Math.sin(pc1Angle) - 5)
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#e74c3c')
+                    .text('PC1: λ₁ = 2.8');
+                
+                g.append('text')
+                    .attr('x', centerX + pc2Length * Math.cos(pc2Angle) + 15)
+                    .attr('y', centerY - pc2Length * Math.sin(pc2Angle) - 5)
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#27ae60')
+                    .text('PC2: λ₂ = 0.6');
+                
+                // Variance explanation
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', innerHeight - 60)
+                    .attr('font-size', '11px')
+                    .attr('fill', '#7f8c8d')
+                    .text('PC1 explains 82% of variance');
+                
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', innerHeight - 45)
+                    .attr('font-size', '11px')
+                    .attr('fill', '#7f8c8d')
+                    .text('PC2 explains 18% of variance');
+                
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', innerHeight - 30)
+                    .attr('font-size', '11px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#2c3e50')
+                    .text('Total: 100% of variance captured');
+                
+                // Original vs PC coordinate system
+                g.append('text')
+                    .attr('x', innerWidth - 150)
+                    .attr('y', innerHeight - 45)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#95a5a6')
+                    .text('Gray: Original coordinates');
+                
+                g.append('text')
+                    .attr('x', innerWidth - 150)
+                    .attr('y', innerHeight - 30)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#e74c3c')
+                    .text('Red/Green: PC coordinates');
+            }
+        }
+
+        function initAlgorithmViz() {
+            const container = d3.select('#algorithm-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('PCA Step-by-Step Process');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Create sample data transformation visualization
+                const stepHeight = 35;
+                const stepY = 40;
+                
+                // Step 1: Raw data matrix
+                const step1X = 50;
+                g.append('rect')
+                    .attr('x', step1X - 25)
+                    .attr('y', stepY - 15)
+                    .attr('width', 50)
+                    .attr('height', 30)
+                    .attr('fill', '#95a5a6')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 3);
+                
+                g.append('text')
+                    .attr('x', step1X)
+                    .attr('y', stepY + 3)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('X');
+                
+                g.append('text')
+                    .attr('x', step1X)
+                    .attr('y', stepY + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .text('Raw Data');
+                
+                // Arrow 1
+                g.append('line')
+                    .attr('x1', step1X + 30)
+                    .attr('y1', stepY)
+                    .attr('x2', step1X + 70)
+                    .attr('y2', stepY)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                g.append('text')
+                    .attr('x', step1X + 50)
+                    .attr('y', stepY - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '8px')
+                    .attr('fill', '#7f8c8d')
+                    .text('center');
+                
+                // Step 2: Centered data
+                const step2X = step1X + 100;
+                g.append('rect')
+                    .attr('x', step2X - 25)
+                    .attr('y', stepY - 15)
+                    .attr('width', 50)
+                    .attr('height', 30)
+                    .attr('fill', '#3498db')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 3);
+                
+                g.append('text')
+                    .attr('x', step2X)
+                    .attr('y', stepY + 3)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('X-μ');
+                
+                g.append('text')
+                    .attr('x', step2X)
+                    .attr('y', stepY + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .text('Centered');
+                
+                // Arrow 2
+                g.append('line')
+                    .attr('x1', step2X + 30)
+                    .attr('y1', stepY)
+                    .attr('x2', step2X + 70)
+                    .attr('y2', stepY)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                g.append('text')
+                    .attr('x', step2X + 50)
+                    .attr('y', stepY - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '8px')
+                    .attr('fill', '#7f8c8d')
+                    .text('covariance');
+                
+                // Step 3: Covariance matrix
+                const step3X = step2X + 100;
+                g.append('rect')
+                    .attr('x', step3X - 25)
+                    .attr('y', stepY - 15)
+                    .attr('width', 50)
+                    .attr('height', 30)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 3);
+                
+                g.append('text')
+                    .attr('x', step3X)
+                    .attr('y', stepY + 3)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('C');
+                
+                g.append('text')
+                    .attr('x', step3X)
+                    .attr('y', stepY + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .text('Covariance');
+                
+                // Arrow down
+                g.append('line')
+                    .attr('x1', step3X)
+                    .attr('y1', stepY + 20)
+                    .attr('x2', step3X)
+                    .attr('y2', stepY + 60)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                g.append('text')
+                    .attr('x', step3X + 20)
+                    .attr('y', stepY + 40)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '8px')
+                    .attr('fill', '#7f8c8d')
+                    .text('eigen');
+                
+                // Step 4: Eigenvalues/vectors
+                const step4Y = stepY + 80;
+                g.append('rect')
+                    .attr('x', step3X - 25)
+                    .attr('y', step4Y - 15)
+                    .attr('width', 50)
+                    .attr('height', 30)
+                    .attr('fill', '#27ae60')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 3);
+                
+                g.append('text')
+                    .attr('x', step3X)
+                    .attr('y', step4Y + 3)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('λ,Q');
+                
+                g.append('text')
+                    .attr('x', step3X)
+                    .attr('y', step4Y + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .text('Eigen');
+                
+                // Arrow left
+                g.append('line')
+                    .attr('x1', step3X - 30)
+                    .attr('y1', step4Y)
+                    .attr('x2', step3X - 70)
+                    .attr('y2', step4Y)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                g.append('text')
+                    .attr('x', step3X - 50)
+                    .attr('y', step4Y - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '8px')
+                    .attr('fill', '#7f8c8d')
+                    .text('select k');
+                
+                // Step 5: Selected components
+                const step5X = step3X - 100;
+                g.append('rect')
+                    .attr('x', step5X - 25)
+                    .attr('y', step4Y - 15)
+                    .attr('width', 50)
+                    .attr('height', 30)
+                    .attr('fill', '#9b59b6')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 3);
+                
+                g.append('text')
+                    .attr('x', step5X)
+                    .attr('y', step4Y + 3)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('Q_k');
+                
+                g.append('text')
+                    .attr('x', step5X)
+                    .attr('y', step4Y + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .text('Top k PCs');
+                
+                // Arrow left to final
+                g.append('line')
+                    .attr('x1', step5X - 30)
+                    .attr('y1', step4Y)
+                    .attr('x2', step5X - 70)
+                    .attr('y2', step4Y)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                g.append('text')
+                    .attr('x', step5X - 50)
+                    .attr('y', step4Y - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '8px')
+                    .attr('fill', '#7f8c8d')
+                    .text('transform');
+                
+                // Step 6: Final transformation
+                const step6X = step5X - 100;
+                g.append('rect')
+                    .attr('x', step6X - 25)
+                    .attr('y', step4Y - 15)
+                    .attr('width', 50)
+                    .attr('height', 30)
+                    .attr('fill', '#f39c12')
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 2)
+                    .attr('rx', 3);
+                
+                g.append('text')
+                    .attr('x', step6X)
+                    .attr('y', step4Y + 3)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'white')
+                    .text('Y');
+                
+                g.append('text')
+                    .attr('x', step6X)
+                    .attr('y', step4Y + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .text('PC Space');
+                
+                // Arrow marker definition
+                const defs = svg.append('defs');
+                defs.append('marker')
+                    .attr('id', 'arrow')
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 8)
+                    .attr('refY', 0)
+                    .attr('markerWidth', 6)
+                    .attr('markerHeight', 6)
+                    .attr('orient', 'auto')
+                    .append('path')
+                    .attr('d', 'M0,-5L10,0L0,5')
+                    .attr('fill', '#34495e');
+                
+                // Mathematical formulas
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', step4Y + 60)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', 'bold')
+                    .text('Key Formulas:');
+                
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', step4Y + 80)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .text('C = (1/n-1)X^T X  •  C = QΛQ^T  •  Y = X Q_k');
+                
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', step4Y + 95)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Complexity: O(d³) for eigendecomposition, O(nd²) for SVD when n < d');
+            }
+        }
+
+        function initScreeViz() {
+            const container = d3.select('#scree-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 150, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Scree Plot: Choosing Number of Components');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Sample eigenvalues (decreasing)
+                const eigenvalues = [4.2, 2.1, 0.8, 0.5, 0.3, 0.2, 0.1, 0.05, 0.03, 0.02];
+                const totalVariance = d3.sum(eigenvalues);
+                const data = eigenvalues.map((val, i) => ({
+                    component: i + 1,
+                    eigenvalue: val,
+                    explainedVariance: val / totalVariance,
+                    cumulativeVariance: d3.sum(eigenvalues.slice(0, i + 1)) / totalVariance
+                }));
+                
+                const xScale = d3.scaleLinear()
+                    .domain([1, 10])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, Math.max(d3.max(data, d => d.eigenvalue), 1)])
+                    .range([innerHeight, 0]);
+                
+                const yScale2 = d3.scaleLinear()
+                    .domain([0, 1])
+                    .range([innerHeight, 0]);
+                
+                // Eigenvalue line with points
+                const eigenLine = d3.line()
+                    .x(d => xScale(d.component))
+                    .y(d => yScale(d.eigenvalue));
+                
+                g.append('path')
+                    .datum(data)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 3)
+                    .attr('d', eigenLine);
+                
+                g.selectAll('.eigenvalue-point')
+                    .data(data)
+                    .enter().append('circle')
+                    .attr('class', 'eigenvalue-point')
+                    .attr('cx', d => xScale(d.component))
+                    .attr('cy', d => yScale(d.eigenvalue))
+                    .attr('r', 5)
+                    .attr('fill', '#3498db')
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 2);
+                
+                // Cumulative variance line
+                const cumLine = d3.line()
+                    .x(d => xScale(d.component))
+                    .y(d => yScale2(d.cumulativeVariance));
+                
+                g.append('path')
+                    .datum(data)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3)
+                    .attr('d', cumLine);
+                
+                g.selectAll('.cumulative-point')
+                    .data(data)
+                    .enter().append('circle')
+                    .attr('class', 'cumulative-point')
+                    .attr('cx', d => xScale(d.component))
+                    .attr('cy', d => yScale2(d.cumulativeVariance))
+                    .attr('r', 4)
+                    .attr('fill', '#e74c3c')
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 2);
+                
+                // Elbow annotation with highlighting
+                const elbowComponent = 3;
+                g.append('circle')
+                    .attr('cx', xScale(elbowComponent))
+                    .attr('cy', yScale(data[elbowComponent-1].eigenvalue))
+                    .attr('r', 12)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#f39c12')
+                    .attr('stroke-width', 3)
+                    .attr('stroke-dasharray', '5,5');
+                
+                g.append('line')
+                    .attr('x1', xScale(elbowComponent) + 15)
+                    .attr('y1', yScale(data[elbowComponent-1].eigenvalue))
+                    .attr('x2', xScale(elbowComponent) + 45)
+                    .attr('y2', yScale(data[elbowComponent-1].eigenvalue) - 30)
+                    .attr('stroke', '#f39c12')
+                    .attr('stroke-width', 2);
+                
+                g.append('text')
+                    .attr('x', xScale(elbowComponent) + 50)
+                    .attr('y', yScale(data[elbowComponent-1].eigenvalue) - 35)
+                    .attr('font-size', '11px')
+                    .attr('fill', '#f39c12')
+                    .attr('font-weight', 'bold')
+                    .text('Elbow Point');
+                
+                g.append('text')
+                    .attr('x', xScale(elbowComponent) + 50)
+                    .attr('y', yScale(data[elbowComponent-1].eigenvalue) - 20)
+                    .attr('font-size', '9px')
+                    .attr('fill', '#f39c12')
+                    .text('Choose 3 components');
+                
+                // 95% threshold line
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('x2', innerWidth)
+                    .attr('y1', yScale2(0.95))
+                    .attr('y2', yScale2(0.95))
+                    .attr('stroke', '#27ae60')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+                
+                g.append('text')
+                    .attr('x', innerWidth - 60)
+                    .attr('y', yScale2(0.95) - 5)
+                    .attr('font-size', '10px')
+                    .attr('fill', '#27ae60')
+                    .attr('font-weight', 'bold')
+                    .text('95% threshold');
+                
+                // Highlight the component that crosses 95%
+                const crossing95 = data.findIndex(d => d.cumulativeVariance >= 0.95) + 1;
+                g.append('line')
+                    .attr('x1', xScale(crossing95))
+                    .attr('x2', xScale(crossing95))
+                    .attr('y1', 0)
+                    .attr('y2', innerHeight)
+                    .attr('stroke', '#27ae60')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '3,3')
+                    .attr('opacity', 0.7);
+                
+                g.append('text')
+                    .attr('x', xScale(crossing95) + 5)
+                    .attr('y', 20)
+                    .attr('font-size', '9px')
+                    .attr('fill', '#27ae60')
+                    .attr('font-weight', 'bold')
+                    .text(`${crossing95} components`);
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale).tickFormat(d3.format('d')));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale));
+                
+                g.append('g')
+                    .attr('transform', `translate(${innerWidth},0)`)
+                    .call(d3.axisRight(yScale2).tickFormat(d3.format('.0%')));
+                
+                // Labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('Principal Component Number');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#3498db')
+                    .text('Eigenvalue');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(90)')
+                    .attr('y', -innerWidth - 40)
+                    .attr('x', innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#e74c3c')
+                    .text('Cumulative Variance');
+                
+                // Legend
+                const legend = g.append('g')
+                    .attr('transform', `translate(${innerWidth + 20}, 50)`);
+                
+                legend.append('circle')
+                    .attr('cx', 5)
+                    .attr('cy', 0)
+                    .attr('r', 4)
+                    .attr('fill', '#3498db');
+                
+                legend.append('text')
+                    .attr('x', 15)
+                    .attr('y', 4)
+                    .attr('font-size', '10px')
+                    .text('Eigenvalues');
+                
+                legend.append('circle')
+                    .attr('cx', 5)
+                    .attr('cy', 20)
+                    .attr('r', 4)
+                    .attr('fill', '#e74c3c');
+                
+                legend.append('text')
+                    .attr('x', 15)
+                    .attr('y', 24)
+                    .attr('font-size', '10px')
+                    .text('Cumulative');
+                
+                // Selection criteria summary
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', innerHeight - 40)
+                    .attr('font-size', '10px')
+                    .attr('font-weight', 'bold')
+                    .text('Selection Criteria:');
+                
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', innerHeight - 25)
+                    .attr('font-size', '9px')
+                    .attr('fill', '#f39c12')
+                    .text('• Elbow method: Look for "knee" in eigenvalue curve');
+                
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', innerHeight - 10)
+                    .attr('font-size', '9px')
+                    .attr('fill', '#27ae60')
+                    .text('• Variance threshold: Retain 95% of total variance');
+            }
+        }
+
+        function initImplementationViz() {
+            const container = d3.select('#implementation-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('PCA Implementation Methods Comparison');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Create comparison table
+                const methods = [
+                    {
+                        name: 'Full Eigendecomposition',
+                        complexity: 'O(d³)',
+                        memory: 'O(d²)',
+                        stability: 'Medium',
+                        bestFor: 'Small datasets (d < 1000)',
+                        color: '#e74c3c'
+                    },
+                    {
+                        name: 'SVD (numpy.linalg.svd)',
+                        complexity: 'O(nd²) when n < d',
+                        memory: 'O(nd)',
+                        stability: 'High',
+                        bestFor: 'Medium datasets, more stable',
+                        color: '#3498db'
+                    },
+                    {
+                        name: 'Randomized PCA',
+                        complexity: 'O(ndk)',
+                        memory: 'O(nk)',
+                        stability: 'Good',
+                        bestFor: 'Large datasets, approximate',
+                        color: '#27ae60'
+                    }
+                ];
+                
+                const rowHeight = 50;
+                const colWidths = [120, 80, 60, 60, 150];
+                const headers = ['Method', 'Time', 'Memory', 'Stability', 'Best For'];
+                
+                // Draw table headers
+                let currentX = 20;
+                headers.forEach((header, i) => {
+                    g.append('rect')
+                        .attr('x', currentX)
+                        .attr('y', 20)
+                        .attr('width', colWidths[i])
+                        .attr('height', 30)
+                        .attr('fill', '#34495e')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1);
+                    
+                    g.append('text')
+                        .attr('x', currentX + colWidths[i]/2)
+                        .attr('y', 40)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '11px')
+                        .attr('font-weight', 'bold')
+                        .attr('fill', 'white')
+                        .text(header);
+                    
+                    currentX += colWidths[i];
+                });
+                
+                // Draw method rows
+                methods.forEach((method, rowIdx) => {
+                    const rowY = 50 + rowIdx * rowHeight;
+                    let currentX = 20;
+                    
+                    const cellData = [
+                        method.name,
+                        method.complexity,
+                        method.memory,
+                        method.stability,
+                        method.bestFor
+                    ];
+                    
+                    cellData.forEach((cell, colIdx) => {
+                        // Cell background
+                        g.append('rect')
+                            .attr('x', currentX)
+                            .attr('y', rowY)
+                            .attr('width', colWidths[colIdx])
+                            .attr('height', rowHeight)
+                            .attr('fill', colIdx === 0 ? method.color : '#ecf0f1')
+                            .attr('stroke', '#bdc3c7')
+                            .attr('stroke-width', 1);
+                        
+                        // Cell text
+                        const lines = cell.split(' ');
+                        if (lines.length > 3) {
+                            // Split long text into multiple lines
+                            const midPoint = Math.ceil(lines.length / 2);
+                            const line1 = lines.slice(0, midPoint).join(' ');
+                            const line2 = lines.slice(midPoint).join(' ');
+                            
+                            g.append('text')
+                                .attr('x', currentX + colWidths[colIdx]/2)
+                                .attr('y', rowY + rowHeight/2 - 5)
+                                .attr('text-anchor', 'middle')
+                                .attr('font-size', '9px')
+                                .attr('font-weight', colIdx === 0 ? 'bold' : 'normal')
+                                .attr('fill', colIdx === 0 ? 'white' : '#2c3e50')
+                                .text(line1);
+                            
+                            g.append('text')
+                                .attr('x', currentX + colWidths[colIdx]/2)
+                                .attr('y', rowY + rowHeight/2 + 8)
+                                .attr('text-anchor', 'middle')
+                                .attr('font-size', '9px')
+                                .attr('font-weight', colIdx === 0 ? 'bold' : 'normal')
+                                .attr('fill', colIdx === 0 ? 'white' : '#2c3e50')
+                                .text(line2);
+                        } else {
+                            g.append('text')
+                                .attr('x', currentX + colWidths[colIdx]/2)
+                                .attr('y', rowY + rowHeight/2 + 3)
+                                .attr('text-anchor', 'middle')
+                                .attr('font-size', '10px')
+                                .attr('font-weight', colIdx === 0 ? 'bold' : 'normal')
+                                .attr('fill', colIdx === 0 ? 'white' : '#2c3e50')
+                                .text(cell);
+                        }
+                        
+                        currentX += colWidths[colIdx];
+                    });
+                });
+                
+                // Performance visualization
+                const perfY = 220;
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', perfY)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Performance Scaling');
+                
+                // Simple bar chart for relative performance
+                const perfData = [
+                    {method: 'Full Eigen', score: 1, color: '#e74c3c'},
+                    {method: 'SVD', score: 0.7, color: '#3498db'},
+                    {method: 'Randomized', score: 0.3, color: '#27ae60'}
+                ];
+                
+                const barWidth = 60;
+                const barSpacing = 80;
+                const startX = (innerWidth - (perfData.length * barSpacing)) / 2;
+                
+                perfData.forEach((d, i) => {
+                    const x = startX + i * barSpacing;
+                    const barHeight = d.score * 40;
+                    
+                    // Bar
+                    g.append('rect')
+                        .attr('x', x)
+                        .attr('y', perfY + 40 - barHeight)
+                        .attr('width', barWidth)
+                        .attr('height', barHeight)
+                        .attr('fill', d.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 1);
+                    
+                    // Label
+                    g.append('text')
+                        .attr('x', x + barWidth/2)
+                        .attr('y', perfY + 55)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '9px')
+                        .attr('font-weight', 'bold')
+                        .text(d.method.split(' ')[0]);
+                });
+                
+                g.append('text')
+                    .attr('x', startX - 20)
+                    .attr('y', perfY + 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Relative');
+                
+                g.append('text')
+                    .attr('x', startX - 20)
+                    .attr('y', perfY + 32)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '9px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Complexity');
+            }
+        }
+
+        function initReconstructionViz() {
+            const container = d3.select('#reconstruction-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Reconstruction with Different Numbers of Components');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Generate sample data
+                const n = 30;
+                const originalData = [];
+                for (let i = 0; i < n; i++) {
+                    const x = d3.randomNormal(0, 1)();
+                    const y = 0.7 * x + d3.randomNormal(0, 0.5)();
+                    originalData.push({x: x, y: y});
+                }
+                
+                const plotWidth = innerWidth / 3 - 20;
+                const plotHeight = innerHeight - 40;
+                
+                const xScale = d3.scaleLinear()
+                    .domain(d3.extent(originalData, d => d.x))
+                    .range([10, plotWidth - 10]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain(d3.extent(originalData, d => d.y))
+                    .range([plotHeight - 10, 10]);
+                
+                // Original data plot
+                const g1 = g.append('g')
+                    .attr('transform', 'translate(0, 30)');
+                
+                g1.append('rect')
+                    .attr('x', 0)
+                    .attr('y', 0)
+                    .attr('width', plotWidth)
+                    .attr('height', plotHeight)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#bdc3c7')
+                    .attr('stroke-width', 1);
+                
+                g1.selectAll('.original-point')
+                    .data(originalData)
+                    .enter().append('circle')
+                    .attr('class', 'original-point')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 3)
+                    .attr('fill', '#3498db');
+                
+                g.append('text')
+                    .attr('x', plotWidth / 2)
+                    .attr('y', 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('Original (2D)');
+                
+                // 1 component reconstruction
+                const g2 = g.append('g')
+                    .attr('transform', `translate(${plotWidth + 20}, 30)`);
+                
+                g2.append('rect')
+                    .attr('x', 0)
+                    .attr('y', 0)
+                    .attr('width', plotWidth)
+                    .attr('height', plotHeight)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#bdc3c7')
+                    .attr('stroke-width', 1);
+                
+                // Simulate 1-component reconstruction (project onto line)
+                const meanX = d3.mean(originalData, d => d.x);
+                const meanY = d3.mean(originalData, d => d.y);
+                const pc1Angle = Math.atan(0.7);
+                
+                originalData.forEach(d => {
+                    const dx = d.x - meanX;
+                    const dy = d.y - meanY;
+                    const projection = dx * Math.cos(pc1Angle) + dy * Math.sin(pc1Angle);
+                    const reconstructedX = meanX + projection * Math.cos(pc1Angle);
+                    const reconstructedY = meanY + projection * Math.sin(pc1Angle);
+                    
+                    // Original point
+                    g2.append('circle')
+                        .attr('cx', xScale(d.x))
+                        .attr('cy', yScale(d.y))
+                        .attr('r', 2)
+                        .attr('fill', '#3498db')
+                        .attr('opacity', 0.3);
+                    
+                    // Reconstructed point
+                    g2.append('circle')
+                        .attr('cx', xScale(reconstructedX))
+                        .attr('cy', yScale(reconstructedY))
+                        .attr('r', 3)
+                        .attr('fill', '#e74c3c');
+                    
+                    // Error line
+                    g2.append('line')
+                        .attr('x1', xScale(d.x))
+                        .attr('y1', yScale(d.y))
+                        .attr('x2', xScale(reconstructedX))
+                        .attr('y2', yScale(reconstructedY))
+                        .attr('stroke', '#f39c12')
+                        .attr('stroke-width', 1)
+                        .attr('opacity', 0.7);
+                });
+                
+                g.append('text')
+                    .attr('x', plotWidth + 20 + plotWidth / 2)
+                    .attr('y', 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('1 Component');
+                
+                // Perfect reconstruction (2 components)
+                const g3 = g.append('g')
+                    .attr('transform', `translate(${2 * (plotWidth + 20)}, 30)`);
+                
+                g3.append('rect')
+                    .attr('x', 0)
+                    .attr('y', 0)
+                    .attr('width', plotWidth)
+                    .attr('height', plotHeight)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#bdc3c7')
+                    .attr('stroke-width', 1);
+                
+                g3.selectAll('.perfect-point')
+                    .data(originalData)
+                    .enter().append('circle')
+                    .attr('class', 'perfect-point')
+                    .attr('cx', d => xScale(d.x))
+                    .attr('cy', d => yScale(d.y))
+                    .attr('r', 3)
+                    .attr('fill', '#27ae60');
+                
+                g.append('text')
+                    .attr('x', 2 * (plotWidth + 20) + plotWidth / 2)
+                    .attr('y', 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text('2 Components');
+                
+                // Error information
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 15)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Reconstruction Error: 0 components (100%) → 1 component (25%) → 2 components (0%)');
+            }
+        }
+
+        function initIrisViz() {
+            const container = d3.select('#iris-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 120, bottom: 40, left: 60};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Iris Dataset: 4D → 2D PCA Projection');
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Simulated Iris data in PC space
+                const species = ['Setosa', 'Versicolor', 'Virginica'];
+                const colors = ['#e74c3c', '#27ae60', '#3498db'];
+                const irisData = [];
+                
+                // Generate representative data for each species
+                for (let s = 0; s < 3; s++) {
+                    for (let i = 0; i < 50; i++) {
+                        irisData.push({
+                            species: species[s],
+                            pc1: d3.randomNormal(-2 + s * 2, 0.5)(),
+                            pc2: d3.randomNormal(0 + (s - 1) * 0.8, 0.4)(),
+                            color: colors[s]
+                        });
+                    }
+                }
+                
+                const xScale = d3.scaleLinear()
+                    .domain(d3.extent(irisData, d => d.pc1))
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain(d3.extent(irisData, d => d.pc2))
+                    .range([innerHeight, 0]);
+                
+                // Draw points
+                g.selectAll('.iris-point')
+                    .data(irisData)
+                    .enter().append('circle')
+                    .attr('class', 'iris-point')
+                    .attr('cx', d => xScale(d.pc1))
+                    .attr('cy', d => yScale(d.pc2))
+                    .attr('r', 4)
+                    .attr('fill', d => d.color)
+                    .attr('opacity', 0.8)
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 1);
+                
+                // Axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale).tickFormat(d3.format('.1f')));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale).tickFormat(d3.format('.1f')));
+                
+                // Labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 35)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('PC1 (72.9% variance)');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text('PC2 (22.9% variance)');
+                
+                // Legend
+                const legend = g.append('g')
+                    .attr('transform', `translate(${innerWidth + 20}, 20)`);
+                
+                species.forEach((sp, i) => {
+                    legend.append('circle')
+                        .attr('cx', 5)
+                        .attr('cy', i * 20)
+                        .attr('r', 4)
+                        .attr('fill', colors[i]);
+                    
+                    legend.append('text')
+                        .attr('x', 15)
+                        .attr('y', i * 20 + 4)
+                        .attr('font-size', '10px')
+                        .text(sp);
+                });
+                
+                // Variance explained annotation
+                g.append('text')
+                    .attr('x', 10)
+                    .attr('y', 20)
+                    .attr('font-size', '11px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', '#2c3e50')
+                    .text('Total variance: 95.8%');
+            }
+        }
+
+        function initializeVisualizationForSlide(slideNumber) {
+            try {
+                switch (slideNumber) {
+                    case 2:
+                        console.log('Initializing curse visualization');
+                        setTimeout(() => initCurseViz(), 100);
+                        break;
+                    case 3:
+                        console.log('Initializing covariance visualization');
+                        setTimeout(() => initCovarianceViz(), 100);
+                        break;
+                    case 4:
+                        console.log('Initializing geometric visualization');
+                        setTimeout(() => initGeometricViz(), 100);
+                        break;
+                    case 5:
+                        console.log('Initializing algorithm visualization');
+                        setTimeout(() => initAlgorithmViz(), 100);
+                        break;
+                    case 6:
+                        console.log('Initializing scree visualization');
+                        setTimeout(() => initScreeViz(), 100);
+                        break;
+                    case 7:
+                        console.log('Initializing implementation visualization');
+                        setTimeout(() => initImplementationViz(), 100);
+                        break;
+                    case 8:
+                        console.log('Initializing reconstruction visualization');
+                        setTimeout(() => initReconstructionViz(), 100);
+                        break;
+                    case 9:
+                        console.log('Initializing iris visualization');
+                        setTimeout(() => initIrisViz(), 100);
+                        break;
+                }
+            } catch (error) {
+                console.error('Error initializing visualization:', error);
+            }
+        }
+
+        function initializeAllVisualizations() {
+            for (let i = 1; i <= totalSlides; i++) {
+                initializeVisualizationForSlide(i);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            showSlide(1);
+            setTimeout(() => {
+                initializeAllVisualizations();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

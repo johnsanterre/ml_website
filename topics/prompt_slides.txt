@@ -1,0 +1,138 @@
+PROMPT FOR GENERATING LECTURE SLIDES
+
+## SLIDE STRUCTURE AND ORGANIZATION
+- One concept per slide - avoid multiple concepts on a single slide
+- Progressive reveal of content - build understanding step by step
+- Clear slide numbering (1, 2, 3...) with descriptive titles
+- Logical flow from fundamentals to advanced concepts
+- Each slide should be self-contained but connected to the narrative
+
+## CONTENT GUIDELINES
+- Start with clear learning objectives and duration
+- Use descriptive slide titles that preview the content
+- Include mathematical notation with MathJax for professional appearance
+- Provide concrete examples and real-world applications
+- End with actionable next steps (no "Questions?" section)
+- Keep text concise - slides support the script, don't replace it
+
+## TECHNICAL IMPLEMENTATION
+- Use lightweight HTML format (no heavy frameworks)
+- Implement progressive slide navigation (previous/next buttons)
+- Include keyboard navigation (arrow keys, spacebar)
+- Show slide counter (e.g., "Slide 3 of 13")
+- Use responsive design that works on different screen sizes
+
+## MATHEMATICAL NOTATION
+- Integrate MathJax for beautiful mathematical equations
+- Use proper LaTeX notation (e.g., $$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$$)
+- Ensure equations are readable and properly formatted
+- Include mathematical symbols in spoken form where appropriate
+
+## VISUALIZATION BEST PRACTICES
+- Use D3.js for interactive, mathematical visualizations
+- Create realistic data with appropriate noise levels (not perfect lines)
+- Ensure visualizations demonstrate the concepts being taught
+- Use consistent color schemes and styling
+- Include proper axis labels and legends
+- Make visualizations responsive and mobile-friendly
+
+## SLIDE VISUALIZATIONS
+- **Text Readability**
+  - Use appropriate font sizes (11-14px) based on available space
+  - Apply bold styling to important labels and decision points
+  - Ensure sufficient contrast between text and background
+- **Visual Elements**
+  - Size nodes and points appropriately for their content (30-40px for nodes with text)
+  - Use consistent sizing for similar elements across visualizations
+  - Maintain adequate spacing between visual components
+- **Layout Considerations**
+  - Apply consistent margins across visualizations (e.g., 60px top/right, 40px bottom/left)
+  - Position labels with sufficient spacing from the elements they describe
+  - Ensure legends are clearly readable with proper spacing
+- **Consistency**
+  - Standardize font sizes for similar elements across all visualizations
+  - Use consistent color schemes for related concepts
+  - Maintain uniform styling for legends and annotations
+- **Responsiveness**
+  - Adjust visualization parameters based on container dimensions
+  - Ensure visualizations are properly initialized when their slide is shown
+  - Include fallback text when visualizations cannot be displayed
+
+## D3.js VISUALIZATION GUIDELINES
+- Initialize visualizations when page loads with error handling
+- Include fallback initialization for timing issues
+- Use realistic, noisy data instead of perfect mathematical relationships
+- Implement proper error handling and debugging console logs
+- Ensure visualizations load correctly for each slide
+- Use appropriate scales and margins for readability
+
+## SLIDE CONTENT EXAMPLES
+- **Title Slide**: Learning objectives, duration, overview
+- **Concept Slides**: Definition, mathematical foundation, examples
+- **Method Slides**: Algorithm explanation, cost functions, training approaches
+- **Evaluation Slides**: Metrics, visual comparisons, practical considerations
+- **Summary Slide**: Key takeaways, next steps, forward-looking connections
+
+## STYLING AND PRESENTATION
+- Use consistent CSS styling across all slides
+- Implement clean, professional appearance
+- Use appropriate color schemes for different content types
+- Ensure good contrast and readability
+- Include proper spacing and margins
+
+## INTERACTIVITY FEATURES
+- Smooth slide transitions
+- Interactive visualizations that respond to user input
+- Keyboard and mouse navigation
+- Visual feedback for navigation elements
+- Responsive button states (disabled when appropriate)
+
+## QUALITY ASSURANCE
+- Verify all slides display correctly
+- Test navigation between slides
+- Ensure visualizations load and display properly
+- Check mathematical notation renders correctly
+- Validate HTML structure and accessibility
+
+## COMMON PITFALLS TO AVOID
+- Don't put multiple concepts on one slide
+- Don't use perfect, artificial data in visualizations
+- Don't forget to handle visualization initialization errors
+- Don't create slides that are too text-heavy
+- Don't forget to test navigation and keyboard controls
+- Don't use generic placeholder content
+
+## VISUALIZATION DATA GUIDELINES
+- Generate realistic noise levels appropriate to the concept
+- Use different noise levels to demonstrate different correlation strengths
+- Ensure data follows clear patterns while maintaining realism
+- Include enough data points for meaningful visualization
+- Use appropriate scales and domains for the data
+
+## SLIDE NAVIGATION
+- Implement previous/next button functionality
+- Include keyboard shortcuts (left/right arrows, spacebar)
+- Show current slide number and total count
+- Disable navigation buttons at boundaries
+- Provide visual feedback for navigation state
+
+## TECHNICAL REQUIREMENTS
+- MathJax for mathematical notation
+- D3.js for data visualizations
+- Responsive CSS for different screen sizes
+- Error handling for visualization initialization
+- Console logging for debugging purposes
+
+## CONTENT FLOW
+- Build concepts progressively
+- Connect each slide to the previous and next
+- Use consistent examples throughout the lecture
+- Include visual demonstrations of key concepts
+- Provide clear transitions between topics
+
+## ACCESSIBILITY CONSIDERATIONS
+- Ensure proper contrast ratios
+- Include descriptive alt text for visualizations
+- Use semantic HTML structure
+- Provide keyboard navigation alternatives
+- Test with screen readers where possible

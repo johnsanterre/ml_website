@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Embeddings and NLP</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .slide {
+            display: none;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .slide.active {
+            display: block;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .progress {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .example {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .visualization {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+            background-color: #f8f9fa;
+        }
+        .text-demo {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .vector-display {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+    <!-- MathJax Configuration -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide active" id="slide1">
+        <h1>Text Embeddings and Natural Language Processing</h1>
+        <h2>From Words to Vectors</h2>
+        <p>Understanding how machines process and understand human language</p>
+        <div class="example">
+            <strong>Core Challenge:</strong> How do we convert human language into numerical representations that machines can understand and process?
+        </div>
+        <div class="text-demo">
+            "The quick brown fox" → [0.2, -0.1, 0.8, 0.3, ...]
+        </div>
+        <ul>
+            <li><strong>Goal:</strong> Transform text into meaningful vector representations</li>
+            <li><strong>Requirement:</strong> Preserve semantic meaning and relationships</li>
+            <li><strong>Application:</strong> Enable mathematical operations on text</li>
+        </ul>
+    </div>
+
+    <!-- Slide 2: The Text Representation Problem -->
+    <div class="slide" id="slide2">
+        <h1>The Text Representation Problem</h1>
+        <h2>Why We Need Embeddings</h2>
+        <div class="example">
+            <strong>Fundamental Issues:</strong>
+            <ul>
+                <li><strong>Symbolic vs. Numerical:</strong> Computers work with numbers, not symbols</li>
+                <li><strong>Semantic Similarity:</strong> "cat" and "dog" are more similar than "cat" and "car"</li>
+                <li><strong>Context Dependency:</strong> "bank" has different meanings in different contexts</li>
+                <li><strong>Dimensionality:</strong> Vocabulary sizes can be massive (100K+ words)</li>
+            </ul>
+        </div>
+        <div class="text-demo">
+            Traditional approach: "cat" = 1, "dog" = 2, "car" = 3<br>
+            Problem: No notion of similarity between words
+        </div>
+        <p><strong>Solution:</strong> Map words/text to dense vector spaces where similarity has meaning</p>
+        <div id="problem-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 3: Bag of Words (BoW) -->
+    <div class="slide" id="slide3">
+        <h1>Bag of Words Representation</h1>
+        <h2>The Simplest Approach</h2>
+        <div class="example">
+            <strong>Bag of Words:</strong> Represent text as a vector of word counts
+        </div>
+        <div class="text-demo">
+            Vocabulary: ["the", "cat", "sat", "on", "mat", "dog", "ran"]<br><br>
+            "The cat sat on the mat" → [2, 1, 1, 1, 1, 0, 0]<br>
+            "The dog ran" → [1, 0, 0, 0, 0, 1, 1]
+        </div>
+        <p><strong>Advantages:</strong></p>
+        <ul>
+            <li>Simple and interpretable</li>
+            <li>Easy to implement</li>
+            <li>Works well for some tasks</li>
+        </ul>
+        <p><strong>Disadvantages:</strong></p>
+        <ul>
+            <li>Loses word order information</li>
+            <li>High dimensionality (sparse vectors)</li>
+            <li>No semantic similarity</li>
+            <li>Frequent words dominate</li>
+        </ul>
+        <div id="bow-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 4: TF-IDF -->
+    <div class="slide" id="slide4">
+        <h1>TF-IDF: Weighted Word Importance</h1>
+        <h2>Term Frequency × Inverse Document Frequency</h2>
+        <div class="example">
+            <strong>TF-IDF Formula:</strong>
+            $$\text{TF-IDF}(t,d,D) = \text{TF}(t,d) \times \text{IDF}(t,D)$$
+            $$\text{TF}(t,d) = \frac{\text{count of } t \text{ in } d}{\text{total words in } d}$$
+            $$\text{IDF}(t,D) = \log\left(\frac{|D|}{|\{d \in D : t \in d\}|}\right)$$
+        </div>
+        <p><strong>Key Idea:</strong> Weight words by importance</p>
+        <ul>
+            <li><strong>High TF:</strong> Word appears frequently in document</li>
+            <li><strong>High IDF:</strong> Word is rare across the corpus</li>
+            <li><strong>High TF-IDF:</strong> Word is important to this specific document</li>
+        </ul>
+        <div class="text-demo">
+            "the" → Low IDF (appears everywhere)<br>
+            "quantum" → High IDF (appears rarely)<br>
+            "machine learning" → High TF in ML papers, High IDF overall
+        </div>
+        <div id="tfidf-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 5: Word Embeddings Introduction -->
+    <div class="slide" id="slide5">
+        <h1>Word Embeddings</h1>
+        <h2>Dense Vector Representations</h2>
+        <div class="example">
+            <strong>Key Insight:</strong> Map words to dense, low-dimensional vectors where semantic similarity is preserved
+        </div>
+        <div class="vector-display">
+            "king"   → [0.2, -0.1, 0.8, 0.3, -0.5, ...]<br>
+            "queen"  → [0.3, -0.2, 0.7, 0.4, -0.4, ...]<br>
+            "man"    → [0.1, -0.3, 0.2, 0.8, -0.1, ...]<br>
+            "woman"  → [0.2, -0.4, 0.1, 0.9, -0.2, ...]
+        </div>
+        <p><strong>Properties of Good Embeddings:</strong></p>
+        <ul>
+            <li><strong>Semantic Similarity:</strong> Similar words have similar vectors</li>
+            <li><strong>Analogical Reasoning:</strong> king - man + woman ≈ queen</li>
+            <li><strong>Dense Representation:</strong> Typically 50-300 dimensions</li>
+            <li><strong>Learned from Data:</strong> Capture statistical patterns</li>
+        </ul>
+        <div id="embeddings-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 6: Word2Vec -->
+    <div class="slide" id="slide6">
+        <h1>Word2Vec</h1>
+        <h2>Learning Word Representations</h2>
+        <div class="example">
+            <strong>Two Architectures:</strong>
+            <ul>
+                <li><strong>Skip-gram:</strong> Predict context words from target word</li>
+                <li><strong>CBOW:</strong> Predict target word from context words</li>
+            </ul>
+        </div>
+        <div class="text-demo">
+            Sentence: "The cat sat on the mat"<br><br>
+            Skip-gram: "cat" → predict ["The", "sat"]<br>
+            CBOW: ["The", "sat"] → predict "cat"
+        </div>
+        <div class="example">
+            <strong>Training Objective:</strong> Maximize probability of observing context words
+            $$P(w_{context} | w_{target}) = \frac{\exp(\mathbf{v}_{context} \cdot \mathbf{v}_{target})}{\sum_{w \in V} \exp(\mathbf{v}_w \cdot \mathbf{v}_{target})}$$
+        </div>
+        <p><strong>Key Innovations:</strong></p>
+        <ul>
+            <li>Hierarchical softmax for efficiency</li>
+            <li>Negative sampling</li>
+            <li>Subword information (FastText extension)</li>
+        </ul>
+        <div id="word2vec-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 7: GloVe -->
+    <div class="slide" id="slide7">
+        <h1>GloVe: Global Vectors</h1>
+        <h2>Combining Global and Local Statistics</h2>
+        <div class="example">
+            <strong>Core Idea:</strong> Use global word co-occurrence statistics to learn embeddings
+        </div>
+        <div class="example">
+            <strong>GloVe Objective:</strong>
+            $$J = \sum_{i,j=1}^V f(X_{ij})(\mathbf{w}_i^T \mathbf{w}_j + b_i + b_j - \log X_{ij})^2$$
+            <p>Where $X_{ij}$ is the co-occurrence count of words $i$ and $j$</p>
+        </div>
+        <p><strong>Advantages over Word2Vec:</strong></p>
+        <ul>
+            <li>Uses global corpus statistics</li>
+            <li>More stable training</li>
+            <li>Better performance on word analogy tasks</li>
+            <li>Faster training on large corpora</li>
+        </ul>
+        <div class="text-demo">
+            Co-occurrence matrix captures how often words appear together:<br>
+            X["ice", "steam"] = low (rarely co-occur)<br>
+            X["ice", "cold"] = high (frequently co-occur)
+        </div>
+        <div id="glove-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 8: Contextual Embeddings -->
+    <div class="slide" id="slide8">
+        <h1>Contextual Embeddings</h1>
+        <h2>Beyond Static Word Representations</h2>
+        <div class="example">
+            <strong>Problem with Static Embeddings:</strong> One vector per word type
+        </div>
+        <div class="text-demo">
+            "I deposited money in the bank" (financial institution)<br>
+            "I sat by the river bank" (side of river)<br><br>
+            Static embedding: "bank" always gets the same vector
+        </div>
+        <div class="example">
+            <strong>Solution:</strong> Generate different embeddings based on context
+        </div>
+        <p><strong>Key Models:</strong></p>
+        <ul>
+            <li><strong>ELMo:</strong> Bidirectional LSTM language models</li>
+            <li><strong>BERT:</strong> Bidirectional encoder with attention</li>
+            <li><strong>GPT:</strong> Autoregressive transformer models</li>
+        </ul>
+        <div class="vector-display">
+            Context 1: "bank" → [0.1, 0.8, -0.2, ...]  (financial)<br>
+            Context 2: "bank" → [0.7, -0.1, 0.5, ...]  (river)
+        </div>
+        <div id="contextual-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 9: BERT and Transformers -->
+    <div class="slide" id="slide9">
+        <h1>BERT and Transformer Embeddings</h1>
+        <h2>Attention-Based Representations</h2>
+        <div class="example">
+            <strong>BERT:</strong> Bidirectional Encoder Representations from Transformers
+        </div>
+        <p><strong>Key Innovations:</strong></p>
+        <ul>
+            <li><strong>Bidirectional Context:</strong> Uses both left and right context</li>
+            <li><strong>Self-Attention:</strong> Each word attends to all other words</li>
+            <li><strong>Pre-training + Fine-tuning:</strong> Transfer learning approach</li>
+            <li><strong>Multiple Layers:</strong> Different layers capture different information</li>
+        </ul>
+        <div class="example">
+            <strong>BERT Training Tasks:</strong>
+            <ul>
+                <li><strong>Masked Language Model:</strong> Predict masked words</li>
+                <li><strong>Next Sentence Prediction:</strong> Predict if sentences are consecutive</li>
+            </ul>
+        </div>
+        <div class="text-demo">
+            Input: "The [MASK] sat on the mat"<br>
+            BERT learns to predict: "cat", "dog", "mouse", etc.
+        </div>
+        <div id="bert-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 10: Sentence Embeddings -->
+    <div class="slide" id="slide10">
+        <h1>Sentence and Document Embeddings</h1>
+        <h2>Beyond Word-Level Representations</h2>
+        <div class="example">
+            <strong>Challenge:</strong> How to represent entire sentences or documents?
+        </div>
+        <p><strong>Approaches:</strong></p>
+        <ul>
+            <li><strong>Averaging:</strong> Mean of word embeddings</li>
+            <li><strong>Weighted Averaging:</strong> TF-IDF weighted mean</li>
+            <li><strong>Sentence-BERT:</strong> Siamese networks for sentence similarity</li>
+            <li><strong>Universal Sentence Encoder:</strong> Transformer-based sentence embeddings</li>
+            <li><strong>Doc2Vec:</strong> Extension of Word2Vec to documents</li>
+        </ul>
+        <div class="vector-display">
+            "Machine learning is powerful" → [0.3, -0.1, 0.7, ...]<br>
+            "AI can solve many problems" → [0.4, -0.2, 0.6, ...]<br>
+            Similarity: cos(v1, v2) = 0.85 (high semantic similarity)
+        </div>
+        <div class="example">
+            <strong>Applications:</strong> Semantic search, document clustering, paraphrase detection
+        </div>
+        <div id="sentence-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 11: Modern LLM Embeddings -->
+    <div class="slide" id="slide11">
+        <h1>Modern Language Model Embeddings</h1>
+        <h2>GPT, T5, and Beyond</h2>
+        <div class="example">
+            <strong>Evolution:</strong> From task-specific to general-purpose embeddings
+        </div>
+        <p><strong>Modern Approaches:</strong></p>
+        <ul>
+            <li><strong>GPT Embeddings:</strong> Use hidden states from large language models</li>
+            <li><strong>Instruction-Tuned:</strong> Embeddings trained to follow instructions</li>
+            <li><strong>Contrastive Learning:</strong> Learn by comparing positive/negative pairs</li>
+            <li><strong>Multi-Modal:</strong> Joint text and image embeddings</li>
+        </ul>
+        <div class="example">
+            <strong>OpenAI text-embedding-ada-002:</strong>
+            <ul>
+                <li>1536-dimensional vectors</li>
+                <li>Trained on diverse tasks</li>
+                <li>State-of-the-art performance</li>
+            </ul>
+        </div>
+        <div class="text-demo">
+            Input: "Find me documents about climate change"<br>
+            Embedding: Captures intent, semantics, and domain
+        </div>
+        <div id="llm-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 12: Applications -->
+    <div class="slide" id="slide12">
+        <h1>Applications of Text Embeddings</h1>
+        <h2>Real-World Use Cases</h2>
+        <div class="example">
+            <strong>Core Applications:</strong>
+        </div>
+        <ul>
+            <li><strong>Semantic Search:</strong> Find documents by meaning, not keywords</li>
+            <li><strong>Recommendation Systems:</strong> Recommend similar articles/products</li>
+            <li><strong>Text Classification:</strong> Categorize documents automatically</li>
+            <li><strong>Sentiment Analysis:</strong> Understand emotional tone</li>
+            <li><strong>Clustering:</strong> Group similar documents together</li>
+            <li><strong>Question Answering:</strong> Match questions to relevant passages</li>
+            <li><strong>Machine Translation:</strong> Cross-lingual embeddings</li>
+            <li><strong>Chatbots:</strong> Understand user intent</li>
+        </ul>
+        <div class="example">
+            <strong>Example: Semantic Search</strong><br>
+            Query: "How to bake bread?"<br>
+            Matches: "Bread making tutorial", "Baking recipes", "Yeast fermentation"<br>
+            (Even without exact keyword matches)
+        </div>
+        <div id="applications-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 13: Choosing the Right Embedding -->
+    <div class="slide" id="slide13">
+        <h1>Choosing the Right Embedding</h1>
+        <h2>Trade-offs and Considerations</h2>
+        <div class="example">
+            <strong>Key Factors:</strong>
+        </div>
+        <ul>
+            <li><strong>Task Requirements:</strong> Word-level vs. sentence-level vs. document-level</li>
+            <li><strong>Domain Specificity:</strong> General-purpose vs. domain-specific embeddings</li>
+            <li><strong>Computational Resources:</strong> Model size and inference speed</li>
+            <li><strong>Context Sensitivity:</strong> Static vs. contextual embeddings</li>
+            <li><strong>Language Support:</strong> Monolingual vs. multilingual</li>
+        </ul>
+        <div class="example">
+            <strong>Decision Framework:</strong>
+            <ul>
+                <li><strong>Simple tasks:</strong> TF-IDF, Word2Vec, GloVe</li>
+                <li><strong>Context matters:</strong> BERT, RoBERTa, ELECTRA</li>
+                <li><strong>Sentence similarity:</strong> Sentence-BERT, Universal Sentence Encoder</li>
+                <li><strong>General purpose:</strong> OpenAI embeddings, Cohere embeddings</li>
+                <li><strong>Specialized domains:</strong> Fine-tune on domain data</li>
+            </ul>
+        </div>
+        <div id="comparison-viz" class="visualization"></div>
+    </div>
+
+    <!-- Slide 14: Key Takeaways -->
+    <div class="slide" id="slide14">
+        <h1>Key Takeaways</h1>
+        <h2>Text Embeddings Landscape</h2>
+        <ul>
+            <li><strong>Evolution:</strong> From sparse (BoW, TF-IDF) to dense (Word2Vec, BERT) representations</li>
+            <li><strong>Context Matters:</strong> Static embeddings → Contextual embeddings</li>
+            <li><strong>Scale Effects:</strong> Larger models and datasets generally perform better</li>
+            <li><strong>Task Specificity:</strong> Choose embeddings based on your specific use case</li>
+            <li><strong>Similarity Metrics:</strong> Cosine similarity is the standard for measuring semantic similarity</li>
+            <li><strong>Dimensionality:</strong> More dimensions ≠ always better (50-1500 typical range)</li>
+            <li><strong>Future Direction:</strong> Multi-modal, instruction-following, and domain-adaptive embeddings</li>
+        </ul>
+        <div class="example">
+            <strong>Practical Advice:</strong>
+            <ul>
+                <li>Start with pre-trained embeddings</li>
+                <li>Fine-tune if you have domain-specific data</li>
+                <li>Evaluate on your specific task and metrics</li>
+                <li>Consider computational constraints</li>
+            </ul>
+        </div>
+        <div class="vector-display">
+            "Understanding text embeddings opens the door to modern NLP applications"
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button onclick="prevSlide()">Previous</button>
+        <div class="progress">Slide <span id="current">1</span> of <span id="total">14</span></div>
+        <button onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 14;
+
+        function showSlide(n) {
+            // Hide all slides
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show the current slide
+            document.getElementById('slide' + n).classList.add('active');
+            document.getElementById('current').textContent = n;
+            
+            // Initialize visualizations for the current slide if needed
+            setTimeout(() => {
+                initializeVisualizationForSlide(n);
+            }, 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+        
+        // Initialize all visualizations when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initializeAllVisualizations();
+            }, 1000);
+            
+            setTimeout(() => {
+                initializeVisualizationForSlide(currentSlide);
+            }, 1500);
+        });
+        
+        function initializeAllVisualizations() {
+            try {
+                initProblemViz();
+                initBowViz();
+                initTfidfViz();
+                initEmbeddingsViz();
+                initWord2vecViz();
+                initGloveViz();
+                initContextualViz();
+                initBertViz();
+                initSentenceViz();
+                initLlmViz();
+                initApplicationsViz();
+                initComparisonViz();
+            } catch (error) {
+                console.error('Error initializing visualizations:', error);
+            }
+        }
+        
+        // Visualization functions
+        function initProblemViz() {
+            const container = d3.select('#problem-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 40, right: 40, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Show symbolic vs numerical representation
+                const words = ['cat', 'dog', 'car', 'tree', 'house'];
+                const symbolicY = height * 0.3;
+                const numericalY = height * 0.7;
+                
+                // Symbolic representation
+                svg.append('text')
+                    .attr('x', 20)
+                    .attr('y', symbolicY - 20)
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Symbolic (No Similarity):');
+                
+                words.forEach((word, i) => {
+                    svg.append('rect')
+                        .attr('x', 50 + i * 80)
+                        .attr('y', symbolicY - 10)
+                        .attr('width', 60)
+                        .attr('height', 30)
+                        .attr('fill', '#e74c3c')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2);
+                    
+                    svg.append('text')
+                        .attr('x', 80 + i * 80)
+                        .attr('y', symbolicY + 8)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '12px')
+                        .attr('fill', 'white')
+                        .attr('font-weight', 'bold')
+                        .text(word);
+                });
+                
+                // Numerical representation
+                svg.append('text')
+                    .attr('x', 20)
+                    .attr('y', numericalY - 20)
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Vector Space (Similarity Preserved):');
+                
+                // Position words based on semantic similarity
+                const positions = [
+                    {word: 'cat', x: 100, y: numericalY},
+                    {word: 'dog', x: 150, y: numericalY + 10},
+                    {word: 'car', x: 300, y: numericalY + 20},
+                    {word: 'tree', x: 400, y: numericalY},
+                    {word: 'house', x: 450, y: numericalY + 15}
+                ];
+                
+                positions.forEach(pos => {
+                    svg.append('circle')
+                        .attr('cx', pos.x)
+                        .attr('cy', pos.y)
+                        .attr('r', 20)
+                        .attr('fill', '#3498db')
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2);
+                    
+                    svg.append('text')
+                        .attr('x', pos.x)
+                        .attr('y', pos.y + 4)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('fill', 'white')
+                        .attr('font-weight', 'bold')
+                        .text(pos.word);
+                });
+                
+                // Draw similarity lines
+                svg.append('line')
+                    .attr('x1', 100)
+                    .attr('y1', numericalY)
+                    .attr('x2', 150)
+                    .attr('y2', numericalY + 10)
+                    .attr('stroke', '#2ecc71')
+                    .attr('stroke-width', 3)
+                    .attr('stroke-dasharray', '5,5');
+                
+                svg.append('text')
+                    .attr('x', 125)
+                    .attr('y', numericalY - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', '#2ecc71')
+                    .attr('font-weight', 'bold')
+                    .text('Similar');
+            }
+        }
+        
+        function initBowViz() {
+            const container = d3.select('#bow-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                // Create a simple BoW visualization
+                const div = container.append('div')
+                    .style('padding', '20px')
+                    .style('text-align', 'center');
+                
+                div.append('h4')
+                    .style('color', '#3498db')
+                    .text('Bag of Words Matrix');
+                
+                const table = div.append('table')
+                    .style('margin', '0 auto')
+                    .style('border-collapse', 'collapse');
+                
+                // Header
+                const header = table.append('tr');
+                ['Document', 'cat', 'dog', 'sat', 'ran', 'the'].forEach(word => {
+                    header.append('th')
+                        .style('border', '1px solid #ddd')
+                        .style('padding', '8px')
+                        .style('background-color', '#3498db')
+                        .style('color', 'white')
+                        .text(word);
+                });
+                
+                // Data rows
+                const data = [
+                    ['Doc 1: "The cat sat"', 1, 0, 1, 0, 1],
+                    ['Doc 2: "The dog ran"', 0, 1, 0, 1, 1],
+                    ['Doc 3: "Cat and dog"', 1, 1, 0, 0, 0]
+                ];
+                
+                data.forEach(row => {
+                    const tr = table.append('tr');
+                    row.forEach((cell, i) => {
+                        tr.append('td')
+                            .style('border', '1px solid #ddd')
+                            .style('padding', '8px')
+                            .style('background-color', i === 0 ? '#ecf0f1' : '#ffffff')
+                            .text(cell);
+                    });
+                });
+            }
+        }
+        
+        function initTfidfViz() {
+            const container = d3.select('#tfidf-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 40, right: 40, bottom: 60, left: 60};
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Sample TF-IDF data
+                const words = ['the', 'machine', 'learning', 'quantum', 'computer'];
+                const tfidfScores = [0.1, 0.7, 0.8, 0.9, 0.6];
+                
+                const xScale = d3.scaleBand()
+                    .domain(words)
+                    .range([0, innerWidth])
+                    .padding(0.2);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 1])
+                    .range([innerHeight, 0]);
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale));
+                
+                // Add bars
+                g.selectAll('.bar')
+                    .data(words)
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'bar')
+                    .attr('x', d => xScale(d))
+                    .attr('y', (d, i) => yScale(tfidfScores[i]))
+                    .attr('width', xScale.bandwidth())
+                    .attr('height', (d, i) => innerHeight - yScale(tfidfScores[i]))
+                    .attr('fill', '#3498db');
+                
+                // Add value labels
+                g.selectAll('.label')
+                    .data(words)
+                    .enter()
+                    .append('text')
+                    .attr('class', 'label')
+                    .attr('x', d => xScale(d) + xScale.bandwidth() / 2)
+                    .attr('y', (d, i) => yScale(tfidfScores[i]) - 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text((d, i) => tfidfScores[i].toFixed(1));
+                
+                // Add title
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', -10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('TF-IDF Scores by Word');
+                
+                // Add axis labels
+                g.append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', innerHeight + 40)
+                    .attr('text-anchor', 'middle')
+                    .text('Words');
+                
+                g.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -40)
+                    .attr('x', -innerHeight / 2)
+                    .attr('text-anchor', 'middle')
+                    .text('TF-IDF Score');
+            }
+        }
+        
+        function initEmbeddingsViz() {
+            const container = d3.select('#embeddings-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 280;
+                const margin = {top: 60, right: 60, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // 2D projection of word embeddings
+                const words = [
+                    {word: 'king', x: 200, y: 100, color: '#3498db'},
+                    {word: 'queen', x: 220, y: 120, color: '#3498db'},
+                    {word: 'man', x: 180, y: 80, color: '#e74c3c'},
+                    {word: 'woman', x: 200, y: 100, color: '#e74c3c'},
+                    {word: 'cat', x: 350, y: 150, color: '#2ecc71'},
+                    {word: 'dog', x: 370, y: 170, color: '#2ecc71'},
+                    {word: 'car', x: 120, y: 200, color: '#f39c12'},
+                    {word: 'truck', x: 140, y: 220, color: '#f39c12'}
+                ];
+                
+                // Draw word points
+                words.forEach(word => {
+                    svg.append('circle')
+                        .attr('cx', word.x)
+                        .attr('cy', word.y)
+                        .attr('r', 15)
+                        .attr('fill', word.color)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2);
+                    
+                    svg.append('text')
+                        .attr('x', word.x)
+                        .attr('y', word.y + 4)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .attr('fill', 'white')
+                        .attr('font-weight', 'bold')
+                        .text(word.word);
+                });
+                
+                // Draw analogy arrow: king - man + woman = queen
+                svg.append('line')
+                    .attr('x1', 200)
+                    .attr('y1', 100)
+                    .attr('x2', 180)
+                    .attr('y2', 80)
+                    .attr('stroke', '#95a5a6')
+                    .attr('stroke-width', 3)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                svg.append('line')
+                    .attr('x1', 200)
+                    .attr('y1', 100)
+                    .attr('x2', 220)
+                    .attr('y2', 120)
+                    .attr('stroke', '#95a5a6')
+                    .attr('stroke-width', 3)
+                    .attr('marker-end', 'url(#arrow)');
+                
+                // Add title
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '14px')
+                    .attr('font-weight', 'bold')
+                    .text('Word Embeddings: Semantic Relationships in Vector Space');
+                
+                // Add analogy annotation
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height - 10)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#7f8c8d')
+                    .text('Similar words cluster together, analogies preserved');
+            }
+        }
+        
+        // Placeholder functions for remaining visualizations
+        function initWord2vecViz() {
+            const container = d3.select('#word2vec-viz');
+            if (!container.empty()) {
+                container.html('<div style="padding: 20px; text-align: center; color: #7f8c8d;">Word2Vec Architecture<br><small>Skip-gram and CBOW training process</small></div>');
+            }
+        }
+        
+        function initGloveViz() {
+            const container = d3.select('#glove-viz');
+            if (!container.empty()) {
+                container.html('<div style="padding: 20px; text-align: center; color: #7f8c8d;">GloVe Co-occurrence Matrix<br><small>Global word-word co-occurrence statistics</small></div>');
+            }
+        }
+        
+        function initContextualViz() {
+            const container = d3.select('#contextual-viz');
+            if (!container.empty()) {
+                container.html('<div style="padding: 20px; text-align: center; color: #7f8c8d;">Contextual Word Representations<br><small>Same word, different contexts, different vectors</small></div>');
+            }
+        }
+        
+        function initBertViz() {
+            const container = d3.select('#bert-viz');
+            if (!container.empty()) {
+                container.html('<div style="padding: 20px; text-align: center; color: #7f8c8d;">BERT Attention Mechanism<br><small>Self-attention across all positions</small></div>');
+            }
+        }
+        
+        function initSentenceViz() {
+            const container = d3.select('#sentence-viz');
+            if (!container.empty()) {
+                container.html('<div style="padding: 20px; text-align: center; color: #7f8c8d;">Sentence Embedding Similarity<br><small>Semantic similarity between sentences</small></div>');
+            }
+        }
+        
+        function initLlmViz() {
+            const container = d3.select('#llm-viz');
+            if (!container.empty()) {
+                container.html('<div style="padding: 20px; text-align: center; color: #7f8c8d;">Modern LLM Embeddings<br><small>Large-scale pre-trained representations</small></div>');
+            }
+        }
+        
+        function initApplicationsViz() {
+            const container = d3.select('#applications-viz');
+            if (!container.empty()) {
+                container.html('<div style="padding: 20px; text-align: center; color: #7f8c8d;">Embedding Applications<br><small>Search, recommendation, classification, clustering</small></div>');
+            }
+        }
+        
+        function initComparisonViz() {
+            const container = d3.select('#comparison-viz');
+            if (!container.empty()) {
+                container.html('<div style="padding: 20px; text-align: center; color: #7f8c8d;">Embedding Comparison<br><small>Performance vs. computational trade-offs</small></div>');
+            }
+        }
+        
+        function initializeVisualizationForSlide(slideNumber) {
+            try {
+                switch (slideNumber) {
+                    case 2:
+                        initProblemViz();
+                        break;
+                    case 3:
+                        initBowViz();
+                        break;
+                    case 4:
+                        initTfidfViz();
+                        break;
+                    case 5:
+                        initEmbeddingsViz();
+                        break;
+                    case 6:
+                        initWord2vecViz();
+                        break;
+                    case 7:
+                        initGloveViz();
+                        break;
+                    case 8:
+                        initContextualViz();
+                        break;
+                    case 9:
+                        initBertViz();
+                        break;
+                    case 10:
+                        initSentenceViz();
+                        break;
+                    case 11:
+                        initLlmViz();
+                        break;
+                    case 12:
+                        initApplicationsViz();
+                        break;
+                    case 13:
+                        initComparisonViz();
+                        break;
+                }
+            } catch (error) {
+                console.error(`Error initializing visualization for slide ${slideNumber}:`, error);
+            }
+        }
+    </script>
+</body>
+</html>

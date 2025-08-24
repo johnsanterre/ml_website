@@ -1,0 +1,1446 @@
+Supervised Learning
+- Linear Regression
+- Logistic Regression
+- Decision Trees
+- Random Forest
+- Support Vector Machines
+- Naive Bayes
+- K-Nearest Neighbors
+- Gradient Boosting
+- XGBoost
+- Cross-Validation
+- Overfitting and Underfitting
+- Bias-Variance Tradeoff
+
+Neural Networks
+- Feed Forward Neural Networks
+- Backpropagation
+- Activation Functions
+- Loss Functions
+- Optimization Algorithms
+- Convolutional Neural Networks
+- Recurrent Neural Networks
+- Long Short-Term Memory
+- Attention Mechanisms
+- Transformers
+- Regularization Techniques
+- Dropout
+- Batch Normalization
+
+Unsupervised Learning
+- K-Means Clustering
+- Hierarchical Clustering
+- DBSCAN
+- Principal Component Analysis
+- Dimensionality Reduction
+- Autoencoders
+- Generative Adversarial Networks
+- Self-Supervised Learning
+- Anomaly Detection
+- Association Rules
+
+Optimization and Training
+- Gradient Descent
+- Stochastic Gradient Descent
+- Mini-Batch Gradient Descent
+- Adam Optimizer
+- RMSprop
+- Learning Rate Scheduling
+- Early Stopping
+- Hyperparameter Tuning
+- Grid Search
+- Random Search
+- Bayesian Optimization
+- Momentum
+
+Model Evaluation and Selection
+- Classification Metrics
+- Regression Metrics
+- Confusion Matrix
+- ROC Curves
+- Precision-Recall
+- F1 Score
+- Mean Squared Error
+- Mean Absolute Error
+- R-squared
+- Model Interpretability
+- Feature Importance
+- SHAP Values
+- LIME
+
+Ensemble Methods
+- Bagging
+- Boosting
+- Stacking
+- Voting Classifiers
+- Random Subspace Method
+- AdaBoost
+- Gradient Boosting Machines
+- LightGBM
+- CatBoost
+- Ensemble Diversity
+- Bootstrap Sampling
+
+Deep Learning Architectures
+- ResNet
+- DenseNet
+- Inception Networks
+- U-Net
+- YOLO
+- BERT
+- GPT Models
+- Vision Transformers
+- Graph Neural Networks
+- Capsule Networks
+- Neural Architecture Search
+- Transfer Learning
+
+Time Series Analysis
+- ARIMA Models
+- Seasonal Decomposition
+- Moving Averages
+- Exponential Smoothing
+- Prophet
+- LSTM for Time Series
+- Temporal Convolutional Networks
+- Change Point Detection
+- Anomaly Detection in Time Series
+- Forecasting Evaluation
+- Cross-Validation for Time Series
+
+Natural Language Processing
+- Text Preprocessing
+- Word Embeddings
+- TF-IDF
+- Word2Vec
+- GloVe
+- BERT Embeddings
+- Named Entity Recognition
+- Sentiment Analysis
+- Text Classification
+- Machine Translation
+- Question Answering
+- Text Generation
+- Language Models
+
+Computer Vision
+- Image Preprocessing
+- Feature Extraction
+- SIFT Features
+- HOG Features
+- Image Segmentation
+- Object Detection
+- Face Recognition
+- Image Classification
+- Data Augmentation
+- Transfer Learning for Vision
+- Image Captioning
+- Style Transfer
+
+Reinforcement Learning
+- Q-Learning
+- Policy Gradient Methods
+- Actor-Critic Methods
+- Deep Q-Networks
+- Proximal Policy Optimization
+- Monte Carlo Methods
+- Temporal Difference Learning
+- Multi-Armed Bandits
+- Exploration vs Exploitation
+- Value Function Approximation
+- Policy Iteration
+- SARSA
+
+Probabilistic Models
+- Bayesian Networks
+- Hidden Markov Models
+- Gaussian Mixture Models
+- Latent Dirichlet Allocation
+- Variational Autoencoders
+- Markov Chain Monte Carlo
+- Expectation Maximization
+- Belief Propagation
+- Junction Tree Algorithm
+- Probabilistic Graphical Models
+- Causal Inference
+
+Feature Engineering and Selection
+- One-Hot Encoding
+- Feature Interaction
+- Polynomial Features
+- Recursive Feature Elimination
+- Lasso Regression
+- Ridge Regression
+- Elastic Net
+- Feature Importance Ranking
+- Correlation Analysis
+- Mutual Information
+- Chi-Square Test
+- Feature Scaling Methods
+- Feature Normalization Techniques
+
+Big Data and Distributed ML
+- MapReduce
+- Spark MLlib
+- Distributed Training
+- Data Parallelism
+- Model Parallelism
+- Federated Learning
+- Streaming Machine Learning
+- Incremental Learning
+- Online Learning
+- Scalable Algorithms
+- Memory Management Strategies
+- GPU Acceleration Techniques
+
+Ethics and Fairness in ML
+- Algorithmic Bias
+- Fairness Metrics
+- Adversarial Attacks
+- Privacy-Preserving ML
+- Differential Privacy
+- Explainable AI
+- Responsible AI
+- Data Privacy
+- Bias Detection
+- Fairness Constraints
+- Ethical Guidelines
+- Fairness in Classification
+- Fairness in Recommendation Systems
+
+Graph Machine Learning
+- Graph Representation Learning
+- Node Embeddings
+- Graph Neural Networks
+- Graph Convolutional Networks
+- Graph Attention Networks
+- Link Prediction
+- Community Detection
+- Graph Clustering
+- Network Analysis
+- Social Network Analysis
+- Knowledge Graphs
+- Graph Mining Applications
+
+Multi-Modal Learning
+- Vision-Language Models
+- Audio-Visual Learning
+- Cross-Modal Retrieval
+- Multi-Modal Fusion
+- Joint Embeddings
+- Cross-Modal Translation
+- Multi-Modal Generation
+- Audio-Visual Speech Recognition
+- Image-Text Matching
+- Multi-Modal Understanding
+- Cross-Modal Attention Mechanisms
+- Multi-Modal Transformers
+
+AutoML and Neural Architecture Search
+- Hyperparameter Optimization
+- Neural Architecture Search
+- Auto-Sklearn
+- Auto-PyTorch
+- Meta-Learning
+- Few-Shot Learning
+- Zero-Shot Learning
+- Learning to Learn
+- Automated Feature Engineering
+- Automated Data Preprocessing
+- Model Compression
+- Neural Architecture Optimization
+
+Causal Machine Learning
+- Causal Discovery
+- Structural Causal Models
+- Counterfactual Reasoning
+- Instrumental Variables
+- Propensity Score Matching
+- Causal Inference
+- Treatment Effect Estimation
+- Confounding Variables
+- Causal Graph Learning
+- Do-Calculus
+- Causal Feature Selection
+- Causal Fairness
+
+Federated and Privacy-Preserving ML
+- Federated Learning
+- Differential Privacy
+- Homomorphic Encryption
+- Secure Multi-Party Computation
+- Privacy-Preserving Data Mining
+- Federated Optimization
+- Communication-Efficient Learning
+- Byzantine-Robust Learning
+- Personalized Federated Learning
+- Federated Transfer Learning
+- Privacy Budget Management
+- Secure Aggregation
+
+Online and Incremental Learning
+- Online Learning Algorithms
+- Incremental Learning
+- Concept Drift Detection
+- Adaptive Learning
+- Lifelong Learning
+- Continual Learning
+- Catastrophic Forgetting
+- Experience Replay
+- Elastic Weight Consolidation
+- Progressive Neural Networks
+- Online Feature Selection
+- Adaptive Model Updates
+
+Multi-Task and Transfer Learning
+- Multi-Task Learning
+- Transfer Learning
+- Domain Adaptation
+- Domain Generalization
+- Few-Shot Learning
+- Meta-Learning
+- Knowledge Distillation
+- Teacher-Student Networks
+- Progressive Neural Networks
+- Adversarial Training
+- Cross-Domain Learning
+- Task Similarity Learning
+
+Interpretable and Explainable AI
+- Model Interpretability
+- Feature Attribution
+- SHAP Values
+- LIME Explanations
+- Integrated Gradients
+- Attention Visualization
+- Decision Trees
+- Rule-Based Models
+- Interpretable Neural Networks
+- Counterfactual Explanations
+- Local Interpretable Models
+- Global Model Explanations
+
+Robust and Adversarial ML
+- Adversarial Attacks
+- Adversarial Training
+- Robust Optimization
+- Adversarial Examples
+- Poisoning Attacks
+- Evasion Attacks
+- Model Inversion
+- Membership Inference
+- Defensive Distillation
+- Certified Robustness
+- Adversarial Detection
+- Robust Feature Learning
+
+Quantum Machine Learning
+- Quantum Neural Networks
+- Quantum Feature Maps
+- Quantum Kernels
+- Quantum Variational Algorithms
+- Quantum-Classical Hybrid Models
+- Quantum Optimization
+- Quantum Sampling
+- Quantum Error Correction
+- Quantum-Classical Interface
+- Quantum Feature Selection
+- Quantum Clustering
+- Quantum Generative Models
+
+Few-Shot Learning
+- Prototypical Networks
+- Matching Networks
+- Model-Agnostic Meta-Learning
+- Relation Networks
+- Siamese Networks
+- Learning to Compare
+- Few-Shot Classification
+- Few-Shot Regression
+- Few-Shot Object Detection
+- Few-Shot Segmentation
+
+Active Learning
+- Uncertainty Sampling
+- Query-by-Committee
+- Expected Model Change
+- Information Gain
+- Pool-Based Sampling
+- Stream-Based Sampling
+- Batch Mode Active Learning
+- Multi-Label Active Learning
+- Cost-Effective Active Learning
+- Active Learning for Deep Learning
+
+Data Augmentation
+- Image Augmentation
+- Text Augmentation
+- Audio Augmentation
+- Mixup
+- CutMix
+- RandAugment
+- AutoAugment
+- Style Transfer Augmentation
+- Generative Data Augmentation
+- Adversarial Training Data
+
+Model Compression
+- Knowledge Distillation
+- Pruning
+- Quantization
+- Low-Rank Factorization
+- Channel Pruning
+- Structured Pruning
+- Dynamic Pruning
+- Neural Architecture Search
+- MobileNet
+- EfficientNet
+
+Anomaly Detection
+- Isolation Forest
+- One-Class SVM
+- Local Outlier Factor
+- Autoencoder-Based Detection
+- Variational Autoencoder
+- Generative Adversarial Networks
+- Deep One-Class Classification
+- Self-Supervised Learning
+- Contrastive Learning
+- Outlier Detection Metrics
+
+Recommendation Systems
+- Collaborative Filtering
+- Content-Based Filtering
+- Matrix Factorization
+- Deep Learning for Recommendations
+- Sequential Recommendations
+- Multi-Armed Bandits
+- Contextual Bandits
+- A/B Testing
+- Cold Start Problem
+- Evaluation Metrics
+
+Time Series Forecasting
+- ARIMA Models
+- Exponential Smoothing
+- Prophet
+- DeepAR
+- Temporal Fusion Transformers
+- N-BEATS
+- Informer
+- Autoformer
+- Long Short-Term Memory
+- Attention Mechanisms
+
+Natural Language Generation
+- Text Generation
+- Language Modeling
+- Machine Translation
+- Summarization
+- Question Generation
+- Dialogue Systems
+- Story Generation
+- Poetry Generation
+- Code Generation
+- Creative Writing
+
+Computer Vision Tasks
+- Image Classification
+- Object Detection
+- Semantic Segmentation
+- Instance Segmentation
+- Pose Estimation
+- Face Recognition
+- Image Captioning
+- Visual Question Answering
+- Image-to-Image Translation
+- Video Understanding
+
+Reinforcement Learning Algorithms
+- Q-Learning
+- SARSA
+- Policy Gradient
+- Actor-Critic
+- Deep Q-Networks
+- Proximal Policy Optimization
+- Trust Region Policy Optimization
+- Soft Actor-Critic
+- Twin Delayed DDPG
+- Rainbow DQN
+
+Gradient Descent Variants
+- Stochastic Gradient Descent
+- Mini-Batch Gradient Descent
+- Adam Optimizer
+- RMSprop
+- Momentum
+- AdaGrad
+- AdaDelta
+- Nesterov Momentum
+- AMSGrad
+- RAdam
+
+Neural Network Regularization
+- Dropout
+- Batch Normalization
+- Weight Decay
+- Early Stopping
+- Data Augmentation
+- Label Smoothing
+- Mixup
+- CutMix
+- Stochastic Depth
+- ShakeDrop
+
+Attention Mechanisms
+- Self-Attention
+- Multi-Head Attention
+- Scaled Dot-Product Attention
+- Positional Encoding
+- Relative Position Encoding
+- Local Attention
+- Sparse Attention
+- Linear Attention
+- Performer
+- Linformer
+
+Loss Functions
+- Cross-Entropy Loss
+- Mean Squared Error
+- Mean Absolute Error
+- Huber Loss
+- Focal Loss
+- Dice Loss
+- Contrastive Loss
+- Triplet Loss
+- Center Loss
+- ArcFace Loss
+
+Feature Selection Methods
+- Recursive Feature Elimination
+- Lasso Regression
+- Ridge Regression
+- Elastic Net
+- Mutual Information
+- Chi-Square Test
+- Correlation Analysis
+- Forward Selection
+- Backward Elimination
+- Stepwise Selection
+
+Clustering Algorithms
+- K-Means
+- Hierarchical Clustering
+- DBSCAN
+- Gaussian Mixture Models
+- Spectral Clustering
+- Mean Shift
+- Affinity Propagation
+- OPTICS
+- BIRCH
+- Agglomerative Clustering
+
+Dimensionality Reduction
+- Principal Component Analysis
+- Linear Discriminant Analysis
+- t-SNE
+- UMAP
+- Autoencoders
+- Factor Analysis
+- Independent Component Analysis
+- Random Projections
+- Kernel PCA
+- Manifold Learning
+
+Evaluation Metrics
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- ROC Curve
+- AUC
+- Confusion Matrix
+- Mean Squared Error
+- R-squared
+- Mean Absolute Error
+
+Transfer Learning Approaches
+- Fine-tuning
+- Feature Extraction
+- Domain Adaptation
+- Multi-task Learning
+- Knowledge Distillation
+- Progressive Neural Networks
+- Elastic Weight Consolidation
+- Learning Without Forgetting
+- Continual Learning
+- Catastrophic Forgetting Prevention
+
+Generative Models
+- Variational Autoencoders
+- Generative Adversarial Networks
+- Flow-Based Models
+- Diffusion Models
+- Energy-Based Models
+- Autoregressive Models
+- Normalizing Flows
+- Score-Based Models
+- Denoising Diffusion
+- Score Matching
+
+Transformer Architecture
+- Self-Attention Mechanism
+- Multi-Head Attention
+- Positional Encoding
+- Feed-Forward Networks
+- Layer Normalization
+- Residual Connections
+- Encoder-Decoder Structure
+- Cross-Attention
+- Relative Position Encoding
+- Rotary Position Embedding
+
+
+
+Activation Functions
+- ReLU
+- Leaky ReLU
+- ELU
+- GELU
+- Swish
+- Mish
+- Softmax
+- Sigmoid
+- Tanh
+- Maxout
+
+
+
+Recurrent Neural Networks
+- Hidden State
+- Cell State
+- Gates
+- Forget Gate
+- Input Gate
+- Output Gate
+- Vanishing Gradient
+- Exploding Gradient
+- LSTM
+- GRU
+
+Attention Mechanism
+- Query
+- Key
+- Value
+- Attention Weights
+- Self-Attention
+- Multi-Head Attention
+- Scaled Dot-Product
+- Positional Encoding
+- Relative Position
+- Cross-Attention
+
+Regularization
+- L1 Regularization
+- L2 Regularization
+- Dropout
+- Early Stopping
+- Data Augmentation
+- Label Smoothing
+- Mixup
+- CutMix
+- Stochastic Depth
+- ShakeDrop
+
+Loss Functions
+- Cross-Entropy
+- Mean Squared Error
+- Mean Absolute Error
+- Huber Loss
+- Focal Loss
+- Dice Loss
+- Contrastive Loss
+- Triplet Loss
+- Center Loss
+- ArcFace Loss
+
+Feature Engineering
+- Polynomial Features
+- Interaction Features
+- Temporal Features
+- Categorical Encoding
+- Numerical Scaling
+- Feature Selection Methods
+- Feature Extraction Techniques
+- Dimensionality Reduction
+- Feature Aggregation Strategies
+- Feature Transformation Tools
+
+Model Deployment
+- Model Serialization Formats
+- API Development Patterns
+- Containerization Strategies
+- Model Serving Architectures
+- A/B Testing Frameworks
+- Model Monitoring Systems
+- Performance Tracking Tools
+- Scalability Patterns
+- Latency Optimization Techniques
+- Resource Management Strategies
+
+Data Pipeline
+- Data Ingestion Methods
+- Data Processing Workflows
+- Data Storage Systems
+- Data Retrieval Patterns
+- Data Transformation Tools
+- Data Quality Frameworks
+- Data Lineage Tracking
+- Data Versioning Strategies
+- Data Governance Policies
+- Data Security Protocols
+
+Model Versioning
+- Version Control
+- Model Registry
+- Experiment Tracking
+- Model Artifacts
+- Dependency Management
+- Environment Management
+- Reproducibility
+- Model Rollback
+- A/B Testing
+- Performance Comparison
+
+Weight Initialization
+- Xavier Initialization
+- He Initialization
+- Random Initialization
+- Zero Initialization
+- Orthogonal Initialization
+- Identity Initialization
+- Normal Initialization
+- Uniform Initialization
+- Glorot Initialization
+- Kaiming Initialization
+
+Gradient Clipping
+- Norm Clipping
+- Value Clipping
+- Adaptive Clipping
+- Global Clipping
+- Layer-wise Clipping
+- Threshold-based Clipping
+- Momentum Clipping
+- Gradient Scaling
+- Loss Scaling
+- Mixed Precision
+
+Learning Rate Scheduling
+- Step Decay
+- Exponential Decay
+- Cosine Annealing
+- Cyclical Learning Rate
+- Warmup
+- Plateau Detection
+- Adaptive Learning Rate
+- Polynomial Decay
+- Inverse Time Decay
+- Cosine Restart
+
+Batch Normalization
+- Training Mode
+- Inference Mode
+- Moving Average
+- Batch Statistics
+- Population Statistics
+- Momentum
+- Epsilon
+- Gamma Parameter
+- Beta Parameter
+- Affine Transformation
+
+Dropout
+- Dropout Rate
+- Training Mode
+- Inference Mode
+- Monte Carlo Dropout
+- Spatial Dropout
+- Channel Dropout
+- Weight Dropout
+- Attention Dropout
+- Dropout Regularization
+- Dropout Analysis
+
+HOG Features
+- Gradient Computation
+- Cell Histograms
+- Block Normalization
+- Orientation Binning
+- Spatial Binning
+- Contrast Normalization
+- Feature Vector Construction
+- HOG vs SIFT
+
+ReLU Activation
+- Leaky ReLU
+- Parametric ReLU
+- Dead Neuron Problem
+- ReLU vs Sigmoid
+- ReLU Variants
+- ReLU Initialization
+- ReLU and Gradient Flow
+
+Convolution
+- 1D Convolution
+- 2D Convolution
+- 3D Convolution
+- Stride and Padding
+- Dilation and Groups
+- Transposed Convolution
+- Depthwise Convolution
+- Separable Convolution
+- Convolution vs Correlation
+- Convolution in Signal Processing
+- Convolutional Layers
+- Feature Maps and Receptive Fields
+- Pooling Operations
+- Convolution in Neural Networks
+- Convolution in Computer Vision
+
+Cross-Entropy Loss
+- Binary Cross-Entropy
+- Categorical Cross-Entropy
+- Sparse Categorical Cross-Entropy
+- Label Smoothing
+- Cross-Entropy vs MSE
+- Cross-Entropy Variants
+- Cross-Entropy in Multi-Class
+- Cross-Entropy for Imbalanced Data
+
+Principal Component Analysis
+- Eigenvalue Decomposition
+- Singular Value Decomposition
+- Dimensionality Reduction
+- Feature Extraction
+- Variance Explained
+- Scree Plot Analysis
+- Component Interpretation
+- PCA vs LDA
+- PCA in Image Processing
+
+K-Means Clustering
+- Initialization Methods
+- Convergence Criteria
+- Distance Metrics
+- K-Means++
+- Elbow Method
+- Silhouette Analysis
+- K-Means vs Hierarchical
+- K-Means for Image Segmentation
+- K-Means in Text Clustering
+- K-Means Limitations
+
+Isolation Forest
+- Isolation Principle
+- Path Length Calculation
+- Anomaly Score
+- Tree Construction
+- Random Subspace
+- Subsampling Strategy
+- Parameter Tuning
+- Isolation Forest vs LOF
+- Applications in Cybersecurity
+
+One-Class SVM
+- Mathematical Foundation
+- Kernel Functions
+- Margin Optimization
+- Support Vectors
+- Parameter Selection
+- One-Class SVM vs Two-Class
+- Novelty Detection
+- Outlier Detection
+- One-Class SVM in Practice
+- Limitations and Extensions
+
+Local Outlier Factor
+- Local Density Estimation
+- Reachability Distance
+- LOF Score Calculation
+- K-Nearest Neighbors
+- Parameter Sensitivity
+- LOF vs Other Methods
+- LOF for High Dimensions
+- LOF Variants
+
+Autoencoder-Based Detection
+- Autoencoder Architecture
+- Reconstruction Error
+- Latent Space Analysis
+- Variational Autoencoders
+- Denoising Autoencoders
+- Sparse Autoencoders
+- Contractive Autoencoders
+- Adversarial Autoencoders
+- Autoencoder Training
+- Detection Thresholds
+
+Variational Autoencoder
+- Variational Inference
+- ELBO Objective
+- Reparameterization Trick
+- Latent Space Structure
+- VAE vs Standard AE
+- Conditional VAE
+- Beta-VAE
+- VAE-GAN
+- VAE for Anomaly Detection
+- VAE Applications
+
+XGBoost
+- Gradient Boosting Framework
+- Tree Construction Algorithm
+- Regularization Techniques
+- Handling Missing Values
+- Feature Importance
+- Hyperparameter Tuning
+- XGBoost vs LightGBM
+- XGBoost vs CatBoost
+- XGBoost for Classification
+- XGBoost for Regression
+
+K-Means
+- Lloyd's Algorithm
+- Initialization Methods
+- Convergence Criteria
+- Distance Metrics
+- K-Means++
+- Elbow Method
+- Silhouette Analysis
+- K-Means vs Hierarchical
+- K-Means for Image Segmentation
+- K-Means in Text Clustering
+
+Word2Vec
+- Skip-gram Model
+- Continuous Bag of Words
+- Negative Sampling
+- Hierarchical Softmax
+- Word Embeddings
+- Vector Operations
+- Word Analogies
+- Word2Vec vs GloVe
+
+Federated Learning
+- FedAvg Algorithm
+- Federated SGD
+- Secure Aggregation
+- Differential Privacy in FL
+- Communication-Efficient FL
+- Byzantine-Robust FL
+- Personalized FL
+- Federated Transfer Learning
+
+Knowledge Distillation
+- Teacher-Student Framework
+- Soft Targets
+- Temperature Scaling
+- Distillation Loss
+- Attention Transfer
+- Feature Distillation
+- Response-Based Distillation
+- Knowledge Distillation vs Pruning
+
+Q-Learning
+- Q-Value Function
+- Q-Table Updates
+- Epsilon-Greedy Policy
+- Temporal Difference Learning
+- Q-Learning Algorithm
+- Q-Learning vs SARSA
+- Q-Learning with Function Approximation
+- Deep Q-Learning
+- Double Q-Learning
+
+t-SNE
+- Stochastic Neighbor Embedding
+- Perplexity Parameter
+- KL Divergence
+- Gradient Descent Optimization
+- Early Exaggeration
+- t-Distribution
+- Barnes-Hut Approximation
+- t-SNE vs PCA
+
+LSTM
+- Long Short-Term Memory
+- Memory Cell
+- Input Gate
+- Forget Gate
+- Output Gate
+- Cell State
+- Hidden State
+- LSTM vs RNN
+- Bidirectional LSTM
+- LSTM Variants
+
+Xavier Initialization
+- Xavier/Glorot Initialization
+- Variance Preservation
+- Fan-in and Fan-out
+- Normal Distribution
+- Uniform Distribution
+- Xavier vs He Initialization
+- Xavier for Sigmoid
+- Xavier for Tanh
+- Xavier in Practice
+
+
+Cosine Annealing
+- Cosine Schedule
+- Warm Restarts
+- Learning Rate Decay
+- Cosine vs Step Decay
+- Cosine vs Exponential
+- Cosine Annealing with Warmup
+- Cosine Annealing Parameters
+- Cosine Annealing Variants
+
+Monte Carlo Dropout
+- Dropout at Inference
+- Uncertainty Estimation
+- Bayesian Neural Networks
+- MC Dropout vs Standard Dropout
+- MC Dropout Sampling
+- MC Dropout for Regression
+- MC Dropout for Classification
+- MC Dropout Implementation
+
+Eigenvalue Decomposition
+- Eigenvalues and Eigenvectors
+- Characteristic Polynomial
+- Diagonalization
+- Eigendecomposition
+- Power Iteration
+- QR Algorithm
+- Eigenvalue Properties
+- Eigenvalue vs SVD
+- Eigenvalue Computation
+
+
+Kernel Functions
+- Linear Kernel
+- Polynomial Kernel
+- RBF Kernel
+- Sigmoid Kernel
+- Kernel Trick
+- Mercer's Theorem
+- Kernel Selection
+- Kernel Parameters
+- Kernel vs Feature Maps
+
+
+Reconstruction Error
+- Mean Squared Error
+- Mean Absolute Error
+- Binary Cross-Entropy
+- Frobenius Norm
+- L2 Norm
+- L1 Norm
+- Cross-Entropy for Discrete Data
+- Reconstruction Loss Functions
+- Distance Metrics
+- Error Thresholds
+
+Variational Inference
+- Evidence Lower Bound
+- KL Divergence
+- Reparameterization
+- Variational Family
+- Mean Field Approximation
+- Variational Parameters
+- VI vs MCMC
+- VI Convergence
+
+Latent Space Structure
+- Disentangled Representations
+- Latent Traversals
+- Spherical Linear Interpolation (Slerp)
+- Latent Space Arithmetic
+- Euclidean vs Cosine Distance
+- Prior Distributions in Latent Space
+- Posterior Collapse
+- Total Correlation Regularization
+- Mutual Information Regularization
+- Latent Manifold Hypothesis
+ 
+ Adam Optimizer
+ - Moment Estimates (m and v)
+ - Bias Correction
+ - Beta1, Beta2, Epsilon
+ - Adam vs SGD with Momentum
+ - AdamW (Decoupled Weight Decay)
+ - AMSGrad Variant
+ - Warmup with Adam
+ - Sparse Gradients Handling
+ - Weight Decay in Adam
+ 
+ DBSCAN
+ - Eps Parameter
+ - MinPts Parameter
+ - Core, Border, Noise Points
+ - Density Reachability and Connectivity
+ - k-Distance Plot
+ - Distance Metrics for DBSCAN
+ - DBSCAN vs K-Means
+ - HDBSCAN
+ - Spatial Indexing (k-d tree, ball tree)
+ - Parameter Sensitivity
+ 
+ UMAP
+ - Fuzzy Simplicial Sets
+ - n_neighbors Parameter
+ - min_dist Parameter
+ - Metric Choice
+ - Graph Construction
+ - Optimization Objective
+ - Spectral Initialization
+ - Local vs Global Structure
+ - Supervised UMAP
+ - UMAP vs t-SNE
+ 
+ Triplet Loss
+ - Anchor, Positive, Negative
+ - Margin Parameter
+ - Hard Negative Mining
+ - Semi-Hard Negative Mining
+ - Online vs Offline Mining
+ - Batch Construction Strategies
+ - Triplet Loss vs Contrastive Loss
+ - Embedding Normalization
+ - Distance Metrics in Embedding Space
+ - Triplet Selection Strategies
+ 
+ Proximal Policy Optimization (PPO)
+ - Clipped Surrogate Objective
+ - Policy Ratio
+ - Generalized Advantage Estimation (GAE)
+ - Value Function Loss
+ - Entropy Bonus
+ - PPO-Clip vs PPO-Penalty
+ - Minibatch and Epoch Scheduling
+ - Trust Region vs Clipping
+ - PPO Hyperparameters
+ - Target KL Control
+
+Direct Preference Optimization (DPO)
+- Bradley-Terry Model
+- Preference Data Format
+- DPO vs PPO
+- DPO vs RLHF
+- Beta Parameter
+- Preference Learning Objective
+- Human Feedback Integration
+- DPO Training Process
+- Preference Alignment
+- DPO Limitations
+
+Reinforcement Learning from Human Feedback (RLHF)
+- Reward Modeling
+- Human Preference Collection
+- Reward Function Learning
+- Policy Optimization
+- RLHF vs Supervised Fine-tuning
+- RLHF vs DPO
+- Human Feedback Quality
+- Reward Model Training
+- Policy vs Reward Model
+
+Diffusion Models
+- Forward Diffusion Process
+- Reverse Diffusion Process
+- Noise Scheduler
+- DDPM (Denoising Diffusion Probabilistic Models)
+- DDIM (Denoising Diffusion Implicit Models)
+- Score-Based Models
+- Classifier-Free Guidance
+- Latent Diffusion Models
+- Diffusion vs GANs
+- Diffusion vs VAE
+
+Large Language Models (LLMs)
+- Transformer Architecture
+- Pre-training Objectives
+- Fine-tuning Strategies
+- Prompt Engineering
+- Chain-of-Thought Reasoning
+- Few-Shot Learning
+- Instruction Tuning
+- Parameter-Efficient Fine-tuning
+- LLM Scaling Laws
+- LLM Evaluation
+
+Multimodal Generative AI
+- Vision-Language Models
+- CLIP Architecture
+- DALL-E
+- Stable Diffusion
+- Midjourney
+- Text-to-Image Generation
+- Image-to-Text Generation
+- Cross-Modal Understanding
+- Multimodal Alignment
+- Generative Multimodal Models
+
+Masking and Masked Models
+- Random Masking
+- Structured Masking
+- Masked Language Modeling
+- Masked Autoencoders (MAE)
+- Masked Image Modeling
+- Masked Vision Transformers
+- Masked Self-Supervised Learning
+- Masking Strategies
+- Masking vs Denoising
+- Masked Model Training
+
+Random Forest
+- Bootstrap Aggregating (Bagging)
+- Random Subspace Method
+- Out-of-Bag Estimation
+- Feature Importance
+- Random Forest vs Decision Trees
+- Random Forest vs XGBoost
+- Random Forest Parameters
+
+Support Vector Machines (SVM)
+- Linear SVM
+- Kernel SVM
+- Soft Margin SVM
+- Hard Margin SVM
+- Support Vectors
+- Margin Maximization
+- Kernel Trick
+- SVM vs Logistic Regression
+- SVM Parameters (C, gamma)
+- SVM for Multi-Class
+
+Naive Bayes
+- Gaussian Naive Bayes
+- Multinomial Naive Bayes
+- Bernoulli Naive Bayes
+- Independence Assumption
+- Laplace Smoothing
+- Prior Probabilities
+- Likelihood Estimation
+- Naive Bayes vs Logistic Regression
+- Naive Bayes Parameters
+
+
+K-Nearest Neighbors (KNN)
+- Distance Metrics
+- K Parameter Selection
+- KNN vs Other Classifiers
+- KNN for Regression
+- KNN for Classification
+- KNN Algorithm
+- KNN Parameters
+- KNN Limitations
+
+Linear Regression
+- Ordinary Least Squares
+- Ridge Regression
+- Lasso Regression
+- Elastic Net
+- Linear Regression Assumptions
+- Linear Regression vs Polynomial
+- Linear Regression Parameters
+- Linear Regression vs Logistic
+
+
+Logistic Regression
+- Binary Logistic Regression
+- Multinomial Logistic Regression
+- Logistic Function
+- Maximum Likelihood Estimation
+- Logistic Regression vs Linear
+- Logistic Regression Parameters
+- Logistic Regression Assumptions
+
+
+Normalization
+- Min-Max Normalization
+- Z-Score Normalization
+- Robust Normalization
+- Batch Normalization
+- Layer Normalization
+- Group Normalization
+- Instance Normalization
+- Weight Normalization
+- Normalization vs Standardization
+- Normalization in Deep Learning
+
+
+Linear Discriminant Analysis (LDA)
+- Fisher's Linear Discriminant
+- Between-Class Scatter
+- Within-Class Scatter
+- LDA vs PCA
+- LDA for Classification
+- LDA for Dimensionality Reduction
+- LDA Assumptions
+- LDA Parameters
+- LDA vs QDA
+
+Factor Analysis
+- Factor Loading Matrix
+- Common Factors
+- Unique Factors
+- Factor Rotation
+- Factor Analysis vs PCA
+- Factor Analysis Assumptions
+- Factor Analysis Parameters
+- Factor Analysis vs ICA
+- Factor Analysis for Latent Variables
+
+
+Topic Modeling
+- Probabilistic Topic Models
+- Topic-Word Distributions
+- Document-Topic Distributions
+- Topic Coherence
+- Topic Diversity
+- Topic Modeling vs Clustering
+- Topic Modeling Evaluation
+- Topic Modeling Parameters
+
+
+Latent Dirichlet Allocation (LDA)
+- Dirichlet Distribution
+- Generative Process
+- Gibbs Sampling
+- Variational Inference
+- LDA vs pLSA
+- LDA Parameters (alpha, beta)
+- LDA vs NMF
+
+Matrix Factorizations
+- Non-Negative Matrix Factorization (NMF)
+- Singular Value Decomposition (SVD)
+- Principal Component Analysis (PCA)
+- Independent Component Analysis (ICA)
+- Matrix Factorization vs Clustering
+- Matrix Factorization Algorithms
+- Matrix Factorization Parameters
+- Matrix Factorization for Dimensionality Reduction
+
+Ranking Methods
+- Learning to Rank (LTR)
+- Pointwise Ranking
+- Pairwise Ranking
+- Listwise Ranking
+- Ranking Loss Functions
+- Ranking Metrics (NDCG, MAP)
+- Ranking vs Classification
+- Ranking Algorithms
+- Ranking for Search
+- Ranking for Recommendation
+
+
+Wavelets and Tensors
+- Wavelet Transform
+- Discrete Wavelet Transform
+- Continuous Wavelet Transform
+- Haar Wavelets
+- Daubechies Wavelets
+- Tensor Decomposition
+- CP Decomposition
+- Tucker Decomposition
+- Tensor Rank
+- Tensor Operations
+
+Graph Algorithms
+- Breadth-First Search (BFS)
+- Depth-First Search (DFS)
+- Dijkstra's Algorithm
+- Bellman-Ford Algorithm
+- Floyd-Warshall Algorithm
+- Kruskal's Algorithm
+- Prim's Algorithm
+- Topological Sorting
+- Strongly Connected Components
+- Bipartite Graph Detection
+
+
+Discrete Mathematics
+- Set Theory
+- Combinatorics
+- Graph Theory Fundamentals
+- Boolean Algebra
+- Logic and Proofs
+- Number Theory
+- Recurrence Relations
+- Generating Functions
+- Graph Connectivity
+- Planar Graphs
+
+Graph Neural Networks
+- Graph Representation Learning
+- Node Embeddings
+- Graph Convolutional Networks
+- Graph Attention Networks
+- GraphSAGE
+- Graph Isomorphism Networks
+- Message Passing Neural Networks
+- Graph Pooling
+- Graph Classification
+- Graph Generation
+
+Probabilistic Programming
+- Probabilistic Graphical Models
+- Bayesian Networks
+- Markov Chain Monte Carlo
+- Variational Inference
+- Hamiltonian Monte Carlo
+- No-U-Turn Sampler (NUTS)
+- Probabilistic Programming Languages
+- PyMC
+- Stan
+- Probabilistic Programming vs Traditional ML
+
+Traditional Time Series
+- Moving Averages
+- Exponential Smoothing
+- ARIMA Models
+- Seasonal Decomposition
+- Trend Analysis
+- Stationarity
+- Autocorrelation
+- Partial Autocorrelation
+- Box-Jenkins Methodology
+- Time Series Forecasting
+
+Cross-Validation
+- K-Fold Cross-Validation
+- Stratified K-Fold
+- Leave-One-Out Cross-Validation
+- Leave-P-Out Cross-Validation
+- Time Series Split
+- Group K-Fold
+- Repeated K-Fold
+- Cross-Validation vs Holdout
+
+Gradient Boosting
+- AdaBoost
+- Gradient Boosting Machines
+- LightGBM
+- CatBoost
+
+Decision Trees
+- CART Algorithm
+- ID3 Algorithm
+- C4.5 Algorithm
+- Tree Pruning
+- Tree Visualization
+- Decision Trees Interpretability
