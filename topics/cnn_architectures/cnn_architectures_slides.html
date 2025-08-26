@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNN Architectures</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 85vw;
+            max-width: 1000px;
+            height: 75vh;
+            background: white;
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 0.8rem;
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #34495e;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout classes */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .concept-box {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            border-left: 4px solid #95a5a6;
+        }
+
+        .innovation-box {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            border-left: 4px solid #3498db;
+        }
+
+        /* Title slide styling */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+
+        .objective h3 {
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Architecture timeline */
+        .timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .timeline-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            min-width: 120px;
+            margin: 0 0.5rem;
+            border-left: 4px solid #e67e22;
+        }
+
+        .timeline-arrow {
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            margin: 0 0.5rem;
+        }
+
+        /* Architecture comparison */
+        .arch-comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .arch-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            border-left: 4px solid #9b59b6;
+        }
+
+        .arch-card h4 {
+            color: #9b59b6;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ResNet specific */
+        .residual-demo {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .network-path {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid #bdc3c7;
+        }
+
+        .plus-sign {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        /* Efficiency metrics */
+        .efficiency-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            border-left: 4px solid #f39c12;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f39c12;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Modern architectures */
+        .modern-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .arch-type {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #8e44ad;
+        }
+
+        .arch-type h4 {
+            color: #8e44ad;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            background: white;
+            min-height: 250px;
+        }
+
+        /* Navigation */
+        .counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #34495e;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .nav-button {
+            position: fixed;
+            bottom: 20px;
+            background: #34495e;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-button:hover {
+            background: #2c3e50;
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            left: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>CNN Architectures</h1>
+            <p class="subtitle">Evolution and Innovation in Computer Vision</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>Architecture Evolution</h3>
+                    <p>Trace CNN development from LeNet to modern transformer hybrids</p>
+                </div>
+                <div class="objective">
+                    <h3>Design Principles</h3>
+                    <p>Understand key innovations and architectural patterns</p>
+                </div>
+                <div class="objective">
+                    <h3>Trade-offs</h3>
+                    <p>Balance accuracy, efficiency, and computational constraints</p>
+                </div>
+                <div class="objective">
+                    <h3>Practical Selection</h3>
+                    <p>Choose appropriate architectures for specific vision tasks</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: The CNN Revolution -->
+        <div class="slide" id="slide2">
+            <h2>The CNN Revolution</h2>
+            
+            <div class="concept-box">
+                <p><strong>The Paradigm Shift:</strong> From treating images as flat vectors to understanding spatial hierarchy and local feature extraction through specialized architectural designs.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Why CNNs Changed Everything</h3>
+                    <ul>
+                        <li><strong>Parameter Efficiency:</strong> Shared weights reduce parameters dramatically</li>
+                        <li><strong>Translation Invariance:</strong> Same feature detector works anywhere in image</li>
+                        <li><strong>Hierarchical Features:</strong> Low-level to high-level feature abstraction</li>
+                        <li><strong>Spatial Structure:</strong> Preserves 2D relationships in data</li>
+                    </ul>
+                    
+                    <h3>The ImageNet Impact</h3>
+                    <ul>
+                        <li>1.2M images, 1000 classes benchmark</li>
+                        <li>Annual competition drove innovation</li>
+                        <li>Error rates dropped from 28% to 3%</li>
+                        <li>Established deep learning dominance</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="cnn-revolution-viz"></div>
+                </div>
+            </div>
+            
+            <div class="innovation-box">
+                <p><strong>Core Insight:</strong> Local connectivity + weight sharing + pooling = powerful feature extraction that scales with image size while maintaining computational efficiency.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Architecture Timeline -->
+        <div class="slide" id="slide3">
+            <h2>Architecture Evolution Timeline</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>LeNet-5</h4>
+                    <p>1998</p>
+                    <p>Pioneering CNN</p>
+                </div>
+                <div class="timeline-arrow">→</div>
+                <div class="timeline-item">
+                    <h4>AlexNet</h4>
+                    <p>2012</p>
+                    <p>Deep Learning Breakthrough</p>
+                </div>
+                <div class="timeline-arrow">→</div>
+                <div class="timeline-item">
+                    <h4>VGGNet</h4>
+                    <p>2014</p>
+                    <p>Depth & Simplicity</p>
+                </div>
+                <div class="timeline-arrow">→</div>
+                <div class="timeline-item">
+                    <h4>ResNet</h4>
+                    <p>2015</p>
+                    <p>Skip Connections</p>
+                </div>
+                <div class="timeline-arrow">→</div>
+                <div class="timeline-item">
+                    <h4>EfficientNet</h4>
+                    <p>2019</p>
+                    <p>Compound Scaling</p>
+                </div>
+            </div>
+            
+            <div class="arch-comparison">
+                <div class="arch-card">
+                    <h4>LeNet-5 (1998)</h4>
+                    <p>60K parameters</p>
+                    <p>Handwritten digits</p>
+                    <p>Proof of concept</p>
+                </div>
+                <div class="arch-card">
+                    <h4>AlexNet (2012)</h4>
+                    <p>60M parameters</p>
+                    <p>ImageNet breakthrough</p>
+                    <p>GPU acceleration</p>
+                </div>
+                <div class="arch-card">
+                    <h4>ResNet-152 (2015)</h4>
+                    <p>60M parameters</p>
+                    <p>152 layers deep</p>
+                    <p>Residual learning</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Key Milestones</h3>
+                    <ul>
+                        <li><strong>1998:</strong> LeNet proves CNN concept</li>
+                        <li><strong>2012:</strong> AlexNet wins ImageNet by huge margin</li>
+                        <li><strong>2014:</strong> VGG shows power of depth</li>
+                        <li><strong>2015:</strong> ResNet enables very deep networks</li>
+                        <li><strong>2017:</strong> Attention mechanisms emerge</li>
+                        <li><strong>2019:</strong> EfficientNet optimizes scaling</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="timeline-viz"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: ResNet Revolution -->
+        <div class="slide" id="slide4">
+            <h2>The ResNet Revolution</h2>
+            
+            <div class="concept-box">
+                <p><strong>The Problem:</strong> Very deep networks suffered degradation - training accuracy got worse as networks got deeper, even without overfitting.</p>
+            </div>
+            
+            <div class="residual-demo">
+                <div class="network-path">
+                    <h4>Traditional Path</h4>
+                    <p>$F(x)$</p>
+                    <p>Direct mapping</p>
+                    <p>Gradients vanish</p>
+                </div>
+                
+                <div class="plus-sign">+</div>
+                
+                <div class="network-path">
+                    <h4>Skip Connection</h4>
+                    <p>$x$</p>
+                    <p>Identity mapping</p>
+                    <p>Always preserved</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Residual Learning</h3>
+                    <ul>
+                        <li><strong>Core Idea:</strong> Learn residual $F(x) = H(x) - x$</li>
+                        <li><strong>Output:</strong> $H(x) = F(x) + x$</li>
+                        <li><strong>Benefit:</strong> If optimal mapping is identity, just learn $F(x) = 0$</li>
+                        <li><strong>Gradient Flow:</strong> Always has path back through skip connection</li>
+                    </ul>
+                    
+                    <h3>Revolutionary Results</h3>
+                    <ul>
+                        <li>ResNet-152: 152 layers trained successfully</li>
+                        <li>Error rate: 3.57% on ImageNet</li>
+                        <li>Enabled networks with 1000+ layers</li>
+                        <li>Foundation for modern deep architectures</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="resnet-viz"></div>
+                </div>
+            </div>
+            
+            <div class="innovation-box">
+                <p><strong>Mathematical Insight:</strong> Skip connections ensure that deeper models can always perform at least as well as shallower ones, solving the degradation problem.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Efficiency-Focused Architectures -->
+        <div class="slide" id="slide5">
+            <h2>Efficiency-Focused Architectures</h2>
+            
+            <div class="concept-box">
+                <p><strong>The Challenge:</strong> Deploy powerful computer vision models on mobile devices, edge computing platforms, and resource-constrained environments.</p>
+            </div>
+            
+            <div class="efficiency-grid">
+                <div class="metric-box">
+                    <div class="metric-value">4.2M</div>
+                    <p>MobileNetV2 Parameters</p>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">300ms</div>
+                    <p>Mobile Inference Time</p>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">75%</div>
+                    <p>ImageNet Accuracy</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>MobileNet Innovation</h3>
+                    <ul>
+                        <li><strong>Depthwise Separable Convolutions:</strong> Factor convolution into depthwise + pointwise</li>
+                        <li><strong>Parameter Reduction:</strong> 8-9x fewer parameters than standard convolution</li>
+                        <li><strong>Width Multiplier:</strong> α scales channel count</li>
+                        <li><strong>Resolution Multiplier:</strong> ρ scales input resolution</li>
+                    </ul>
+                    
+                    <h3>EfficientNet Approach</h3>
+                    <ul>
+                        <li><strong>Compound Scaling:</strong> Balance depth, width, resolution</li>
+                        <li><strong>Neural Architecture Search:</strong> Automated design optimization</li>
+                        <li><strong>Scaling Law:</strong> $depth = α^φ$, $width = β^φ$, $resolution = γ^φ$</li>
+                        <li><strong>Constraint:</strong> $α · β^2 · γ^2 ≈ 2$</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="efficiency-viz"></div>
+                </div>
+            </div>
+            
+            <div class="innovation-box">
+                <p><strong>Key Insight:</strong> Systematic scaling of all dimensions (depth, width, resolution) together yields better performance than scaling any single dimension.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Attention in CNNs -->
+        <div class="slide" id="slide6">
+            <h2>Attention Mechanisms in CNNs</h2>
+            
+            <div class="concept-box">
+                <p><strong>The Idea:</strong> Not all features are equally important - learn to focus on the most relevant spatial locations and channels dynamically.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Squeeze-and-Excitation (SE)</h3>
+                    <ul>
+                        <li><strong>Channel Attention:</strong> Learn importance of each channel</li>
+                        <li><strong>Global Average Pooling:</strong> Summarize spatial information</li>
+                        <li><strong>Excitation:</strong> Two FC layers with sigmoid activation</li>
+                        <li><strong>Recalibration:</strong> Scale original features by attention weights</li>
+                    </ul>
+                    
+                    <h3>CBAM (Convolutional Block Attention)</h3>
+                    <ul>
+                        <li><strong>Sequential Attention:</strong> Channel then spatial attention</li>
+                        <li><strong>Channel Module:</strong> Global pooling + shared MLP</li>
+                        <li><strong>Spatial Module:</strong> Channel pooling + convolution</li>
+                        <li><strong>Lightweight:</strong> Minimal parameter overhead</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="attention-viz"></div>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Benefits of Attention</h3>
+                    <ul>
+                        <li>Improved feature representation quality</li>
+                        <li>Better handling of complex scenes</li>
+                        <li>Enhanced model interpretability</li>
+                        <li>Minimal computational overhead</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Modern Applications</h3>
+                    <ul>
+                        <li>Object detection and segmentation</li>
+                        <li>Fine-grained classification</li>
+                        <li>Medical image analysis</li>
+                        <li>Autonomous driving perception</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Multi-Scale Architectures -->
+        <div class="slide" id="slide7">
+            <h2>Multi-Scale and Multi-Path Architectures</h2>
+            
+            <div class="concept-box">
+                <p><strong>The Challenge:</strong> Objects appear at different scales in images. Single-scale features miss important information for both small and large objects.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Inception Networks</h3>
+                    <ul>
+                        <li><strong>Multi-Scale Convolutions:</strong> 1x1, 3x3, 5x5 in parallel</li>
+                        <li><strong>Dimensional Reduction:</strong> 1x1 convs reduce computational cost</li>
+                        <li><strong>Sparse Connections:</strong> Not all neurons need to connect</li>
+                        <li><strong>Computational Efficiency:</strong> Careful bottleneck design</li>
+                    </ul>
+                    
+                    <h3>Feature Pyramid Networks (FPN)</h3>
+                    <ul>
+                        <li><strong>Top-Down Pathway:</strong> High-level semantics flow down</li>
+                        <li><strong>Lateral Connections:</strong> Preserve spatial details</li>
+                        <li><strong>Multi-Level Predictions:</strong> Detect objects at all scales</li>
+                        <li><strong>Object Detection:</strong> Foundation for modern detectors</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="multiscale-viz"></div>
+                </div>
+            </div>
+            
+            <div class="grid-3">
+                <div class="arch-card">
+                    <h4>Inception Module</h4>
+                    <p>Parallel convolutions</p>
+                    <p>Multiple receptive fields</p>
+                    <p>Concatenated outputs</p>
+                </div>
+                <div class="arch-card">
+                    <h4>FPN Architecture</h4>
+                    <p>Bottom-up + top-down</p>
+                    <p>Lateral connections</p>
+                    <p>Multi-scale features</p>
+                </div>
+                <div class="arch-card">
+                    <h4>Path Aggregation</h4>
+                    <p>Enhanced connectivity</p>
+                    <p>Information flow</p>
+                    <p>Better localization</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Neural Architecture Search -->
+        <div class="slide" id="slide8">
+            <h2>Neural Architecture Search (NAS)</h2>
+            
+            <div class="concept-box">
+                <p><strong>The Vision:</strong> Automate the design of neural architectures using machine learning to discover optimal network structures automatically.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>NAS Methodology</h3>
+                    <ul>
+                        <li><strong>Search Space:</strong> Define possible architectural components</li>
+                        <li><strong>Search Strategy:</strong> Reinforcement learning, evolutionary methods</li>
+                        <li><strong>Performance Estimation:</strong> Proxy tasks, weight sharing</li>
+                        <li><strong>Architecture Evaluation:</strong> Accuracy, efficiency metrics</li>
+                    </ul>
+                    
+                    <h3>EfficientNet Discovery</h3>
+                    <ul>
+                        <li><strong>Baseline Architecture:</strong> MnasNet discovered via NAS</li>
+                        <li><strong>Compound Scaling:</strong> Systematic dimension scaling</li>
+                        <li><strong>Performance:</strong> 84.3% ImageNet accuracy</li>
+                        <li><strong>Efficiency:</strong> 8.4x smaller than ResNet</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="nas-viz"></div>
+                </div>
+            </div>
+            
+            <div class="grid-3">
+                <div class="arch-card">
+                    <h4>Search Space</h4>
+                    <p>Convolution types</p>
+                    <p>Kernel sizes</p>
+                    <p>Skip connections</p>
+                </div>
+                <div class="arch-card">
+                    <h4>Optimization</h4>
+                    <p>Reinforcement learning</p>
+                    <p>Evolutionary algorithms</p>
+                    <p>Gradient-based methods</p>
+                </div>
+                <div class="arch-card">
+                    <h4>Evaluation</h4>
+                    <p>Proxy datasets</p>
+                    <p>Early stopping</p>
+                    <p>Weight sharing</p>
+                </div>
+            </div>
+            
+            <div class="innovation-box">
+                <p><strong>Impact:</strong> NAS democratizes architecture design and consistently discovers structures that outperform hand-designed networks across multiple metrics.</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Modern Hybrid Architectures -->
+        <div class="slide" id="slide9">
+            <h2>Modern Hybrid Architectures</h2>
+            
+            <div class="concept-box">
+                <p><strong>The Convergence:</strong> CNNs and Transformers are borrowing from each other, leading to hybrid architectures that combine the best of both worlds.</p>
+            </div>
+            
+            <div class="modern-grid">
+                <div class="arch-type">
+                    <h4>Vision Transformers (ViT)</h4>
+                    <ul>
+                        <li>Pure transformer architecture for vision</li>
+                        <li>Image patches as sequence tokens</li>
+                        <li>Global self-attention from start</li>
+                        <li>Excellent with large datasets</li>
+                    </ul>
+                </div>
+                
+                <div class="arch-type">
+                    <h4>ConvNeXt</h4>
+                    <ul>
+                        <li>CNN modernized with transformer insights</li>
+                        <li>Larger kernels and depthwise convolutions</li>
+                        <li>LayerNorm and GELU activation</li>
+                        <li>Competitive with transformers</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Hybrid Approaches</h3>
+                    <ul>
+                        <li><strong>Early Convolutions:</strong> Process local patterns efficiently</li>
+                        <li><strong>Late Attention:</strong> Capture global dependencies</li>
+                        <li><strong>Best of Both:</strong> Inductive bias + flexibility</li>
+                        <li><strong>Scalability:</strong> Work across dataset sizes</li>
+                    </ul>
+                    
+                    <h3>Performance Comparison</h3>
+                    <ul>
+                        <li><strong>Small Data:</strong> CNNs often better</li>
+                        <li><strong>Large Data:</strong> Transformers excel</li>
+                        <li><strong>Efficiency:</strong> CNNs more parameter efficient</li>
+                        <li><strong>Interpretability:</strong> Attention provides insights</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="hybrid-viz"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Architecture Selection Guide -->
+        <div class="slide" id="slide10">
+            <h2>Architecture Selection Guide</h2>
+            
+            <div class="concept-box">
+                <p><strong>The Question:</strong> With so many architecture choices, how do you select the right one for your specific computer vision task and constraints?</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Task-Based Selection</h3>
+                    <ul>
+                        <li><strong>Image Classification:</strong> ResNet, EfficientNet, ViT</li>
+                        <li><strong>Object Detection:</strong> FPN-based (Faster R-CNN, YOLO)</li>
+                        <li><strong>Semantic Segmentation:</strong> U-Net, DeepLab, Mask R-CNN</li>
+                        <li><strong>Mobile Deployment:</strong> MobileNet, ShuffleNet</li>
+                    </ul>
+                    
+                    <h3>Constraint-Based Selection</h3>
+                    <ul>
+                        <li><strong>High Accuracy:</strong> Large ResNet, EfficientNet-B7, ViT-Large</li>
+                        <li><strong>Low Latency:</strong> MobileNet, EfficientNet-B0</li>
+                        <li><strong>Small Memory:</strong> Compressed architectures, pruning</li>
+                        <li><strong>Limited Data:</strong> Pre-trained CNNs with transfer learning</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Decision Framework</h3>
+                    <div class="innovation-box">
+                        <h4>1. Define Requirements</h4>
+                        <ul>
+                            <li>Accuracy targets</li>
+                            <li>Latency constraints</li>
+                            <li>Memory limitations</li>
+                            <li>Training data size</li>
+                        </ul>
+                        
+                        <h4>2. Consider Trade-offs</h4>
+                        <ul>
+                            <li>Accuracy vs speed</li>
+                            <li>Model size vs performance</li>
+                            <li>Training time vs inference time</li>
+                            <li>Interpretability needs</li>
+                        </ul>
+                        
+                        <h4>3. Validate Choice</h4>
+                        <ul>
+                            <li>Benchmark on your data</li>
+                            <li>Profile computational requirements</li>
+                            <li>Test deployment scenarios</li>
+                            <li>Monitor production performance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arch-comparison">
+                <div class="arch-card">
+                    <h4>Research Priority</h4>
+                    <p>Accuracy > Everything</p>
+                    <p>Large models, ensemble</p>
+                    <p>ResNet-152, ViT-Huge</p>
+                </div>
+                <div class="arch-card">
+                    <h4>Production Balance</h4>
+                    <p>Accuracy + Efficiency</p>
+                    <p>Optimized architectures</p>
+                    <p>EfficientNet, ConvNeXt</p>
+                </div>
+                <div class="arch-card">
+                    <h4>Edge Deployment</h4>
+                    <p>Efficiency > Accuracy</p>
+                    <p>Mobile-optimized</p>
+                    <p>MobileNet, quantization</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">10</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(`slide${currentSlide}`).classList.add('active');
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations for current slide
+            setTimeout(() => {
+                if (currentSlide === 2) initCNNRevolutionViz();
+                if (currentSlide === 3) initTimelineViz();
+                if (currentSlide === 4) initResNetViz();
+                if (currentSlide === 5) initEfficiencyViz();
+                if (currentSlide === 6) initAttentionViz();
+                if (currentSlide === 7) initMultiScaleViz();
+                if (currentSlide === 8) initNASViz();
+                if (currentSlide === 9) initHybridViz();
+            }, 100);
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+
+        // D3.js Visualizations
+        function initCNNRevolutionViz() {
+            const container = d3.select('#cnn-revolution-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 220;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Show parameter efficiency comparison
+                const data = [
+                    {name: 'Fully Connected', params: 1000000, color: '#e74c3c'},
+                    {name: 'CNN (shared weights)', params: 100000, color: '#3498db'}
+                ];
+                
+                const xScale = d3.scaleBand()
+                    .domain(data.map(d => d.name))
+                    .range([40, width - 40])
+                    .padding(0.3);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, d3.max(data, d => d.params)])
+                    .range([height - 40, 40]);
+                
+                svg.selectAll('.bar')
+                    .data(data)
+                    .enter().append('rect')
+                    .attr('class', 'bar')
+                    .attr('x', d => xScale(d.name))
+                    .attr('y', d => yScale(d.params))
+                    .attr('width', xScale.bandwidth())
+                    .attr('height', d => height - 40 - yScale(d.params))
+                    .attr('fill', d => d.color)
+                    .attr('opacity', 0.8);
+                
+                // Add labels
+                svg.selectAll('.label')
+                    .data(data)
+                    .enter().append('text')
+                    .attr('class', 'label')
+                    .attr('x', d => xScale(d.name) + xScale.bandwidth()/2)
+                    .attr('y', height - 20)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .text(d => d.name);
+                
+                svg.selectAll('.value')
+                    .data(data)
+                    .enter().append('text')
+                    .attr('class', 'value')
+                    .attr('x', d => xScale(d.name) + xScale.bandwidth()/2)
+                    .attr('y', d => yScale(d.params) - 5)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '11px')
+                    .style('font-weight', 'bold')
+                    .text(d => (d.params / 1000) + 'K');
+                
+                svg.append('text')
+                    .attr('x', width/2)
+                    .attr('y', 20)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '14px')
+                    .style('font-weight', 'bold')
+                    .text('Parameter Efficiency: CNN vs Fully Connected');
+            }
+        }
+
+        function initTimelineViz() {
+            const container = d3.select('#timeline-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Timeline data
+                const milestones = [
+                    {year: 1998, name: 'LeNet', accuracy: 99, innovation: 'CNN concept'},
+                    {year: 2012, name: 'AlexNet', accuracy: 84, innovation: 'GPU training'},
+                    {year: 2014, name: 'VGG', accuracy: 92, innovation: 'Very deep'},
+                    {year: 2015, name: 'ResNet', accuracy: 96, innovation: 'Skip connections'},
+                    {year: 2019, name: 'EfficientNet', accuracy: 84, innovation: 'Compound scaling'}
+                ];
+                
+                const xScale = d3.scaleLinear()
+                    .domain([1995, 2022])
+                    .range([40, width - 40]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([80, 100])
+                    .range([height - 40, 40]);
+                
+                // Draw timeline line
+                svg.append('line')
+                    .attr('x1', 40)
+                    .attr('x2', width - 40)
+                    .attr('y1', height - 20)
+                    .attr('y2', height - 20)
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2);
+                
+                // Add milestones
+                milestones.forEach((milestone, i) => {
+                    const x = xScale(milestone.year);
+                    
+                    // Vertical line
+                    svg.append('line')
+                        .attr('x1', x)
+                        .attr('x2', x)
+                        .attr('y1', height - 25)
+                        .attr('y2', height - 15)
+                        .attr('stroke', '#3498db')
+                        .attr('stroke-width', 2);
+                    
+                    // Accuracy point
+                    svg.append('circle')
+                        .attr('cx', x)
+                        .attr('cy', yScale(milestone.accuracy))
+                        .attr('r', 4)
+                        .attr('fill', '#3498db')
+                        .attr('stroke', 'white')
+                        .attr('stroke-width', 2);
+                    
+                    // Labels
+                    svg.append('text')
+                        .attr('x', x)
+                        .attr('y', height - 5)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '10px')
+                        .text(milestone.year);
+                    
+                    svg.append('text')
+                        .attr('x', x)
+                        .attr('y', yScale(milestone.accuracy) - 10)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '10px')
+                        .style('font-weight', 'bold')
+                        .text(milestone.name);
+                });
+                
+                // Y-axis label
+                svg.append('text')
+                    .attr('x', 20)
+                    .attr('y', height/2)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .style('writing-mode', 'vertical-lr')
+                    .text('ImageNet Accuracy %');
+            }
+        }
+
+        function initResNetViz() {
+            const container = d3.select('#resnet-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 200;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Draw residual block
+                const blockWidth = 80;
+                const blockHeight = 40;
+                const centerX = width / 2;
+                const centerY = height / 2;
+                
+                // Input
+                svg.append('circle')
+                    .attr('cx', centerX - 120)
+                    .attr('cy', centerY)
+                    .attr('r', 8)
+                    .attr('fill', '#3498db')
+                    .attr('stroke', 'white')
+                    .attr('stroke-width', 2);
+                
+                svg.append('text')
+                    .attr('x', centerX - 120)
+                    .attr('y', centerY - 15)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .text('x');
+                
+                // Main path (F(x))
+                svg.append('rect')
+                    .attr('x', centerX - blockWidth/2)
+                    .attr('y', centerY - blockHeight/2)
+                    .attr('width', blockWidth)
+                    .attr('height', blockHeight)
+                    .attr('fill', '#ecf0f1')
+                    .attr('stroke', '#34495e')
+                    .attr('stroke-width', 2);
+                
+                svg.append('text')
+                    .attr('x', centerX)
+                    .attr('y', centerY + 5)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .style('font-weight', 'bold')
+                    .text('F(x)');
+                
+                // Skip connection
+                const skipY = centerY + 60;
+                svg.append('path')
+                    .attr('d', `M ${centerX - 120} ${centerY} 
+                               L ${centerX - 80} ${centerY} 
+                               L ${centerX - 80} ${skipY} 
+                               L ${centerX + 80} ${skipY} 
+                               L ${centerX + 80} ${centerY}`)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#27ae60')
+                    .attr('stroke-width', 2);
+                
+                // Addition
+                svg.append('circle')
+                    .attr('cx', centerX + 80)
+                    .attr('cy', centerY)
+                    .attr('r', 12)
+                    .attr('fill', '#27ae60')
+                    .attr('stroke', 'white')
+                    .attr('stroke-width', 2);
+                
+                svg.append('text')
+                    .attr('x', centerX + 80)
+                    .attr('y', centerY + 5)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '16px')
+                    .style('fill', 'white')
+                    .style('font-weight', 'bold')
+                    .text('+');
+                
+                // Output
+                svg.append('circle')
+                    .attr('cx', centerX + 120)
+                    .attr('cy', centerY)
+                    .attr('r', 8)
+                    .attr('fill', '#3498db')
+                    .attr('stroke', 'white')
+                    .attr('stroke-width', 2);
+                
+                svg.append('text')
+                    .attr('x', centerX + 120)
+                    .attr('y', centerY - 15)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .text('F(x) + x');
+                
+                // Arrows
+                const arrowData = [
+                    {x1: centerX - 105, y1: centerY, x2: centerX - 45, y2: centerY},
+                    {x1: centerX + 45, y1: centerY, x2: centerX + 65, y2: centerY},
+                    {x1: centerX + 95, y1: centerY, x2: centerX + 105, y2: centerY}
+                ];
+                
+                arrowData.forEach(arrow => {
+                    svg.append('path')
+                        .attr('d', `M ${arrow.x1} ${arrow.y1} L ${arrow.x2} ${arrow.y2} 
+                                   M ${arrow.x2 - 5} ${arrow.y2 - 3} L ${arrow.x2} ${arrow.y2} L ${arrow.x2 - 5} ${arrow.y2 + 3}`)
+                        .attr('stroke', '#34495e')
+                        .attr('stroke-width', 2)
+                        .attr('fill', 'none');
+                });
+                
+                svg.append('text')
+                    .attr('x', centerX)
+                    .attr('y', 30)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '14px')
+                    .style('font-weight', 'bold')
+                    .text('Residual Block Architecture');
+            }
+        }
+
+        function initEfficiencyViz() {
+            const container = d3.select('#efficiency-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                const margin = {top: 20, right: 20, bottom: 40, left: 50};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Data: accuracy vs parameters (millions)
+                const models = [
+                    {name: 'MobileNetV2', accuracy: 72, params: 3.4},
+                    {name: 'EfficientNet-B0', accuracy: 77, params: 5.3},
+                    {name: 'ResNet-50', accuracy: 76, params: 25.6},
+                    {name: 'EfficientNet-B4', accuracy: 83, params: 19.0},
+                    {name: 'ResNet-101', accuracy: 78, params: 44.5}
+                ];
+                
+                const xScale = d3.scaleLinear()
+                    .domain([0, 50])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([70, 85])
+                    .range([innerHeight, 0]);
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale))
+                    .append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 35)
+                    .attr('fill', 'black')
+                    .style('font-size', '12px')
+                    .text('Parameters (millions)');
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale))
+                    .append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -35)
+                    .attr('x', -innerHeight / 2)
+                    .attr('fill', 'black')
+                    .style('font-size', '12px')
+                    .text('ImageNet Accuracy (%)');
+                
+                // Add points
+                g.selectAll('.model-point')
+                    .data(models)
+                    .enter().append('circle')
+                    .attr('class', 'model-point')
+                    .attr('cx', d => xScale(d.params))
+                    .attr('cy', d => yScale(d.accuracy))
+                    .attr('r', 5)
+                    .attr('fill', d => d.name.includes('Efficient') ? '#27ae60' : d.name.includes('Mobile') ? '#f39c12' : '#3498db')
+                    .attr('stroke', 'white')
+                    .attr('stroke-width', 2);
+                
+                // Add labels
+                g.selectAll('.model-label')
+                    .data(models)
+                    .enter().append('text')
+                    .attr('class', 'model-label')
+                    .attr('x', d => xScale(d.params) + 8)
+                    .attr('y', d => yScale(d.accuracy) + 3)
+                    .style('font-size', '10px')
+                    .text(d => d.name);
+            }
+        }
+
+        function initAttentionViz() {
+            const container = d3.select('#attention-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // SE Block visualization
+                const blockSize = 40;
+                const spacing = 60;
+                const startX = 50;
+                const centerY = height / 2;
+                
+                // Input feature map
+                svg.append('rect')
+                    .attr('x', startX)
+                    .attr('y', centerY - blockSize/2)
+                    .attr('width', blockSize)
+                    .attr('height', blockSize)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.7);
+                
+                svg.append('text')
+                    .attr('x', startX + blockSize/2)
+                    .attr('y', centerY - blockSize/2 - 10)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '11px')
+                    .text('Input Features');
+                
+                // Global Average Pooling
+                svg.append('rect')
+                    .attr('x', startX + spacing)
+                    .attr('y', centerY - 15)
+                    .attr('width', 30)
+                    .attr('height', 30)
+                    .attr('fill', '#e67e22')
+                    .attr('opacity', 0.7);
+                
+                svg.append('text')
+                    .attr('x', startX + spacing + 15)
+                    .attr('y', centerY - 20)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '10px')
+                    .text('GAP');
+                
+                // FC layers
+                svg.append('rect')
+                    .attr('x', startX + 2*spacing)
+                    .attr('y', centerY - 10)
+                    .attr('width', 20)
+                    .attr('height', 20)
+                    .attr('fill', '#9b59b6')
+                    .attr('opacity', 0.7);
+                
+                svg.append('text')
+                    .attr('x', startX + 2*spacing + 10)
+                    .attr('y', centerY - 15)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '9px')
+                    .text('FC');
+                
+                // Attention weights
+                svg.append('rect')
+                    .attr('x', startX + 3*spacing)
+                    .attr('y', centerY - 8)
+                    .attr('width', 16)
+                    .attr('height', 16)
+                    .attr('fill', '#27ae60')
+                    .attr('opacity', 0.7);
+                
+                svg.append('text')
+                    .attr('x', startX + 3*spacing + 8)
+                    .attr('y', centerY - 12)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '8px')
+                    .text('σ');
+                
+                // Recalibrated features
+                svg.append('rect')
+                    .attr('x', startX + 4*spacing)
+                    .attr('y', centerY - blockSize/2)
+                    .attr('width', blockSize)
+                    .attr('height', blockSize)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.9);
+                
+                svg.append('text')
+                    .attr('x', startX + 4*spacing + blockSize/2)
+                    .attr('y', centerY - blockSize/2 - 10)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '11px')
+                    .text('Recalibrated');
+                
+                // Arrows
+                for (let i = 0; i < 4; i++) {
+                    const x1 = startX + blockSize + i*spacing + (i > 0 ? -blockSize + 30 : 0);
+                    const x2 = startX + (i+1)*spacing + (i >= 1 ? -10 : 0);
+                    
+                    svg.append('path')
+                        .attr('d', `M ${x1} ${centerY} L ${x2} ${centerY} 
+                                   M ${x2 - 5} ${centerY - 3} L ${x2} ${centerY} L ${x2 - 5} ${centerY + 3}`)
+                        .attr('stroke', '#34495e')
+                        .attr('stroke-width', 1)
+                        .attr('fill', 'none');
+                }
+                
+                svg.append('text')
+                    .attr('x', width/2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '13px')
+                    .style('font-weight', 'bold')
+                    .text('Squeeze-and-Excitation Block');
+            }
+        }
+
+        function initMultiScaleViz() {
+            const container = d3.select('#multiscale-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Inception module visualization
+                const centerX = width / 2;
+                const topY = 40;
+                const bottomY = 140;
+                
+                // Input
+                svg.append('rect')
+                    .attr('x', centerX - 20)
+                    .attr('y', topY - 15)
+                    .attr('width', 40)
+                    .attr('height', 15)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.7);
+                
+                svg.append('text')
+                    .attr('x', centerX)
+                    .attr('y', topY - 20)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .text('Input');
+                
+                // Parallel convolutions
+                const convTypes = [
+                    {name: '1x1', x: centerX - 120, color: '#e74c3c'},
+                    {name: '1x1→3x3', x: centerX - 40, color: '#f39c12'},
+                    {name: '1x1→5x5', x: centerX + 40, color: '#27ae60'},
+                    {name: 'MaxPool→1x1', x: centerX + 120, color: '#9b59b6'}
+                ];
+                
+                convTypes.forEach(conv => {
+                    // Convolution block
+                    svg.append('rect')
+                        .attr('x', conv.x - 15)
+                        .attr('y', topY + 30)
+                        .attr('width', 30)
+                        .attr('height', 40)
+                        .attr('fill', conv.color)
+                        .attr('opacity', 0.7);
+                    
+                    svg.append('text')
+                        .attr('x', conv.x)
+                        .attr('y', topY + 53)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '9px')
+                        .style('fill', 'white')
+                        .style('font-weight', 'bold')
+                        .text(conv.name);
+                    
+                    // Connection from input
+                    svg.append('line')
+                        .attr('x1', centerX)
+                        .attr('y1', topY)
+                        .attr('x2', conv.x)
+                        .attr('y2', topY + 30)
+                        .attr('stroke', '#34495e')
+                        .attr('stroke-width', 2);
+                    
+                    // Connection to output
+                    svg.append('line')
+                        .attr('x1', conv.x)
+                        .attr('y1', topY + 70)
+                        .attr('x2', centerX)
+                        .attr('y2', bottomY - 10)
+                        .attr('stroke', '#34495e')
+                        .attr('stroke-width', 2);
+                });
+                
+                // Concatenation
+                svg.append('rect')
+                    .attr('x', centerX - 30)
+                    .attr('y', bottomY - 10)
+                    .attr('width', 60)
+                    .attr('height', 15)
+                    .attr('fill', '#34495e')
+                    .attr('opacity', 0.7);
+                
+                svg.append('text')
+                    .attr('x', centerX)
+                    .attr('y', bottomY - 2)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '11px')
+                    .style('fill', 'white')
+                    .text('Concatenate');
+                
+                svg.append('text')
+                    .attr('x', centerX)
+                    .attr('y', 20)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '14px')
+                    .style('font-weight', 'bold')
+                    .text('Inception Module: Multi-Scale Feature Extraction');
+            }
+        }
+
+        function initNASViz() {
+            const container = d3.select('#nas-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // NAS process visualization
+                const steps = [
+                    {name: 'Search Space', x: 80, icon: '⚙️'},
+                    {name: 'Controller', x: 200, icon: '🧠'},
+                    {name: 'Architecture', x: 320, icon: '🏗️'},
+                    {name: 'Training', x: 440, icon: '📈'},
+                    {name: 'Validation', x: 560, icon: '✓'}
+                ];
+                
+                const y = height / 2;
+                
+                steps.forEach((step, i) => {
+                    // Step circle
+                    svg.append('circle')
+                        .attr('cx', step.x)
+                        .attr('cy', y)
+                        .attr('r', 25)
+                        .attr('fill', '#3498db')
+                        .attr('stroke', 'white')
+                        .attr('stroke-width', 2);
+                    
+                    // Step number
+                    svg.append('text')
+                        .attr('x', step.x)
+                        .attr('y', y + 5)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '16px')
+                        .style('fill', 'white')
+                        .style('font-weight', 'bold')
+                        .text(i + 1);
+                    
+                    // Step name
+                    svg.append('text')
+                        .attr('x', step.x)
+                        .attr('y', y + 45)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '11px')
+                        .text(step.name);
+                    
+                    // Arrow to next step
+                    if (i < steps.length - 1) {
+                        const nextX = steps[i + 1].x;
+                        svg.append('path')
+                            .attr('d', `M ${step.x + 25} ${y} L ${nextX - 25} ${y} 
+                                       M ${nextX - 30} ${y - 5} L ${nextX - 25} ${y} L ${nextX - 30} ${y + 5}`)
+                            .attr('stroke', '#34495e')
+                            .attr('stroke-width', 2)
+                            .attr('fill', 'none');
+                    }
+                });
+                
+                // Feedback loop
+                svg.append('path')
+                    .attr('d', `M ${steps[4].x} ${y + 30} 
+                               Q ${width - 50} ${y + 60} ${steps[1].x} ${y + 30}`)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e67e22')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+                
+                svg.append('text')
+                    .attr('x', width - 100)
+                    .attr('y', y + 75)
+                    .style('font-size', '10px')
+                    .style('fill', '#e67e22')
+                    .text('Feedback Loop');
+                
+                svg.append('text')
+                    .attr('x', width/2)
+                    .attr('y', 25)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '14px')
+                    .style('font-weight', 'bold')
+                    .text('Neural Architecture Search Process');
+            }
+        }
+
+        function initHybridViz() {
+            const container = d3.select('#hybrid-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Show CNN vs Transformer vs Hybrid comparison
+                const architectures = [
+                    {name: 'CNN', x: 100, layers: ['Conv', 'Conv', 'Pool', 'Conv'], color: '#3498db'},
+                    {name: 'Transformer', x: 300, layers: ['Attn', 'Attn', 'Attn', 'Attn'], color: '#e67e22'},
+                    {name: 'Hybrid', x: 500, layers: ['Conv', 'Conv', 'Attn', 'Attn'], color: '#27ae60'}
+                ];
+                
+                architectures.forEach(arch => {
+                    // Architecture name
+                    svg.append('text')
+                        .attr('x', arch.x)
+                        .attr('y', 30)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '13px')
+                        .style('font-weight', 'bold')
+                        .text(arch.name);
+                    
+                    // Layer stack
+                    arch.layers.forEach((layer, i) => {
+                        const y = 50 + i * 25;
+                        
+                        svg.append('rect')
+                            .attr('x', arch.x - 30)
+                            .attr('y', y)
+                            .attr('width', 60)
+                            .attr('height', 20)
+                            .attr('fill', arch.color)
+                            .attr('opacity', 0.7)
+                            .attr('stroke', 'white')
+                            .attr('stroke-width', 1);
+                        
+                        svg.append('text')
+                            .attr('x', arch.x)
+                            .attr('y', y + 13)
+                            .attr('text-anchor', 'middle')
+                            .style('font-size', '10px')
+                            .style('fill', 'white')
+                            .style('font-weight', 'bold')
+                            .text(layer);
+                    });
+                });
+                
+                svg.append('text')
+                    .attr('x', width/2)
+                    .attr('y', 170)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .text('Architecture Paradigms: Pure vs Hybrid Approaches');
+            }
+        }
+    </script>
+</body>
+</html>
