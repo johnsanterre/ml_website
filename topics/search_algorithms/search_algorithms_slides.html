@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Algorithms</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90vw;
+            max-width: 1100px;
+            height: 80vh;
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 1.2rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 0.6rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .highlight {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 1.5rem 0;
+        }
+
+        .formula {
+            background: #fdfdfd;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1.2rem 0;
+            background: white;
+            min-height: 300px;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2.5rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .objective h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .objective p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* Search algorithm specific styles */
+        .algorithm-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .algorithm-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .algorithm-item.header {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .search-path {
+            stroke-width: 2px;
+            fill: none;
+        }
+
+        .levy-step {
+            stroke: #e74c3c;
+            stroke-width: 3px;
+            opacity: 0.7;
+        }
+
+        .random-walk {
+            stroke: #3498db;
+            stroke-width: 2px;
+            opacity: 0.8;
+        }
+
+        .optimization-landscape {
+            fill-opacity: 0.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 85vh;
+                padding: 25px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .grid-2, .grid-3, .objectives {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>Search Algorithms</h1>
+            <p class="subtitle">From Random Walks to Nature-Inspired Optimization</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>Random Processes</h3>
+                    <p>Master random walk and Lévy flight fundamentals</p>
+                </div>
+                <div class="objective">
+                    <h3>Nature-Inspired Methods</h3>
+                    <p>Explore genetic algorithms, PSO, and swarm intelligence</p>
+                </div>
+                <div class="objective">
+                    <h3>Modern Metaheuristics</h3>
+                    <p>Learn advanced search strategies and hybrid approaches</p>
+                </div>
+                <div class="objective">
+                    <h3>Practical Applications</h3>
+                    <p>Apply search algorithms to real-world optimization problems</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: What are Search Algorithms? -->
+        <div class="slide" id="slide2">
+            <h2>Search Algorithms in Optimization</h2>
+            
+            <div class="highlight">
+                <p><strong>Search algorithms explore solution spaces to find optimal or near-optimal solutions, balancing exploration of new regions with exploitation of promising areas.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Core Concepts</h3>
+                    <ul>
+                        <li><strong>Exploration:</strong> Searching new regions of solution space</li>
+                        <li><strong>Exploitation:</strong> Refining solutions in promising areas</li>
+                        <li><strong>Solution Space:</strong> All possible solutions to a problem</li>
+                        <li><strong>Fitness Landscape:</strong> Objective function over solution space</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Applications:</strong> Hyperparameter tuning, neural architecture search, feature selection, scheduling, routing, and portfolio optimization.
+                    </div>
+                </div>
+                <div>
+                    <div class="viz" id="search-landscape-viz">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Optimization Landscape with Search Paths
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>No Free Lunch Theorem:</strong> No single search algorithm performs best on all optimization problems. Algorithm selection depends on problem characteristics.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Random Walk Algorithms -->
+        <div class="slide" id="slide3">
+            <h2>Random Walk Algorithms</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Mathematical Foundation</h3>
+                    <div class="formula">
+                        $$X_{t+1} = X_t + \epsilon_t$$
+                    </div>
+                    <p>Where ε<sub>t</sub> is a random step drawn from a probability distribution.</p>
+                    
+                    <h3>Properties</h3>
+                    <ul>
+                        <li><strong>Memoryless:</strong> Next step independent of history</li>
+                        <li><strong>Unbiased:</strong> No preferred direction</li>
+                        <li><strong>Diffusive:</strong> Spreads as √t over time</li>
+                        <li><strong>Ergodic:</strong> Eventually visits all accessible states</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Brownian Motion</h3>
+                    <div class="formula">
+                        $$\langle X^2(t) \rangle = 2Dt$$
+                    </div>
+                    <p>Mean squared displacement grows linearly with time (diffusion coefficient D).</p>
+                    
+                    <div class="viz" id="random-walk-viz">
+                        <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Random Walk Trajectory
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="example">
+                <strong>Optimization Use:</strong> Random walk provides baseline search behavior and can escape local optima through random perturbations, but convergence is typically slow.
+            </div>
+        </div>
+
+        <!-- Slide 4: Lévy Flight -->
+        <div class="slide" id="slide4">
+            <h2>Lévy Flight and Heavy-Tailed Distributions</h2>
+            
+            <div class="highlight">
+                <p><strong>Lévy flights use heavy-tailed step size distributions, enabling both local search and long-distance jumps for efficient exploration of complex landscapes.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Mathematical Formulation</h3>
+                    <div class="formula">
+                        $$P(s) \sim s^{-\alpha}$$
+                    </div>
+                    <p>Power-law distribution with 1 < α ≤ 3</p>
+                    
+                    <h3>Superdiffusive Behavior</h3>
+                    <div class="formula">
+                        $$\langle X^2(t) \rangle \sim t^{\gamma}$$
+                    </div>
+                    <p>Where γ > 1 (superdiffusive vs γ = 1 for normal diffusion)</p>
+                    
+                    <ul>
+                        <li>Many small steps for local search</li>
+                        <li>Occasional large jumps for exploration</li>
+                        <li>Optimal foraging strategy in nature</li>
+                        <li>Faster exploration than Brownian motion</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="levy-flight-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Lévy Flight vs Random Walk Comparison
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <strong>Natural Examples:</strong> Foraging patterns of albatrosses, shark movements, human mobility patterns, and stock market fluctuations.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Nature-Inspired Algorithms -->
+        <div class="slide" id="slide5">
+            <h2>Nature-Inspired Search Algorithms</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Simulated Annealing</h3>
+                    <div class="formula">
+                        $$P(\text{accept}) = e^{-\Delta E / T}$$
+                    </div>
+                    <p>Accept worse solutions with probability decreasing over time (cooling schedule).</p>
+                    
+                    <h3>Genetic Algorithms</h3>
+                    <ul>
+                        <li><strong>Selection:</strong> Choose fittest individuals</li>
+                        <li><strong>Crossover:</strong> Combine parent solutions</li>
+                        <li><strong>Mutation:</strong> Random modifications</li>
+                        <li><strong>Evolution:</strong> Iterative improvement</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Particle Swarm Optimization</h3>
+                    <div class="formula">
+                        $$v_{i}^{t+1} = w v_{i}^t + c_1 r_1 (p_i - x_i^t) + c_2 r_2 (g - x_i^t)$$
+                    </div>
+                    <p>Particles move based on personal best (p<sub>i</sub>) and global best (g).</p>
+                    
+                    <h3>Ant Colony Optimization</h3>
+                    <ul>
+                        <li>Pheromone trail construction</li>
+                        <li>Probabilistic path selection</li>
+                        <li>Evaporation and reinforcement</li>
+                        <li>Emergent shortest paths</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="viz" id="nature-algorithms-viz">
+                <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    Swarm Behavior Visualization
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Genetic Algorithm Details -->
+        <div class="slide" id="slide6">
+            <h2>Genetic Algorithm Mechanics</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Selection Methods</h3>
+                    <ul>
+                        <li><strong>Tournament Selection:</strong> Random competition</li>
+                        <li><strong>Roulette Wheel:</strong> Fitness-proportional</li>
+                        <li><strong>Rank Selection:</strong> Rank-based probability</li>
+                        <li><strong>Elitism:</strong> Preserve best solutions</li>
+                    </ul>
+                    
+                    <h3>Crossover Operations</h3>
+                    <ul>
+                        <li><strong>Single-point:</strong> Split at one position</li>
+                        <li><strong>Multi-point:</strong> Multiple split points</li>
+                        <li><strong>Uniform:</strong> Random bit selection</li>
+                        <li><strong>Arithmetic:</strong> Weighted combinations</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Mutation Strategies</h3>
+                    <ul>
+                        <li><strong>Bit-flip:</strong> Toggle binary values</li>
+                        <li><strong>Gaussian:</strong> Add normal noise</li>
+                        <li><strong>Swap:</strong> Exchange elements</li>
+                        <li><strong>Adaptive:</strong> Rate depends on diversity</li>
+                    </ul>
+                    
+                    <div class="viz" id="genetic-operations-viz">
+                        <div style="height: 180px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Crossover and Mutation Visualization
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="example">
+                <strong>Parameter Guidelines:</strong> Population size 50-200, crossover rate 0.6-0.9, mutation rate 0.01-0.1, selection pressure moderate to maintain diversity.
+            </div>
+        </div>
+
+        <!-- Slide 7: Modern Metaheuristic Methods -->
+        <div class="slide" id="slide7">
+            <h2>Advanced Metaheuristic Algorithms</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Tabu Search</h3>
+                    <ul>
+                        <li>Memory-based search with forbidden moves</li>
+                        <li>Tabu list prevents cycling</li>
+                        <li>Aspiration criteria override taboos</li>
+                        <li>Diversification and intensification</li>
+                    </ul>
+                    
+                    <h3>Harmony Search</h3>
+                    <div class="formula">
+                        $$x_i^{new} = \begin{cases} 
+                        x_i^{random} & \text{with probability } HMCR \\
+                        x_i^{memory} \pm \epsilon & \text{with probability } PAR
+                        \end{cases}$$
+                    </div>
+                    <p>Mimics musical improvisation process.</p>
+                </div>
+                
+                <div>
+                    <h3>Firefly Algorithm</h3>
+                    <div class="formula">
+                        $$I = I_0 e^{-\gamma r^2}$$
+                    </div>
+                    <p>Light intensity decreases with distance, attracting less bright fireflies.</p>
+                    
+                    <h3>Cuckoo Search</h3>
+                    <ul>
+                        <li>Combines Lévy flights with cuckoo behavior</li>
+                        <li>Nest abandonment for poor solutions</li>
+                        <li>Efficient global search capability</li>
+                        <li>Fewer parameters than other algorithms</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Algorithm Selection:</strong> Choose based on problem dimensionality, constraint types, computational budget, and required solution quality.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Performance Analysis -->
+        <div class="slide" id="slide8">
+            <h2>Performance Analysis and Benchmarking</h2>
+            
+            <div class="algorithm-comparison">
+                <div class="algorithm-item header">Algorithm</div>
+                <div class="algorithm-item header">Strengths</div>
+                <div class="algorithm-item header">Weaknesses</div>
+                <div class="algorithm-item header">Best For</div>
+                
+                <div class="algorithm-item"><strong>Random Walk</strong></div>
+                <div class="algorithm-item">Simple, unbiased exploration</div>
+                <div class="algorithm-item">Very slow convergence</div>
+                <div class="algorithm-item">Baseline comparison</div>
+                
+                <div class="algorithm-item"><strong>Lévy Flight</strong></div>
+                <div class="algorithm-item">Efficient exploration, escapes local optima</div>
+                <div class="algorithm-item">Parameter tuning needed</div>
+                <div class="algorithm-item">Complex landscapes</div>
+                
+                <div class="algorithm-item"><strong>Genetic Algorithm</strong></div>
+                <div class="algorithm-item">Population diversity, robust</div>
+                <div class="algorithm-item">Many parameters, slow</div>
+                <div class="algorithm-item">Discrete optimization</div>
+                
+                <div class="algorithm-item"><strong>PSO</strong></div>
+                <div class="algorithm-item">Fast convergence, few parameters</div>
+                <div class="algorithm-item">Premature convergence</div>
+                <div class="algorithm-item">Continuous optimization</div>
+                
+                <div class="algorithm-item"><strong>Simulated Annealing</strong></div>
+                <div class="algorithm-item">Theoretical guarantees</div>
+                <div class="algorithm-item">Cooling schedule critical</div>
+                <div class="algorithm-item">Single-objective problems</div>
+                
+                <div class="algorithm-item"><strong>Ant Colony</strong></div>
+                <div class="algorithm-item">Good for graph problems</div>
+                <div class="algorithm-item">Pheromone tuning complex</div>
+                <div class="algorithm-item">Routing, scheduling</div>
+            </div>
+            
+            <div class="example">
+                <strong>Benchmarking:</strong> Use standard test functions (Sphere, Rastrigin, Ackley) and report statistics over multiple runs. Consider convergence speed, solution quality, and robustness.
+            </div>
+        </div>
+
+        <!-- Slide 9: Applications in Machine Learning -->
+        <div class="slide" id="slide9">
+            <h2>ML Applications and Hybrid Approaches</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Hyperparameter Optimization</h3>
+                    <ul>
+                        <li><strong>Grid/Random Search:</strong> Simple baselines</li>
+                        <li><strong>Genetic Algorithms:</strong> Complex parameter interactions</li>
+                        <li><strong>PSO:</strong> Continuous parameter spaces</li>
+                        <li><strong>Bayesian Optimization:</strong> Expensive evaluations</li>
+                    </ul>
+                    
+                    <h3>Neural Architecture Search</h3>
+                    <ul>
+                        <li>Evolutionary algorithms for architecture design</li>
+                        <li>Reinforcement learning controllers</li>
+                        <li>Differentiable architecture search</li>
+                        <li>Multi-objective optimization (accuracy vs efficiency)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Feature Selection</h3>
+                    <ul>
+                        <li>Genetic algorithms for subset selection</li>
+                        <li>PSO for feature weighting</li>
+                        <li>Ant colony for sequential selection</li>
+                        <li>Wrapper vs filter approaches</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Hybrid Methods:</strong>
+                        <ul>
+                            <li>Memetic algorithms (GA + local search)</li>
+                            <li>Multi-stage optimization</li>
+                            <li>Ensemble of metaheuristics</li>
+                            <li>Machine learning guided search</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="viz" id="ml-applications-viz">
+                <div style="height: 180px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    Search Algorithm Application Framework
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Summary and Guidelines -->
+        <div class="slide" id="slide10">
+            <h2>Algorithm Selection Guidelines</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Problem Characteristics</h3>
+                    <ul>
+                        <li><strong>Dimensionality:</strong> Low (< 10): exhaustive, Medium (10-100): metaheuristics, High (> 100): specialized methods</li>
+                        <li><strong>Continuity:</strong> Discrete → GA, Continuous → PSO/DE</li>
+                        <li><strong>Multimodality:</strong> Many local optima → Lévy flights, diverse populations</li>
+                        <li><strong>Constraints:</strong> Heavy constraints → penalty methods, repair operators</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Computational Constraints</h3>
+                    <ul>
+                        <li><strong>Evaluation Cost:</strong> Expensive → Bayesian optimization, Cheap → population methods</li>
+                        <li><strong>Time Limits:</strong> Fast → PSO/DE, Thorough → GA</li>
+                        <li><strong>Memory:</strong> Limited → simple algorithms</li>
+                        <li><strong>Parallel Processing:</strong> Available → population methods</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Best Practices:</strong> Start with simple baselines (random search), understand your problem landscape, tune algorithms properly, use multiple runs for statistical significance, and consider hybrid approaches for complex problems.</p>
+            </div>
+            
+            <div class="example">
+                <strong>Future Directions:</strong> Integration with deep learning (neural architecture search), multi-objective optimization for real-world trade-offs, and adaptive algorithms that learn problem structure during search.
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">10</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations
+            setTimeout(() => initViz(currentSlide), 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Visualization functions
+        function initViz(slideNum) {
+            console.log('Initializing visualization for slide:', slideNum);
+            
+            try {
+                switch(slideNum) {
+                    case 2:
+                        createSearchLandscapeViz();
+                        break;
+                    case 3:
+                        createRandomWalkViz();
+                        break;
+                    case 4:
+                        createLevyFlightViz();
+                        break;
+                    case 5:
+                        createNatureAlgorithmsViz();
+                        break;
+                    case 6:
+                        createGeneticOperationsViz();
+                        break;
+                    case 9:
+                        createMLApplicationsViz();
+                        break;
+                }
+            } catch (error) {
+                console.error('Visualization error:', error);
+            }
+        }
+
+        function createSearchLandscapeViz() {
+            const container = d3.select('#search-landscape-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 250;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Create optimization landscape with contours
+            const xScale = d3.scaleLinear().domain([-3, 3]).range([20, width - 20]);
+            const yScale = d3.scaleLinear().domain([-2, 2]).range([height - 20, 20]);
+            
+            // Draw contour lines representing fitness landscape
+            const contours = [
+                {level: 1, rx: 40, ry: 30, cx: 100, cy: 60},
+                {level: 2, rx: 80, ry: 60, cx: 100, cy: 60},
+                {level: 3, rx: 120, ry: 90, cx: 100, cy: 60},
+                {level: 1, rx: 35, ry: 25, cx: 300, cy: 150},
+                {level: 2, rx: 70, ry: 50, cx: 300, cy: 150}
+            ];
+            
+            contours.forEach(contour => {
+                svg.append('ellipse')
+                    .attr('cx', contour.cx)
+                    .attr('cy', contour.cy)
+                    .attr('rx', contour.rx)
+                    .attr('ry', contour.ry)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 1)
+                    .attr('opacity', 0.7);
+            });
+            
+            // Draw search paths
+            const searchPaths = [
+                [[50, 200], [80, 180], [120, 160], [150, 140], [180, 120], [100, 60]],
+                [[350, 50], [320, 80], [290, 120], [280, 140], [300, 150]]
+            ];
+            
+            searchPaths.forEach((path, i) => {
+                const line = d3.line()
+                    .x(d => d[0])
+                    .y(d => d[1])
+                    .curve(d3.curveCardinal);
+                
+                svg.append('path')
+                    .datum(path)
+                    .attr('d', line)
+                    .attr('stroke', i === 0 ? '#e74c3c' : '#2ecc71')
+                    .attr('stroke-width', 3)
+                    .attr('fill', 'none')
+                    .attr('opacity', 0.8);
+                
+                // Mark start and end points
+                svg.append('circle')
+                    .attr('cx', path[0][0])
+                    .attr('cy', path[0][1])
+                    .attr('r', 5)
+                    .attr('fill', i === 0 ? '#e74c3c' : '#2ecc71');
+                
+                svg.append('circle')
+                    .attr('cx', path[path.length-1][0])
+                    .attr('cy', path[path.length-1][1])
+                    .attr('r', 5)
+                    .attr('fill', '#f39c12');
+            });
+            
+            // Add labels
+            svg.append('text')
+                .attr('x', 100)
+                .attr('y', 40)
+                .text('Global Optimum')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('fill', '#2c3e50');
+            
+            svg.append('text')
+                .attr('x', 300)
+                .attr('y', 130)
+                .text('Local Optimum')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('fill', '#2c3e50');
+        }
+
+        function createRandomWalkViz() {
+            const container = d3.select('#random-walk-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 150;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate random walk
+            const steps = 100;
+            const walkPath = [{x: width/2, y: height/2}];
+            
+            for (let i = 1; i < steps; i++) {
+                const prev = walkPath[i-1];
+                const stepSize = 3;
+                const angle = Math.random() * 2 * Math.PI;
+                
+                walkPath.push({
+                    x: prev.x + stepSize * Math.cos(angle),
+                    y: prev.y + stepSize * Math.sin(angle)
+                });
+            }
+            
+            // Draw the path
+            const line = d3.line()
+                .x(d => Math.max(10, Math.min(width-10, d.x)))
+                .y(d => Math.max(10, Math.min(height-10, d.y)));
+            
+            svg.append('path')
+                .datum(walkPath)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none')
+                .attr('opacity', 0.8);
+            
+            // Mark start and end
+            svg.append('circle')
+                .attr('cx', walkPath[0].x)
+                .attr('cy', walkPath[0].y)
+                .attr('r', 4)
+                .attr('fill', '#2ecc71');
+            
+            svg.append('circle')
+                .attr('cx', walkPath[walkPath.length-1].x)
+                .attr('cy', walkPath[walkPath.length-1].y)
+                .attr('r', 4)
+                .attr('fill', '#e74c3c');
+        }
+
+        function createLevyFlightViz() {
+            const container = d3.select('#levy-flight-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 200;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate Lévy flight
+            function levyStep() {
+                const u = Math.random();
+                return Math.pow(u, -1/2.5); // Alpha = 2.5
+            }
+            
+            const levyPath = [{x: 50, y: height/2}];
+            const randomPath = [{x: 50, y: height/2 + 50}];
+            
+            for (let i = 1; i < 50; i++) {
+                // Lévy flight
+                const prevLevy = levyPath[i-1];
+                const stepSize = Math.min(levyStep() * 2, 20);
+                const angle = Math.random() * 2 * Math.PI;
+                
+                levyPath.push({
+                    x: Math.max(10, Math.min(width-10, prevLevy.x + stepSize * Math.cos(angle))),
+                    y: Math.max(10, Math.min(height/2 + 40, prevLevy.y + stepSize * Math.sin(angle)))
+                });
+                
+                // Random walk for comparison
+                const prevRandom = randomPath[i-1];
+                const randomStep = 3;
+                const randomAngle = Math.random() * 2 * Math.PI;
+                
+                randomPath.push({
+                    x: Math.max(10, Math.min(width-10, prevRandom.x + randomStep * Math.cos(randomAngle))),
+                    y: Math.max(height/2 + 60, Math.min(height-10, prevRandom.y + randomStep * Math.sin(randomAngle)))
+                });
+            }
+            
+            // Draw paths
+            const line = d3.line()
+                .x(d => d.x)
+                .y(d => d.y);
+            
+            svg.append('path')
+                .datum(levyPath)
+                .attr('d', line)
+                .attr('stroke', '#e74c3c')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none')
+                .attr('opacity', 0.8);
+            
+            svg.append('path')
+                .datum(randomPath)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none')
+                .attr('opacity', 0.8);
+            
+            // Add labels
+            svg.append('text')
+                .attr('x', 20)
+                .attr('y', 30)
+                .text('Lévy Flight')
+                .attr('font-size', '12px')
+                .attr('fill', '#e74c3c');
+            
+            svg.append('text')
+                .attr('x', 20)
+                .attr('y', height - 20)
+                .text('Random Walk')
+                .attr('font-size', '12px')
+                .attr('fill', '#3498db');
+        }
+
+        function createNatureAlgorithmsViz() {
+            const container = d3.select('#nature-algorithms-viz');
+            container.selectAll('*').remove();
+            
+            const width = 500;
+            const height = 150;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Create particle swarm visualization
+            const particles = [];
+            const numParticles = 20;
+            const target = {x: 400, y: 75};
+            
+            for (let i = 0; i < numParticles; i++) {
+                particles.push({
+                    x: 50 + Math.random() * 100,
+                    y: 50 + Math.random() * 50,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2
+                });
+            }
+            
+            // Draw target
+            svg.append('circle')
+                .attr('cx', target.x)
+                .attr('cy', target.y)
+                .attr('r', 8)
+                .attr('fill', '#f39c12')
+                .attr('stroke', '#d35400')
+                .attr('stroke-width', 2);
+            
+            svg.append('text')
+                .attr('x', target.x)
+                .attr('y', target.y - 15)
+                .text('Global Best')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '10px');
+            
+            // Draw particles
+            particles.forEach((particle, i) => {
+                svg.append('circle')
+                    .attr('cx', particle.x)
+                    .attr('cy', particle.y)
+                    .attr('r', 3)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.7);
+                
+                // Draw velocity vector
+                svg.append('line')
+                    .attr('x1', particle.x)
+                    .attr('y1', particle.y)
+                    .attr('x2', particle.x + particle.vx * 10)
+                    .attr('y2', particle.y + particle.vy * 10)
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 1)
+                    .attr('opacity', 0.5);
+            });
+            
+            // Add swarm label
+            svg.append('text')
+                .attr('x', 100)
+                .attr('y', 20)
+                .text('Particle Swarm')
+                .attr('font-size', '14px')
+                .attr('font-weight', 'bold')
+                .attr('fill', '#2c3e50');
+        }
+
+        function createGeneticOperationsViz() {
+            const container = d3.select('#genetic-operations-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 120;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Crossover visualization
+            const parent1 = [1, 0, 1, 1, 0, 1, 0, 0];
+            const parent2 = [0, 1, 0, 0, 1, 1, 1, 1];
+            const crossoverPoint = 4;
+            
+            // Draw parents
+            parent1.forEach((bit, i) => {
+                svg.append('rect')
+                    .attr('x', 20 + i * 15)
+                    .attr('y', 20)
+                    .attr('width', 12)
+                    .attr('height', 12)
+                    .attr('fill', bit ? '#3498db' : '#ecf0f1')
+                    .attr('stroke', '#2c3e50');
+                
+                svg.append('text')
+                    .attr('x', 26 + i * 15)
+                    .attr('y', 30)
+                    .text(bit)
+                    .attr('font-size', '8px')
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', bit ? 'white' : '#2c3e50');
+            });
+            
+            parent2.forEach((bit, i) => {
+                svg.append('rect')
+                    .attr('x', 20 + i * 15)
+                    .attr('y', 40)
+                    .attr('width', 12)
+                    .attr('height', 12)
+                    .attr('fill', bit ? '#e74c3c' : '#ecf0f1')
+                    .attr('stroke', '#2c3e50');
+                
+                svg.append('text')
+                    .attr('x', 26 + i * 15)
+                    .attr('y', 50)
+                    .text(bit)
+                    .attr('font-size', '8px')
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', bit ? 'white' : '#2c3e50');
+            });
+            
+            // Draw crossover line
+            svg.append('line')
+                .attr('x1', 20 + crossoverPoint * 15)
+                .attr('y1', 15)
+                .attr('x2', 20 + crossoverPoint * 15)
+                .attr('y2', 57)
+                .attr('stroke', '#f39c12')
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', '3,3');
+            
+            // Draw offspring
+            const offspring1 = parent1.slice(0, crossoverPoint).concat(parent2.slice(crossoverPoint));
+            const offspring2 = parent2.slice(0, crossoverPoint).concat(parent1.slice(crossoverPoint));
+            
+            offspring1.forEach((bit, i) => {
+                const color = i < crossoverPoint ? '#3498db' : '#e74c3c';
+                svg.append('rect')
+                    .attr('x', 20 + i * 15)
+                    .attr('y', 70)
+                    .attr('width', 12)
+                    .attr('height', 12)
+                    .attr('fill', bit ? color : '#ecf0f1')
+                    .attr('stroke', '#2c3e50');
+                
+                svg.append('text')
+                    .attr('x', 26 + i * 15)
+                    .attr('y', 80)
+                    .text(bit)
+                    .attr('font-size', '8px')
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', bit ? 'white' : '#2c3e50');
+            });
+            
+            // Labels
+            svg.append('text')
+                .attr('x', 10)
+                .attr('y', 30)
+                .text('P1')
+                .attr('font-size', '10px');
+            
+            svg.append('text')
+                .attr('x', 10)
+                .attr('y', 50)
+                .text('P2')
+                .attr('font-size', '10px');
+            
+            svg.append('text')
+                .attr('x', 10)
+                .attr('y', 80)
+                .text('O1')
+                .attr('font-size', '10px');
+        }
+
+        function createMLApplicationsViz() {
+            const container = d3.select('#ml-applications-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 120;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Create application framework diagram
+            const components = [
+                {name: 'Problem', x: 50, y: 60, color: '#3498db'},
+                {name: 'Search\nAlgorithm', x: 150, y: 60, color: '#2ecc71'},
+                {name: 'Evaluation', x: 250, y: 60, color: '#f39c12'},
+                {name: 'Solution', x: 350, y: 60, color: '#e74c3c'}
+            ];
+            
+            components.forEach((comp, i) => {
+                svg.append('rect')
+                    .attr('x', comp.x - 25)
+                    .attr('y', comp.y - 20)
+                    .attr('width', 50)
+                    .attr('height', 40)
+                    .attr('fill', comp.color)
+                    .attr('opacity', 0.7)
+                    .attr('rx', 5);
+                
+                svg.append('text')
+                    .attr('x', comp.x)
+                    .attr('y', comp.y + 5)
+                    .text(comp.name)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white')
+                    .attr('font-weight', 'bold');
+                
+                if (i < components.length - 1) {
+                    svg.append('line')
+                        .attr('x1', comp.x + 25)
+                        .attr('y1', comp.y)
+                        .attr('x2', components[i + 1].x - 25)
+                        .attr('y2', components[i + 1].y)
+                        .attr('stroke', '#2c3e50')
+                        .attr('stroke-width', 2)
+                        .attr('marker-end', 'url(#arrow)');
+                }
+            });
+            
+            // Arrow marker
+            svg.append('defs')
+                .append('marker')
+                .attr('id', 'arrow')
+                .attr('markerWidth', 10)
+                .attr('markerHeight', 7)
+                .attr('refX', 9)
+                .attr('refY', 3.5)
+                .attr('orient', 'auto')
+                .append('polygon')
+                .attr('points', '0 0, 10 3.5, 0 7')
+                .attr('fill', '#2c3e50');
+            
+            // Add feedback loop
+            svg.append('path')
+                .attr('d', 'M 325 80 Q 200 100 75 80')
+                .attr('stroke', '#7f8c8d')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none')
+                .attr('stroke-dasharray', '5,5')
+                .attr('marker-end', 'url(#arrow)');
+            
+            svg.append('text')
+                .attr('x', 200)
+                .attr('y', 105)
+                .text('Feedback Loop')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '10px')
+                .attr('fill', '#7f8c8d');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>

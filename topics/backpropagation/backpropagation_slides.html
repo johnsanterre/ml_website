@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backpropagation</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90vw;
+            max-width: 1100px;
+            height: 80vh;
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 1.2rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 0.6rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .highlight {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 1.5rem 0;
+        }
+
+        .formula {
+            background: #fdfdfd;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1.2rem 0;
+            background: white;
+            min-height: 300px;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2.5rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .objective h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .objective p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* Algorithm steps */
+        .algorithm-step {
+            background: #f8f9fa;
+            border-left: 4px solid #e74c3c;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .algorithm-step h4 {
+            color: #e74c3c;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Network visualization styles */
+        .network-node {
+            fill: #3498db;
+            stroke: #2980b9;
+            stroke-width: 2px;
+        }
+
+        .network-link {
+            stroke: #7f8c8d;
+            stroke-width: 2px;
+            fill: none;
+        }
+
+        .gradient-flow {
+            stroke: #e74c3c;
+            stroke-width: 3px;
+            fill: none;
+            stroke-dasharray: 5,5;
+            animation: dash 2s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -10;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 85vh;
+                padding: 25px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .grid-2, .grid-3, .objectives {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>Backpropagation</h1>
+            <p class="subtitle">The Engine of Neural Network Learning</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>Chain Rule Mastery</h3>
+                    <p>Understand how calculus enables gradient computation</p>
+                </div>
+                <div class="objective">
+                    <h3>Algorithm Steps</h3>
+                    <p>Learn the forward and backward pass mechanics</p>
+                </div>
+                <div class="objective">
+                    <h3>Gradient Flow</h3>
+                    <p>Visualize how errors propagate through networks</p>
+                </div>
+                <div class="objective">
+                    <h3>Practical Implementation</h3>
+                    <p>Bridge theory to modern deep learning frameworks</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is Backpropagation? -->
+        <div class="slide" id="slide2">
+            <h2>What is Backpropagation?</h2>
+            
+            <div class="highlight">
+                <p><strong>Backpropagation is an algorithm that efficiently computes gradients of the loss function with respect to neural network parameters using the chain rule of calculus.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Key Insights</h3>
+                    <ul>
+                        <li>Enables training of deep neural networks</li>
+                        <li>Computes gradients in O(n) time, not O(n²)</li>
+                        <li>Works backward from output to input</li>
+                        <li>Foundation of modern deep learning</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Historical Impact:</strong> Backpropagation's rediscovery in the 1980s sparked the neural network revolution and enabled today's deep learning breakthroughs.
+                    </div>
+                </div>
+                <div>
+                    <div class="viz" id="network-overview">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Neural Network with Gradient Flow
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Forward Pass Foundation -->
+        <div class="slide" id="slide3">
+            <h2>The Forward Pass</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Layer Computation</h3>
+                    <div class="formula">
+                        $$z^{(l)} = W^{(l)}a^{(l-1)} + b^{(l)}$$
+                        $$a^{(l)} = f(z^{(l)})$$
+                    </div>
+                    <ul>
+                        <li><strong>z⁽ˡ⁾:</strong> Pre-activation values</li>
+                        <li><strong>W⁽ˡ⁾:</strong> Weight matrix</li>
+                        <li><strong>a⁽ˡ⁾:</strong> Activations</li>
+                        <li><strong>f:</strong> Activation function</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Loss Computation</h3>
+                    <div class="formula">
+                        $$L = \frac{1}{2}(y - \hat{y})^2$$
+                    </div>
+                    <p>The forward pass computes predictions and stores intermediate values needed for gradient computation.</p>
+                    
+                    <div class="example">
+                        <strong>Key Point:</strong> We must store activations and pre-activations during the forward pass for use in backpropagation.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Chain Rule Principle -->
+        <div class="slide" id="slide4">
+            <h2>The Chain Rule Foundation</h2>
+            
+            <div class="highlight">
+                <p><strong>The chain rule allows us to compute gradients of composite functions by multiplying partial derivatives along the computational path.</strong></p>
+            </div>
+            
+            <div class="formula">
+                $$\frac{\partial L}{\partial W^{(l)}} = \frac{\partial L}{\partial a^{(l)}} \cdot \frac{\partial a^{(l)}}{\partial z^{(l)}} \cdot \frac{\partial z^{(l)}}{\partial W^{(l)}}$$
+            </div>
+            
+            <div class="viz" id="chain-rule-viz">
+                <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    Computational Graph with Chain Rule
+                </div>
+            </div>
+            
+            <p>Each gradient depends on the gradient of the subsequent layer, creating a recursive computation that flows backward through the network.</p>
+        </div>
+
+        <!-- Slide 5: Backpropagation Algorithm -->
+        <div class="slide" id="slide5">
+            <h2>Backpropagation Algorithm</h2>
+            
+            <div class="algorithm-step">
+                <h4>Step 1: Output Layer Gradient</h4>
+                <div class="formula">
+                    $$\delta^{(L)} = \frac{\partial L}{\partial a^{(L)}} \odot f'(z^{(L)})$$
+                </div>
+            </div>
+            
+            <div class="algorithm-step">
+                <h4>Step 2: Hidden Layer Gradients</h4>
+                <div class="formula">
+                    $$\delta^{(l)} = ((W^{(l+1)})^T \delta^{(l+1)}) \odot f'(z^{(l)})$$
+                </div>
+            </div>
+            
+            <div class="algorithm-step">
+                <h4>Step 3: Parameter Gradients</h4>
+                <div class="formula">
+                    $$\frac{\partial L}{\partial W^{(l)}} = \delta^{(l)} (a^{(l-1)})^T$$
+                    $$\frac{\partial L}{\partial b^{(l)}} = \delta^{(l)}$$
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Gradient Flow Visualization -->
+        <div class="slide" id="slide6">
+            <h2>Gradient Flow Through Layers</h2>
+            
+            <div class="viz" id="gradient-flow-viz">
+                <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    Interactive Gradient Flow Visualization
+                </div>
+            </div>
+            
+            <p>Watch how gradients flow backward from the output layer to earlier layers, with each layer's gradient depending on subsequent layers.</p>
+            
+            <div class="example">
+                <strong>Key Insight:</strong> The δ (delta) values represent the "error responsibility" of each neuron in the final loss.
+            </div>
+        </div>
+
+        <!-- Slide 7: Weight Updates -->
+        <div class="slide" id="slide7">
+            <h2>Parameter Updates</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Gradient Descent Update</h3>
+                    <div class="formula">
+                        $$W^{(l)} := W^{(l)} - \alpha \frac{\partial L}{\partial W^{(l)}}$$
+                        $$b^{(l)} := b^{(l)} - \alpha \frac{\partial L}{\partial b^{(l)}}$$
+                    </div>
+                    <p>Learning rate α controls the step size of parameter updates.</p>
+                </div>
+                
+                <div>
+                    <h3>Batch Processing</h3>
+                    <div class="formula">
+                        $$\frac{\partial L}{\partial W^{(l)}} = \frac{1}{m}\sum_{i=1}^{m} \delta^{(l)}_i (a^{(l-1)}_i)^T$$
+                    </div>
+                    <p>Gradients are typically averaged over mini-batches for stable training.</p>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>The complete learning cycle: Forward pass → Loss computation → Backpropagation → Parameter updates</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Computational Efficiency -->
+        <div class="slide" id="slide8">
+            <h2>Why Backpropagation is Efficient</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Without Backpropagation</h3>
+                    <ul>
+                        <li>Finite differences: O(n²) complexity</li>
+                        <li>Numerical instability</li>
+                        <li>Impractical for large networks</li>
+                        <li>Forward pass for each parameter</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>With Backpropagation</h3>
+                    <ul>
+                        <li>Chain rule optimization: O(n) complexity</li>
+                        <li>Exact gradients (no approximation)</li>
+                        <li>Scales to millions of parameters</li>
+                        <li>Single forward + backward pass</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="example">
+                <strong>Performance Impact:</strong> A network with 1 million parameters would require 1 million forward passes without backpropagation, but only 1 forward + 1 backward pass with it.
+            </div>
+        </div>
+
+        <!-- Slide 9: Modern Implementation -->
+        <div class="slide" id="slide9">
+            <h2>Automatic Differentiation</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Framework Automation</h3>
+                    <ul>
+                        <li>TensorFlow and PyTorch automate backpropagation</li>
+                        <li>Computational graphs track operations</li>
+                        <li>Automatic gradient computation</li>
+                        <li>Memory-efficient implementations</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Modern Reality:</strong> While frameworks handle the mechanics, understanding backpropagation remains crucial for debugging and optimization.
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Common Challenges</h3>
+                    <ul>
+                        <li>Vanishing gradients in deep networks</li>
+                        <li>Exploding gradients with poor initialization</li>
+                        <li>Memory management for large models</li>
+                        <li>Gradient clipping and normalization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Summary -->
+        <div class="slide" id="slide10">
+            <h2>Key Takeaways</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Core Principles</h3>
+                    <ul>
+                        <li>Chain rule enables efficient gradient computation</li>
+                        <li>Gradients flow backward through network layers</li>
+                        <li>Each layer's gradient depends on subsequent layers</li>
+                        <li>O(n) complexity makes deep learning feasible</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Practical Impact</h3>
+                    <ul>
+                        <li>Foundation of all neural network training</li>
+                        <li>Enables deep learning architectures</li>
+                        <li>Automated in modern frameworks</li>
+                        <li>Critical for understanding optimization</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Backpropagation transformed machine learning by making neural network training computationally feasible. Understanding its principles is essential for any deep learning practitioner.</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">10</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations
+            setTimeout(() => initViz(currentSlide), 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Visualization functions
+        function initViz(slideNum) {
+            console.log('Initializing visualization for slide:', slideNum);
+            
+            try {
+                switch(slideNum) {
+                    case 2:
+                        createNetworkOverview();
+                        break;
+                    case 4:
+                        createChainRuleViz();
+                        break;
+                    case 6:
+                        createGradientFlowViz();
+                        break;
+                }
+            } catch (error) {
+                console.error('Visualization error:', error);
+            }
+        }
+
+        function createNetworkOverview() {
+            const container = d3.select('#network-overview');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 250;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Network structure
+            const layers = [
+                {nodes: 3, x: 50},
+                {nodes: 4, x: 150},
+                {nodes: 4, x: 250},
+                {nodes: 2, x: 350}
+            ];
+            
+            // Create connections
+            const connections = [];
+            for (let i = 0; i < layers.length - 1; i++) {
+                for (let j = 0; j < layers[i].nodes; j++) {
+                    for (let k = 0; k < layers[i + 1].nodes; k++) {
+                        connections.push({
+                            x1: layers[i].x,
+                            y1: 50 + j * (height - 100) / (layers[i].nodes - 1),
+                            x2: layers[i + 1].x,
+                            y2: 50 + k * (height - 100) / (layers[i + 1].nodes - 1)
+                        });
+                    }
+                }
+            }
+            
+            // Draw connections
+            svg.selectAll('.connection')
+                .data(connections)
+                .enter()
+                .append('line')
+                .attr('class', 'network-link')
+                .attr('x1', d => d.x1)
+                .attr('y1', d => d.y1)
+                .attr('x2', d => d.x2)
+                .attr('y2', d => d.y2);
+            
+            // Draw nodes
+            layers.forEach((layer, layerIdx) => {
+                for (let i = 0; i < layer.nodes; i++) {
+                    svg.append('circle')
+                        .attr('class', 'network-node')
+                        .attr('cx', layer.x)
+                        .attr('cy', 50 + i * (height - 100) / (layer.nodes - 1))
+                        .attr('r', 15);
+                }
+            });
+            
+            // Add gradient flow arrows
+            svg.append('path')
+                .attr('class', 'gradient-flow')
+                .attr('d', `M 350 ${height/2} L 50 ${height/2}`)
+                .attr('marker-end', 'url(#arrowhead)');
+            
+            // Arrow marker
+            svg.append('defs')
+                .append('marker')
+                .attr('id', 'arrowhead')
+                .attr('markerWidth', 10)
+                .attr('markerHeight', 7)
+                .attr('refX', 9)
+                .attr('refY', 3.5)
+                .attr('orient', 'auto')
+                .append('polygon')
+                .attr('points', '0 0, 10 3.5, 0 7')
+                .attr('fill', '#e74c3c');
+        }
+
+        function createChainRuleViz() {
+            const container = d3.select('#chain-rule-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 150;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Chain rule components
+            const components = [
+                {label: '∂L/∂a', x: 50, y: 75},
+                {label: '∂a/∂z', x: 150, y: 75},
+                {label: '∂z/∂W', x: 250, y: 75},
+                {label: '∂L/∂W', x: 350, y: 75}
+            ];
+            
+            // Draw boxes
+            components.forEach((comp, i) => {
+                svg.append('rect')
+                    .attr('x', comp.x - 30)
+                    .attr('y', comp.y - 15)
+                    .attr('width', 60)
+                    .attr('height', 30)
+                    .attr('fill', i === 3 ? '#e74c3c' : '#3498db')
+                    .attr('opacity', 0.2)
+                    .attr('stroke', i === 3 ? '#e74c3c' : '#3498db')
+                    .attr('stroke-width', 2);
+                
+                svg.append('text')
+                    .attr('x', comp.x)
+                    .attr('y', comp.y + 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .text(comp.label);
+            });
+            
+            // Draw multiplication symbols
+            for (let i = 0; i < components.length - 2; i++) {
+                svg.append('text')
+                    .attr('x', components[i].x + 50)
+                    .attr('y', components[i].y + 5)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '16px')
+                    .text('×');
+            }
+            
+            // Draw equals
+            svg.append('text')
+                .attr('x', 300)
+                .attr('y', 80)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '16px')
+                .text('=');
+        }
+
+        function createGradientFlowViz() {
+            const container = d3.select('#gradient-flow-viz');
+            container.selectAll('*').remove();
+            
+            const width = 500;
+            const height = 250;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Layer structure
+            const layers = [
+                {name: 'Input', x: 80, neurons: 3},
+                {name: 'Hidden 1', x: 180, neurons: 4},
+                {name: 'Hidden 2', x: 280, neurons: 4},
+                {name: 'Output', x: 380, neurons: 2}
+            ];
+            
+            // Draw layer labels
+            layers.forEach(layer => {
+                svg.append('text')
+                    .attr('x', layer.x)
+                    .attr('y', 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .text(layer.name);
+            });
+            
+            // Draw neurons and gradient values
+            layers.forEach((layer, layerIdx) => {
+                for (let i = 0; i < layer.neurons; i++) {
+                    const y = 60 + i * (height - 120) / (layer.neurons - 1);
+                    
+                    // Neuron circle
+                    svg.append('circle')
+                        .attr('cx', layer.x)
+                        .attr('cy', y)
+                        .attr('r', 12)
+                        .attr('fill', layerIdx === 3 ? '#e74c3c' : '#3498db')
+                        .attr('opacity', 0.8);
+                    
+                    // Gradient value (simulated)
+                    const gradValue = layerIdx === 3 ? (0.5 + Math.random() * 0.5).toFixed(2) : 
+                                     (0.1 + Math.random() * 0.3).toFixed(2);
+                    
+                    svg.append('text')
+                        .attr('x', layer.x)
+                        .attr('y', y + 25)
+                        .attr('text-anchor', 'middle')
+                        .attr('font-size', '10px')
+                        .text(`δ=${gradValue}`);
+                }
+            });
+            
+            // Animated gradient flow arrows
+            for (let i = layers.length - 1; i > 0; i--) {
+                const arrow = svg.append('path')
+                    .attr('d', `M ${layers[i].x - 20} ${height/2} L ${layers[i-1].x + 20} ${height/2}`)
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3)
+                    .attr('fill', 'none')
+                    .attr('marker-end', 'url(#gradient-arrow)')
+                    .attr('opacity', 0);
+                
+                // Animate with delay
+                arrow.transition()
+                    .delay((layers.length - i - 1) * 500)
+                    .duration(500)
+                    .attr('opacity', 1);
+            }
+            
+            // Arrow marker for gradients
+            svg.append('defs')
+                .append('marker')
+                .attr('id', 'gradient-arrow')
+                .attr('markerWidth', 10)
+                .attr('markerHeight', 7)
+                .attr('refX', 9)
+                .attr('refY', 3.5)
+                .attr('orient', 'auto')
+                .append('polygon')
+                .attr('points', '0 0, 10 3.5, 0 7')
+                .attr('fill', '#e74c3c');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>

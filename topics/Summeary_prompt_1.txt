@@ -1,0 +1,59 @@
+# Machine Learning Lecture Creation Guidelines
+
+When creating machine learning lecture materials, follow this structured approach:
+
+## File Structure
+Create three files for each lecture topic in `topics/[topic_name]/`:
+- `[topic_name]_outline.md` - Structured 15-minute lecture outline
+- `[topic_name]_slides.html` - Interactive HTML slides with visualizations
+- `[topic_name]_script.md` - Detailed spoken script for each slide
+
+## Outline Format (outline.md)
+- 6-7 main sections, each 2-3 minutes
+- Start with Introduction (2 min) and end with Key Takeaways
+- Use bullet points for sub-topics
+- Focus on practical, actionable content
+- Include learning objectives in introduction
+
+## Slides Format (slides.html)
+- 10 slides total including title slide
+- Compact design: 85vw width, 75vh height, 30px padding
+- Typography: h1 (2.2rem), h2 (1.7rem), h3 (1.2rem), p (0.9rem)
+- NO SCROLLING: All content must fit within viewport
+- NO colored boxes (warning, danger, do/dont with colors)
+- Use neutral styling: .highlight and .example boxes only
+- Replace large tables with concise summary text
+- Remove "bottom boxes" that add extra length
+- Inline formulas instead of separate .formula boxes
+- Include simple D3.js visualizations where helpful
+- Navigation with keyboard arrows and slide counter
+
+## Script Format (script.md)
+- Detailed speaking notes for each slide (280-300 words per slide)
+- Natural, conversational tone
+- Include slide transitions and key emphasis points
+- Provide technical depth beyond what's on slides
+- Real-world examples and practical applications
+
+## Content Guidelines
+- Focus on practical ML concepts, not just theory
+- Include common pitfalls and best practices
+- Use business-relevant examples
+- Balance technical depth with accessibility
+- Emphasize actionable insights over academic completeness
+
+## Design Constraints
+- All slides must fit in viewport without scrolling
+- Consistent, clean, professional styling
+- Minimal color usage (blue highlights only)
+- Compact spacing and margins
+- Grid layouts for organization
+- Responsive design for different screen sizes
+
+## Topics to Favor
+- Specific techniques and algorithms
+- Practical implementation challenges
+- Common mistakes and how to avoid them
+- Real-world applications and case studies
+- Tool-specific knowledge (XGBoost, LSTM, etc.)
+- Domain-specific considerations (time series, NLP, etc.)

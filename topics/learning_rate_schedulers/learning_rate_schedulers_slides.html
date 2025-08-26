@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Rate Schedulers</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90vw;
+            max-width: 1100px;
+            height: 80vh;
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 1.2rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 0.6rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .highlight {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 1.5rem 0;
+        }
+
+        .formula {
+            background: #fdfdfd;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1.2rem 0;
+            background: white;
+            min-height: 300px;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2.5rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .objective h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .objective p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* Scheduler specific styles */
+        .scheduler-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .scheduler-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .scheduler-item.header {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .lr-curve {
+            stroke-width: 3px;
+            fill: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 85vh;
+                padding: 25px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .grid-2, .grid-3, .objectives {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>Learning Rate Schedulers</h1>
+            <p class="subtitle">Optimizing Optimization Through Adaptive Learning Rates</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>Scheduling Strategies</h3>
+                    <p>Master step decay, cosine, and polynomial scheduling</p>
+                </div>
+                <div class="objective">
+                    <h3>Adaptive Methods</h3>
+                    <p>Learn performance-based learning rate adjustment</p>
+                </div>
+                <div class="objective">
+                    <h3>Advanced Techniques</h3>
+                    <p>Explore warm-up, cyclical rates, and one-cycle policies</p>
+                </div>
+                <div class="objective">
+                    <h3>Practical Implementation</h3>
+                    <p>Apply scheduling strategies in real-world scenarios</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Why Learning Rate Scheduling? -->
+        <div class="slide" id="slide2">
+            <h2>Why Learning Rate Scheduling?</h2>
+            
+            <div class="highlight">
+                <p><strong>Static learning rates often lead to suboptimal convergence. Learning rate scheduling adapts the step size during training to achieve better optimization and faster convergence.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Problems with Fixed Learning Rates</h3>
+                    <ul>
+                        <li>Too high: oscillation around minimum</li>
+                        <li>Too low: extremely slow convergence</li>
+                        <li>Doesn't adapt to changing loss landscape</li>
+                        <li>May get stuck in plateaus</li>
+                        <li>Suboptimal final performance</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Key Insight:</strong> Early training benefits from larger steps for fast progress, while later training needs smaller steps for fine-tuning.
+                    </div>
+                </div>
+                <div>
+                    <div class="viz" id="lr-comparison-viz">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Fixed vs Scheduled Learning Rate Comparison
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Step Decay Schedulers -->
+        <div class="slide" id="slide3">
+            <h2>Step Decay Schedulers</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Step Decay</h3>
+                    <div class="formula">
+                        $$\alpha_t = \alpha_0 \times \gamma^{\lfloor t/s \rfloor}$$
+                    </div>
+                    <ul>
+                        <li><strong>α₀:</strong> Initial learning rate</li>
+                        <li><strong>γ:</strong> Decay factor (e.g., 0.1)</li>
+                        <li><strong>s:</strong> Step size (epochs between drops)</li>
+                    </ul>
+                    
+                    <h3>Exponential Decay</h3>
+                    <div class="formula">
+                        $$\alpha_t = \alpha_0 \times e^{-\lambda t}$$
+                    </div>
+                    <p>Smooth continuous decay with decay rate λ.</p>
+                </div>
+                
+                <div>
+                    <div class="viz" id="step-decay-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Step vs Exponential Decay Visualization
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <strong>When to Use:</strong> Step decay for established architectures with known training phases. Exponential for smoother transitions.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Cosine and Polynomial Schedulers -->
+        <div class="slide" id="slide4">
+            <h2>Cosine and Polynomial Schedulers</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Cosine Annealing</h3>
+                    <div class="formula">
+                        $$\alpha_t = \alpha_{min} + \frac{\alpha_{max} - \alpha_{min}}{2}\left(1 + \cos\left(\frac{t}{T}\pi\right)\right)$$
+                    </div>
+                    <p>Smooth sinusoidal decay from αₘₐₓ to αₘᵢₙ over T epochs.</p>
+                    
+                    <h3>Polynomial Decay</h3>
+                    <div class="formula">
+                        $$\alpha_t = \alpha_0 \times \left(1 - \frac{t}{T}\right)^p$$
+                    </div>
+                    <p>Power law decay with exponent p controlling decay rate.</p>
+                </div>
+                
+                <div>
+                    <div class="viz" id="cosine-poly-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Cosine vs Polynomial Decay Curves
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <strong>Cosine Benefits:</strong> Smooth transitions, no hyperparameter tuning for decay rate. Works well with warm restarts.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Warm Restarts and Cyclical Rates -->
+        <div class="slide" id="slide5">
+            <h2>Warm Restarts and Cyclical Learning Rates</h2>
+            
+            <div class="highlight">
+                <p><strong>Cyclical learning rates periodically restart the learning rate to escape local minima and explore different regions of the loss landscape.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Cosine Annealing with Warm Restarts</h3>
+                    <div class="formula">
+                        $$\alpha_t = \alpha_{min} + \frac{\alpha_{max} - \alpha_{min}}{2}\left(1 + \cos\left(\frac{T_{cur}}{T_i}\pi\right)\right)$$
+                    </div>
+                    <p>Where T_cur is epochs since last restart, T_i is restart period.</p>
+                    
+                    <h3>Benefits of Restarts</h3>
+                    <ul>
+                        <li>Escape local minima</li>
+                        <li>Explore multiple solutions</li>
+                        <li>Often find better final solutions</li>
+                        <li>Ensemble-like behavior</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="warm-restarts-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Warm Restarts Visualization
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Adaptive Schedulers -->
+        <div class="slide" id="slide6">
+            <h2>Adaptive Learning Rate Schedulers</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>ReduceLROnPlateau</h3>
+                    <ul>
+                        <li>Monitor validation loss (or other metric)</li>
+                        <li>Reduce LR when no improvement for N epochs</li>
+                        <li>Typically reduce by factor of 0.1-0.5</li>
+                        <li>Automatically adapts to training dynamics</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Parameters:</strong>
+                        <ul>
+                            <li>Patience: epochs to wait</li>
+                            <li>Factor: reduction multiplier</li>
+                            <li>Min LR: lower bound</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Learning Rate Range Test</h3>
+                    <ul>
+                        <li>Gradually increase LR from very small to large</li>
+                        <li>Plot loss vs learning rate</li>
+                        <li>Find optimal range from curve shape</li>
+                        <li>Use steepest descent point</li>
+                    </ul>
+                    
+                    <div class="viz" id="lr-range-test-viz">
+                        <div style="height: 150px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            LR Range Test Curve
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: One-Cycle Learning Rate Policy -->
+        <div class="slide" id="slide7">
+            <h2>One-Cycle Learning Rate Policy</h2>
+            
+            <div class="highlight">
+                <p><strong>One-cycle policy: start low, increase to maximum, then decrease to very low. Achieves super-convergence with fewer epochs and better generalization.</strong></p>
+            </div>
+            
+            <div class="viz" id="one-cycle-viz">
+                <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    One-Cycle Learning Rate Policy
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Phase Breakdown</h3>
+                    <ul>
+                        <li><strong>Phase 1 (45%):</strong> Increase from base to max LR</li>
+                        <li><strong>Phase 2 (45%):</strong> Decrease from max to base LR</li>
+                        <li><strong>Phase 3 (10%):</strong> Decrease to minimum LR</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Benefits</h3>
+                    <ul>
+                        <li>Faster convergence (super-convergence)</li>
+                        <li>Better generalization</li>
+                        <li>Requires fewer epochs</li>
+                        <li>Self-regularizing effect</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Warm-up Strategies -->
+        <div class="slide" id="slide8">
+            <h2>Learning Rate Warm-up</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Why Warm-up?</h3>
+                    <ul>
+                        <li>Large models sensitive to initial LR</li>
+                        <li>Prevents early instability</li>
+                        <li>Allows higher maximum learning rates</li>
+                        <li>Essential for large batch training</li>
+                    </ul>
+                    
+                    <h3>Linear Warm-up</h3>
+                    <div class="formula">
+                        $$\alpha_t = \alpha_{target} \times \frac{t}{t_{warmup}}$$
+                    </div>
+                    <p>Linearly increase from 0 to target LR over warm-up period.</p>
+                </div>
+                
+                <div>
+                    <div class="viz" id="warmup-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Warm-up + Cosine Decay Schedule
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <strong>Typical Setup:</strong> 5-10% of total epochs for warm-up, followed by cosine decay or other schedule.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Practical Implementation -->
+        <div class="slide" id="slide9">
+            <h2>Implementation and Best Practices</h2>
+            
+            <div class="scheduler-comparison">
+                <div class="scheduler-item header">Method</div>
+                <div class="scheduler-item header">Best For</div>
+                <div class="scheduler-item header">Key Parameters</div>
+                
+                <div class="scheduler-item"><strong>Step Decay</strong></div>
+                <div class="scheduler-item">Established architectures</div>
+                <div class="scheduler-item">Step size, decay factor</div>
+                
+                <div class="scheduler-item"><strong>Cosine</strong></div>
+                <div class="scheduler-item">General purpose, smooth decay</div>
+                <div class="scheduler-item">T_max, min LR</div>
+                
+                <div class="scheduler-item"><strong>ReduceLROnPlateau</strong></div>
+                <div class="scheduler-item">Unknown training dynamics</div>
+                <div class="scheduler-item">Patience, factor</div>
+                
+                <div class="scheduler-item"><strong>One-Cycle</strong></div>
+                <div class="scheduler-item">Fast training, good generalization</div>
+                <div class="scheduler-item">Max LR, cycle length</div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Implementation Tips</h3>
+                    <ul>
+                        <li>Start with cosine annealing for most cases</li>
+                        <li>Use LR range test to find optimal bounds</li>
+                        <li>Monitor both training and validation metrics</li>
+                        <li>Log learning rate for debugging</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Common Pitfalls</h3>
+                    <ul>
+                        <li>Too aggressive decay (undershooting optimum)</li>
+                        <li>Not using warm-up with large models</li>
+                        <li>Ignoring validation performance</li>
+                        <li>One-size-fits-all approach</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Summary -->
+        <div class="slide" id="slide10">
+            <h2>Key Takeaways</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Core Principles</h3>
+                    <ul>
+                        <li>Learning rate scheduling improves convergence</li>
+                        <li>Different schedules suit different problem types</li>
+                        <li>Adaptive methods reduce hyperparameter tuning</li>
+                        <li>Cyclical rates can escape local minima</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Practical Guidelines</h3>
+                    <ul>
+                        <li>Use cosine annealing as default choice</li>
+                        <li>Add warm-up for large models or batch sizes</li>
+                        <li>Try one-cycle for faster training</li>
+                        <li>Monitor learning rate during training</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Learning rate scheduling is one of the most impactful hyperparameter choices in deep learning. Proper scheduling can reduce training time, improve final performance, and enhance generalization.</strong></p>
+            </div>
+            
+            <div class="example">
+                <strong>Modern Practice:</strong> Most state-of-the-art models use sophisticated scheduling combining warm-up, cosine decay, and sometimes cyclical elements for optimal performance.
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">10</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations
+            setTimeout(() => initViz(currentSlide), 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Visualization functions
+        function initViz(slideNum) {
+            console.log('Initializing visualization for slide:', slideNum);
+            
+            try {
+                switch(slideNum) {
+                    case 2:
+                        createLRComparisonViz();
+                        break;
+                    case 3:
+                        createStepDecayViz();
+                        break;
+                    case 4:
+                        createCosinePolyViz();
+                        break;
+                    case 5:
+                        createWarmRestartsViz();
+                        break;
+                    case 6:
+                        createLRRangeTestViz();
+                        break;
+                    case 7:
+                        createOneCycleViz();
+                        break;
+                    case 8:
+                        createWarmupViz();
+                        break;
+                }
+            } catch (error) {
+                console.error('Visualization error:', error);
+            }
+        }
+
+        function createLRComparisonViz() {
+            const container = d3.select('#lr-comparison-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 250;
+            const margin = {top: 20, right: 100, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate convergence data
+            const epochs = d3.range(0, 100);
+            const fixedLR = epochs.map(e => 5 * Math.exp(-0.03 * e) + 0.1 + 0.2 * Math.random());
+            const scheduledLR = epochs.map(e => {
+                let decay = e < 50 ? 0.05 : 0.15;
+                return 5 * Math.exp(-decay * e) + 0.05 + 0.1 * Math.random();
+            });
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 99])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 6])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(i))
+                .y(d => yScale(d));
+            
+            // Draw convergence curves
+            svg.append('path')
+                .datum(fixedLR)
+                .attr('d', line)
+                .attr('stroke', '#e74c3c')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(scheduledLR)
+                .attr('d', line)
+                .attr('stroke', '#2ecc71')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('transform', `translate(${width - 90}, 30)`);
+            
+            legend.append('line').attr('x1', 0).attr('x2', 20).attr('y1', 0).attr('y2', 0)
+                .attr('stroke', '#e74c3c').attr('stroke-width', 3);
+            legend.append('text').attr('x', 25).attr('y', 5).text('Fixed LR').attr('font-size', '12px');
+            
+            legend.append('line').attr('x1', 0).attr('x2', 20).attr('y1', 20).attr('y2', 20)
+                .attr('stroke', '#2ecc71').attr('stroke-width', 3);
+            legend.append('text').attr('x', 25).attr('y', 25).text('Scheduled').attr('font-size', '12px');
+        }
+
+        function createStepDecayViz() {
+            const container = d3.select('#step-decay-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 200;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate step and exponential decay
+            const epochs = d3.range(0, 100);
+            const stepDecay = epochs.map(e => 0.1 * Math.pow(0.1, Math.floor(e / 25)));
+            const expDecay = epochs.map(e => 0.1 * Math.exp(-0.05 * e));
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 99])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 0.12])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(i))
+                .y(d => yScale(d));
+            
+            // Draw decay curves
+            svg.append('path')
+                .datum(stepDecay)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(expDecay)
+                .attr('d', line)
+                .attr('stroke', '#f39c12')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            // Add labels
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', height - 5)
+                .text('Epochs')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+            
+            svg.append('text')
+                .attr('x', 15)
+                .attr('y', height/2)
+                .text('Learning Rate')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('transform', `rotate(-90, 15, ${height/2})`);
+        }
+
+        function createCosinePolyViz() {
+            const container = d3.select('#cosine-poly-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 200;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate cosine and polynomial decay
+            const epochs = d3.range(0, 100);
+            const cosineDecay = epochs.map(e => 0.05 + 0.05 * (1 + Math.cos(Math.PI * e / 99)));
+            const polyDecay = epochs.map(e => 0.1 * Math.pow(1 - e / 99, 2));
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 99])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 0.12])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(i))
+                .y(d => yScale(d));
+            
+            // Draw decay curves
+            svg.append('path')
+                .datum(cosineDecay)
+                .attr('d', line)
+                .attr('stroke', '#9b59b6')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(polyDecay)
+                .attr('d', line)
+                .attr('stroke', '#e67e22')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+        }
+
+        function createWarmRestartsViz() {
+            const container = d3.select('#warm-restarts-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 200;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate warm restarts pattern
+            const epochs = d3.range(0, 100);
+            const warmRestarts = epochs.map(e => {
+                const cycle = e % 25;
+                return 0.02 + 0.08 * (1 + Math.cos(Math.PI * cycle / 24)) / 2;
+            });
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 99])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 0.12])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(i))
+                .y(d => yScale(d));
+            
+            svg.append('path')
+                .datum(warmRestarts)
+                .attr('d', line)
+                .attr('stroke', '#2ecc71')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+        }
+
+        function createLRRangeTestViz() {
+            const container = d3.select('#lr-range-test-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 120;
+            const margin = {top: 10, right: 20, bottom: 30, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate LR range test curve
+            const lrs = d3.range(-6, 0, 0.1);
+            const losses = lrs.map(lr => {
+                const rate = Math.pow(10, lr);
+                if (rate < 1e-4) return 5 + Math.random();
+                if (rate < 1e-2) return 2 - 3 * lr + Math.random() * 0.5;
+                return 10 + rate * 1000 + Math.random();
+            });
+            
+            const xScale = d3.scaleLinear()
+                .domain([-6, 0])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 8])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(lrs[i]))
+                .y(d => yScale(d));
+            
+            svg.append('path')
+                .datum(losses)
+                .attr('d', line)
+                .attr('stroke', '#e74c3c')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none');
+        }
+
+        function createOneCycleViz() {
+            const container = d3.select('#one-cycle-viz');
+            container.selectAll('*').remove();
+            
+            const width = 500;
+            const height = 250;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate one-cycle pattern
+            const epochs = d3.range(0, 100);
+            const oneCycle = epochs.map(e => {
+                if (e < 45) return 0.01 + (0.1 - 0.01) * e / 44;
+                if (e < 90) return 0.1 - (0.1 - 0.01) * (e - 45) / 44;
+                return 0.01 - (0.01 - 0.001) * (e - 90) / 9;
+            });
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 99])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 0.12])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(i))
+                .y(d => yScale(d));
+            
+            svg.append('path')
+                .datum(oneCycle)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 4)
+                .attr('fill', 'none');
+            
+            // Add phase labels
+            svg.append('text')
+                .attr('x', xScale(22))
+                .attr('y', margin.top + 10)
+                .text('Phase 1: Increase')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('fill', '#3498db');
+            
+            svg.append('text')
+                .attr('x', xScale(67))
+                .attr('y', margin.top + 10)
+                .text('Phase 2: Decrease')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('fill', '#3498db');
+            
+            svg.append('text')
+                .attr('x', xScale(94))
+                .attr('y', margin.top + 10)
+                .text('Phase 3: Fine-tune')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('fill', '#3498db');
+        }
+
+        function createWarmupViz() {
+            const container = d3.select('#warmup-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 200;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate warmup + cosine schedule
+            const epochs = d3.range(0, 100);
+            const warmupCosine = epochs.map(e => {
+                if (e < 10) return 0.1 * e / 10;  // Linear warmup
+                const adjustedE = e - 10;
+                return 0.01 + 0.09 * (1 + Math.cos(Math.PI * adjustedE / 89)) / 2;
+            });
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 99])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 0.12])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(i))
+                .y(d => yScale(d));
+            
+            svg.append('path')
+                .datum(warmupCosine)
+                .attr('d', line)
+                .attr('stroke', '#f39c12')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            // Add warmup region highlight
+            svg.append('rect')
+                .attr('x', margin.left)
+                .attr('y', margin.top)
+                .attr('width', xScale(10) - margin.left)
+                .attr('height', height - margin.top - margin.bottom)
+                .attr('fill', '#f39c12')
+                .attr('opacity', 0.2);
+            
+            svg.append('text')
+                .attr('x', xScale(5))
+                .attr('y', height - 10)
+                .text('Warm-up')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '10px')
+                .attr('fill', '#f39c12');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>

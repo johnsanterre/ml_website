@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regularization Techniques</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90vw;
+            max-width: 1100px;
+            height: 80vh;
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 1.2rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 0.6rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .highlight {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 1.5rem 0;
+        }
+
+        .formula {
+            background: #fdfdfd;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1.2rem 0;
+            background: white;
+            min-height: 300px;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2.5rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .objective h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .objective p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* Regularization specific styles */
+        .technique-box {
+            background: #34495e;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .technique-box h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-cell {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .comparison-cell.header {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .regularization-path {
+            stroke-width: 3px;
+            fill: none;
+        }
+
+        .constraint-region {
+            fill-opacity: 0.3;
+            stroke-width: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 85vh;
+                padding: 25px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .grid-2, .grid-3, .objectives {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>Regularization Techniques</h1>
+            <p class="subtitle">Controlling Model Complexity for Better Generalization</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>Bias-Variance Trade-off</h3>
+                    <p>Understand how regularization balances model complexity</p>
+                </div>
+                <div class="objective">
+                    <h3>L1 & L2 Regularization</h3>
+                    <p>Master Ridge and Lasso regression techniques</p>
+                </div>
+                <div class="objective">
+                    <h3>Modern Techniques</h3>
+                    <p>Explore dropout, batch norm, and data augmentation</p>
+                </div>
+                <div class="objective">
+                    <h3>Practical Application</h3>
+                    <p>Learn parameter selection and implementation strategies</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is Regularization? -->
+        <div class="slide" id="slide2">
+            <h2>What is Regularization?</h2>
+            
+            <div class="highlight">
+                <p><strong>Regularization is a technique to prevent overfitting by adding constraints or penalties to the model, reducing its complexity and improving generalization to new data.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>The Overfitting Problem</h3>
+                    <ul>
+                        <li>Complex models memorize training data</li>
+                        <li>Poor performance on unseen examples</li>
+                        <li>High variance, low bias</li>
+                        <li>Common with limited training data</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Real-world Impact:</strong> A model that achieves 99% training accuracy but only 60% test accuracy is clearly overfitted and needs regularization.
+                    </div>
+                </div>
+                <div>
+                    <div class="viz" id="overfitting-viz">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Overfitting vs Regularized Model Comparison
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Bias-Variance Trade-off -->
+        <div class="slide" id="slide3">
+            <h2>The Bias-Variance Trade-off</h2>
+            
+            <div class="formula">
+                $$\text{Expected Error} = \text{Bias}^2 + \text{Variance} + \text{Irreducible Error}$$
+            </div>
+            
+            <div class="grid-3">
+                <div class="example">
+                    <h3>High Bias</h3>
+                    <ul>
+                        <li>Underfitting</li>
+                        <li>Too simple model</li>
+                        <li>Poor training performance</li>
+                        <li>Consistent but wrong</li>
+                    </ul>
+                </div>
+                
+                <div class="example">
+                    <h3>High Variance</h3>
+                    <ul>
+                        <li>Overfitting</li>
+                        <li>Too complex model</li>
+                        <li>Poor test performance</li>
+                        <li>Inconsistent predictions</li>
+                    </ul>
+                </div>
+                
+                <div class="example">
+                    <h3>Regularization</h3>
+                    <ul>
+                        <li>Optimal balance</li>
+                        <li>Controlled complexity</li>
+                        <li>Better generalization</li>
+                        <li>Stable performance</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="viz" id="bias-variance-viz">
+                <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    Bias-Variance Trade-off Visualization
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: L1 Regularization (Lasso) -->
+        <div class="slide" id="slide4">
+            <h2>L1 Regularization (Lasso)</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Mathematical Formulation</h3>
+                    <div class="formula">
+                        $$\min_{\boldsymbol{\beta}} \frac{1}{2n}\|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|_2^2 + \lambda\|\boldsymbol{\beta}\|_1$$
+                    </div>
+                    <p>The L1 penalty term $\lambda\|\boldsymbol{\beta}\|_1 = \lambda\sum_{j=1}^{p}|\beta_j|$ adds the sum of absolute values of coefficients.</p>
+                    
+                    <h3>Key Properties</h3>
+                    <ul>
+                        <li>Promotes sparsity (many coefficients become exactly zero)</li>
+                        <li>Automatic feature selection</li>
+                        <li>Non-differentiable at zero</li>
+                        <li>Diamond-shaped constraint region</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="l1-constraint-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            L1 Constraint Region (Diamond)
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <h4>When to Use L1</h4>
+                        <p>Ideal when you suspect many features are irrelevant and want automatic feature selection.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: L2 Regularization (Ridge) -->
+        <div class="slide" id="slide5">
+            <h2>L2 Regularization (Ridge)</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Mathematical Formulation</h3>
+                    <div class="formula">
+                        $$\min_{\boldsymbol{\beta}} \frac{1}{2n}\|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|_2^2 + \lambda\|\boldsymbol{\beta}\|_2^2$$
+                    </div>
+                    <p>The L2 penalty term $\lambda\|\boldsymbol{\beta}\|_2^2 = \lambda\sum_{j=1}^{p}\beta_j^2$ adds the sum of squared coefficients.</p>
+                    
+                    <h3>Key Properties</h3>
+                    <ul>
+                        <li>Shrinks coefficients proportionally</li>
+                        <li>Handles multicollinearity well</li>
+                        <li>Differentiable everywhere</li>
+                        <li>Circular constraint region</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="l2-constraint-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            L2 Constraint Region (Circle)
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <h4>When to Use L2</h4>
+                        <p>Best when all features contribute somewhat and you want smooth coefficient shrinkage.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: L1 vs L2 Comparison -->
+        <div class="slide" id="slide6">
+            <h2>L1 vs L2: Geometric Intuition</h2>
+            
+            <div class="viz" id="l1-l2-comparison">
+                <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    Interactive L1 vs L2 Constraint Visualization
+                </div>
+            </div>
+            
+            <div class="comparison-table">
+                <div class="comparison-cell header">Aspect</div>
+                <div class="comparison-cell header">L1 (Lasso)</div>
+                <div class="comparison-cell header">L2 (Ridge)</div>
+                
+                <div class="comparison-cell"><strong>Sparsity</strong></div>
+                <div class="comparison-cell">✓ Creates sparse solutions</div>
+                <div class="comparison-cell">✗ Dense solutions</div>
+                
+                <div class="comparison-cell"><strong>Feature Selection</strong></div>
+                <div class="comparison-cell">✓ Automatic</div>
+                <div class="comparison-cell">✗ Manual required</div>
+                
+                <div class="comparison-cell"><strong>Multicollinearity</strong></div>
+                <div class="comparison-cell">Selects arbitrarily</div>
+                <div class="comparison-cell">✓ Handles well</div>
+                
+                <div class="comparison-cell"><strong>Computational</strong></div>
+                <div class="comparison-cell">Iterative algorithms</div>
+                <div class="comparison-cell">✓ Closed-form solution</div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Elastic Net -->
+        <div class="slide" id="slide7">
+            <h2>Elastic Net: Best of Both Worlds</h2>
+            
+            <div class="formula">
+                $$\min_{\boldsymbol{\beta}} \frac{1}{2n}\|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|_2^2 + \lambda\left(\alpha\|\boldsymbol{\beta}\|_1 + \frac{1-\alpha}{2}\|\boldsymbol{\beta}\|_2^2\right)$$
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Combining L1 and L2</h3>
+                    <ul>
+                        <li>α controls the mixing ratio</li>
+                        <li>α = 1: Pure L1 (Lasso)</li>
+                        <li>α = 0: Pure L2 (Ridge)</li>
+                        <li>0 < α < 1: Elastic Net</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Advantages:</strong>
+                        <ul>
+                            <li>Selects groups of correlated features</li>
+                            <li>More stable than Lasso</li>
+                            <li>Better for high-dimensional data</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="viz" id="elastic-net-viz">
+                        <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Elastic Net Regularization Path
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <h4>When to Use Elastic Net</h4>
+                        <p>Ideal for high-dimensional data with grouped variables or when you need both sparsity and stability.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Modern Regularization Techniques -->
+        <div class="slide" id="slide8">
+            <h2>Modern Deep Learning Regularization</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Dropout</h3>
+                    <div class="formula">
+                        $$y = f(\mathbf{W} \cdot (\mathbf{x} \odot \mathbf{m}))$$
+                    </div>
+                    <p>Randomly sets neurons to zero during training with probability p.</p>
+                    
+                    <h3>Batch Normalization</h3>
+                    <div class="formula">
+                        $$\hat{x} = \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}}$$
+                    </div>
+                    <p>Normalizes layer inputs, acts as implicit regularization.</p>
+                </div>
+                
+                <div>
+                    <h3>Data Augmentation</h3>
+                    <ul>
+                        <li>Rotation, scaling, cropping for images</li>
+                        <li>Noise injection for robustness</li>
+                        <li>Synthetic data generation</li>
+                        <li>Mixup and CutMix techniques</li>
+                    </ul>
+                    
+                    <h3>Early Stopping</h3>
+                    <ul>
+                        <li>Monitor validation loss</li>
+                        <li>Stop when overfitting begins</li>
+                        <li>Simple but effective</li>
+                        <li>No hyperparameter tuning needed</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Parameter Selection -->
+        <div class="slide" id="slide9">
+            <h2>Choosing Regularization Parameters</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Cross-Validation Approach</h3>
+                    <ul>
+                        <li>Grid search over λ values</li>
+                        <li>K-fold cross-validation</li>
+                        <li>Select λ with best validation performance</li>
+                        <li>Common range: 10⁻⁶ to 10²</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Practical Tips:</strong>
+                        <ul>
+                            <li>Use logarithmic spacing for λ</li>
+                            <li>Start with wide range, then narrow</li>
+                            <li>Consider computational budget</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="viz" id="cv-selection-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Cross-Validation Curves
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>One Standard Error Rule:</strong> Choose the largest λ whose CV error is within one standard error of the minimum.</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Summary -->
+        <div class="slide" id="slide10">
+            <h2>Key Takeaways</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Fundamental Principles</h3>
+                    <ul>
+                        <li>Regularization prevents overfitting by controlling complexity</li>
+                        <li>L1 promotes sparsity, L2 promotes smoothness</li>
+                        <li>Elastic Net combines benefits of both</li>
+                        <li>Modern techniques extend beyond penalty methods</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Practical Guidelines</h3>
+                    <ul>
+                        <li>Use cross-validation for parameter selection</li>
+                        <li>Consider problem characteristics when choosing technique</li>
+                        <li>Combine multiple regularization approaches</li>
+                        <li>Monitor both training and validation performance</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Regularization is essential for building robust machine learning models. The choice of technique depends on your data characteristics, computational constraints, and interpretability requirements.</strong></p>
+            </div>
+            
+            <div class="example">
+                <strong>Future Directions:</strong> Research continues into adaptive regularization, learned regularization functions, and regularization for specific architectures like transformers and graph neural networks.
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">10</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations
+            setTimeout(() => initViz(currentSlide), 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Visualization functions
+        function initViz(slideNum) {
+            console.log('Initializing visualization for slide:', slideNum);
+            
+            try {
+                switch(slideNum) {
+                    case 2:
+                        createOverfittingViz();
+                        break;
+                    case 3:
+                        createBiasVarianceViz();
+                        break;
+                    case 4:
+                        createL1ConstraintViz();
+                        break;
+                    case 5:
+                        createL2ConstraintViz();
+                        break;
+                    case 6:
+                        createL1L2Comparison();
+                        break;
+                    case 7:
+                        createElasticNetViz();
+                        break;
+                    case 9:
+                        createCVSelectionViz();
+                        break;
+                }
+            } catch (error) {
+                console.error('Visualization error:', error);
+            }
+        }
+
+        function createOverfittingViz() {
+            const container = d3.select('#overfitting-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 250;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate data
+            const xData = d3.range(0, 10, 0.1);
+            const trueFunction = xData.map(x => Math.sin(x) + 0.2 * Math.random() - 0.1);
+            const overfittedFunction = xData.map(x => Math.sin(x) + 0.5 * Math.sin(10*x) + 0.2 * Math.random() - 0.1);
+            const regularizedFunction = xData.map(x => Math.sin(x) + 0.1 * Math.sin(3*x) + 0.1 * Math.random() - 0.05);
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 10])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([-2, 2])
+                .range([height - margin.bottom, margin.top]);
+            
+            // Create line generators
+            const line = d3.line()
+                .x((d, i) => xScale(xData[i]))
+                .y(d => yScale(d));
+            
+            // Draw functions
+            svg.append('path')
+                .datum(trueFunction)
+                .attr('d', line)
+                .attr('stroke', '#2ecc71')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(overfittedFunction)
+                .attr('d', line)
+                .attr('stroke', '#e74c3c')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none')
+                .attr('stroke-dasharray', '5,5');
+            
+            svg.append('path')
+                .datum(regularizedFunction)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none');
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('transform', `translate(${width - 150}, 30)`);
+            
+            legend.append('line').attr('x1', 0).attr('x2', 20).attr('y1', 0).attr('y2', 0)
+                .attr('stroke', '#2ecc71').attr('stroke-width', 3);
+            legend.append('text').attr('x', 25).attr('y', 5).text('True Function').attr('font-size', '12px');
+            
+            legend.append('line').attr('x1', 0).attr('x2', 20).attr('y1', 20).attr('y2', 20)
+                .attr('stroke', '#e74c3c').attr('stroke-width', 2).attr('stroke-dasharray', '5,5');
+            legend.append('text').attr('x', 25).attr('y', 25).text('Overfitted').attr('font-size', '12px');
+            
+            legend.append('line').attr('x1', 0).attr('x2', 20).attr('y1', 40).attr('y2', 40)
+                .attr('stroke', '#3498db').attr('stroke-width', 2);
+            legend.append('text').attr('x', 25).attr('y', 45).text('Regularized').attr('font-size', '12px');
+        }
+
+        function createBiasVarianceViz() {
+            const container = d3.select('#bias-variance-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 150;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Create complexity scale
+            const complexityScale = d3.scaleLinear().domain([0, 100]).range([50, width - 50]);
+            const errorScale = d3.scaleLinear().domain([0, 1]).range([height - 30, 30]);
+            
+            // Generate curves
+            const complexity = d3.range(0, 101, 2);
+            const bias = complexity.map(x => 0.8 * Math.exp(-x/20) + 0.1);
+            const variance = complexity.map(x => 0.1 + 0.7 * (x/100) ** 2);
+            const total = complexity.map((x, i) => bias[i] + variance[i] + 0.1);
+            
+            const line = d3.line()
+                .x((d, i) => complexityScale(complexity[i]))
+                .y(d => errorScale(d))
+                .curve(d3.curveCardinal);
+            
+            // Draw curves
+            svg.append('path')
+                .datum(bias)
+                .attr('d', line)
+                .attr('stroke', '#e74c3c')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(variance)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(total)
+                .attr('d', line)
+                .attr('stroke', '#2c3e50')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            // Add labels
+            svg.append('text')
+                .attr('x', 60)
+                .attr('y', 45)
+                .text('Bias²')
+                .attr('fill', '#e74c3c')
+                .attr('font-size', '14px')
+                .attr('font-weight', 'bold');
+            
+            svg.append('text')
+                .attr('x', 300)
+                .attr('y', 45)
+                .text('Variance')
+                .attr('fill', '#3498db')
+                .attr('font-size', '14px')
+                .attr('font-weight', 'bold');
+            
+            svg.append('text')
+                .attr('x', 180)
+                .attr('y', 80)
+                .text('Total Error')
+                .attr('fill', '#2c3e50')
+                .attr('font-size', '14px')
+                .attr('font-weight', 'bold');
+            
+            // Add axes labels
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', height - 5)
+                .text('Model Complexity')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+        }
+
+        function createL1ConstraintViz() {
+            const container = d3.select('#l1-constraint-viz');
+            container.selectAll('*').remove();
+            
+            const width = 300;
+            const height = 250;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // L1 constraint (diamond)
+            const diamond = [
+                [centerX, centerY - 80],  // top
+                [centerX + 80, centerY], // right
+                [centerX, centerY + 80],  // bottom
+                [centerX - 80, centerY]  // left
+            ];
+            
+            svg.append('polygon')
+                .attr('points', diamond.map(d => d.join(',')).join(' '))
+                .attr('class', 'constraint-region')
+                .attr('fill', '#3498db')
+                .attr('stroke', '#2980b9');
+            
+            // Add contour lines (ellipses for loss function)
+            for (let i = 1; i <= 3; i++) {
+                svg.append('ellipse')
+                    .attr('cx', centerX + 30)
+                    .attr('cy', centerY + 20)
+                    .attr('rx', 40 * i)
+                    .attr('ry', 30 * i)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 2)
+                    .attr('opacity', 1 - i * 0.2);
+            }
+            
+            // Mark optimal point (where contour touches constraint)
+            svg.append('circle')
+                .attr('cx', centerX)
+                .attr('cy', centerY - 80)
+                .attr('r', 6)
+                .attr('fill', '#f39c12')
+                .attr('stroke', '#d35400')
+                .attr('stroke-width', 2);
+            
+            // Add axes
+            svg.append('line')
+                .attr('x1', centerX - 100).attr('x2', centerX + 100)
+                .attr('y1', centerY).attr('y2', centerY)
+                .attr('stroke', '#7f8c8d').attr('stroke-width', 1);
+            
+            svg.append('line')
+                .attr('x1', centerX).attr('x2', centerX)
+                .attr('y1', centerY - 100).attr('y2', centerY + 100)
+                .attr('stroke', '#7f8c8d').attr('stroke-width', 1);
+            
+            // Labels
+            svg.append('text')
+                .attr('x', centerX + 105)
+                .attr('y', centerY + 5)
+                .text('β₁')
+                .attr('font-size', '14px');
+            
+            svg.append('text')
+                .attr('x', centerX - 5)
+                .attr('y', centerY - 105)
+                .text('β₂')
+                .attr('font-size', '14px');
+        }
+
+        function createL2ConstraintViz() {
+            const container = d3.select('#l2-constraint-viz');
+            container.selectAll('*').remove();
+            
+            const width = 300;
+            const height = 250;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // L2 constraint (circle)
+            svg.append('circle')
+                .attr('cx', centerX)
+                .attr('cy', centerY)
+                .attr('r', 80)
+                .attr('class', 'constraint-region')
+                .attr('fill', '#9b59b6')
+                .attr('stroke', '#8e44ad');
+            
+            // Add contour lines (ellipses for loss function)
+            for (let i = 1; i <= 3; i++) {
+                svg.append('ellipse')
+                    .attr('cx', centerX + 30)
+                    .attr('cy', centerY + 20)
+                    .attr('rx', 40 * i)
+                    .attr('ry', 30 * i)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 2)
+                    .attr('opacity', 1 - i * 0.2);
+            }
+            
+            // Mark optimal point (where contour touches constraint)
+            const optimalAngle = Math.atan2(20, 30);
+            const optimalX = centerX + 80 * Math.cos(optimalAngle);
+            const optimalY = centerY + 80 * Math.sin(optimalAngle);
+            
+            svg.append('circle')
+                .attr('cx', optimalX)
+                .attr('cy', optimalY)
+                .attr('r', 6)
+                .attr('fill', '#f39c12')
+                .attr('stroke', '#d35400')
+                .attr('stroke-width', 2);
+            
+            // Add axes
+            svg.append('line')
+                .attr('x1', centerX - 100).attr('x2', centerX + 100)
+                .attr('y1', centerY).attr('y2', centerY)
+                .attr('stroke', '#7f8c8d').attr('stroke-width', 1);
+            
+            svg.append('line')
+                .attr('x1', centerX).attr('x2', centerX)
+                .attr('y1', centerY - 100).attr('y2', centerY + 100)
+                .attr('stroke', '#7f8c8d').attr('stroke-width', 1);
+            
+            // Labels
+            svg.append('text')
+                .attr('x', centerX + 105)
+                .attr('y', centerY + 5)
+                .text('β₁')
+                .attr('font-size', '14px');
+            
+            svg.append('text')
+                .attr('x', centerX - 5)
+                .attr('y', centerY - 105)
+                .text('β₂')
+                .attr('font-size', '14px');
+        }
+
+        function createL1L2Comparison() {
+            const container = d3.select('#l1-l2-comparison');
+            container.selectAll('*').remove();
+            
+            const width = 500;
+            const height = 250;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // L1 side
+            const l1CenterX = width / 4;
+            const l1CenterY = height / 2;
+            
+            // L1 diamond
+            const diamond = [
+                [l1CenterX, l1CenterY - 60],
+                [l1CenterX + 60, l1CenterY],
+                [l1CenterX, l1CenterY + 60],
+                [l1CenterX - 60, l1CenterY]
+            ];
+            
+            svg.append('polygon')
+                .attr('points', diamond.map(d => d.join(',')).join(' '))
+                .attr('fill', '#3498db')
+                .attr('fill-opacity', 0.3)
+                .attr('stroke', '#2980b9')
+                .attr('stroke-width', 2);
+            
+            // L2 side
+            const l2CenterX = 3 * width / 4;
+            const l2CenterY = height / 2;
+            
+            svg.append('circle')
+                .attr('cx', l2CenterX)
+                .attr('cy', l2CenterY)
+                .attr('r', 60)
+                .attr('fill', '#9b59b6')
+                .attr('fill-opacity', 0.3)
+                .attr('stroke', '#8e44ad')
+                .attr('stroke-width', 2);
+            
+            // Add contours for both
+            [l1CenterX, l2CenterX].forEach((centerX, idx) => {
+                const centerY = height / 2;
+                for (let i = 1; i <= 2; i++) {
+                    svg.append('ellipse')
+                        .attr('cx', centerX + 20)
+                        .attr('cy', centerY + 15)
+                        .attr('rx', 30 * i)
+                        .attr('ry', 22 * i)
+                        .attr('fill', 'none')
+                        .attr('stroke', '#e74c3c')
+                        .attr('stroke-width', 1.5)
+                        .attr('opacity', 1 - i * 0.3);
+                }
+            });
+            
+            // Labels
+            svg.append('text')
+                .attr('x', l1CenterX)
+                .attr('y', 30)
+                .text('L1 (Lasso)')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '16px')
+                .attr('font-weight', 'bold');
+            
+            svg.append('text')
+                .attr('x', l2CenterX)
+                .attr('y', 30)
+                .text('L2 (Ridge)')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '16px')
+                .attr('font-weight', 'bold');
+            
+            // Optimal points
+            svg.append('circle')
+                .attr('cx', l1CenterX)
+                .attr('cy', l1CenterY - 60)
+                .attr('r', 5)
+                .attr('fill', '#f39c12');
+            
+            const l2OptimalAngle = Math.atan2(15, 20);
+            svg.append('circle')
+                .attr('cx', l2CenterX + 60 * Math.cos(l2OptimalAngle))
+                .attr('cy', l2CenterY + 60 * Math.sin(l2OptimalAngle))
+                .attr('r', 5)
+                .attr('fill', '#f39c12');
+        }
+
+        function createElasticNetViz() {
+            const container = d3.select('#elastic-net-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 150;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate regularization path data
+            const lambdas = d3.range(0, 5, 0.1);
+            const coef1 = lambdas.map(l => 2 * Math.exp(-l) * Math.cos(l));
+            const coef2 = lambdas.map(l => 1.5 * Math.exp(-l/2) * Math.sin(l/2));
+            const coef3 = lambdas.map(l => Math.exp(-l/3) * (l > 2 ? 0 : 1));
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 5])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([-2, 2])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(lambdas[i]))
+                .y(d => yScale(d));
+            
+            // Draw coefficient paths
+            svg.append('path')
+                .datum(coef1)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(coef2)
+                .attr('d', line)
+                .attr('stroke', '#e74c3c')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(coef3)
+                .attr('d', line)
+                .attr('stroke', '#2ecc71')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            // Add axes labels
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', height - 5)
+                .text('log(λ)')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+            
+            svg.append('text')
+                .attr('x', 15)
+                .attr('y', height/2)
+                .text('Coefficients')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('transform', `rotate(-90, 15, ${height/2})`);
+        }
+
+        function createCVSelectionViz() {
+            const container = d3.select('#cv-selection-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 200;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate CV curve data
+            const lambdas = d3.range(-6, 2, 0.2);
+            const trainError = lambdas.map(l => 0.2 + 0.1 * l + 0.05 * Math.random());
+            const cvError = lambdas.map(l => 0.3 + 0.15 * (l + 2) ** 2 + 0.05 * Math.random());
+            
+            const xScale = d3.scaleLinear()
+                .domain([-6, 2])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 2])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(lambdas[i]))
+                .y(d => yScale(d));
+            
+            // Draw error curves
+            svg.append('path')
+                .datum(trainError)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(cvError)
+                .attr('d', line)
+                .attr('stroke', '#e74c3c')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            // Mark optimal lambda
+            const optimalIdx = cvError.indexOf(Math.min(...cvError));
+            svg.append('line')
+                .attr('x1', xScale(lambdas[optimalIdx]))
+                .attr('x2', xScale(lambdas[optimalIdx]))
+                .attr('y1', margin.top)
+                .attr('y2', height - margin.bottom)
+                .attr('stroke', '#f39c12')
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', '5,5');
+            
+            // Add legend
+            svg.append('text')
+                .attr('x', width - 100)
+                .attr('y', 40)
+                .text('Training Error')
+                .attr('fill', '#3498db')
+                .attr('font-size', '12px');
+            
+            svg.append('text')
+                .attr('x', width - 100)
+                .attr('y', 55)
+                .text('CV Error')
+                .attr('fill', '#e74c3c')
+                .attr('font-size', '12px');
+            
+            // Add axes labels
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', height - 5)
+                .text('log(λ)')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>

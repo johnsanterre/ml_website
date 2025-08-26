@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMAP Algorithm</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 85vw;
+            max-width: 1000px;
+            height: 75vh;
+            background: white;
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 0.8rem;
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #34495e;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout classes */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .concept-box {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            border-left: 4px solid #95a5a6;
+        }
+
+        .formula-section {
+            background: #fdfdfd;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .algorithm-box {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            border-left: 4px solid #3498db;
+        }
+
+        /* Title slide styling */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+
+        .objective h3 {
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Process flow */
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 1.5rem 0;
+        }
+
+        .process-step {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            flex: 1;
+            margin: 0 0.5rem;
+            border-left: 4px solid #3498db;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #7f8c8d;
+        }
+
+        /* Parameter boxes */
+        .parameter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .parameter-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 4px solid #e67e22;
+        }
+
+        /* Comparison layout */
+        .comparison-layout {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            gap: 1rem;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .method-box {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid #bdc3c7;
+        }
+
+        .vs-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            background: white;
+            min-height: 250px;
+        }
+
+        /* Navigation */
+        .counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #34495e;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .nav-button {
+            position: fixed;
+            bottom: 20px;
+            background: #34495e;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-button:hover {
+            background: #2c3e50;
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            left: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>UMAP Algorithm</h1>
+            <p class="subtitle">Uniform Manifold Approximation and Projection</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>Mathematical Foundation</h3>
+                    <p>Understand topology, manifolds, and fuzzy simplicial complexes</p>
+                </div>
+                <div class="objective">
+                    <h3>Algorithm Mechanics</h3>
+                    <p>Master graph construction and layout optimization phases</p>
+                </div>
+                <div class="objective">
+                    <h3>Parameter Tuning</h3>
+                    <p>Learn to control local/global balance and embedding quality</p>
+                </div>
+                <div class="objective">
+                    <h3>Practical Applications</h3>
+                    <p>Apply UMAP effectively for visualization and analysis</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: The Dimensionality Reduction Problem -->
+        <div class="slide" id="slide2">
+            <h2>The Dimensionality Reduction Challenge</h2>
+            
+            <div class="concept-box">
+                <p><strong>Goal:</strong> Reduce high-dimensional data to 2-3 dimensions while preserving meaningful structure. But what structure should we preserve?</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Traditional Methods' Limitations</h3>
+                    <ul>
+                        <li><strong>PCA:</strong> Only linear relationships, global structure</li>
+                        <li><strong>t-SNE:</strong> Slow, loses global structure, crowding problem</li>
+                        <li><strong>MDS:</strong> Expensive, doesn't scale well</li>
+                        <li><strong>Autoencoders:</strong> Black box, many parameters</li>
+                    </ul>
+                    
+                    <h3>UMAP's Innovation</h3>
+                    <ul>
+                        <li>Theoretically grounded in topology</li>
+                        <li>Preserves local and global structure</li>
+                        <li>Computationally efficient</li>
+                        <li>Flexible for different data types</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="problem-viz"></div>
+                </div>
+            </div>
+            
+            <div class="concept-box">
+                <p><strong>The Manifold Hypothesis:</strong> High-dimensional data often lies on or near a lower-dimensional manifold embedded in the high-dimensional space.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Mathematical Foundation -->
+        <div class="slide" id="slide3">
+            <h2>Mathematical Foundation</h2>
+            
+            <div class="concept-box">
+                <p><strong>UMAP is built on rigorous mathematical foundations from topology and differential geometry, not just heuristics.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Key Mathematical Concepts</h3>
+                    <ul>
+                        <li><strong>Riemannian Manifolds:</strong> Locally Euclidean spaces with distance metrics</li>
+                        <li><strong>Simplicial Complexes:</strong> Higher-dimensional generalizations of graphs</li>
+                        <li><strong>Fuzzy Sets:</strong> Partial membership instead of binary</li>
+                        <li><strong>Category Theory:</strong> Functorial relationships between spaces</li>
+                    </ul>
+                    
+                    <div class="algorithm-box">
+                        <h4>The UMAP Philosophy</h4>
+                        <p>Find a low-dimensional representation that best approximates the topological structure of the high-dimensional data manifold.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Why This Matters</h3>
+                    <ul>
+                        <li><strong>Theoretical guarantees:</strong> Not just empirical success</li>
+                        <li><strong>Principled approach:</strong> Parameters have clear meanings</li>
+                        <li><strong>Generalizability:</strong> Works across data types</li>
+                        <li><strong>Predictable behavior:</strong> Mathematical intuition applies</li>
+                    </ul>
+                    
+                    <div class="viz" id="manifold-viz"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: UMAP Algorithm Overview -->
+        <div class="slide" id="slide4">
+            <h2>UMAP Algorithm Overview</h2>
+            
+            <div class="process-flow">
+                <div class="process-step">
+                    <h4>Phase 1</h4>
+                    <p>Graph Construction</p>
+                    <p>Build fuzzy simplicial complex</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <h4>Phase 2</h4>
+                    <p>Layout Optimization</p>
+                    <p>Find optimal low-D embedding</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Phase 1: Graph Construction</h3>
+                    <ul>
+                        <li><strong>Step 1:</strong> Find k-nearest neighbors for each point</li>
+                        <li><strong>Step 2:</strong> Estimate local connectivity</li>
+                        <li><strong>Step 3:</strong> Compute fuzzy membership weights</li>
+                        <li><strong>Step 4:</strong> Symmetrize through fuzzy union</li>
+                    </ul>
+                    
+                    <div class="formula-section">
+                        <h4>Fuzzy Membership</h4>
+                        <p>$$w_{ij} = \exp\left(-\max(0, d_{ij} - \rho_i) / \sigma_i\right)$$</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Phase 2: Layout Optimization</h3>
+                    <ul>
+                        <li><strong>Initialize:</strong> Random or spectral embedding</li>
+                        <li><strong>Optimize:</strong> Cross-entropy between graphs</li>
+                        <li><strong>Forces:</strong> Attractive (connected) vs repulsive (disconnected)</li>
+                        <li><strong>Converge:</strong> Until embedding stabilizes</li>
+                    </ul>
+                    
+                    <div class="viz" id="algorithm-viz"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Graph Construction Details -->
+        <div class="slide" id="slide5">
+            <h2>Graph Construction: The Heart of UMAP</h2>
+            
+            <div class="concept-box">
+                <p><strong>The fuzzy simplicial complex captures both local neighborhoods and global connectivity through mathematically principled weighting.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Local Connectivity</h3>
+                    <div class="algorithm-box">
+                        <h4>Key Insight</h4>
+                        <p>Each point has a locally defined distance metric based on its nearest neighbor distance ($\rho_i$) and scaling factor ($\sigma_i$).</p>
+                        
+                        <p>$$\rho_i = d(x_i, \text{1st neighbor})$$</p>
+                        <p>$$\sigma_i \text{ chosen so that } \sum_{j} w_{ij} = \log_2(k)$$</p>
+                    </div>
+                    
+                    <h3>Fuzzy Union</h3>
+                    <ul>
+                        <li>Combine directed edges: $w_{ij} \cup w_{ji}$</li>
+                        <li>Fuzzy union: $a \cup b = a + b - ab$</li>
+                        <li>Creates symmetric, weighted graph</li>
+                        <li>Preserves local manifold structure</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="graph-construction-viz"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Layout Optimization -->
+        <div class="slide" id="slide6">
+            <h2>Layout Optimization</h2>
+            
+            <div class="concept-box">
+                <p><strong>Find a low-dimensional layout that best preserves the high-dimensional fuzzy simplicial complex structure.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Cross-Entropy Optimization</h3>
+                    <div class="formula-section">
+                        <p>$$CE = \sum_{ij} w_{ij}^{(high)} \log\left(\frac{w_{ij}^{(high)}}{w_{ij}^{(low)}}\right)$$</p>
+                        <p>Minimize difference between high-D and low-D graphs</p>
+                    </div>
+                    
+                    <h3>Force-Based Interpretation</h3>
+                    <ul>
+                        <li><strong>Attractive forces:</strong> Pull connected points together</li>
+                        <li><strong>Repulsive forces:</strong> Push unconnected points apart</li>
+                        <li><strong>Balance:</strong> Prevents collapse and maintains structure</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Stochastic Gradient Descent</h3>
+                    <ul>
+                        <li><strong>Sample edges:</strong> Positive and negative samples</li>
+                        <li><strong>Update positions:</strong> Move toward optimal layout</li>
+                        <li><strong>Cooling schedule:</strong> Reduce learning rate over time</li>
+                        <li><strong>Epochs:</strong> Typically 200-500 iterations</li>
+                    </ul>
+                    
+                    <div class="viz" id="optimization-viz"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Key Parameters -->
+        <div class="slide" id="slide7">
+            <h2>Key Parameters and Their Effects</h2>
+            
+            <div class="parameter-grid">
+                <div class="parameter-box">
+                    <h4>n_neighbors (5-100)</h4>
+                    <ul>
+                        <li><strong>Low values:</strong> Focus on local structure</li>
+                        <li><strong>High values:</strong> Preserve global structure</li>
+                        <li><strong>Trade-off:</strong> Local detail vs global topology</li>
+                    </ul>
+                </div>
+                
+                <div class="parameter-box">
+                    <h4>min_dist (0.0-1.0)</h4>
+                    <ul>
+                        <li><strong>Small values:</strong> Tight, dense embeddings</li>
+                        <li><strong>Large values:</strong> Loose, spread out embeddings</li>
+                        <li><strong>Control:</strong> How tightly packed points can be</li>
+                    </ul>
+                </div>
+                
+                <div class="parameter-box">
+                    <h4>metric (distance function)</h4>
+                    <ul>
+                        <li><strong>Euclidean:</strong> Standard continuous data</li>
+                        <li><strong>Cosine:</strong> High-dimensional, sparse data</li>
+                        <li><strong>Manhattan:</strong> Categorical-like features</li>
+                    </ul>
+                </div>
+                
+                <div class="parameter-box">
+                    <h4>n_components (2-100)</h4>
+                    <ul>
+                        <li><strong>2-3:</strong> Visualization purposes</li>
+                        <li><strong>5-50:</strong> Feature extraction</li>
+                        <li><strong>Higher:</strong> Preserve more structure</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="viz" id="parameter-effects-viz"></div>
+        </div>
+
+        <!-- Slide 8: UMAP vs Other Methods -->
+        <div class="slide" id="slide8">
+            <h2>UMAP vs Other Methods</h2>
+            
+            <div class="comparison-layout">
+                <div class="method-box">
+                    <h4>PCA</h4>
+                    <p><strong>Linear</strong></p>
+                    <p>Fast, interpretable</p>
+                    <p>Global structure only</p>
+                </div>
+                
+                <div class="vs-text">vs</div>
+                
+                <div class="method-box">
+                    <h4>t-SNE</h4>
+                    <p><strong>Non-linear</strong></p>
+                    <p>Great local structure</p>
+                    <p>Slow, loses global</p>
+                </div>
+                
+                <div class="vs-text">vs</div>
+                
+                <div class="method-box">
+                    <h4>UMAP</h4>
+                    <p><strong>Non-linear</strong></p>
+                    <p>Local + global</p>
+                    <p>Fast, scalable</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>UMAP Advantages</h3>
+                    <ul>
+                        <li><strong>Speed:</strong> Much faster than t-SNE</li>
+                        <li><strong>Global structure:</strong> Preserves large-scale topology</li>
+                        <li><strong>Scalability:</strong> Handles millions of points</li>
+                        <li><strong>Flexibility:</strong> Many distance metrics supported</li>
+                        <li><strong>Theory:</strong> Strong mathematical foundation</li>
+                    </ul>
+                    
+                    <h3>When to Use UMAP</h3>
+                    <ul>
+                        <li>Large datasets (>10k points)</li>
+                        <li>Need both local and global structure</li>
+                        <li>Exploratory data analysis</li>
+                        <li>Preprocessing for clustering</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="comparison-viz"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Practical Applications -->
+        <div class="slide" id="slide9">
+            <h2>Practical Applications</h2>
+            
+            <div class="grid-3">
+                <div>
+                    <h3>Data Exploration</h3>
+                    <ul>
+                        <li>High-dimensional data visualization</li>
+                        <li>Pattern discovery and outlier detection</li>
+                        <li>Understanding data distribution</li>
+                        <li>Hypothesis generation</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Machine Learning Pipeline</h3>
+                    <ul>
+                        <li>Feature extraction and engineering</li>
+                        <li>Preprocessing for clustering algorithms</li>
+                        <li>Anomaly detection in embeddings</li>
+                        <li>Semi-supervised learning</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Domain Applications</h3>
+                    <ul>
+                        <li>Single-cell genomics analysis</li>
+                        <li>Image and document clustering</li>
+                        <li>Recommendation systems</li>
+                        <li>Network analysis and graph embeddings</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Best Practices</h3>
+                    <ul>
+                        <li><strong>Preprocessing:</strong> Scale features appropriately</li>
+                        <li><strong>Parameter tuning:</strong> Start with defaults, then adjust</li>
+                        <li><strong>Validation:</strong> Check multiple random seeds</li>
+                        <li><strong>Interpretation:</strong> Distances in embedding ≠ original distances</li>
+                    </ul>
+                    
+                    <div class="algorithm-box">
+                        <h4>Common Pitfalls</h4>
+                        <ul>
+                            <li>Over-interpreting cluster distances</li>
+                            <li>Ignoring parameter sensitivity</li>
+                            <li>Not validating with domain knowledge</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="viz" id="applications-viz"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Advanced Topics and Future -->
+        <div class="slide" id="slide10">
+            <h2>Advanced Topics and Future Directions</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>UMAP Extensions</h3>
+                    <ul>
+                        <li><strong>Parametric UMAP:</strong> Neural network for new data projection</li>
+                        <li><strong>Supervised UMAP:</strong> Incorporates target labels</li>
+                        <li><strong>Semi-supervised:</strong> Partial label information</li>
+                        <li><strong>Inverse transforms:</strong> Map back to original space</li>
+                    </ul>
+                    
+                    <h3>Implementation Considerations</h3>
+                    <ul>
+                        <li><strong>Memory:</strong> O(n) for sparse implementations</li>
+                        <li><strong>Time complexity:</strong> O(n log n) for construction</li>
+                        <li><strong>Reproducibility:</strong> Set random seeds carefully</li>
+                        <li><strong>Hyperparameters:</strong> Grid search for optimal settings</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Research Directions</h3>
+                    <ul>
+                        <li><strong>Theoretical analysis:</strong> Better convergence guarantees</li>
+                        <li><strong>Dynamic embeddings:</strong> Handling streaming data</li>
+                        <li><strong>Multi-modal data:</strong> Integrating different data types</li>
+                        <li><strong>Interpretability:</strong> Understanding what embeddings preserve</li>
+                    </ul>
+                    
+                    <h3>Key Takeaways</h3>
+                    <ul>
+                        <li>UMAP provides theoretically grounded dimensionality reduction</li>
+                        <li>Balance of local and global structure preservation</li>
+                        <li>Efficient and scalable for large datasets</li>
+                        <li>Parameter choices significantly impact results</li>
+                        <li>Excellent for exploration, careful interpretation needed</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">10</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(`slide${currentSlide}`).classList.add('active');
+            document.getElementById('current').textContent = currentSlide;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+
+        // D3.js Visualizations
+        function initProblemViz() {
+            const container = d3.select('#problem-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 200;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // High-dimensional data (represented as scattered points)
+                const leftG = svg.append('g')
+                    .attr('transform', 'translate(40, 20)');
+                
+                leftG.append('text')
+                    .attr('x', 60).attr('y', 15)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .style('font-weight', 'bold')
+                    .text('High-Dimensional Data');
+                
+                // Generate random 3D-looking clusters
+                const clusters = [
+                    {center: {x: 30, y: 50}, color: '#3498db', size: 15},
+                    {center: {x: 80, y: 40}, color: '#e67e22', size: 15},
+                    {center: {x: 55, y: 80}, color: '#27ae60', size: 15}
+                ];
+                
+                clusters.forEach(cluster => {
+                    Array.from({length: cluster.size}, () => {
+                        const angle = Math.random() * 2 * Math.PI;
+                        const radius = Math.random() * 15;
+                        return {
+                            x: cluster.center.x + radius * Math.cos(angle),
+                            y: cluster.center.y + radius * Math.sin(angle) + 20,
+                            color: cluster.color
+                        };
+                    }).forEach(point => {
+                        leftG.append('circle')
+                            .attr('cx', point.x)
+                            .attr('cy', point.y)
+                            .attr('r', 2)
+                            .attr('fill', point.color)
+                            .attr('opacity', 0.6);
+                    });
+                });
+                
+                // Arrow
+                svg.append('path')
+                    .attr('d', `M${width/2 - 30},100 L${width/2 + 10},100 M${width/2 + 5},95 L${width/2 + 10},100 L${width/2 + 5},105`)
+                    .attr('stroke', '#7f8c8d')
+                    .attr('stroke-width', 2)
+                    .attr('fill', 'none');
+                
+                svg.append('text')
+                    .attr('x', width/2)
+                    .attr('y', 90)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '10px')
+                    .text('UMAP');
+                
+                // Low-dimensional embedding
+                const rightG = svg.append('g')
+                    .attr('transform', `translate(${width - 160}, 20)`);
+                
+                rightG.append('text')
+                    .attr('x', 60).attr('y', 15)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .style('font-weight', 'bold')
+                    .text('2D Embedding');
+                
+                // Well-separated 2D clusters
+                const embeddedClusters = [
+                    {center: {x: 25, y: 45}, color: '#3498db'},
+                    {center: {x: 85, y: 35}, color: '#e67e22'},
+                    {center: {x: 55, y: 85}, color: '#27ae60'}
+                ];
+                
+                embeddedClusters.forEach(cluster => {
+                    Array.from({length: 15}, () => {
+                        const angle = Math.random() * 2 * Math.PI;
+                        const radius = Math.random() * 8;
+                        return {
+                            x: cluster.center.x + radius * Math.cos(angle),
+                            y: cluster.center.y + radius * Math.sin(angle) + 20,
+                            color: cluster.color
+                        };
+                    }).forEach(point => {
+                        rightG.append('circle')
+                            .attr('cx', point.x)
+                            .attr('cy', point.y)
+                            .attr('r', 2.5)
+                            .attr('fill', point.color)
+                            .attr('opacity', 0.8);
+                    });
+                });
+            }
+        }
+
+        function initManifoldViz() {
+            const container = d3.select('#manifold-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Draw a curved manifold
+                const g = svg.append('g')
+                    .attr('transform', 'translate(20, 20)');
+                
+                // Create curved surface
+                const points = [];
+                for (let i = 0; i < 50; i++) {
+                    const t = i / 49;
+                    const x = t * (width - 40);
+                    const y = 60 + 30 * Math.sin(t * Math.PI * 2);
+                    points.push({x, y});
+                }
+                
+                const line = d3.line()
+                    .x(d => d.x)
+                    .y(d => d.y)
+                    .curve(d3.curveCardinal);
+                
+                g.append('path')
+                    .datum(points)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 3)
+                    .attr('opacity', 0.7);
+                
+                // Add data points on the manifold
+                for (let i = 0; i < 20; i++) {
+                    const t = i / 19;
+                    const x = t * (width - 40);
+                    const y = 60 + 30 * Math.sin(t * Math.PI * 2);
+                    
+                    g.append('circle')
+                        .attr('cx', x)
+                        .attr('cy', y)
+                        .attr('r', 3)
+                        .attr('fill', '#e74c3c')
+                        .attr('opacity', 0.8);
+                }
+                
+                g.append('text')
+                    .attr('x', (width - 40) / 2)
+                    .attr('y', 140)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .text('Data on a 1D manifold embedded in 2D space');
+            }
+        }
+
+        function initAlgorithmViz() {
+            const container = d3.select('#algorithm-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Show optimization process
+                let iteration = 0;
+                const maxIterations = 100;
+                
+                // Initial random layout
+                const points = Array.from({length: 20}, (_, i) => ({
+                    id: i,
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    targetX: (i % 4) * (width / 4) + width / 8,
+                    targetY: Math.floor(i / 4) * (height / 5) + height / 10
+                }));
+                
+                function animate() {
+                    svg.selectAll('*').remove();
+                    
+                    const t = iteration / maxIterations;
+                    const alpha = Math.exp(-t * 3); // Cooling schedule
+                    
+                    points.forEach(point => {
+                        // Move towards target
+                        const dx = point.targetX - point.x;
+                        const dy = point.targetY - point.y;
+                        point.x += dx * alpha * 0.1;
+                        point.y += dy * alpha * 0.1;
+                    });
+                    
+                    // Draw connections (graph edges)
+                    points.forEach((point, i) => {
+                        points.forEach((other, j) => {
+                            if (i < j && Math.abs(i - j) <= 2) {
+                                svg.append('line')
+                                    .attr('x1', point.x)
+                                    .attr('y1', point.y)
+                                    .attr('x2', other.x)
+                                    .attr('y2', other.y)
+                                    .attr('stroke', '#bdc3c7')
+                                    .attr('stroke-width', 1)
+                                    .attr('opacity', 0.5);
+                            }
+                        });
+                    });
+                    
+                    // Draw points
+                    svg.selectAll('.point')
+                        .data(points)
+                        .enter().append('circle')
+                        .attr('class', 'point')
+                        .attr('cx', d => d.x)
+                        .attr('cy', d => d.y)
+                        .attr('r', 4)
+                        .attr('fill', '#3498db')
+                        .attr('opacity', 0.8);
+                    
+                    svg.append('text')
+                        .attr('x', 10).attr('y', 20)
+                        .style('font-size', '12px')
+                        .text(`Iteration: ${iteration}`);
+                    
+                    iteration = (iteration + 1) % (maxIterations + 20);
+                    
+                    if (iteration === 0) {
+                        // Reset to random positions
+                        points.forEach(point => {
+                            point.x = Math.random() * width;
+                            point.y = Math.random() * height;
+                        });
+                    }
+                }
+                
+                const interval = setInterval(animate, 100);
+                
+                // Clean up on slide change
+                setTimeout(() => clearInterval(interval), 10000);
+            }
+        }
+
+        function initGraphConstructionViz() {
+            const container = d3.select('#graph-construction-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 220;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Show k-NN graph construction
+                const points = [
+                    {id: 0, x: width/2, y: height/2, color: '#e74c3c'},
+                    {id: 1, x: width/2 - 40, y: height/2 - 30, color: '#3498db'},
+                    {id: 2, x: width/2 + 30, y: height/2 - 40, color: '#3498db'},
+                    {id: 3, x: width/2 - 20, y: height/2 + 40, color: '#3498db'},
+                    {id: 4, x: width/2 + 50, y: height/2 + 20, color: '#95a5a6'},
+                    {id: 5, x: width/2 - 60, y: height/2 + 10, color: '#95a5a6'},
+                ];
+                
+                // Draw connections to 3 nearest neighbors
+                const neighbors = [1, 2, 3];
+                neighbors.forEach(nId => {
+                    const neighbor = points.find(p => p.id === nId);
+                    const centerPoint = points[0];
+                    
+                    svg.append('line')
+                        .attr('x1', centerPoint.x)
+                        .attr('y1', centerPoint.y)
+                        .attr('x2', neighbor.x)
+                        .attr('y2', neighbor.y)
+                        .attr('stroke', '#3498db')
+                        .attr('stroke-width', 2)
+                        .attr('opacity', 0.6);
+                    
+                    // Add weight labels
+                    const midX = (centerPoint.x + neighbor.x) / 2;
+                    const midY = (centerPoint.y + neighbor.y) / 2;
+                    const distance = Math.sqrt(Math.pow(neighbor.x - centerPoint.x, 2) + Math.pow(neighbor.y - centerPoint.y, 2));
+                    const weight = Math.exp(-distance / 30).toFixed(2);
+                    
+                    svg.append('text')
+                        .attr('x', midX)
+                        .attr('y', midY - 5)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '10px')
+                        .style('fill', '#2c3e50')
+                        .text(weight);
+                });
+                
+                // Draw points
+                svg.selectAll('.point')
+                    .data(points)
+                    .enter().append('circle')
+                    .attr('class', 'point')
+                    .attr('cx', d => d.x)
+                    .attr('cy', d => d.y)
+                    .attr('r', d => d.id === 0 ? 6 : 4)
+                    .attr('fill', d => d.color)
+                    .attr('stroke', d => d.id === 0 ? '#2c3e50' : 'none')
+                    .attr('stroke-width', 2);
+                
+                // Labels
+                svg.append('text')
+                    .attr('x', width/2)
+                    .attr('y', 20)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .style('font-weight', 'bold')
+                    .text('k-NN Graph (k=3)');
+                
+                svg.append('text')
+                    .attr('x', 10)
+                    .attr('y', height - 10)
+                    .style('font-size', '10px')
+                    .text('Red: query point, Blue: neighbors, Gray: non-neighbors');
+            }
+        }
+
+        function initOptimizationViz() {
+            const container = d3.select('#optimization-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                const margin = {top: 20, right: 20, bottom: 40, left: 40};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Show convergence curve
+                const epochs = Array.from({length: 50}, (_, i) => i);
+                const loss = epochs.map(i => Math.exp(-i * 0.1) + 0.1 + Math.random() * 0.05);
+                
+                const xScale = d3.scaleLinear()
+                    .domain([0, 49])
+                    .range([0, innerWidth]);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, Math.max(...loss)])
+                    .range([innerHeight, 0]);
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale))
+                    .append('text')
+                    .attr('x', innerWidth / 2)
+                    .attr('y', 35)
+                    .attr('fill', 'black')
+                    .style('font-size', '12px')
+                    .text('Epoch');
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale))
+                    .append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -25)
+                    .attr('x', -innerHeight / 2)
+                    .attr('fill', 'black')
+                    .style('font-size', '12px')
+                    .text('Loss');
+                
+                // Draw loss curve
+                const line = d3.line()
+                    .x((d, i) => xScale(i))
+                    .y(d => yScale(d))
+                    .curve(d3.curveMonotoneX);
+                
+                g.append('path')
+                    .datum(loss)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#3498db')
+                    .attr('stroke-width', 2)
+                    .attr('d', line);
+            }
+        }
+
+        function initParameterEffectsViz() {
+            const container = d3.select('#parameter-effects-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 120;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Show effect of n_neighbors parameter
+                const scenarios = [
+                    {name: 'n_neighbors=5', x: 60, spread: 0.8},
+                    {name: 'n_neighbors=15', x: 200, spread: 0.6},
+                    {name: 'n_neighbors=50', x: 340, spread: 0.4}
+                ];
+                
+                scenarios.forEach(scenario => {
+                    const g = svg.append('g')
+                        .attr('transform', `translate(${scenario.x - 50}, 10)`);
+                    
+                    g.append('text')
+                        .attr('x', 50).attr('y', 15)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '11px')
+                        .style('font-weight', 'bold')
+                        .text(scenario.name);
+                    
+                    // Generate clusters with different connectivity
+                    const clusters = [
+                        {center: {x: 25, y: 50}, color: '#3498db'},
+                        {center: {x: 75, y: 50}, color: '#e67e22'}
+                    ];
+                    
+                    clusters.forEach(cluster => {
+                        Array.from({length: 8}, () => {
+                            const angle = Math.random() * 2 * Math.PI;
+                            const radius = Math.random() * 15 * scenario.spread;
+                            return {
+                                x: cluster.center.x + radius * Math.cos(angle),
+                                y: cluster.center.y + radius * Math.sin(angle) + 25,
+                                color: cluster.color
+                            };
+                        }).forEach(point => {
+                            g.append('circle')
+                                .attr('cx', point.x)
+                                .attr('cy', point.y)
+                                .attr('r', 2)
+                                .attr('fill', point.color)
+                                .attr('opacity', 0.7);
+                        });
+                    });
+                });
+                
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height - 5)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '10px')
+                    .text('Higher n_neighbors → more global structure preservation');
+            }
+        }
+
+        function initComparisonViz() {
+            const container = d3.select('#comparison-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 180;
+                const margin = {top: 20, right: 20, bottom: 40, left: 50};
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                const innerWidth = width - margin.left - margin.right;
+                const innerHeight = height - margin.top - margin.bottom;
+                
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+                
+                // Comparison data
+                const methods = ['PCA', 't-SNE', 'UMAP'];
+                const metrics = {
+                    speed: [0.9, 0.3, 0.8],
+                    local: [0.2, 0.9, 0.8],
+                    global: [0.8, 0.2, 0.7],
+                    scalability: [0.9, 0.2, 0.8]
+                };
+                
+                const colors = ['#3498db', '#e67e22', '#27ae60'];
+                
+                const xScale = d3.scaleBand()
+                    .domain(methods)
+                    .range([0, innerWidth])
+                    .padding(0.2);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, 1])
+                    .range([innerHeight, 0]);
+                
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${innerHeight})`)
+                    .call(d3.axisBottom(xScale));
+                
+                g.append('g')
+                    .call(d3.axisLeft(yScale))
+                    .append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('y', -35)
+                    .attr('x', -innerHeight / 2)
+                    .attr('fill', 'black')
+                    .style('font-size', '12px')
+                    .text('Score');
+                
+                // Draw bars for each metric
+                Object.keys(metrics).forEach((metric, metricIndex) => {
+                    methods.forEach((method, methodIndex) => {
+                        const barWidth = xScale.bandwidth() / 4;
+                        const barX = xScale(method) + metricIndex * barWidth;
+                        const barHeight = yScale(0) - yScale(metrics[metric][methodIndex]);
+                        
+                        g.append('rect')
+                            .attr('x', barX)
+                            .attr('y', yScale(metrics[metric][methodIndex]))
+                            .attr('width', barWidth)
+                            .attr('height', barHeight)
+                            .attr('fill', colors[methodIndex])
+                            .attr('opacity', 0.7);
+                    });
+                });
+                
+                // Legend
+                const legend = g.append('g')
+                    .attr('transform', `translate(${innerWidth - 80}, 10)`);
+                
+                ['Speed', 'Local', 'Global', 'Scale'].forEach((label, i) => {
+                    legend.append('rect')
+                        .attr('x', 0)
+                        .attr('y', i * 15)
+                        .attr('width', 10)
+                        .attr('height', 10)
+                        .attr('fill', '#7f8c8d');
+                    
+                    legend.append('text')
+                        .attr('x', 15)
+                        .attr('y', i * 15 + 8)
+                        .style('font-size', '10px')
+                        .text(label);
+                });
+            }
+        }
+
+        function initApplicationsViz() {
+            const container = d3.select('#applications-viz');
+            if (!container.empty()) {
+                container.html('');
+                
+                const width = container.node().getBoundingClientRect().width;
+                const height = 160;
+                
+                const svg = container.append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // Show different application domains
+                const domains = [
+                    {name: 'Genomics', x: 80, icon: '🧬'},
+                    {name: 'Images', x: 200, icon: '🖼️'},
+                    {name: 'Text', x: 320, icon: '📄'}
+                ];
+                
+                domains.forEach(domain => {
+                    const g = svg.append('g')
+                        .attr('transform', `translate(${domain.x - 40}, 20)`);
+                    
+                    g.append('text')
+                        .attr('x', 40).attr('y', 15)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '24px')
+                        .text(domain.icon);
+                    
+                    g.append('text')
+                        .attr('x', 40).attr('y', 40)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '12px')
+                        .style('font-weight', 'bold')
+                        .text(domain.name);
+                    
+                    // Generate representative embedding
+                    const clusters = domain.name === 'Genomics' ? 4 : 3;
+                    for (let i = 0; i < clusters; i++) {
+                        const centerX = 20 + (i % 2) * 40;
+                        const centerY = 60 + Math.floor(i / 2) * 40;
+                        const color = d3.schemeCategory10[i];
+                        
+                        Array.from({length: 6}, () => ({
+                            x: centerX + (Math.random() - 0.5) * 20,
+                            y: centerY + (Math.random() - 0.5) * 20
+                        })).forEach(point => {
+                            g.append('circle')
+                                .attr('cx', point.x)
+                                .attr('cy', point.y)
+                                .attr('r', 2)
+                                .attr('fill', color)
+                                .attr('opacity', 0.7);
+                        });
+                    }
+                });
+            }
+        }
+
+        // Initialize visualizations when slides are shown
+        const originalShowSlide = showSlide;
+        showSlide = function(n) {
+            originalShowSlide(n);
+            
+            // Initialize visualizations based on current slide
+            setTimeout(() => {
+                if (currentSlide === 2) initProblemViz();
+                if (currentSlide === 3) initManifoldViz();
+                if (currentSlide === 4) initAlgorithmViz();
+                if (currentSlide === 5) initGraphConstructionViz();
+                if (currentSlide === 6) initOptimizationViz();
+                if (currentSlide === 7) initParameterEffectsViz();
+                if (currentSlide === 8) initComparisonViz();
+                if (currentSlide === 9) initApplicationsViz();
+            }, 100);
+        };
+
+        // Initialize current slide visualizations
+        setTimeout(() => {
+            if (currentSlide === 2) initProblemViz();
+            if (currentSlide === 3) initManifoldViz();
+            if (currentSlide === 4) initAlgorithmViz();
+            if (currentSlide === 5) initGraphConstructionViz();
+            if (currentSlide === 6) initOptimizationViz();
+            if (currentSlide === 7) initParameterEffectsViz();
+            if (currentSlide === 8) initComparisonViz();
+            if (currentSlide === 9) initApplicationsViz();
+        }, 100);
+    </script>
+</body>
+</html>

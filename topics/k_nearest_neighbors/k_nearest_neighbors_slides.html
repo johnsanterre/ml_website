@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Nearest Neighbors</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 85vw;
+            max-width: 1000px;
+            height: 75vh;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .highlight {
+            background: #ecf0f1;
+            padding: 1.2rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 1rem 0;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            background: white;
+            min-height: 250px;
+        }
+        
+        /* New varied layout styles */
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .architecture-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .architecture-item.header {
+            background: #3498db;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-left: none;
+        }
+        
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+        }
+        
+        .objectives {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .objective {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .objective h3 {
+            color: #e74c3c;
+            margin-bottom: 0.5rem;
+        }
+        
+        .method-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .works-box {
+            background: #d5f4e6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .fails-box {
+            background: #fdeaea;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .big-idea {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        
+        .big-idea h3 {
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .gate-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .gate-box h4 {
+            color: #9b59b6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .problem-box {
+            background: #fff5f5;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #e53e3e;
+        }
+        
+        .solution-box {
+            background: #f0fff4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #38a169;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2.5rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .objective h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .objective p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* KNN specific styles */
+        .data-point {
+            stroke: #2c3e50;
+            stroke-width: 1px;
+        }
+
+        .class-a {
+            fill: #3498db;
+        }
+
+        .class-b {
+            fill: #e74c3c;
+        }
+
+        .query-point {
+            fill: #f39c12;
+            stroke: #e67e22;
+            stroke-width: 3px;
+        }
+
+        .neighbor-line {
+            stroke: #7f8c8d;
+            stroke-width: 1px;
+            stroke-dasharray: 3,3;
+            opacity: 0.7;
+        }
+
+        .distance-circle {
+            fill: none;
+            stroke: #f39c12;
+            stroke-width: 2px;
+            opacity: 0.5;
+        }
+
+        /* Comparison table */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .comparison-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .comparison-item.header {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 85vh;
+                padding: 25px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .grid-2, .grid-3, .objectives {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>K-Nearest Neighbors</h1>
+            <p class="subtitle">The Simple Algorithm That Reveals All ML Realities</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>Algorithm Fundamentals</h3>
+                    <p>Master the deceptively simple KNN approach</p>
+                </div>
+                <div class="objective">
+                    <h3>Curse of Dimensionality</h3>
+                    <p>Understand why high dimensions break everything</p>
+                </div>
+                <div class="objective">
+                    <h3>Distance and Similarity</h3>
+                    <p>Learn the critical role of distance metrics</p>
+                </div>
+                <div class="objective">
+                    <h3>Real-World Challenges</h3>
+                    <p>Discover practical ML implementation realities</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Introduction - Why KNN Matters -->
+        <div class="slide" id="slide2">
+            <h2>Why KNN Reveals ML Realities</h2>
+            
+            <div class="highlight">
+                <p><strong>K-Nearest Neighbors appears simple but exposes every fundamental challenge in machine learning: dimensionality, similarity, data quality, and computational trade-offs.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>The Simplicity Deception</h3>
+                    <ul>
+                        <li><strong>Core Idea:</strong> Predict based on K closest examples</li>
+                        <li><strong>No Training:</strong> Lazy learning stores all data</li>
+                        <li><strong>Intuitive:</strong> Similar things should behave similarly</li>
+                        <li><strong>Universal:</strong> Works for any data type</li>
+                    </ul>
+                    
+                    <h3>ML Reality Check</h3>
+                    <ul>
+                        <li>What does "similar" actually mean?</li>
+                        <li>How do we measure distance fairly?</li>
+                        <li>Why do dimensions make everything harder?</li>
+                        <li>When does simple become impossible?</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="knn-intro-viz" style="height: 200px;">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            KNN Classification Example
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The KNN Algorithm -->
+        <div class="slide" id="slide3">
+            <h2>The KNN Algorithm</h2>
+            
+            <div class="highlight">
+                <p><strong>Algorithm:</strong> For a query point, find K nearest neighbors, then predict using majority vote (classification) or average (regression).</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Core Steps</h3>
+                    <ul>
+                        <li><strong>Store:</strong> Keep all training data in memory</li>
+                        <li><strong>Compute:</strong> Calculate distance to all points</li>
+                        <li><strong>Sort:</strong> Find K nearest neighbors</li>
+                        <li><strong>Predict:</strong> Vote (classification) or average (regression)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Lazy vs Eager Learning</h3>
+                    <ul>
+                        <li><strong>Lazy:</strong> No training phase, store everything</li>
+                        <li><strong>Eager:</strong> Learn model parameters during training</li>
+                        <li><strong>Trade-off:</strong> Memory vs computation time</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Choosing K and Distance Metrics -->
+        <div class="slide" id="slide4">
+            <h2>Critical Design Choices</h2>
+            
+            <div class="architecture-grid">
+                <div class="architecture-item header">The K Parameter</div>
+                <div class="architecture-item header">Distance Metrics</div>
+                
+                <div class="architecture-item">
+                    <p>$$\text{Prediction} = \arg\max_{c} \sum_{i \in N_k(x)} I(y_i = c)$$</p>
+                    <h4>Bias-Variance Trade-off:</h4>
+                    <ul>
+                        <li><strong>K=1:</strong> High variance, low bias</li>
+                        <li><strong>K=N:</strong> Low variance, high bias</li>
+                        <li><strong>Odd K:</strong> Prevents ties in classification</li>
+                    </ul>
+                </div>
+                
+                <div class="architecture-item">
+                    <h4>Common Choices:</h4>
+                    <p>$$d_{\text{Euclidean}} = \sqrt{\sum_{i=1}^{d} (x_i - y_i)^2}$$</p>
+                    <p>$$d_{\text{Manhattan}} = \sum_{i=1}^{d} |x_i - y_i|$$</p>
+                    <p>$$d_{\text{Cosine}} = 1 - \frac{x \cdot y}{||x|| \cdot ||y||}$$</p>
+                </div>
+            </div>
+            
+            <div class="big-idea">
+                <h3>The Big Reality</h3>
+                <p>Both choices are domain-specific and empirical - there's no universal "best" answer!</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: The Curse of Dimensionality -->
+        <div class="slide" id="slide5">
+            <h2>The Curse of Dimensionality</h2>
+            
+            <div class="highlight">
+                <p><strong>In high dimensions, the concept of "nearest" becomes meaningless as all distances become similar, breaking KNN's fundamental assumption.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Distance Concentration</h3>
+                    <ul>
+                        <li><strong>Phenomenon:</strong> Max distance / Min distance → 1</li>
+                        <li><strong>Result:</strong> All points equidistant from query</li>
+                        <li><strong>Implication:</strong> No meaningful "neighbors"</li>
+                        <li><strong>Threshold:</strong> Problems start around 10-20 dimensions</li>
+                    </ul>
+                    
+                    <h3>Volume Effects</h3>
+                    <ul>
+                        <li>Hypersphere volume concentrates at surface</li>
+                        <li>Data becomes increasingly sparse</li>
+                        <li>Local neighborhoods disappear</li>
+                        <li>Outliers everywhere in high dimensions</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Practical Implications</h3>
+                    <ul>
+                        <li><strong>Text Data:</strong> 10,000+ word features</li>
+                        <li><strong>Images:</strong> Millions of pixel features</li>
+                        <li><strong>Genomics:</strong> Thousands of gene expressions</li>
+                        <li><strong>Embeddings:</strong> Hundreds of latent dimensions</li>
+                    </ul>
+                    
+                    <h3>Mitigation Strategies</h3>
+                    <ul>
+                        <li>Dimensionality reduction (PCA, t-SNE)</li>
+                        <li>Feature selection and engineering</li>
+                        <li>Learn better distance metrics</li>
+                        <li>Use approximate methods</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Feature Scaling Problems -->
+        <div class="slide" id="slide6">
+            <h2>Feature Scaling Problems</h2>
+            
+            <div class="highlight">
+                <p><strong>Problem:</strong> Features with different scales will dominate distance calculations, making KNN focus on the wrong things.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Classic Example</h3>
+                    <ul>
+                        <li><strong>Age:</strong> 20-80 years (range of 60)</li>
+                        <li><strong>Income:</strong> $20k-$200k (range of 180k)</li>
+                        <li><strong>Result:</strong> Income differences dominate completely</li>
+                        <li><strong>Fix:</strong> Standardization or normalization</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Other Distance Challenges</h3>
+                    <ul>
+                        <li><strong>Categorical Data:</strong> No natural distance</li>
+                        <li><strong>Missing Values:</strong> Break distance calculations</li>
+                        <li><strong>Outliers:</strong> Skew all neighborhoods</li>
+                        <li><strong>Irrelevant Features:</strong> Add noise to similarity</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: The Speed Problem -->
+        <div class="slide" id="slide7">
+            <h2>The Speed Problem</h2>
+            
+            <div class="highlight">
+                <p><strong>Reality Check:</strong> KNN requires computing distance to every training point for each prediction. With 1 million examples, that's 1 million calculations per query!</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>The Core Challenge</h3>
+                    <p>Prediction time: <strong>O(nd)</strong> where n = training points, d = dimensions</p>
+                    <ul>
+                        <li>Must store entire training set in memory</li>
+                        <li>No pre-computation possible (lazy learning)</li>
+                        <li>Scales poorly with data size</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Speed Solutions</h3>
+                    <ul>
+                        <li><strong>Approximate:</strong> "Good enough" neighbors</li>
+                        <li><strong>Index:</strong> KD-trees, LSH, Ball trees</li>
+                        <li><strong>Sample:</strong> Search random subsets</li>
+                        <li><strong>Modern:</strong> Vector databases, embeddings</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Slide 8: Data Quality Problems -->
+        <div class="slide" id="slide8">
+            <h2>Data Quality Problems</h2>
+            
+            <div class="highlight">
+                <p><strong>KNN is extremely sensitive to dirty data because it makes decisions based entirely on immediate neighbors.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Outlier Impact</h3>
+                    <ul>
+                        <li><strong>Problem:</strong> Single outlier corrupts neighborhood</li>
+                        <li><strong>Example:</strong> Data entry error creates "nearest" neighbor</li>
+                        <li><strong>Solution:</strong> Outlier detection and removal</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Other Data Issues</h3>
+                    <ul>
+                        <li><strong>Missing Values:</strong> Break distance calculations</li>
+                        <li><strong>Irrelevant Features:</strong> Add noise to distances</li>
+                        <li><strong>Noise Amplification:</strong> Gets worse in high dimensions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: When KNN Works vs Fails -->
+        <div class="slide" id="slide9">
+            <h2>When KNN Works vs Fails</h2>
+            
+            <div class="highlight">
+                <p><strong>KNN thrives with low dimensions, clean data, and irregular boundaries. It struggles with high dimensions, noise, and speed requirements.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>✓ KNN Works Great</h3>
+                    <ul>
+                        <li><strong>2-10 dimensions:</strong> Distance stays meaningful</li>
+                        <li><strong>Clean data:</strong> No outliers corrupting neighborhoods</li>
+                        <li><strong>Irregular boundaries:</strong> Complex decision surfaces</li>
+                        <li><strong>Small datasets:</strong> Computation remains feasible</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>✗ KNN Struggles With</h3>
+                    <ul>
+                        <li><strong>100+ dimensions:</strong> Curse of dimensionality kicks in</li>
+                        <li><strong>Noisy data:</strong> Outliers become "nearest" neighbors</li>
+                        <li><strong>Real-time needs:</strong> Too slow for production</li>
+                        <li><strong>Irrelevant features:</strong> Noise dominates signal</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="example">
+                <strong>Success Story:</strong> Netflix uses KNN-style collaborative filtering - "Users like you also enjoyed..." works because user preferences create meaningful neighborhoods in recommendation space.
+            </div>
+        </div>
+
+        <!-- Slide 10: What KNN Teaches Us -->
+        <div class="slide" id="slide10">
+            <h2>What KNN Teaches Us About ML</h2>
+            
+            <div class="highlight">
+                <p><strong>KNN is the perfect teaching algorithm - simple enough to understand completely, yet it reveals every fundamental ML challenge.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>The Big Lessons</h3>
+                    <ul>
+                        <li><strong>Curse of Dimensionality:</strong> More features ≠ better performance</li>
+                        <li><strong>Data Quality Matters:</strong> Garbage in, garbage out</li>
+                        <li><strong>Similarity is Subjective:</strong> No universal distance metric</li>
+                        <li><strong>Simple ≠ Fast:</strong> Computational complexity hits hard</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Modern Fixes</h3>
+                    <ul>
+                        <li>Learn embeddings with neural networks</li>
+                        <li>Use vector databases (FAISS, Pinecone)</li>
+                        <li>Combine with other algorithms</li>
+                        <li>Accept "good enough" approximations</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="example">
+                <strong>The Bottom Line:</strong> Understanding why KNN fails in high dimensions makes you a better ML practitioner. It's not just about KNN - it's about developing intuition for when any algorithm will struggle.
+            </div>
+        </div>
+
+        <!-- Slide 11: Modern Solutions -->
+        <div class="slide" id="slide11">
+            <h2>Modern Solutions</h2>
+            
+            <div class="highlight">
+                <p><strong>Modern ML addresses KNN's limitations while keeping its core insights about similarity-based reasoning.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Learn Better Representations</h3>
+                    <ul>
+                        <li><strong>Neural Embeddings:</strong> Word2Vec, sentence transformers</li>
+                        <li><strong>Metric Learning:</strong> Learn optimal distance functions</li>
+                        <li><strong>Deep Features:</strong> CNN features for images</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Production Infrastructure</h3>
+                    <ul>
+                        <li><strong>Vector Databases:</strong> FAISS, Pinecone, Weaviate</li>
+                        <li><strong>Approximate Search:</strong> LSH, random sampling</li>
+                        <li><strong>Hybrid Models:</strong> Neural nets + KNN</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Key Takeaways -->
+        <div class="slide" id="slide12">
+            <h2>Key Takeaways</h2>
+            
+            <div class="highlight">
+                <p><strong>KNN's simplicity exposes fundamental ML challenges: the gap between intuitive concepts and mathematical reality, the curse of dimensionality, and the critical importance of data preprocessing.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Fundamental Insights</h3>
+                    <ul>
+                        <li><strong>Similarity is Subjective:</strong> No universal distance metric</li>
+                        <li><strong>Dimensions Matter:</strong> High dimensions break intuition</li>
+                        <li><strong>Data Quality Crucial:</strong> Garbage in, garbage out</li>
+                        <li><strong>Scalability Reality:</strong> Simple ≠ fast or practical</li>
+                        <li><strong>Preprocessing Critical:</strong> Algorithm success depends on data prep</li>
+                    </ul>
+                    
+                    <h3>Practical Guidelines</h3>
+                    <ul>
+                        <li>Start with KNN as baseline for comparison</li>
+                        <li>Invest heavily in feature engineering</li>
+                        <li>Always scale features appropriately</li>
+                        <li>Consider approximate methods for speed</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>When to Use KNN</h3>
+                    <ul>
+                        <li><strong>Good Baseline:</strong> Quick proof of concept</li>
+                        <li><strong>Irregular Boundaries:</strong> Complex decision surfaces</li>
+                        <li><strong>Small Datasets:</strong> Limited training data</li>
+                        <li><strong>Interpretability:</strong> Need to explain decisions</li>
+                    </ul>
+                    
+                    <h3>Why Understanding KNN Matters</h3>
+                    <ul>
+                        <li>Foundation for many modern algorithms</li>
+                        <li>Reveals universal ML challenges</li>
+                        <li>Builds intuition for similarity-based methods</li>
+                        <li>Teaches humility about "simple" solutions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">12</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 12;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations
+            setTimeout(() => initViz(currentSlide), 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Visualization functions
+        function initViz(slideNum) {
+            console.log('Initializing visualization for slide:', slideNum);
+            
+            try {
+                switch(slideNum) {
+                    case 2:
+                        createKNNIntroViz();
+                        break;
+                }
+            } catch (error) {
+                console.error('Visualization error:', error);
+            }
+        }
+
+        function createKNNIntroViz() {
+            const container = d3.select('#knn-intro-viz');
+            container.selectAll('*').remove();
+            
+            const width = 350;
+            const height = 180;
+            const margin = {top: 20, right: 20, bottom: 20, left: 20};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate sample data
+            const classA = [
+                {x: 50, y: 40}, {x: 70, y: 50}, {x: 60, y: 70}, {x: 80, y: 60},
+                {x: 40, y: 80}, {x: 90, y: 40}, {x: 55, y: 55}, {x: 75, y: 75}
+            ];
+            
+            const classB = [
+                {x: 150, y: 40}, {x: 170, y: 50}, {x: 160, y: 70}, {x: 180, y: 60},
+                {x: 140, y: 80}, {x: 190, y: 40}, {x: 155, y: 55}, {x: 175, y: 75}
+            ];
+            
+            const queryPoint = {x: 120, y: 60};
+            
+            // Draw class A points (blue)
+            svg.selectAll('.class-a')
+                .data(classA)
+                .enter()
+                .append('circle')
+                .attr('class', 'data-point class-a')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+                .attr('r', 5);
+            
+            // Draw class B points (red)
+            svg.selectAll('.class-b')
+                .data(classB)
+                .enter()
+                .append('circle')
+                .attr('class', 'data-point class-b')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+                .attr('r', 5);
+            
+            // Draw query point (orange)
+            svg.append('circle')
+                .attr('class', 'query-point')
+                .attr('cx', queryPoint.x)
+                .attr('cy', queryPoint.y)
+                .attr('r', 8);
+            
+            // Find K=3 nearest neighbors
+            const allPoints = [...classA.map(p => ({...p, class: 'A'})), 
+                             ...classB.map(p => ({...p, class: 'B'}))];
+            
+            const distances = allPoints.map(p => ({
+                ...p,
+                distance: Math.sqrt(Math.pow(p.x - queryPoint.x, 2) + Math.pow(p.y - queryPoint.y, 2))
+            }));
+            
+            distances.sort((a, b) => a.distance - b.distance);
+            const neighbors = distances.slice(0, 3);
+            
+            // Draw lines to nearest neighbors
+            neighbors.forEach(neighbor => {
+                svg.append('line')
+                    .attr('class', 'neighbor-line')
+                    .attr('x1', queryPoint.x)
+                    .attr('y1', queryPoint.y)
+                    .attr('x2', neighbor.x)
+                    .attr('y2', neighbor.y);
+            });
+            
+            // Draw circle around farthest neighbor
+            const maxDistance = neighbors[neighbors.length - 1].distance;
+            svg.append('circle')
+                .attr('class', 'distance-circle')
+                .attr('cx', queryPoint.x)
+                .attr('cy', queryPoint.y)
+                .attr('r', maxDistance);
+            
+            // Add labels
+            svg.append('text')
+                .attr('x', 50)
+                .attr('y', 15)
+                .text('Class A')
+                .attr('fill', '#3498db')
+                .attr('font-size', '12px')
+                .attr('font-weight', 'bold');
+            
+            svg.append('text')
+                .attr('x', 150)
+                .attr('y', 15)
+                .text('Class B')
+                .attr('fill', '#e74c3c')
+                .attr('font-size', '12px')
+                .attr('font-weight', 'bold');
+            
+            svg.append('text')
+                .attr('x', queryPoint.x - 15)
+                .attr('y', queryPoint.y - 15)
+                .text('Query')
+                .attr('fill', '#f39c12')
+                .attr('font-size', '12px')
+                .attr('font-weight', 'bold');
+            
+            // Count neighbors by class
+            const countA = neighbors.filter(n => n.class === 'A').length;
+            const countB = neighbors.filter(n => n.class === 'B').length;
+            const prediction = countA > countB ? 'A' : 'B';
+            
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', height - 5)
+                .text(`K=3: ${countA} Class A, ${countB} Class B → Predict Class ${prediction}`)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '11px')
+                .attr('fill', '#2c3e50')
+                .attr('font-weight', 'bold');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>

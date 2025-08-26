@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoML</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90vw;
+            max-width: 1100px;
+            height: 80vh;
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 1.2rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #5a6c7d;
+            margin-bottom: 0.6rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .highlight {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 1.5rem 0;
+        }
+
+        .formula {
+            background: #fdfdfd;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1.2rem 0;
+            background: white;
+            min-height: 300px;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2.5rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .objective h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .objective p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* AutoML specific styles */
+        .automl-process {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .process-step {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            position: relative;
+        }
+
+        .process-step::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #3498db;
+        }
+
+        .process-step:last-child::after {
+            display: none;
+        }
+
+        .platform-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .platform-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .platform-item.header {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nas-architecture {
+            stroke-width: 2px;
+            fill: #3498db;
+            opacity: 0.7;
+        }
+
+        .search-path {
+            stroke: #e74c3c;
+            stroke-width: 3px;
+            fill: none;
+            stroke-dasharray: 5,5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 85vh;
+                padding: 25px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .grid-2, .grid-3, .objectives {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>AutoML</h1>
+            <p class="subtitle">Automated Machine Learning for Everyone</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>Core Components</h3>
+                    <p>Understand automated feature engineering, NAS, and hyperparameter optimization</p>
+                </div>
+                <div class="objective">
+                    <h3>Neural Architecture Search</h3>
+                    <p>Explore modern techniques for automated model design</p>
+                </div>
+                <div class="objective">
+                    <h3>Practical Platforms</h3>
+                    <p>Learn about real-world AutoML tools and frameworks</p>
+                </div>
+                <div class="objective">
+                    <h3>Challenges & Future</h3>
+                    <p>Understand limitations and emerging directions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is AutoML? -->
+        <div class="slide" id="slide2">
+            <h2>What is AutoML?</h2>
+            
+            <div class="highlight">
+                <p><strong>AutoML (Automated Machine Learning) automates the end-to-end process of applying machine learning to real-world problems, making AI accessible to non-experts while improving efficiency for experts.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Traditional ML Challenges</h3>
+                    <ul>
+                        <li>Requires extensive domain expertise</li>
+                        <li>Manual feature engineering is time-consuming</li>
+                        <li>Hyperparameter tuning is tedious and error-prone</li>
+                        <li>Architecture design requires deep knowledge</li>
+                        <li>Model selection involves trial and error</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>The Promise:</strong> AutoML democratizes machine learning by automating these complex decisions, enabling domain experts to focus on problem definition rather than implementation details.
+                    </div>
+                </div>
+                <div>
+                    <div class="viz" id="automl-overview-viz">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Traditional vs AutoML Workflow
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Core Components -->
+        <div class="slide" id="slide3">
+            <h2>Core Components of AutoML</h2>
+            
+            <div class="automl-process">
+                <div class="process-step">
+                    <h4>Data Preprocessing</h4>
+                    <p>Automated cleaning, transformation, and feature engineering</p>
+                </div>
+                <div class="process-step">
+                    <h4>Model Selection</h4>
+                    <p>Algorithm choice and architecture search</p>
+                </div>
+                <div class="process-step">
+                    <h4>Hyperparameter Optimization</h4>
+                    <p>Automated tuning of model parameters</p>
+                </div>
+                <div class="process-step">
+                    <h4>Model Evaluation</h4>
+                    <p>Performance assessment and ensemble creation</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Automated Feature Engineering</h3>
+                    <ul>
+                        <li>Feature selection and extraction</li>
+                        <li>Handling missing values and outliers</li>
+                        <li>Categorical encoding strategies</li>
+                        <li>Feature scaling and normalization</li>
+                        <li>Polynomial and interaction features</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Neural Architecture Search (NAS)</h3>
+                    <ul>
+                        <li>Automated neural network design</li>
+                        <li>Search space definition and exploration</li>
+                        <li>Performance estimation techniques</li>
+                        <li>Multi-objective optimization</li>
+                        <li>Transfer learning for efficiency</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Neural Architecture Search -->
+        <div class="slide" id="slide4">
+            <h2>Neural Architecture Search (NAS)</h2>
+            
+            <div class="highlight">
+                <p><strong>NAS automatically discovers neural network architectures that match or exceed human-designed networks, revolutionizing how we approach model design.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Search Space Design</h3>
+                    <ul>
+                        <li><strong>Micro Search:</strong> Cell-level operations and connections</li>
+                        <li><strong>Macro Search:</strong> Overall network structure</li>
+                        <li><strong>Operations:</strong> Convolution types, pooling, activations</li>
+                        <li><strong>Connections:</strong> Skip connections, branching patterns</li>
+                    </ul>
+                    
+                    <h3>Search Strategies</h3>
+                    <ul>
+                        <li><strong>Reinforcement Learning:</strong> Controller generates architectures</li>
+                        <li><strong>Evolutionary:</strong> Mutation and crossover of architectures</li>
+                        <li><strong>Gradient-based:</strong> Differentiable architecture search</li>
+                        <li><strong>Bayesian Optimization:</strong> Probabilistic model guidance</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="nas-search-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            NAS Search Space Exploration
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <strong>DARTS (Differentiable Architecture Search):</strong> Makes architecture search differentiable by representing operations as weighted combinations, enabling gradient-based optimization.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Modern NAS Methods -->
+        <div class="slide" id="slide5">
+            <h2>Advanced NAS Techniques</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Performance Estimation</h3>
+                    <ul>
+                        <li><strong>Early Stopping:</strong> Evaluate architectures with limited training</li>
+                        <li><strong>Weight Sharing:</strong> Share weights across similar architectures</li>
+                        <li><strong>Performance Predictors:</strong> Learn to estimate accuracy without training</li>
+                        <li><strong>One-shot NAS:</strong> Train supernet then extract subnets</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Efficiency Focus:</strong> Modern NAS methods reduce search time from thousands of GPU days to hours through clever performance estimation and weight sharing strategies.
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Notable NAS Methods</h3>
+                    <ul>
+                        <li><strong>ENAS:</strong> Efficient Neural Architecture Search with weight sharing</li>
+                        <li><strong>DARTS:</strong> Differentiable architecture search</li>
+                        <li><strong>ProxylessNAS:</strong> Direct search on target hardware</li>
+                        <li><strong>EfficientNet:</strong> Compound scaling for mobile deployment</li>
+                    </ul>
+                    
+                    <div class="formula">
+                        $$\text{Architecture} = \underset{\alpha}{\text{argmax}} \sum_{o \in \mathcal{O}} \frac{\exp(\alpha_o)}{\sum_{o' \in \mathcal{O}} \exp(\alpha_{o'})} \cdot o(x)$$
+                    </div>
+                    <p>DARTS continuous relaxation of architecture search</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Hyperparameter Optimization -->
+        <div class="slide" id="slide6">
+            <h2>Hyperparameter Optimization</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Bayesian Optimization</h3>
+                    <div class="formula">
+                        $$\alpha(\mathbf{x}) = \mathbb{E}[\max(f(\mathbf{x}) - f^*, 0) | \mathcal{D}]$$
+                    </div>
+                    <p>Expected improvement acquisition function guides search toward promising regions.</p>
+                    
+                    <ul>
+                        <li>Gaussian process surrogate models</li>
+                        <li>Acquisition functions (EI, UCB, PI)</li>
+                        <li>Balances exploration vs exploitation</li>
+                        <li>Efficient for expensive evaluations</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Multi-fidelity Methods</h3>
+                    <ul>
+                        <li><strong>Hyperband:</strong> Principled early stopping</li>
+                        <li><strong>BOHB:</strong> Combines Bayesian optimization with Hyperband</li>
+                        <li><strong>Population-based Training:</strong> Online hyperparameter adaptation</li>
+                        <li><strong>Successive Halving:</strong> Eliminates poor configurations early</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Key Insight:</strong> Don't waste computation on obviously poor hyperparameter configurations. Use low-fidelity evaluations to quickly eliminate bad candidates.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="viz" id="hyperopt-viz">
+                <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    Bayesian Optimization Process
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: AutoML Platforms -->
+        <div class="slide" id="slide7">
+            <h2>AutoML Platforms and Tools</h2>
+            
+            <div class="platform-comparison">
+                <div class="platform-item header">Platform</div>
+                <div class="platform-item header">Strengths</div>
+                <div class="platform-item header">Best For</div>
+                
+                <div class="platform-item"><strong>Google AutoML</strong></div>
+                <div class="platform-item">Cloud integration, easy deployment</div>
+                <div class="platform-item">Production applications, non-experts</div>
+                
+                <div class="platform-item"><strong>H2O.ai</strong></div>
+                <div class="platform-item">Open source, feature engineering</div>
+                <div class="platform-item">Data scientists, interpretability</div>
+                
+                <div class="platform-item"><strong>Auto-sklearn</strong></div>
+                <div class="platform-item">Ensemble methods, robustness</div>
+                <div class="platform-item">Research, classical ML</div>
+                
+                <div class="platform-item"><strong>Azure AutoML</strong></div>
+                <div class="platform-item">Enterprise integration, MLOps</div>
+                <div class="platform-item">Enterprise deployments</div>
+                
+                <div class="platform-item"><strong>AutoKeras</strong></div>
+                <div class="platform-item">Deep learning focus, accessibility</div>
+                <div class="platform-item">Neural networks, beginners</div>
+                
+                <div class="platform-item"><strong>TPOT</strong></div>
+                <div class="platform-item">Genetic programming, pipelines</div>
+                <div class="platform-item">Feature engineering, evolution</div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Platform Selection Criteria:</strong> Consider your expertise level, deployment requirements, computational budget, and the need for customization versus convenience.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Implementation Approaches -->
+        <div class="slide" id="slide8">
+            <h2>AutoML Implementation Strategies</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Search Strategies</h3>
+                    <ul>
+                        <li><strong>Random Search:</strong> Surprisingly effective baseline</li>
+                        <li><strong>Grid Search:</strong> Exhaustive but expensive</li>
+                        <li><strong>Bayesian Optimization:</strong> Sample-efficient optimization</li>
+                        <li><strong>Evolutionary Algorithms:</strong> Population-based exploration</li>
+                        <li><strong>Gradient-based:</strong> Fast convergence when applicable</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Computational Budget:</strong> AutoML success often depends on available computational resources. Plan accordingly for search time vs. accuracy trade-offs.
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>Evaluation Strategies</h3>
+                    <ul>
+                        <li><strong>Cross-validation:</strong> Robust performance estimation</li>
+                        <li><strong>Holdout validation:</strong> Faster but less reliable</li>
+                        <li><strong>Early stopping:</strong> Computational efficiency</li>
+                        <li><strong>Performance prediction:</strong> Learning curves and extrapolation</li>
+                        <li><strong>Multi-objective:</strong> Accuracy vs. efficiency trade-offs</li>
+                    </ul>
+                    
+                    <div class="viz" id="automl-process-viz">
+                        <div style="height: 180px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            AutoML Optimization Loop
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Challenges and Limitations -->
+        <div class="slide" id="slide9">
+            <h2>Challenges and Limitations</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Technical Challenges</h3>
+                    <ul>
+                        <li><strong>Computational Cost:</strong> NAS can require thousands of GPU hours</li>
+                        <li><strong>Search Space Design:</strong> Defining good search spaces is difficult</li>
+                        <li><strong>Transfer Learning:</strong> Limited transferability across domains</li>
+                        <li><strong>Scalability:</strong> Performance on large-scale problems</li>
+                    </ul>
+                    
+                    <h3>Practical Limitations</h3>
+                    <ul>
+                        <li><strong>Domain Knowledge:</strong> Still requires problem understanding</li>
+                        <li><strong>Data Quality:</strong> Garbage in, garbage out principle applies</li>
+                        <li><strong>Interpretability:</strong> Black-box solutions hard to understand</li>
+                        <li><strong>Deployment:</strong> Complex models may be hard to deploy</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>When NOT to Use AutoML</h3>
+                    <ul>
+                        <li>Limited computational resources</li>
+                        <li>Need for high interpretability</li>
+                        <li>Highly specialized domains</li>
+                        <li>Real-time inference requirements</li>
+                        <li>Small datasets with domain expertise available</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <strong>Resource Reality:</strong> State-of-the-art NAS methods can cost $50,000+ in cloud compute. Consider whether the automation benefits justify the computational expense.
+                    </div>
+                    
+                    <div class="example">
+                        <strong>Human-AI Collaboration:</strong> AutoML works best when combined with human domain expertise, not as a complete replacement for human judgment.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Future Directions -->
+        <div class="slide" id="slide10">
+            <h2>Future of AutoML</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Emerging Trends</h3>
+                    <ul>
+                        <li><strong>Efficient NAS:</strong> Reducing search time and computational cost</li>
+                        <li><strong>Hardware-aware Search:</strong> Co-optimizing for target deployment</li>
+                        <li><strong>Multi-modal AutoML:</strong> Handling diverse data types</li>
+                        <li><strong>Federated AutoML:</strong> Distributed and privacy-preserving</li>
+                        <li><strong>Continual Learning:</strong> Adapting to changing data distributions</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Democratization Goals</h3>
+                    <ul>
+                        <li><strong>No-code Platforms:</strong> Visual ML pipeline construction</li>
+                        <li><strong>Domain-specific AutoML:</strong> Tailored solutions for specific fields</li>
+                        <li><strong>Explainable AutoML:</strong> Interpretable automated decisions</li>
+                        <li><strong>Edge AutoML:</strong> Optimization for resource-constrained devices</li>
+                        <li><strong>Interactive AutoML:</strong> Human-in-the-loop optimization</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>The Vision:</strong> AutoML aims to make machine learning as accessible as spreadsheets, enabling domain experts to solve problems without deep ML expertise while augmenting experts' capabilities.</p>
+            </div>
+            
+            <div class="example">
+                <strong>Current Reality vs Future:</strong> We're moving from "AutoML for ML experts" to "AutoML for everyone," with interfaces becoming increasingly user-friendly and domain-specific solutions emerging for healthcare, finance, and other specialized fields.
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">10</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations
+            setTimeout(() => initViz(currentSlide), 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Visualization functions
+        function initViz(slideNum) {
+            console.log('Initializing visualization for slide:', slideNum);
+            
+            try {
+                switch(slideNum) {
+                    case 2:
+                        createAutoMLOverviewViz();
+                        break;
+                    case 4:
+                        createNASSearchViz();
+                        break;
+                    case 6:
+                        createHyperoptViz();
+                        break;
+                    case 8:
+                        createAutoMLProcessViz();
+                        break;
+                }
+            } catch (error) {
+                console.error('Visualization error:', error);
+            }
+        }
+
+        function createAutoMLOverviewViz() {
+            const container = d3.select('#automl-overview-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 250;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Traditional ML workflow
+            const traditionalSteps = [
+                {name: 'Feature Eng.', x: 50, y: 60, manual: true},
+                {name: 'Model Select', x: 150, y: 60, manual: true},
+                {name: 'Hyperparameter', x: 250, y: 60, manual: true},
+                {name: 'Evaluation', x: 350, y: 60, manual: true}
+            ];
+            
+            // AutoML workflow
+            const automlSteps = [
+                {name: 'Define Problem', x: 50, y: 160, manual: true},
+                {name: 'AutoML System', x: 200, y: 160, manual: false},
+                {name: 'Best Model', x: 350, y: 160, manual: false}
+            ];
+            
+            // Draw traditional workflow
+            svg.append('text')
+                .attr('x', 200)
+                .attr('y', 30)
+                .text('Traditional ML')
+                .attr('text-anchor', 'middle')
+                .attr('font-weight', 'bold')
+                .attr('fill', '#e74c3c');
+            
+            traditionalSteps.forEach((step, i) => {
+                svg.append('rect')
+                    .attr('x', step.x - 25)
+                    .attr('y', step.y - 15)
+                    .attr('width', 50)
+                    .attr('height', 30)
+                    .attr('fill', step.manual ? '#e74c3c' : '#2ecc71')
+                    .attr('opacity', 0.7)
+                    .attr('rx', 5);
+                
+                svg.append('text')
+                    .attr('x', step.x)
+                    .attr('y', step.y + 5)
+                    .text(step.name)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white');
+                
+                if (i < traditionalSteps.length - 1) {
+                    svg.append('line')
+                        .attr('x1', step.x + 25)
+                        .attr('y1', step.y)
+                        .attr('x2', traditionalSteps[i + 1].x - 25)
+                        .attr('y2', traditionalSteps[i + 1].y)
+                        .attr('stroke', '#7f8c8d')
+                        .attr('stroke-width', 2);
+                }
+            });
+            
+            // Draw AutoML workflow
+            svg.append('text')
+                .attr('x', 200)
+                .attr('y', 130)
+                .text('AutoML')
+                .attr('text-anchor', 'middle')
+                .attr('font-weight', 'bold')
+                .attr('fill', '#2ecc71');
+            
+            automlSteps.forEach((step, i) => {
+                const width = step.name === 'AutoML System' ? 100 : 60;
+                svg.append('rect')
+                    .attr('x', step.x - width/2)
+                    .attr('y', step.y - 15)
+                    .attr('width', width)
+                    .attr('height', 30)
+                    .attr('fill', step.manual ? '#3498db' : '#2ecc71')
+                    .attr('opacity', 0.7)
+                    .attr('rx', 5);
+                
+                svg.append('text')
+                    .attr('x', step.x)
+                    .attr('y', step.y + 5)
+                    .text(step.name)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white');
+                
+                if (i < automlSteps.length - 1) {
+                    svg.append('line')
+                        .attr('x1', step.x + (step.name === 'AutoML System' ? 50 : 30))
+                        .attr('y1', step.y)
+                        .attr('x2', automlSteps[i + 1].x - 30)
+                        .attr('y2', automlSteps[i + 1].y)
+                        .attr('stroke', '#7f8c8d')
+                        .attr('stroke-width', 2);
+                }
+            });
+        }
+
+        function createNASSearchViz() {
+            const container = d3.select('#nas-search-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 200;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Create search space representation
+            const nodes = [];
+            for (let i = 0; i < 20; i++) {
+                nodes.push({
+                    x: 50 + Math.random() * 300,
+                    y: 50 + Math.random() * 100,
+                    performance: Math.random(),
+                    id: i
+                });
+            }
+            
+            // Draw search space
+            nodes.forEach(node => {
+                svg.append('circle')
+                    .attr('cx', node.x)
+                    .attr('cy', node.y)
+                    .attr('r', 6 + node.performance * 4)
+                    .attr('fill', d3.interpolateRdYlBu(1 - node.performance))
+                    .attr('opacity', 0.7)
+                    .attr('stroke', '#2c3e50')
+                    .attr('stroke-width', 1);
+            });
+            
+            // Draw search path
+            const searchPath = nodes.slice(0, 5).sort((a, b) => a.x - b.x);
+            const line = d3.line()
+                .x(d => d.x)
+                .y(d => d.y)
+                .curve(d3.curveCardinal);
+            
+            svg.append('path')
+                .datum(searchPath)
+                .attr('d', line)
+                .attr('class', 'search-path');
+            
+            // Add legend
+            svg.append('text')
+                .attr('x', 20)
+                .attr('y', 190)
+                .text('Architecture Performance: ')
+                .attr('font-size', '12px');
+            
+            svg.append('circle').attr('cx', 140).attr('cy', 185).attr('r', 5).attr('fill', d3.interpolateRdYlBu(1));
+            svg.append('text').attr('x', 150).attr('y', 189).text('Low').attr('font-size', '10px');
+            
+            svg.append('circle').attr('cx', 200).attr('cy', 185).attr('r', 5).attr('fill', d3.interpolateRdYlBu(0));
+            svg.append('text').attr('x', 210).attr('y', 189).text('High').attr('font-size', '10px');
+        }
+
+        function createHyperoptViz() {
+            const container = d3.select('#hyperopt-viz');
+            container.selectAll('*').remove();
+            
+            const width = 500;
+            const height = 150;
+            const margin = {top: 20, right: 20, bottom: 30, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate Bayesian optimization data
+            const iterations = d3.range(0, 20);
+            const observations = iterations.map(i => ({
+                x: Math.random() * 10,
+                y: Math.sin(Math.random() * 10) + Math.random() * 0.5,
+                iteration: i
+            }));
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 10])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([-2, 2])
+                .range([height - margin.bottom, margin.top]);
+            
+            // Draw true function (sine wave)
+            const trueFunction = d3.range(0, 10, 0.1).map(x => ({x, y: Math.sin(x)}));
+            const line = d3.line()
+                .x(d => xScale(d.x))
+                .y(d => yScale(d.y));
+            
+            svg.append('path')
+                .datum(trueFunction)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none')
+                .attr('opacity', 0.7);
+            
+            // Draw observations
+            svg.selectAll('.observation')
+                .data(observations.slice(0, 10))
+                .enter()
+                .append('circle')
+                .attr('class', 'observation')
+                .attr('cx', d => xScale(d.x))
+                .attr('cy', d => yScale(d.y))
+                .attr('r', 4)
+                .attr('fill', '#e74c3c')
+                .attr('opacity', 0.8);
+            
+            // Labels
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', height - 5)
+                .text('Hyperparameter Space')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+        }
+
+        function createAutoMLProcessViz() {
+            const container = d3.select('#automl-process-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 150;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Draw optimization loop
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = 50;
+            
+            const steps = [
+                {name: 'Generate', angle: 0},
+                {name: 'Evaluate', angle: Math.PI / 2},
+                {name: 'Update', angle: Math.PI},
+                {name: 'Select', angle: 3 * Math.PI / 2}
+            ];
+            
+            // Draw circle
+            svg.append('circle')
+                .attr('cx', centerX)
+                .attr('cy', centerY)
+                .attr('r', radius)
+                .attr('fill', 'none')
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 3)
+                .attr('stroke-dasharray', '5,5');
+            
+            // Draw steps
+            steps.forEach((step, i) => {
+                const x = centerX + radius * Math.cos(step.angle);
+                const y = centerY + radius * Math.sin(step.angle);
+                
+                svg.append('circle')
+                    .attr('cx', x)
+                    .attr('cy', y)
+                    .attr('r', 15)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.8);
+                
+                svg.append('text')
+                    .attr('x', x)
+                    .attr('y', y + 5)
+                    .text(i + 1)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', 'white')
+                    .attr('font-weight', 'bold');
+                
+                // Add labels
+                const labelX = centerX + (radius + 25) * Math.cos(step.angle);
+                const labelY = centerY + (radius + 25) * Math.sin(step.angle);
+                
+                svg.append('text')
+                    .attr('x', labelX)
+                    .attr('y', labelY + 5)
+                    .text(step.name)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#2c3e50');
+            });
+            
+            // Add center label
+            svg.append('text')
+                .attr('x', centerX)
+                .attr('y', centerY + 5)
+                .text('AutoML')
+                .attr('text-anchor', 'middle')
+                .attr('font-weight', 'bold')
+                .attr('fill', '#2c3e50');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>

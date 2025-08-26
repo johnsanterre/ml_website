@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSTM for Time Series</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 85vw;
+            max-width: 1000px;
+            height: 75vh;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .highlight {
+            background: #ecf0f1;
+            padding: 1.2rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 1rem 0;
+        }
+
+        .formula {
+            background: #fdfdfd;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            background: white;
+            min-height: 250px;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2.5rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .objective h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .objective p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* LSTM specific styles */
+        .gate-box {
+            background: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem;
+            text-align: center;
+        }
+
+        .lstm-cell {
+            stroke: #2c3e50;
+            stroke-width: 2px;
+            fill: #ecf0f1;
+        }
+
+        .gate-component {
+            fill: #3498db;
+            stroke: #2980b9;
+            stroke-width: 1px;
+        }
+
+        .cell-state {
+            stroke: #e74c3c;
+            stroke-width: 3px;
+            fill: none;
+        }
+
+        .hidden-state {
+            stroke: #2ecc71;
+            stroke-width: 3px;
+            fill: none;
+        }
+
+        .time-series-line {
+            stroke: #3498db;
+            stroke-width: 2px;
+            fill: none;
+        }
+
+        .prediction-line {
+            stroke: #e74c3c;
+            stroke-width: 2px;
+            fill: none;
+            stroke-dasharray: 5,5;
+        }
+
+        /* Architecture comparison */
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .architecture-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 2px solid #e9ecef;
+        }
+
+        .architecture-item.header {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 85vh;
+                padding: 25px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .grid-2, .grid-3, .objectives {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>LSTM for Time Series</h1>
+            <p class="subtitle">Long Short-Term Memory Networks for Sequential Prediction</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>LSTM Architecture</h3>
+                    <p>Understand cell states, gates, and memory mechanisms</p>
+                </div>
+                <div class="objective">
+                    <h3>Time Series Preparation</h3>
+                    <p>Master sequence creation and data preprocessing</p>
+                </div>
+                <div class="objective">
+                    <h3>Model Architectures</h3>
+                    <p>Learn different LSTM configurations for prediction</p>
+                </div>
+                <div class="objective">
+                    <h3>Practical Applications</h3>
+                    <p>Apply LSTMs to real-world time series problems</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Why LSTMs for Time Series? -->
+        <div class="slide" id="slide2">
+            <h2>Why LSTMs for Time Series?</h2>
+            
+            <div class="highlight">
+                <p><strong>LSTMs solve the vanishing gradient problem in standard RNNs, enabling them to learn long-term dependencies crucial for time series prediction.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Standard RNN Problems</h3>
+                    <ul>
+                        <li><strong>Vanishing Gradients:</strong> Information loss over long sequences</li>
+                        <li><strong>Short Memory:</strong> Cannot capture long-term patterns</li>
+                        <li><strong>Training Instability:</strong> Gradients explode or vanish</li>
+                    </ul>
+                    
+                    <h3>Time Series Challenges</h3>
+                    <ul>
+                        <li>Seasonal patterns spanning multiple periods</li>
+                        <li>Long-term trends and dependencies</li>
+                        <li>Multiple interacting time scales</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="viz" id="rnn-vs-lstm-viz" style="height: 220px;">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            RNN vs LSTM Memory Capacity
+                        </div>
+                    </div>
+                    
+                    <div class="example" style="margin-top: 0.5rem;">
+                        <strong>Example:</strong> Stock prediction needs memory of events from weeks ago, not just recent movements.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: LSTM Architecture -->
+        <div class="slide" id="slide3">
+            <h2>LSTM Cell Architecture</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Key Components</h3>
+                    <div class="gate-box">
+                        <h4>Cell State (C<sub>t</sub>)</h4>
+                        <p>Long-term memory highway</p>
+                    </div>
+                    
+                    <div class="gate-box">
+                        <h4>Hidden State (h<sub>t</sub>)</h4>
+                        <p>Short-term memory output</p>
+                    </div>
+                    
+                    <div class="gate-box">
+                        <h4>Three Gates</h4>
+                        <p>Control information flow</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="viz" id="lstm-architecture-viz">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            LSTM Cell Internal Structure
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-3">
+                <div class="example">
+                    <h4>Forget Gate</h4>
+                    <div class="formula">
+                        $$f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)$$
+                    </div>
+                    <p>Decides what information to discard from cell state</p>
+                </div>
+                
+                <div class="example">
+                    <h4>Input Gate</h4>
+                    <div class="formula">
+                        $$i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i)$$
+                        $$\tilde{C}_t = \tanh(W_C \cdot [h_{t-1}, x_t] + b_C)$$
+                    </div>
+                    <p>Controls what new information to store</p>
+                </div>
+                
+                <div class="example">
+                    <h4>Output Gate</h4>
+                    <div class="formula">
+                        $$o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o)$$
+                        $$h_t = o_t \cdot \tanh(C_t)$$
+                    </div>
+                    <p>Determines what parts of cell state to output</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Time Series Data Preparation -->
+        <div class="slide" id="slide4">
+            <h2>Time Series Data Preparation</h2>
+            
+            <div class="highlight">
+                <p><strong>Proper data preparation is crucial for LSTM success. Time series data must be transformed into sequences with appropriate windowing and scaling.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Sliding Window Approach</h3>
+                    <div class="formula">
+                        $$X_t = [x_{t-n+1}, x_{t-n+2}, \ldots, x_t]$$
+                        $$y_t = x_{t+1}$$
+                    </div>
+                    <p>Create sequences of length n to predict next value</p>
+                    
+                    <h3>Data Preprocessing Steps</h3>
+                    <ul>
+                        <li><strong>Scaling:</strong> MinMax or StandardScaler</li>
+                        <li><strong>Stationarity:</strong> Differencing if needed</li>
+                        <li><strong>Missing Values:</strong> Forward fill or interpolation</li>
+                        <li><strong>Outliers:</strong> Detection and handling</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="data-preparation-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Sliding Window Sequence Creation
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <strong>Train-Test Split:</strong> Use temporal ordering! Never shuffle time series data. Typically 70-80% for training, 10-15% validation, 10-15% test.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: LSTM Model Architectures -->
+        <div class="slide" id="slide5">
+            <h2>LSTM Model Architectures for Time Series</h2>
+            
+            <div class="architecture-grid">
+                <div class="architecture-item header">Many-to-One</div>
+                <div class="architecture-item header">Many-to-Many</div>
+                
+                <div class="architecture-item">
+                    <h4>Use Cases:</h4>
+                    <ul>
+                        <li>Single-step forecasting</li>
+                        <li>Sequence classification</li>
+                        <li>Anomaly detection</li>
+                    </ul>
+                    <p><strong>Architecture:</strong> Sequence input → Single output</p>
+                </div>
+                
+                <div class="architecture-item">
+                    <h4>Use Cases:</h4>
+                    <ul>
+                        <li>Multi-step forecasting</li>
+                        <li>Sequence translation</li>
+                        <li>Pattern generation</li>
+                    </ul>
+                    <p><strong>Architecture:</strong> Sequence input → Sequence output</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Advanced Architectures</h3>
+                    <ul>
+                        <li><strong>Stacked LSTMs:</strong> Multiple LSTM layers for complex patterns</li>
+                        <li><strong>Bidirectional LSTMs:</strong> Process sequences forward and backward</li>
+                        <li><strong>Encoder-Decoder:</strong> Sequence-to-sequence with attention</li>
+                        <li><strong>CNN-LSTM:</strong> Combine convolutional and recurrent layers</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="example">
+                        <h4>Model Configuration Tips</h4>
+                        <ul>
+                            <li>Start with 50-100 LSTM units</li>
+                            <li>Use 1-3 LSTM layers maximum</li>
+                            <li>Add dropout (0.2-0.5) for regularization</li>
+                            <li>Return sequences for stacked layers</li>
+                            <li>Dense layer for final prediction</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="viz" id="lstm-architectures-viz">
+                <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    LSTM Architecture Variations
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Training and Optimization -->
+        <div class="slide" id="slide6">
+            <h2>Training LSTMs for Time Series</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Loss Functions</h3>
+                    <ul>
+                        <li><strong>MSE:</strong> Standard for regression tasks</li>
+                        <li><strong>MAE:</strong> Robust to outliers</li>
+                        <li><strong>Huber Loss:</strong> Combines MSE and MAE benefits</li>
+                        <li><strong>MAPE:</strong> Percentage-based error</li>
+                    </ul>
+                    
+                    <h3>Optimization Techniques</h3>
+                    <ul>
+                        <li><strong>Adam Optimizer:</strong> Adaptive learning rates</li>
+                        <li><strong>Gradient Clipping:</strong> Prevent exploding gradients</li>
+                        <li><strong>Learning Rate Scheduling:</strong> Reduce on plateau</li>
+                        <li><strong>Early Stopping:</strong> Prevent overfitting</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Regularization Strategies</h3>
+                    <ul>
+                        <li><strong>Dropout:</strong> 0.2-0.5 in LSTM layers</li>
+                        <li><strong>Recurrent Dropout:</strong> On recurrent connections</li>
+                        <li><strong>L2 Regularization:</strong> Weight penalty</li>
+                        <li><strong>Batch Normalization:</strong> Stabilize training</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <h4>Training Tips</h4>
+                        <ul>
+                            <li>Use stateful=True for very long sequences</li>
+                            <li>Reset states between epochs</li>
+                            <li>Monitor validation loss closely</li>
+                            <li>Use callbacks for learning rate and early stopping</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="formula">
+                <h4>Backpropagation Through Time (BPTT)</h4>
+                $$\frac{\partial L}{\partial W} = \sum_{t=1}^{T} \frac{\partial L_t}{\partial W}$$
+                <p>Gradients flow backward through time steps</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Multi-step Forecasting -->
+        <div class="slide" id="slide7">
+            <h2>Multi-step Ahead Forecasting</h2>
+            
+            <div class="highlight">
+                <p><strong>Multi-step forecasting predicts multiple future values, essential for practical applications like demand planning and resource allocation.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Forecasting Strategies</h3>
+                    <ul>
+                        <li><strong>Direct Method:</strong> Separate model for each horizon</li>
+                        <li><strong>Recursive Method:</strong> Use predictions as inputs</li>
+                        <li><strong>DirRec Method:</strong> Combine direct and recursive</li>
+                        <li><strong>Multiple Output:</strong> Single model, multiple outputs</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <h4>Recursive Forecasting Issues</h4>
+                        <ul>
+                            <li>Error accumulation over time</li>
+                            <li>Uncertainty quantification challenges</li>
+                            <li>Distribution shift in predictions</li>
+                            <li>Computational complexity</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="viz" id="multistep-forecasting-viz">
+                        <div style="height: 250px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            Multi-step Forecasting Comparison
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <strong>Best Practice:</strong> Use teacher forcing during training but recursive prediction during inference for realistic evaluation.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Real-world Applications -->
+        <div class="slide" id="slide8">
+            <h2>Real-world LSTM Applications</h2>
+            
+            <div class="grid-3">
+                <div class="example">
+                    <h3>Financial Markets</h3>
+                    <ul>
+                        <li>Stock price prediction</li>
+                        <li>Cryptocurrency forecasting</li>
+                        <li>Risk management</li>
+                        <li>Algorithmic trading</li>
+                    </ul>
+                </div>
+                
+                <div class="example">
+                    <h3>Weather & Climate</h3>
+                    <ul>
+                        <li>Temperature forecasting</li>
+                        <li>Precipitation prediction</li>
+                        <li>Extreme weather events</li>
+                        <li>Climate modeling</li>
+                    </ul>
+                </div>
+                
+                <div class="example">
+                    <h3>Business & IoT</h3>
+                    <ul>
+                        <li>Demand forecasting</li>
+                        <li>Supply chain optimization</li>
+                        <li>Sensor data analysis</li>
+                        <li>Predictive maintenance</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Implementation Considerations</h3>
+                    <ul>
+                        <li><strong>Data Quality:</strong> Clean, consistent, high-frequency data</li>
+                        <li><strong>Feature Engineering:</strong> Domain-specific indicators</li>
+                        <li><strong>Model Complexity:</strong> Balance accuracy vs interpretability</li>
+                        <li><strong>Computational Resources:</strong> Training time and memory</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Performance Metrics</h3>
+                    <ul>
+                        <li><strong>RMSE:</strong> Root Mean Square Error</li>
+                        <li><strong>MAE:</strong> Mean Absolute Error</li>
+                        <li><strong>MAPE:</strong> Mean Absolute Percentage Error</li>
+                        <li><strong>SMAPE:</strong> Symmetric MAPE</li>
+                        <li><strong>Direction Accuracy:</strong> Trend prediction</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Success Factors:</strong> Domain expertise + Quality data + Proper preprocessing + Appropriate architecture + Careful validation</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Advanced Techniques -->
+        <div class="slide" id="slide9">
+            <h2>Advanced LSTM Techniques</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Attention Mechanisms</h3>
+                    <ul>
+                        <li>Focus on relevant parts of input sequence</li>
+                        <li>Improve long sequence modeling</li>
+                        <li>Enhance interpretability</li>
+                        <li>Reduce information bottleneck</li>
+                    </ul>
+                    
+                    <h3>Ensemble Methods</h3>
+                    <ul>
+                        <li><strong>Model Averaging:</strong> Combine multiple LSTMs</li>
+                        <li><strong>Bagging:</strong> Train on different data subsets</li>
+                        <li><strong>Stacking:</strong> Meta-learning combinations</li>
+                        <li><strong>Boosting:</strong> Sequential error correction</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Transfer Learning</h3>
+                    <ul>
+                        <li>Pre-train on large datasets</li>
+                        <li>Fine-tune for specific domains</li>
+                        <li>Feature extraction from pre-trained models</li>
+                        <li>Domain adaptation techniques</li>
+                    </ul>
+                    
+                    <div class="example">
+                        <h4>Hyperparameter Optimization</h4>
+                        <ul>
+                            <li>Grid search or random search</li>
+                            <li>Bayesian optimization</li>
+                            <li>AutoML frameworks</li>
+                            <li>Neural architecture search</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="viz" id="advanced-techniques-viz">
+                <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                    LSTM with Attention Mechanism
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Best Practices and Guidelines -->
+        <div class="slide" id="slide10">
+            <h2>LSTM Best Practices for Time Series</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Data Preparation</h3>
+                    <ul>
+                        <li>Ensure data stationarity (differencing if needed)</li>
+                        <li>Scale features appropriately (MinMax, Standard)</li>
+                        <li>Handle missing values carefully</li>
+                        <li>Use proper train-validation-test splits</li>
+                        <li>Create sequences with appropriate window size</li>
+                    </ul>
+                    
+                    <h3>Model Design</h3>
+                    <ul>
+                        <li>Start simple: single LSTM layer</li>
+                        <li>Add complexity gradually</li>
+                        <li>Use dropout for regularization</li>
+                        <li>Monitor validation performance</li>
+                        <li>Consider bidirectional for full sequences</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Training Strategy</h3>
+                    <ul>
+                        <li>Use Adam optimizer with default settings</li>
+                        <li>Implement gradient clipping</li>
+                        <li>Early stopping based on validation loss</li>
+                        <li>Learning rate scheduling</li>
+                        <li>Cross-validation for time series</li>
+                    </ul>
+                    
+                    <h3>Common Pitfalls</h3>
+                    <ul>
+                        <li>Data leakage from future to past</li>
+                        <li>Insufficient sequence length</li>
+                        <li>Overfitting to noise</li>
+                        <li>Ignoring seasonality</li>
+                        <li>Not validating on out-of-sample data</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Key Takeaway:</strong> LSTMs excel at capturing long-term dependencies in time series, but success depends critically on proper data preparation, appropriate architecture design, and careful validation strategies.</p>
+            </div>
+            
+            <div class="example">
+                <strong>When to Use LSTMs:</strong> Complex temporal patterns, long sequences, non-linear relationships, and when traditional methods fall short. Consider simpler methods first for baseline comparison.
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">10</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations
+            setTimeout(() => initViz(currentSlide), 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Visualization functions
+        function initViz(slideNum) {
+            console.log('Initializing visualization for slide:', slideNum);
+            
+            try {
+                switch(slideNum) {
+                    case 2:
+                        createRNNvsLSTMViz();
+                        break;
+                    case 3:
+                        createLSTMArchitectureViz();
+                        break;
+                    case 4:
+                        createDataPreparationViz();
+                        break;
+                    case 5:
+                        createLSTMArchitecturesViz();
+                        break;
+                    case 7:
+                        createMultistepForecastingViz();
+                        break;
+                    case 9:
+                        createAdvancedTechniquesViz();
+                        break;
+                }
+            } catch (error) {
+                console.error('Visualization error:', error);
+            }
+        }
+
+        function createRNNvsLSTMViz() {
+            const container = d3.select('#rnn-vs-lstm-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 250;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate memory retention data
+            const timeSteps = d3.range(1, 21);
+            const rnnMemory = timeSteps.map(t => Math.exp(-t/3));
+            const lstmMemory = timeSteps.map(t => Math.exp(-t/15) + 0.1);
+            
+            const xScale = d3.scaleLinear()
+                .domain([1, 20])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 1])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x((d, i) => xScale(timeSteps[i]))
+                .y(d => yScale(d));
+            
+            // Draw memory retention curves
+            svg.append('path')
+                .datum(rnnMemory)
+                .attr('d', line)
+                .attr('stroke', '#e74c3c')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            svg.append('path')
+                .datum(lstmMemory)
+                .attr('d', line)
+                .attr('stroke', '#2ecc71')
+                .attr('stroke-width', 3)
+                .attr('fill', 'none');
+            
+            // Add legend
+            svg.append('text')
+                .attr('x', width - 80)
+                .attr('y', 40)
+                .text('RNN')
+                .attr('fill', '#e74c3c')
+                .attr('font-size', '14px')
+                .attr('font-weight', 'bold');
+            
+            svg.append('text')
+                .attr('x', width - 80)
+                .attr('y', 60)
+                .text('LSTM')
+                .attr('fill', '#2ecc71')
+                .attr('font-size', '14px')
+                .attr('font-weight', 'bold');
+            
+            // Add axes labels
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', height - 5)
+                .text('Time Steps')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+            
+            svg.append('text')
+                .attr('x', 15)
+                .attr('y', height/2)
+                .text('Memory Retention')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('transform', `rotate(-90, 15, ${height/2})`);
+        }
+
+        function createLSTMArchitectureViz() {
+            const container = d3.select('#lstm-architecture-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 250;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Draw LSTM cell structure
+            const cellCenter = {x: width/2, y: height/2};
+            
+            // Main cell body
+            svg.append('rect')
+                .attr('x', cellCenter.x - 80)
+                .attr('y', cellCenter.y - 40)
+                .attr('width', 160)
+                .attr('height', 80)
+                .attr('rx', 10)
+                .attr('class', 'lstm-cell');
+            
+            // Cell state line (horizontal)
+            svg.append('line')
+                .attr('x1', 20)
+                .attr('y1', cellCenter.y - 20)
+                .attr('x2', width - 20)
+                .attr('y2', cellCenter.y - 20)
+                .attr('class', 'cell-state');
+            
+            // Gates
+            const gates = [
+                {name: 'f', x: cellCenter.x - 50, y: cellCenter.y, color: '#e74c3c'},
+                {name: 'i', x: cellCenter.x - 15, y: cellCenter.y, color: '#f39c12'},
+                {name: 'o', x: cellCenter.x + 20, y: cellCenter.y, color: '#2ecc71'}
+            ];
+            
+            gates.forEach(gate => {
+                svg.append('circle')
+                    .attr('cx', gate.x)
+                    .attr('cy', gate.y)
+                    .attr('r', 12)
+                    .attr('fill', gate.color)
+                    .attr('opacity', 0.8);
+                
+                svg.append('text')
+                    .attr('x', gate.x)
+                    .attr('y', gate.y + 5)
+                    .text(gate.name)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', 'white')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold');
+            });
+            
+            // Input and output arrows
+            svg.append('line')
+                .attr('x1', cellCenter.x - 100)
+                .attr('y1', cellCenter.y + 60)
+                .attr('x2', cellCenter.x)
+                .attr('y2', cellCenter.y + 40)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 3)
+                .attr('marker-end', 'url(#arrow)');
+            
+            svg.append('line')
+                .attr('x1', cellCenter.x)
+                .attr('y1', cellCenter.y + 40)
+                .attr('x2', cellCenter.x + 100)
+                .attr('y2', cellCenter.y + 60)
+                .attr('stroke', '#2ecc71')
+                .attr('stroke-width', 3)
+                .attr('marker-end', 'url(#arrow)');
+            
+            // Labels
+            svg.append('text')
+                .attr('x', cellCenter.x - 100)
+                .attr('y', cellCenter.y + 80)
+                .text('Input')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+            
+            svg.append('text')
+                .attr('x', cellCenter.x + 100)
+                .attr('y', cellCenter.y + 80)
+                .text('Output')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+            
+            svg.append('text')
+                .attr('x', cellCenter.x)
+                .attr('y', cellCenter.y - 35)
+                .text('Cell State')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('fill', '#e74c3c');
+            
+            // Arrow marker
+            svg.append('defs')
+                .append('marker')
+                .attr('id', 'arrow')
+                .attr('markerWidth', 10)
+                .attr('markerHeight', 7)
+                .attr('refX', 9)
+                .attr('refY', 3.5)
+                .attr('orient', 'auto')
+                .append('polygon')
+                .attr('points', '0 0, 10 3.5, 0 7')
+                .attr('fill', '#2c3e50');
+        }
+
+        function createDataPreparationViz() {
+            const container = d3.select('#data-preparation-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 200;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate sample time series
+            const data = d3.range(20).map(i => ({
+                x: i,
+                y: 50 + 30 * Math.sin(i * 0.5) + 10 * Math.random()
+            }));
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 19])
+                .range([50, width - 50]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([height - 50, 50]);
+            
+            // Draw time series
+            const line = d3.line()
+                .x(d => xScale(d.x))
+                .y(d => yScale(d.y));
+            
+            svg.append('path')
+                .datum(data)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none');
+            
+            // Draw sliding windows
+            const windowSize = 5;
+            for (let i = 0; i <= data.length - windowSize - 1; i += 3) {
+                const windowData = data.slice(i, i + windowSize);
+                const targetData = data[i + windowSize];
+                
+                // Highlight window
+                svg.append('rect')
+                    .attr('x', xScale(windowData[0].x) - 5)
+                    .attr('y', 30)
+                    .attr('width', xScale(windowData[windowSize-1].x) - xScale(windowData[0].x) + 10)
+                    .attr('height', height - 80)
+                    .attr('fill', '#e74c3c')
+                    .attr('opacity', 0.2);
+                
+                // Mark target
+                svg.append('circle')
+                    .attr('cx', xScale(targetData.x))
+                    .attr('cy', yScale(targetData.y))
+                    .attr('r', 4)
+                    .attr('fill', '#e74c3c');
+            }
+            
+            // Add labels
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', 25)
+                .text('Sliding Window Approach')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '14px')
+                .attr('font-weight', 'bold');
+            
+            svg.append('text')
+                .attr('x', 80)
+                .attr('y', height - 10)
+                .text('Input Sequence')
+                .attr('font-size', '10px')
+                .attr('fill', '#3498db');
+            
+            svg.append('text')
+                .attr('x', 320)
+                .attr('y', height - 10)
+                .text('Target')
+                .attr('font-size', '10px')
+                .attr('fill', '#e74c3c');
+        }
+
+        function createLSTMArchitecturesViz() {
+            const container = d3.select('#lstm-architectures-viz');
+            container.selectAll('*').remove();
+            
+            const width = 500;
+            const height = 150;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Many-to-One architecture
+            const manyToOne = {x: 100, y: 75};
+            
+            // Input sequence
+            for (let i = 0; i < 4; i++) {
+                svg.append('rect')
+                    .attr('x', manyToOne.x - 60 + i * 15)
+                    .attr('y', manyToOne.y + 20)
+                    .attr('width', 10)
+                    .attr('height', 20)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.7);
+            }
+            
+            // LSTM
+            svg.append('rect')
+                .attr('x', manyToOne.x - 15)
+                .attr('y', manyToOne.y - 10)
+                .attr('width', 30)
+                .attr('height', 20)
+                .attr('fill', '#2ecc71')
+                .attr('rx', 5);
+            
+            // Single output
+            svg.append('circle')
+                .attr('cx', manyToOne.x)
+                .attr('cy', manyToOne.y - 30)
+                .attr('r', 8)
+                .attr('fill', '#e74c3c');
+            
+            svg.append('text')
+                .attr('x', manyToOne.x)
+                .attr('y', manyToOne.y + 60)
+                .text('Many-to-One')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('font-weight', 'bold');
+            
+            // Many-to-Many architecture
+            const manyToMany = {x: 350, y: 75};
+            
+            // Input sequence
+            for (let i = 0; i < 4; i++) {
+                svg.append('rect')
+                    .attr('x', manyToMany.x - 60 + i * 15)
+                    .attr('y', manyToMany.y + 20)
+                    .attr('width', 10)
+                    .attr('height', 20)
+                    .attr('fill', '#3498db')
+                    .attr('opacity', 0.7);
+            }
+            
+            // LSTM
+            svg.append('rect')
+                .attr('x', manyToMany.x - 15)
+                .attr('y', manyToMany.y - 10)
+                .attr('width', 30)
+                .attr('height', 20)
+                .attr('fill', '#2ecc71')
+                .attr('rx', 5);
+            
+            // Multiple outputs
+            for (let i = 0; i < 3; i++) {
+                svg.append('circle')
+                    .attr('cx', manyToMany.x - 20 + i * 20)
+                    .attr('cy', manyToMany.y - 30)
+                    .attr('r', 6)
+                    .attr('fill', '#e74c3c');
+            }
+            
+            svg.append('text')
+                .attr('x', manyToMany.x)
+                .attr('y', manyToMany.y + 60)
+                .text('Many-to-Many')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px')
+                .attr('font-weight', 'bold');
+        }
+
+        function createMultistepForecastingViz() {
+            const container = d3.select('#multistep-forecasting-viz');
+            container.selectAll('*').remove();
+            
+            const width = 400;
+            const height = 200;
+            const margin = {top: 20, right: 20, bottom: 40, left: 50};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Generate sample data
+            const historical = d3.range(20).map(i => ({
+                x: i,
+                y: 50 + 20 * Math.sin(i * 0.3) + 5 * Math.random()
+            }));
+            
+            const predictions = d3.range(20, 25).map(i => ({
+                x: i,
+                y: 50 + 20 * Math.sin(i * 0.3) + 10 * Math.random()
+            }));
+            
+            const xScale = d3.scaleLinear()
+                .domain([0, 24])
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([20, 80])
+                .range([height - margin.bottom, margin.top]);
+            
+            const line = d3.line()
+                .x(d => xScale(d.x))
+                .y(d => yScale(d.y));
+            
+            // Draw historical data
+            svg.append('path')
+                .datum(historical)
+                .attr('d', line)
+                .attr('stroke', '#3498db')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none');
+            
+            // Draw predictions
+            svg.append('path')
+                .datum(predictions)
+                .attr('d', line)
+                .attr('stroke', '#e74c3c')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none')
+                .attr('stroke-dasharray', '5,5');
+            
+            // Add vertical line to separate historical from predictions
+            svg.append('line')
+                .attr('x1', xScale(20))
+                .attr('y1', margin.top)
+                .attr('x2', xScale(20))
+                .attr('y2', height - margin.bottom)
+                .attr('stroke', '#7f8c8d')
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', '3,3');
+            
+            // Add legend
+            svg.append('text')
+                .attr('x', width - 100)
+                .attr('y', 40)
+                .text('Historical')
+                .attr('fill', '#3498db')
+                .attr('font-size', '12px');
+            
+            svg.append('text')
+                .attr('x', width - 100)
+                .attr('y', 55)
+                .text('Forecast')
+                .attr('fill', '#e74c3c')
+                .attr('font-size', '12px');
+            
+            // Add labels
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', height - 5)
+                .text('Time Steps')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+        }
+
+        function createAdvancedTechniquesViz() {
+            const container = d3.select('#advanced-techniques-viz');
+            container.selectAll('*').remove();
+            
+            const width = 500;
+            const height = 150;
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Draw LSTM with attention
+            const lstmPositions = [
+                {x: 100, y: 75},
+                {x: 150, y: 75},
+                {x: 200, y: 75},
+                {x: 250, y: 75}
+            ];
+            
+            // LSTM cells
+            lstmPositions.forEach((pos, i) => {
+                svg.append('rect')
+                    .attr('x', pos.x - 15)
+                    .attr('y', pos.y - 10)
+                    .attr('width', 30)
+                    .attr('height', 20)
+                    .attr('fill', '#2ecc71')
+                    .attr('rx', 5);
+                
+                svg.append('text')
+                    .attr('x', pos.x)
+                    .attr('y', pos.y + 5)
+                    .text(`L${i+1}`)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'white');
+            });
+            
+            // Attention weights (lines from output to each LSTM)
+            const outputPos = {x: 350, y: 75};
+            
+            lstmPositions.forEach((pos, i) => {
+                const opacity = [0.8, 0.6, 0.9, 0.4][i]; // Different attention weights
+                svg.append('line')
+                    .attr('x1', pos.x + 15)
+                    .attr('y1', pos.y)
+                    .attr('x2', outputPos.x - 15)
+                    .attr('y2', outputPos.y)
+                    .attr('stroke', '#e74c3c')
+                    .attr('stroke-width', 3)
+                    .attr('opacity', opacity);
+            });
+            
+            // Output
+            svg.append('circle')
+                .attr('cx', outputPos.x)
+                .attr('cy', outputPos.y)
+                .attr('r', 15)
+                .attr('fill', '#f39c12');
+            
+            svg.append('text')
+                .attr('x', outputPos.x)
+                .attr('y', outputPos.y + 5)
+                .text('Out')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '10px')
+                .attr('fill', 'white');
+            
+            // Labels
+            svg.append('text')
+                .attr('x', 175)
+                .attr('y', 130)
+                .text('LSTM Sequence')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '12px');
+            
+            svg.append('text')
+                .attr('x', 275)
+                .attr('y', 50)
+                .text('Attention Weights')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '10px')
+                .attr('fill', '#e74c3c');
+            
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', 20)
+                .text('LSTM with Attention Mechanism')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '14px')
+                .attr('font-weight', 'bold');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>

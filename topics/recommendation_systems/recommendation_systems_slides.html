@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendation Systems</title>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 85vw;
+            max-width: 1000px;
+            height: 75vh;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: absolute;
+        }
+
+        .slide.active {
+            display: block;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #5a6c7d;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        /* Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* Content blocks */
+        .highlight {
+            background: #ecf0f1;
+            padding: 1.2rem;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+            margin: 1rem 0;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        /* Visualization */
+        .viz {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            background: white;
+            min-height: 250px;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2.5rem;
+        }
+
+        .objectives {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .objective {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .objective h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .objective p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* Recommendation systems specific styles */
+        .matrix-cell {
+            stroke: #2c3e50;
+            stroke-width: 1px;
+            fill: #f8f9fa;
+        }
+
+        .matrix-value {
+            fill: #2c3e50;
+            font-size: 12px;
+            text-anchor: middle;
+        }
+
+        .user-node {
+            fill: #3498db;
+            stroke: #2980b9;
+            stroke-width: 2px;
+        }
+
+        .item-node {
+            fill: #e74c3c;
+            stroke: #c0392b;
+            stroke-width: 2px;
+        }
+
+        .connection {
+            stroke: #7f8c8d;
+            stroke-width: 1px;
+            opacity: 0.6;
+        }
+
+        .algorithm-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .algorithm-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .algorithm-item.header {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95vw;
+                height: 85vh;
+                padding: 25px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.6rem; }
+            
+            .grid-2, .grid-3, .objectives {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" id="slide1">
+            <h1>Recommendation Systems</h1>
+            <p class="subtitle">Building Personalized User Experiences</p>
+            
+            <div class="objectives">
+                <div class="objective">
+                    <h3>Collaborative Filtering</h3>
+                    <p>User and item-based recommendation approaches</p>
+                </div>
+                <div class="objective">
+                    <h3>Content-Based Systems</h3>
+                    <p>Feature-driven recommendation strategies</p>
+                </div>
+                <div class="objective">
+                    <h3>Advanced Techniques</h3>
+                    <p>Matrix factorization and deep learning methods</p>
+                </div>
+                <div class="objective">
+                    <h3>Production Systems</h3>
+                    <p>Evaluation, scaling, and deployment considerations</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Introduction and Overview -->
+        <div class="slide" id="slide2">
+            <h2>What Are Recommendation Systems?</h2>
+            
+            <div class="highlight">
+                <p><strong>Recommendation systems predict user preferences for items, driving personalization in modern digital experiences and generating billions in revenue.</strong></p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Core Problem</h3>
+                    <ul>
+                        <li><strong>Predict:</strong> Will user U like item I?</li>
+                        <li><strong>Rank:</strong> Which items should we show first?</li>
+                        <li><strong>Filter:</strong> Remove irrelevant or inappropriate content</li>
+                        <li><strong>Discover:</strong> Help users find new interests</li>
+                    </ul>
+                    
+                    <h3>Business Impact</h3>
+                    <ul>
+                        <li>35% of Amazon revenue from recommendations</li>
+                        <li>80% of Netflix viewing from recommendations</li>
+                        <li>Increased user engagement and retention</li>
+                        <li>Reduced choice overload</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <div class="viz" id="recommendation-overview" style="height: 200px;">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #95a5a6;">
+                            User-Item Interaction Matrix
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Collaborative Filtering -->
+        <div class="slide" id="slide3">
+            <h2>Collaborative Filtering</h2>
+            
+            <div class="highlight">
+                <p><strong>Core Idea:</strong> Users who agreed in the past will agree in the future. Find similar users or items based on historical interactions.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>User-Based CF</h3>
+                    <p>$$\text{sim}(u,v) = \frac{\sum_{i \in I_{uv}} (r_{ui} - \bar{r}_u)(r_{vi} - \bar{r}_v)}{\sqrt{\sum_{i \in I_{uv}} (r_{ui} - \bar{r}_u)^2} \sqrt{\sum_{i \in I_{uv}} (r_{vi} - \bar{r}_v)^2}}$$</p>
+                    <ul>
+                        <li>Find users similar to target user</li>
+                        <li>Recommend items liked by similar users</li>
+                        <li>Works well for niche items</li>
+                    </ul>
+                    
+                    <h3>Item-Based CF</h3>
+                    <ul>
+                        <li>Find items similar to user's liked items</li>
+                        <li>More stable than user-based</li>
+                        <li>Easier to explain recommendations</li>
+                        <li>Better for large user bases</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Challenges</h3>
+                    <ul>
+                        <li><strong>Cold Start:</strong> New users/items have no history</li>
+                        <li><strong>Sparsity:</strong> Most user-item pairs unobserved</li>
+                        <li><strong>Scalability:</strong> Computation grows with users/items</li>
+                        <li><strong>Popularity Bias:</strong> Favors popular items</li>
+                    </ul>
+                    
+                    <h3>Similarity Metrics</h3>
+                    <ul>
+                        <li><strong>Cosine Similarity:</strong> Angle between vectors</li>
+                        <li><strong>Pearson Correlation:</strong> Linear relationship</li>
+                        <li><strong>Jaccard Similarity:</strong> For binary data</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Content-Based Filtering -->
+        <div class="slide" id="slide4">
+            <h2>Content-Based Filtering</h2>
+            
+            <div class="highlight">
+                <p><strong>Approach:</strong> Recommend items similar to those the user has liked before, based on item features and user preferences.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Feature Extraction</h3>
+                    <ul>
+                        <li><strong>Text:</strong> TF-IDF, word embeddings, topics</li>
+                        <li><strong>Images:</strong> CNN features, color histograms</li>
+                        <li><strong>Audio:</strong> Spectrograms, MFCC features</li>
+                        <li><strong>Metadata:</strong> Genre, director, price, brand</li>
+                    </ul>
+                    
+                    <h3>User Profile Building</h3>
+                    <ul>
+                        <li>Aggregate features from liked items</li>
+                        <li>Weight by ratings or implicit feedback</li>
+                        <li>Update profile over time</li>
+                        <li>Handle preference drift</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Advantages</h3>
+                    <ul>
+                        <li>No cold start for new items</li>
+                        <li>Transparent recommendations</li>
+                        <li>Domain knowledge integration</li>
+                        <li>No sparsity issues</li>
+                    </ul>
+                    
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>Limited content analysis</li>
+                        <li>Over-specialization risk</li>
+                        <li>Feature engineering required</li>
+                        <li>Cold start for new users</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Matrix Factorization -->
+        <div class="slide" id="slide5">
+            <h2>Matrix Factorization Techniques</h2>
+            
+            <div class="highlight">
+                <p><strong>Idea:</strong> Decompose user-item matrix into lower-dimensional latent factor matrices that capture hidden patterns.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>SVD and NMF</h3>
+                    <p>$$R \approx U \Sigma V^T$$ where $U$ are user factors, $V$ are item factors</p>
+                    <ul>
+                        <li><strong>SVD:</strong> Handles missing values with modifications</li>
+                        <li><strong>NMF:</strong> Non-negative factors, interpretable</li>
+                        <li><strong>ALS:</strong> Alternating Least Squares optimization</li>
+                    </ul>
+                    
+                    <h3>Neural Collaborative Filtering</h3>
+                    <ul>
+                        <li>Replace dot product with neural networks</li>
+                        <li>Learn complex user-item interactions</li>
+                        <li>Combine with deep features</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Autoencoders</h3>
+                    <ul>
+                        <li>Encode user preferences into latent space</li>
+                        <li>Reconstruct missing ratings</li>
+                        <li>Handle sparse data naturally</li>
+                        <li>Variational AE for uncertainty</li>
+                    </ul>
+                    
+                    <h3>Embedding Techniques</h3>
+                    <ul>
+                        <li><strong>Item2Vec:</strong> Skip-gram for items</li>
+                        <li><strong>User2Vec:</strong> Learn user representations</li>
+                        <li><strong>Graph Embeddings:</strong> User-item graph structure</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Hybrid and Advanced Systems -->
+        <div class="slide" id="slide6">
+            <h2>Hybrid and Advanced Approaches</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Hybrid Strategies</h3>
+                    <ul>
+                        <li><strong>Weighted:</strong> Combine algorithm scores</li>
+                        <li><strong>Switching:</strong> Choose algorithm by context</li>
+                        <li><strong>Cascade:</strong> Sequential refinement</li>
+                        <li><strong>Feature Combination:</strong> Unified model</li>
+                    </ul>
+                    
+                    <h3>Context-Aware Systems</h3>
+                    <ul>
+                        <li>Time of day, season, location</li>
+                        <li>Device type and platform</li>
+                        <li>Social context and mood</li>
+                        <li>Current activity or task</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Sequential Models</h3>
+                    <ul>
+                        <li><strong>RNNs/LSTMs:</strong> Model temporal patterns</li>
+                        <li><strong>Session-based:</strong> Short-term preferences</li>
+                        <li><strong>Next-item prediction:</strong> Immediate needs</li>
+                    </ul>
+                    
+                    <h3>Exploration vs Exploitation</h3>
+                    <ul>
+                        <li><strong>Multi-armed bandits:</strong> Balance known vs new</li>
+                        <li><strong>Thompson sampling:</strong> Bayesian approach</li>
+                        <li><strong>ε-greedy:</strong> Random exploration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Evaluation Metrics -->
+        <div class="slide" id="slide7">
+            <h2>Evaluation and Metrics</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Offline Metrics</h3>
+                    <ul>
+                        <li><strong>RMSE/MAE:</strong> Rating prediction accuracy</li>
+                        <li><strong>Precision@K:</strong> Relevant items in top-K</li>
+                        <li><strong>Recall@K:</strong> Coverage of relevant items</li>
+                        <li><strong>NDCG:</strong> Normalized discounted cumulative gain</li>
+                        <li><strong>AUC:</strong> Area under ROC curve</li>
+                    </ul>
+                    
+                    <h3>Beyond Accuracy</h3>
+                    <ul>
+                        <li><strong>Diversity:</strong> Variety in recommendations</li>
+                        <li><strong>Novelty:</strong> Surprising but relevant items</li>
+                        <li><strong>Coverage:</strong> Catalog item distribution</li>
+                        <li><strong>Serendipity:</strong> Unexpected discoveries</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Online Evaluation</h3>
+                    <ul>
+                        <li><strong>A/B Testing:</strong> Compare algorithms live</li>
+                        <li><strong>Click-through Rate:</strong> User engagement</li>
+                        <li><strong>Conversion Rate:</strong> Purchase/consumption</li>
+                        <li><strong>Session Length:</strong> User retention</li>
+                    </ul>
+                    
+                    <h3>Business Metrics</h3>
+                    <ul>
+                        <li>Revenue per user</li>
+                        <li>Customer lifetime value</li>
+                        <li>User satisfaction scores</li>
+                        <li>Return visit frequency</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Production Challenges -->
+        <div class="slide" id="slide8">
+            <h2>Production and Deployment</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Scalability Challenges</h3>
+                    <ul>
+                        <li><strong>Real-time inference:</strong> Sub-100ms latency</li>
+                        <li><strong>Batch processing:</strong> Precompute recommendations</li>
+                        <li><strong>Distributed computing:</strong> Spark, Hadoop clusters</li>
+                        <li><strong>Caching strategies:</strong> Redis, CDN integration</li>
+                    </ul>
+                    
+                    <h3>Data Pipeline</h3>
+                    <ul>
+                        <li>Streaming user interactions</li>
+                        <li>Feature engineering pipelines</li>
+                        <li>Model retraining schedules</li>
+                        <li>A/B testing infrastructure</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Bias and Fairness</h3>
+                    <ul>
+                        <li><strong>Popularity bias:</strong> Over-recommend popular items</li>
+                        <li><strong>Filter bubbles:</strong> Narrow user exposure</li>
+                        <li><strong>Demographic bias:</strong> Unfair treatment by group</li>
+                        <li><strong>Feedback loops:</strong> Rich get richer</li>
+                    </ul>
+                    
+                    <h3>Privacy Considerations</h3>
+                    <ul>
+                        <li>Federated learning approaches</li>
+                        <li>Differential privacy techniques</li>
+                        <li>User data anonymization</li>
+                        <li>GDPR compliance requirements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Case Studies -->
+        <div class="slide" id="slide9">
+            <h2>Real-World Case Studies</h2>
+            
+            <div class="grid-3">
+                <div class="example">
+                    <h3>Netflix</h3>
+                    <ul>
+                        <li><strong>Approach:</strong> Hybrid collaborative + content</li>
+                        <li><strong>Features:</strong> Viewing history, ratings, metadata</li>
+                        <li><strong>Innovation:</strong> Personalized thumbnails</li>
+                        <li><strong>Scale:</strong> 200M+ users, 15K+ titles</li>
+                    </ul>
+                </div>
+                
+                <div class="example">
+                    <h3>Amazon</h3>
+                    <ul>
+                        <li><strong>Approach:</strong> Item-based collaborative filtering</li>
+                        <li><strong>Features:</strong> Purchase history, browsing</li>
+                        <li><strong>Innovation:</strong> "Customers who bought X also bought Y"</li>
+                        <li><strong>Scale:</strong> 300M+ products</li>
+                    </ul>
+                </div>
+                
+                <div class="example">
+                    <h3>Spotify</h3>
+                    <ul>
+                        <li><strong>Approach:</strong> Deep learning + collaborative</li>
+                        <li><strong>Features:</strong> Audio features, playlists</li>
+                        <li><strong>Innovation:</strong> Discover Weekly, Daily Mix</li>
+                        <li><strong>Scale:</strong> 80M+ tracks, 400M+ users</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <h3>Common Success Patterns</h3>
+                <ul>
+                    <li>Start simple with collaborative filtering, then add complexity</li>
+                    <li>Combine multiple data sources and algorithms</li>
+                    <li>Focus on user experience and business metrics, not just accuracy</li>
+                    <li>Continuous experimentation and iteration</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 10: Best Practices and Future -->
+        <div class="slide" id="slide10">
+            <h2>Best Practices and Future Trends</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Implementation Best Practices</h3>
+                    <ul>
+                        <li><strong>Start Simple:</strong> Basic CF before complex models</li>
+                        <li><strong>Measure Everything:</strong> Comprehensive A/B testing</li>
+                        <li><strong>Handle Cold Start:</strong> Have fallback strategies</li>
+                        <li><strong>Explain Recommendations:</strong> Build user trust</li>
+                        <li><strong>Monitor Bias:</strong> Ensure fair recommendations</li>
+                    </ul>
+                    
+                    <h3>Common Pitfalls</h3>
+                    <ul>
+                        <li>Optimizing only for accuracy</li>
+                        <li>Ignoring temporal dynamics</li>
+                        <li>Over-engineering early systems</li>
+                        <li>Not handling data sparsity</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Emerging Trends</h3>
+                    <ul>
+                        <li><strong>Graph Neural Networks:</strong> Complex relationship modeling</li>
+                        <li><strong>Reinforcement Learning:</strong> Long-term user satisfaction</li>
+                        <li><strong>Causal Inference:</strong> Understanding recommendation effects</li>
+                        <li><strong>Federated Learning:</strong> Privacy-preserving recommendations</li>
+                        <li><strong>Multimodal Systems:</strong> Text, image, audio integration</li>
+                    </ul>
+                    
+                    <h3>Success Metrics</h3>
+                    <ul>
+                        <li>User engagement and retention</li>
+                        <li>Revenue and conversion impact</li>
+                        <li>Diversity and catalog coverage</li>
+                        <li>User satisfaction surveys</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="counter">
+        <span id="current">1</span> / <span id="total">10</span>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide;
+            
+            // Initialize visualizations
+            setTimeout(() => initViz(currentSlide), 100);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Visualization functions
+        function initViz(slideNum) {
+            console.log('Initializing visualization for slide:', slideNum);
+            
+            try {
+                switch(slideNum) {
+                    case 2:
+                        createRecommendationOverview();
+                        break;
+                }
+            } catch (error) {
+                console.error('Visualization error:', error);
+            }
+        }
+
+        function createRecommendationOverview() {
+            const container = d3.select('#recommendation-overview');
+            container.selectAll('*').remove();
+            
+            const width = 350;
+            const height = 150;
+            const margin = {top: 20, right: 20, bottom: 20, left: 40};
+            
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Create a simple user-item matrix visualization
+            const users = ['U1', 'U2', 'U3', 'U4'];
+            const items = ['I1', 'I2', 'I3', 'I4', 'I5'];
+            
+            const cellWidth = (width - margin.left - margin.right) / items.length;
+            const cellHeight = (height - margin.top - margin.bottom) / users.length;
+            
+            // Sample ratings matrix (0 = no rating, 1-5 = rating)
+            const ratings = [
+                [5, 0, 4, 0, 2],
+                [0, 3, 0, 5, 4],
+                [4, 0, 0, 3, 0],
+                [0, 4, 5, 0, 3]
+            ];
+            
+            // Draw matrix cells
+            users.forEach((user, i) => {
+                items.forEach((item, j) => {
+                    const rating = ratings[i][j];
+                    const x = margin.left + j * cellWidth;
+                    const y = margin.top + i * cellHeight;
+                    
+                    // Cell background
+                    svg.append('rect')
+                        .attr('x', x)
+                        .attr('y', y)
+                        .attr('width', cellWidth)
+                        .attr('height', cellHeight)
+                        .attr('fill', rating > 0 ? '#3498db' : '#ecf0f1')
+                        .attr('stroke', '#bdc3c7')
+                        .attr('opacity', rating > 0 ? 0.3 + (rating / 5) * 0.7 : 1);
+                    
+                    // Rating text
+                    if (rating > 0) {
+                        svg.append('text')
+                            .attr('x', x + cellWidth/2)
+                            .attr('y', y + cellHeight/2 + 4)
+                            .text(rating)
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '12px')
+                            .attr('fill', '#2c3e50')
+                            .attr('font-weight', 'bold');
+                    } else {
+                        svg.append('text')
+                            .attr('x', x + cellWidth/2)
+                            .attr('y', y + cellHeight/2 + 4)
+                            .text('?')
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '12px')
+                            .attr('fill', '#95a5a6');
+                    }
+                });
+            });
+            
+            // Add row labels (users)
+            users.forEach((user, i) => {
+                svg.append('text')
+                    .attr('x', margin.left - 10)
+                    .attr('y', margin.top + i * cellHeight + cellHeight/2 + 4)
+                    .text(user)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-weight', 'bold');
+            });
+            
+            // Add column labels (items)
+            items.forEach((item, j) => {
+                svg.append('text')
+                    .attr('x', margin.left + j * cellWidth + cellWidth/2)
+                    .attr('y', margin.top - 5)
+                    .text(item)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '12px')
+                    .attr('fill', '#2c3e50')
+                    .attr('font-weight', 'bold');
+            });
+            
+            // Add title
+            svg.append('text')
+                .attr('x', width/2)
+                .attr('y', 15)
+                .text('User-Item Rating Matrix')
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '14px')
+                .attr('fill', '#2c3e50')
+                .attr('font-weight', 'bold');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            showSlide(1);
+        });
+    </script>
+</body>
+</html>
