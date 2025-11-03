@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resource Library - Machine Learning Course Series</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: "Times New Roman", Times, serif;
             background-color: #000000;
@@ -17,6 +21,8 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         h1 {
@@ -39,6 +45,8 @@
 
         .category {
             margin-bottom: 50px;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .category h2 {
@@ -54,6 +62,9 @@
             background: #0f0f0f;
             border-radius: 8px;
             border: 1px solid #2f2f2f;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            max-width: 100%;
         }
 
         .resource-title {
@@ -65,6 +76,7 @@
             text-decoration: none;
             font-size: 1.2em;
             font-weight: bold;
+            word-break: break-word;
         }
 
         .resource-title a:hover {
@@ -164,10 +176,28 @@
 
             <div class="resource">
                 <h3 class="resource-title">
+                    <a href="https://pubs.acs.org/doi/10.1021/acs.chemrev.4c00055" target="_blank">Self-Driving Laboratories for Chemistry and Materials Science</a>
+                </h3>
+                <p class="resource-description">
+                    A comprehensive 2024 Chemical Reviews paper by Gary Tom et al. exploring self-driving laboratories (SDLs) that integrate automation and autonomous experimental planning to accelerate research in chemistry and materials science. The review covers enabling technologies including hardware and software infrastructure, and demonstrates applications across drug discovery, materials science, genomics, and chemistry. This work examines real-world SDL implementations, their varying levels of automation, and addresses domain-specific challenges in creating fully autonomous research systems.
+                </p>
+            </div>
+
+            <div class="resource">
+                <h3 class="resource-title">
                     <a href="https://arxiv.org/abs/2312.10997" target="_blank">RAG Survey</a>
                 </h3>
                 <p class="resource-description">
                     A comprehensive survey of Retrieval-Augmented Generation methods and their applications across various domains. The paper systematically reviews different RAG architectures, retrieval strategies, and generation techniques used in modern NLP systems. It provides valuable insights into the current state of RAG research and identifies promising directions for future development.
+                </p>
+            </div>
+
+            <div class="resource">
+                <h3 class="resource-title">
+                    <a href="https://www.dallasfed.org/research/economics/2025/0624" target="_blank">Advances in AI Will Boost Productivity, Living Standards Over Time</a>
+                </h3>
+                <p class="resource-description">
+                    A Dallas Federal Reserve analysis by Mark A. Wynne and Lillian Derr examining AI's potential impact on productivity and GDP per capita through 2050, including scenarios ranging from steady historical growth to technological singularity. The article charts extreme possibilities including a benign singularity where machines solve scarcity, and a dystopian scenario of human extinction, alongside more moderate projections of 0.3-3.0 percentage point annual productivity boosts. The analysis discusses current AI adoption rates, evidence of productivity gains, and the potential for AI to accelerate scientific discovery and reverse the declining productivity of research that has plagued recent decades.
                 </p>
             </div>
 
@@ -337,7 +367,6 @@
                     A comprehensive reference for Healthcare Common Procedure Coding System (HCPCS) J codes, which are used for billing drugs and biologicals in healthcare systems. The resource provides detailed information about medical coding standards essential for healthcare data analysis and machine learning applications in medical domains. This reference is valuable for data scientists working with healthcare datasets who need to understand medical coding systems and their implications for data analysis.
                 </p>
             </div>
-        </div>
 
             <div class="resource">
                 <h3 class="resource-title">
@@ -594,19 +623,19 @@
 
             <div class="resource">
                 <h3 class="resource-title">
-                    <a href="https://openreview.net/pdf?id=B1l6y0VFPr" target="_blank">OpenReview Research Paper</a>
+                    <a href="https://openreview.net/pdf?id=B1l6y0VFPr" target="_blank">Identity Crisis: Memorization and Generalization Under Extreme Overparameterization</a>
                 </h3>
                 <p class="resource-description">
-                    A peer-reviewed research paper from OpenReview presenting novel contributions to machine learning methodology, theory, or applications. The paper undergoes rigorous academic review and represents current research frontiers in the field. This resource provides access to cutting-edge research findings and methodological advances that contribute to the theoretical and practical development of machine learning.
+                    A Google Research paper studying the interplay between memorization and generalization in overparameterized networks trained on identity mapping tasks with minimal training data (even a single example). The research reveals that different architectures exhibit strikingly different inductive biases: CNNs can generalize the identity function from a single example while fully connected networks cannot reliably learn it even from 60k examples. This work provides deep insights into how architectural choices like depth, kernel width, and number of channels affect a model's tendency to memorize versus generalize.
                 </p>
             </div>
 
             <div class="resource">
                 <h3 class="resource-title">
-                    <a href="https://arxiv.org/abs/2001.11279" target="_blank">arXiv Research Paper: Advanced ML Techniques</a>
+                    <a href="https://arxiv.org/abs/2001.11279" target="_blank">Goal-directed Graph Construction Using Reinforcement Learning</a>
                 </h3>
                 <p class="resource-description">
-                    An arXiv preprint presenting novel research in machine learning, covering theoretical advances, algorithmic innovations, or empirical studies in the field. The paper contributes to the academic literature with peer-reviewed quality research that advances understanding of machine learning principles and applications. This resource provides early access to research findings that may influence future developments in machine learning methodology.
+                    A paper published in Proceedings of the Royal Society A that formulates graph construction as a reinforcement learning problem, where an agent learns to create and improve graph topologies to optimize target objectives like robustness to failures and attacks. The approach uses graph neural networks and demonstrates the ability to outperform existing methods while generalizing to out-of-sample graphs. This work is particularly relevant for infrastructure and communication networks, showing how RL can be applied to optimize global structural properties of graphs.
                 </p>
             </div>
 
@@ -762,10 +791,10 @@
 
             <div class="resource">
                 <h3 class="resource-title">
-                    <a href="https://vimeo.com/363900704" target="_blank">Advanced Machine Learning Presentation</a>
+                    <a href="https://vimeo.com/363900704" target="_blank">Powering Human–Computer Interfaces with Machine Learning - John Santerre</a>
                 </h3>
                 <p class="resource-description">
-                    A professional presentation covering advanced topics in machine learning, featuring expert insights and practical applications. The video explores sophisticated ML techniques and their real-world implementations across various domains. This resource provides in-depth coverage of complex machine learning concepts for advanced practitioners.
+                    A presentation by John Santerre exploring how machine learning can be applied to enhance human-computer interfaces and interaction design. The talk covers techniques for using ML to create more intuitive, responsive, and adaptive user interfaces that better understand and respond to human behavior. This resource is valuable for those interested in the intersection of machine learning, UX design, and human-computer interaction.
                 </p>
             </div>
 
@@ -828,6 +857,15 @@
         <div class="category" data-category="additional">
             <h2>Additional Resources</h2>
             
+            <div class="resource">
+                <h3 class="resource-title">
+                    <a href="https://simonwillison.net/2025/Oct/16/claude-skills/" target="_blank">Claude Skills Are Awesome, Maybe a Bigger Deal Than MCP</a>
+                </h3>
+                <p class="resource-description">
+                    Simon Willison's analysis of Anthropic's Claude Skills feature, which allows models to load specialized abilities from Markdown files with instructions, scripts, and resources. Skills are conceptually simple yet powerful: they're token-efficient (each skill uses only dozens of tokens in frontmatter), only loaded when relevant, and can turn Claude into a general agent for computer automation. Willison argues that Skills' simplicity—just Markdown with YAML metadata and optional scripts—makes them far more practical than the complex MCP protocol, predicting a "Cambrian explosion" in Skills development that will dwarf the MCP ecosystem.
+                </p>
+            </div>
+
             <div class="resource">
                 <h3 class="resource-title">
                     <a href="https://www.alexirpan.com/2018/02/14/rl-hard.html" target="_blank">Deep Reinforcement Learning Doesn't Work Yet</a>
