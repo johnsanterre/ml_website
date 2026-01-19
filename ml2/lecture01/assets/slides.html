@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Deep Learning</title>
+    
+    <!-- Reveal.js CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/white.css">
+    
+    <!-- Custom Styling -->
+    <style>
+        :root {
+            --berkeley-blue: #003262;
+            --berkeley-gold: #FDB515;
+            --dark-text: #333333;
+            --light-text: #666666;
+        }
+
+        .reveal {
+            font-family: 'Source Sans Pro', Helvetica, sans-serif;
+            font-size: 32px;
+            color: var(--dark-text);
+        }
+
+        .reveal h1 {
+            color: var(--berkeley-blue);
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .reveal h2 {
+            color: var(--berkeley-blue);
+            font-size: 1.8em;
+        }
+
+        .title-slide h1 {
+            font-size: 3em;
+            margin-bottom: 0.3em;
+        }
+
+        .title-slide p {
+            color: var(--light-text);
+            font-size: 1.5em;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 20px auto;
+            width: 70%;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .code-wrapper {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 0.8em;
+        }
+
+        pre {
+            margin: 0;
+        }
+
+        .timeline {
+            list-style: none;
+            padding: 0;
+        }
+
+        .timeline li {
+            margin: 20px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .timeline li:before {
+            content: "•";
+            color: var(--berkeley-gold);
+            font-size: 1.5em;
+            position: absolute;
+            left: 0;
+        }
+
+        .highlight {
+            color: var(--berkeley-blue);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Title Slide -->
+            <section class="title-slide">
+                <h1>Introduction to Deep Learning</h1>
+                <p>ML2: Advanced Machine Learning</p>
+                <p class="author">Berkeley School of Information</p>
+            </section>
+
+            <!-- Building on ML1 -->
+            <section>
+                <h2>Building on Our Foundation</h2>
+                <div class="two-column">
+                    <div>
+                        <p>From ML1, we learned:</p>
+                        <ul>
+                            <li class="fragment">Classical ML algorithms</li>
+                            <li class="fragment">Feature engineering</li>
+                            <li class="fragment">Model evaluation</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p>Now we'll explore:</p>
+                        <ul>
+                            <li class="fragment">Deep learning revolution</li>
+                            <li class="fragment">Automatic feature learning</li>
+                            <li class="fragment">Neural architectures</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Evolution Timeline -->
+            <section>
+                <h2>The Evolution of Machine Learning</h2>
+                <ul class="timeline">
+                    <li class="fragment">1950s-1960s: Rule-based systems
+                        <p class="fragment">Attempting to program intelligence directly</p>
+                    </li>
+                    <li class="fragment">1980s-1990s: Classical ML
+                        <p class="fragment">Decision trees, SVMs, early neural networks</p>
+                    </li>
+                    <li class="fragment">2010s-Present: Deep Learning Revolution
+                        <p class="fragment">Enabled by big data, GPUs, and open source</p>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Deep Learning Revolution -->
+            <section>
+                <h2>Why Deep Learning Now?</h2>
+                <div class="two-column">
+                    <div>
+                        <h3>Three Key Factors</h3>
+                        <ul>
+                            <li class="fragment">Massive Datasets
+                                <p>ImageNet: millions of labeled images</p>
+                            </li>
+                            <li class="fragment">GPU Computing
+                                <p>Parallel processing power</p>
+                            </li>
+                            <li class="fragment">Open Source Tools
+                                <p>PyTorch, TensorFlow</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="image-container">
+                        <div class="fragment">
+                            [Visualization of exponential growth in data, compute, and model size]
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature Learning -->
+            <section>
+                <h2>The Power of Automatic Feature Learning</h2>
+                <div class="two-column">
+                    <div>
+                        <h3>Traditional ML</h3>
+                        <ul>
+                            <li class="fragment">Manual feature design</li>
+                            <li class="fragment">Domain expertise required</li>
+                            <li class="fragment">Time-consuming process</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Deep Learning</h3>
+                        <ul>
+                            <li class="fragment">Automatic feature discovery</li>
+                            <li class="fragment">Hierarchical learning</li>
+                            <li class="fragment">End-to-end optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Neural Network Basics -->
+            <section>
+                <h2>The Artificial Neuron</h2>
+                <div class="code-wrapper fragment">
+                    <pre><code class="python">class Neuron:
+    def __init__(self, input_dim):
+        self.weights = np.random.randn(input_dim)
+        self.bias = np.random.randn()
+    
+    def forward(self, x):
+        z = np.dot(x, self.weights) + self.bias
+        return self.activation(z)</code></pre>
+                </div>
+                <p class="fragment">Just like biological neurons:</p>
+                <ul>
+                    <li class="fragment">Takes multiple inputs</li>
+                    <li class="fragment">Weighs their importance</li>
+                    <li class="fragment">Decides whether to "fire"</li>
+                </ul>
+            </section>
+
+            <!-- Activation Functions -->
+            <section>
+                <h2>Activation Functions</h2>
+                <div class="two-column">
+                    <div>
+                        <h3>ReLU</h3>
+                        <p class="fragment">f(x) = max(0, x)</p>
+                        <ul>
+                            <li class="fragment">Simple but powerful</li>
+                            <li class="fragment">Solves vanishing gradient</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="image-container">
+                            [ReLU function graph]
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PyTorch Introduction -->
+            <section>
+                <h2>Building Networks with PyTorch</h2>
+                <div class="code-wrapper fragment">
+                    <pre><code class="python">class SimpleNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc1 = nn.Linear(784, 128)
+        self.fc2 = nn.Linear(128, 10)
+        self.relu = nn.ReLU()
+    
+    def forward(self, x):
+        x = self.relu(self.fc1(x))
+        return self.fc2(x)</code></pre>
+                </div>
+                <p class="fragment">Clear, Pythonic syntax for expressing neural architectures</p>
+            </section>
+
+            <!-- Framework Comparison -->
+            <section>
+                <h2>PyTorch vs TensorFlow</h2>
+                <div class="two-column">
+                    <div>
+                        <h3>PyTorch</h3>
+                        <div class="code-wrapper fragment">
+                            <pre><code class="python">class SimpleNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc1 = nn.Linear(784, 128)
+        self.fc2 = nn.Linear(128, 10)</code></pre>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>TensorFlow</h3>
+                        <div class="code-wrapper fragment">
+                            <pre><code class="python">model = tf.keras.Sequential([
+    tf.keras.layers.Dense(128),
+    tf.keras.layers.Dense(10)
+])</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Training Process -->
+            <section>
+                <h2>The Training Process</h2>
+                <div class="code-wrapper fragment">
+                    <pre><code class="python">def train_epoch(model, dataloader, optimizer, device):
+    model.train()
+    total_loss = 0
+    for batch_idx, (data, target) in enumerate(dataloader):
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()</code></pre>
+                </div>
+                <ul>
+                    <li class="fragment">Iterative improvement</li>
+                    <li class="fragment">Learning from examples</li>
+                    <li class="fragment">Automatic optimization</li>
+                </ul>
+            </section>
+
+            <!-- Best Practices -->
+            <section>
+                <h2>Best Practices</h2>
+                <div class="two-column">
+                    <div>
+                        <h3>Do's</h3>
+                        <ul>
+                            <li class="fragment">Start simple</li>
+                            <li class="fragment">Validate frequently</li>
+                            <li class="fragment">Monitor metrics</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Don'ts</h3>
+                        <ul>
+                            <li class="fragment">Skip validation</li>
+                            <li class="fragment">Ignore overfitting</li>
+                            <li class="fragment">Overcomplicate early</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Next Steps -->
+            <section>
+                <h2>Coming Up Next</h2>
+                <ul>
+                    <li class="fragment">Backpropagation in detail</li>
+                    <li class="fragment">Gradient descent variations</li>
+                    <li class="fragment">Practical implementation</li>
+                </ul>
+                <div class="fragment">
+                    <p>Get ready for hands-on coding!</p>
+                </div>
+            </section>
+
+            <!-- Q&A -->
+            <section class="title-slide">
+                <h1>Questions?</h1>
+                <p>Let's discuss!</p>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            center: true,
+            fragmentInURL: true,
+            controlsLayout: 'bottom-right',
+            navigationMode: 'linear',
+            width: 1280,
+            height: 720
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+Reveal.js Presentation Template Specifications
+
+1. HTML Base Structure
+```html
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berkeley ML Course Presentation</title>
+    
+    <!-- Reveal.js CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/white.css">
+    
+    <!-- Custom Styling -->
+    <style>
+        :root {
+            --berkeley-blue: #003262;
+            --berkeley-gold: #FDB515;
+            --dark-text: #333333;
+            --light-text: #666666;
+        }
+
+        .reveal {
+            font-family: 'Source Sans Pro', Helvetica, sans-serif;
+            font-size: 32px;
+            color: var(--dark-text);
+        }
+
+        .reveal h1 {
+            color: var(--berkeley-blue);
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .reveal h2 {
+            color: var(--berkeley-blue);
+            font-size: 1.8em;
+        }
+
+        /* Title Slide */
+        .title-slide h1 {
+            font-size: 3em;
+            margin-bottom: 0.3em;
+        }
+
+        .title-slide p {
+            color: var(--light-text);
+            font-size: 1.5em;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        /* Image Containers */
+        .image-container {
+            text-align: center;
+            margin: 20px auto;
+            width: 70%;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* Footnotes */
+        .footnote {
+            border-top: 1px solid #ccc;
+            font-size: 0.25em;
+            color: var(--light-text);
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+        }
+
+        .footnote-ref {
+            color: var(--berkeley-blue);
+            font-size: 0.6em;
+            vertical-align: super;
+        }
+
+        /* Fragment Animations */
+        .fragment {
+            transition: all 0.8s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Slides go here -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            center: true,
+            fragmentInURL: true,
+            controlsLayout: 'bottom-right',
+            navigationMode: 'linear',
+            width: 1280,
+            height: 720
+        });
+    </script>
+</body>
+</html>
+```
+
+2. Slide Templates
+
+a) Title Slide Template:
+```html
+<section class="title-slide">
+    <h1>Main Title</h1>
+    <p>Subtitle or Additional Information</p>
+</section>
+```
+
+b) Single Focus Slide Template:
+```html
+<section>
+    <h2>Topic Title</h2>
+    <div class="image-container">
+        <img src="path/to/image.jpg" alt="Description">
+    </div>
+    <p>Key message or explanation</p>
+</section>
+```
+
+c) Two-Column Slide Template:
+```html
+<section>
+    <h2>Two Column Layout</h2>
+    <div class="two-column">
+        <div class="column">
+            <ul>
+                <li class="fragment">Point 1</li>
+                <li class="fragment">Point 2</li>
+                <li class="fragment">Point 3</li>
+            </ul>
+        </div>
+        <div class="column">
+            <div class="image-container">
+                <img src="path/to/image.jpg" alt="Description">
+            </div>
+        </div>
+    </div>
+</section>
+```
+
+d) Content with Footnote Template:
+```html
+<section>
+    <h2>Content with Reference</h2>
+    <p>Main content with reference<span class="footnote-ref">1</span></p>
+    <div class="footnote">
+        <p>1. Reference details or additional information</p>
+    </div>
+</section>
+```
+
+3. Usage Guidelines
+
+a) Image Best Practices:
+- Use high-resolution images (minimum 1920x1080)
+- Optimize images for web delivery
+- Maintain consistent aspect ratios
+- Use transparent backgrounds when possible
+- Include meaningful alt text
+
+b) Content Structure:
+- Keep one main point per slide
+- Use consistent heading hierarchy
+- Limit bullet points (3-5 per list)
+- Use fragments for complex explanations
+- Include visual aids when possible
+
+c) Typography:
+- Main titles: 2.5em
+- Subtitles: 1.8em
+- Body text: 1em
+- Footnotes: 0.25em
+- Use consistent text alignment
+
+d) Presentation Flow:
+- Start with agenda/overview
+- Group related topics
+- Include transition slides
+- End with summary/key takeaways
+- Add Q&A slide at the end
+
+4. Accessibility Considerations:
+- Use sufficient color contrast
+- Include alt text for images
+- Maintain readable font sizes
+- Ensure keyboard navigation
+- Test with screen readers
+
+5. Technical Setup:
+- Test all transitions
+- Verify fragment animations
+- Check responsive layout
+- Ensure proper PDF export
+- Test offline functionality
+
+
+
+

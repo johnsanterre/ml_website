@@ -1,182 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Machine Learning Course Series</title>
+    <title>Machine Learning Course Series | SMU</title>
     <style>
-        body {
-            font-family: "Times New Roman", Times, serif;
-            background-color: #000000;
-            color: #ffffff;
-            line-height: 1.4;
+        /* Modern Reset & Base */
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f7f9fc;
+            /* Soft gray/blue tint background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header / Navbar */
+        .site-header {
+            background-color: #354CA1;
+            /* SMU Blue */
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Layout */
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px 40px;
         }
 
+        /* Course Selector (Tabs) */
         .course-selector {
-            display: flex;
-            gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin-bottom: 30px;
         }
 
         .course-button {
-            flex: 1;
+            background: white;
+            border: none;
+            border-top: 4px solid #ddd;
             padding: 20px;
-            border: 2px solid #2f2f2f;
-            border-radius: 8px;
-            background: #0f0f0f;
+            border-radius: 4px;
+            /* Slight rounding */
             cursor: pointer;
-            text-align: center;
-            transition: all 0.3s ease;
+            text-align: left;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .course-button.active {
-            border-color: #ff9900;
-            background: #1f1f1f;
+        .course-button h3 {
+            color: #354CA1;
+            /* SMU Blue */
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .course-button span {
+            font-size: 0.85rem;
+            color: #666;
         }
 
         .course-button:hover {
-            border-color: #ff9900;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-top-color: #354CA1;
+            /* Blue hint on hover */
         }
 
+        .course-button.active {
+            border-top-color: #CC0035;
+            /* SMU Red Active */
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-button.active h3 {
+            color: #CC0035;
+        }
+
+        /* Active Content Area */
         .course-content {
             display: none;
+            animation: fadeIn 0.3s ease;
         }
 
         .course-content.active {
             display: block;
         }
 
-        .lesson-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .lesson-box {
-            border: 1px solid #2f2f2f;
+        /* Course Description Box */
+        .course-header-card {
+            background: white;
+            padding: 30px;
             border-radius: 8px;
-            padding: 16px;
-            background: #0f0f0f;
-            transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #CC0035;
+            /* SMU Red accent */
+            margin-bottom: 30px;
         }
 
-        .lesson-box:hover {
-            border-color: #ff9900;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            z-index: 1;
-            transform: translateY(-2px);
-        }
-
-        .content-box {
-            background: #0f0f0f;
-            padding: 24px;
-            border-radius: 8px;
-            margin-top: 16px;
-        }
-
-        h1, h2, h3 {
-            margin: 0.5em 0;
-            color: #ffffff;
-        }
-
-        p {
-            margin: 0.3em 0;
+        .course-header-card h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
         }
 
         .description {
-            color: #ccc;
+            color: #555;
+            font-size: 1.05rem;
+            max-width: 900px;
+        }
+
+        /* Lesson Grid */
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 25px;
+        }
+
+        /* Lesson Card */
+        .lesson-box {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eee;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .lesson-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border-color: #e0e0e0;
+        }
+
+        .lesson-box h3 {
+            color: #CC0035;
+            /* Red Title for contrast */
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            line-height: 1.3;
+        }
+
+        .lesson-box p {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
             flex-grow: 1;
         }
 
-        .button {
-            display: block;
-            text-decoration: none;
-            color: #ff9900;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .button:hover {
-            color: #ffb84d;
-        }
-
+        /* Card Actions */
         .resources {
-            margin-top: 10px;
             display: flex;
             gap: 10px;
+            margin-top: auto;
+            /* Push to bottom */
+            border-top: 1px solid #f0f0f0;
+            /* Subtle separator */
+            padding-top: 15px;
         }
 
-        .textbook-button {
-            display: inline-block;
+        .resource-btn {
             padding: 8px 16px;
-            background: #ff9900;
-            color: #000000;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
             text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.9em;
+            transition: all 0.2s;
+            text-align: center;
         }
 
-        .textbook-button:hover {
-            background: #ffb84d;
+        /* Primary Action: Textbook */
+        .btn-textbook {
+            background-color: #354CA1;
+            /* SMU Blue */
+            color: white;
         }
 
-        .video-button {
-            display: inline-block;
-            padding: 8px 16px;
-            background: #666666;
-            color: #999999;
-            text-decoration: line-through;
-            text-decoration-thickness: 2px;
-            text-decoration-color: #ff0000;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.9em;
+        .btn-textbook:hover {
+            background-color: #2a3c80;
+            transform: translateY(-1px);
+        }
+
+        /* Secondary Action: Colab */
+        .btn-colab {
+            background-color: white;
+            color: #354CA1;
+            border: 1px solid #354CA1;
+        }
+
+        .btn-colab:hover {
+            background-color: #f0f4ff;
+        }
+
+        /* Disabled Action */
+        .btn-disabled {
+            background-color: #f5f5f5;
+            color: #999;
+            border: 1px solid #eee;
             cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .colab-button-disabled {
-            display: inline-block;
-            padding: 8px 16px;
-            background: #666666;
-            color: #999999;
-            text-decoration: line-through;
-            text-decoration-thickness: 2px;
-            text-decoration-color: #ff0000;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.9em;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .course-description {
-            margin: 20px 0;
-            padding: 20px;
-            background: #1f1f1f;
-            border-radius: 8px;
+            text-decoration: none;
         }
     </style>
 </head>
+
 <body>
+
+    <!-- Professional Navbar -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="index.html" class="site-title">SMU Data Science | Machine Learning</a>
+            <a href="resource-library.html" class="nav-link">Resource Library</a>
+        </div>
+    </header>
+
     <div class="container">
-        <h1>Machine Learning Course Series</h1>
-        
+        <!-- Title is in header now, removed duplicate h1 -->
+
+
         <!-- Course Selector -->
         <div class="course-selector">
             <div class="course-button" onclick="switchCourse('python')">
@@ -201,9 +303,10 @@
         <div id="python-content" class="course-content">
             <div class="course-description">
                 <h3>Python Fundamentals</h3>
-                <p>Master the essential Python programming concepts and tools needed for machine learning. This course covers data structures, functions, libraries, and best practices for ML development.</p>
+                <p>Master the essential Python programming concepts and tools needed for machine learning. This course
+                    covers data structures, functions, libraries, and best practices for ML development.</p>
             </div>
-            
+
             <div class="lesson-grid">
                 <div class="lesson-box">
                     <a href="python/lecture01/index.html" class="button">1. Python Basics</a>
@@ -242,7 +345,8 @@
                     <p class="description">Essential Python concepts and tools for machine learning development.</p>
                     <div class="resources">
                         <a href="output/mltopics/python/python_fundamentals.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/1168qSi0WLXDWnQl7fjneSw4RUOeI1-iV?usp=sharing" class="textbook-button" target="_blank">Unit Tests</a>
+                        <a href="https://colab.research.google.com/drive/1168qSi0WLXDWnQl7fjneSw4RUOeI1-iV?usp=sharing"
+                            class="textbook-button" target="_blank">Unit Tests</a>
                     </div>
                 </div>
             </div>
@@ -252,16 +356,19 @@
         <div id="ml1-content" class="course-content">
             <div class="course-description">
                 <h3>Introduction to Machine Learning</h3>
-                <p>Start your journey into machine learning with fundamental concepts, mathematical foundations, and practical implementations. This course provides a solid foundation for understanding modern ML techniques.</p>
+                <p>Start your journey into machine learning with fundamental concepts, mathematical foundations, and
+                    practical implementations. This course provides a solid foundation for understanding modern ML
+                    techniques.</p>
             </div>
-            
+
             <div class="lesson-grid">
                 <!-- ML1 Lectures 1-15 -->
                 <div class="lesson-box">
                     <a href="ml1/lecture01/index.html" class="button">1. Introduction to ML Fundamentals</a>
                     <p class="description">Core concepts, terminology, and the ML pipeline.</p>
                     <div class="resources">
-                        <a href="https://docs.google.com/document/d/1F_tcE-b4OQPlZ2GcSG3aThnozR1Jpj_3nqTROHzv1qg/edit#heading=h.3vm0hw1mzk46" class="textbook-button" target="_blank">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1F_tcE-b4OQPlZ2GcSG3aThnozR1Jpj_3nqTROHzv1qg/edit#heading=h.3vm0hw1mzk46"
+                            class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
@@ -269,13 +376,15 @@
                     <a href="ml1/lecture02/index.html" class="button">2. Linear Regression</a>
                     <p class="description">Understanding and implementing basic regression models.</p>
                     <div class="resources">
-                        <a href="https://docs.google.com/document/d/1_oHxPswyWDfqh1RjePiVqQAZMAqimM73xGo6MjdhA04/edit#heading=h.9ufxgi9bwhd2" class="textbook-button" target="_blank">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1_oHxPswyWDfqh1RjePiVqQAZMAqimM73xGo6MjdhA04/edit#heading=h.9ufxgi9bwhd2"
+                            class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="ml1/lecture03/index.html" class="button">3. Model Evaluation and Validation</a>
-                    <p class="description">Statistical validation, cross-validation techniques, and performance metrics.</p>
+                    <p class="description">Statistical validation, cross-validation techniques, and performance metrics.
+                    </p>
                     <div class="resources">
                         <a href="output/ml1/lecture03/ml1_week03.pdf" class="textbook-button">Textbook</a>
                     </div>
@@ -285,36 +394,43 @@
                     <a href="ml1/lecture04/index.html" class="button">4. Matrix Structures in Machine Learning</a>
                     <p class="description">Understanding different matrix structures and their applications in ML.</p>
                     <div class="resources">
-                        <a href="https://docs.google.com/document/d/1YItb8e5QlXqFZhWx5YMgpk0ienb_rLz2fVGHEpZT20c/edit#heading=h.h3ezv654rmer" class="textbook-button" target="_blank">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1YItb8e5QlXqFZhWx5YMgpk0ienb_rLz2fVGHEpZT20c/edit#heading=h.h3ezv654rmer"
+                            class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="ml1/lecture05/index.html" class="button">5. Regression Methods: From Linear to Logistic</a>
-                    <p class="description">Exploring regression methods, from linear regression solutions to logistic regression and optimization.</p>
+                    <p class="description">Exploring regression methods, from linear regression solutions to logistic
+                        regression and optimization.</p>
                     <div class="resources">
-                        <a href="https://docs.google.com/document/d/1pJM8fde5s1UQ8HtSxtx107p7LSvFzWbACbIylEUAB78/edit#heading=h.b7962tul55t4" class="textbook-button" target="_blank">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1pJM8fde5s1UQ8HtSxtx107p7LSvFzWbACbIylEUAB78/edit#heading=h.b7962tul55t4"
+                            class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="ml1/lecture06/index.html" class="button">6. Decision Trees and Random Forests</a>
-                    <p class="description">Understanding tree-based methods, from basic decision trees to ensemble techniques.</p>
+                    <p class="description">Understanding tree-based methods, from basic decision trees to ensemble
+                        techniques.</p>
                     <div class="resources">
-                        <a href="https://docs.google.com/document/d/1lfRDEskg-aA1h15DmUDUwboQcuVRrEZyAqxkcLiVNss/edit#heading=h.4ehef0kr5sb7" class="textbook-button" target="_blank">Textbook</a>
+                        <a href="https://docs.google.com/document/d/1lfRDEskg-aA1h15DmUDUwboQcuVRrEZyAqxkcLiVNss/edit#heading=h.4ehef0kr5sb7"
+                            class="textbook-button" target="_blank">Textbook</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="ml1/lecture07/index.html" class="button">7. Nearest Neighbors and Naive Bayes</a>
-                    <p class="description">Exploring instance-based learning and probabilistic classification methods.</p>
+                    <p class="description">Exploring instance-based learning and probabilistic classification methods.
+                    </p>
                     <div class="resources">
                         <a href="output/ml1/lecture07/ml1_week07.pdf" class="textbook-button">Textbook</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
-                    <a href="ml1/lecture10/index.html" class="button">10. Matrix Factorization and Collaborative Filtering</a>
+                    <a href="ml1/lecture10/index.html" class="button">10. Matrix Factorization and Collaborative
+                        Filtering</a>
                     <p class="description">Deep dive into SVD and its applications in recommendation systems.</p>
                     <div class="resources">
                         <a href="output/ml1/lecture10/ml1_week10.pdf" class="textbook-button">Textbook</a>
@@ -322,25 +438,32 @@
                 </div>
 
                 <div class="lesson-box">
-                    <a href="ml1/lecture12/index.html" class="button">12. Dimensional Transformations: From SVMs to Deep Learning</a>
-                    <p class="description">Understanding how different ML approaches transform data into higher dimensions.</p>
+                    <a href="ml1/lecture12/index.html" class="button">12. Dimensional Transformations: From SVMs to Deep
+                        Learning</a>
+                    <p class="description">Understanding how different ML approaches transform data into higher
+                        dimensions.</p>
                     <div class="resources">
                         <a href="output/ml1/lecture12/ml1_week12.pdf" class="textbook-button">Textbook</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
-                    <a href="ml1/lecture13/index.html" class="button">13. Introduction to Neural Networks for ML Practitioners</a>
-                    <p class="description">Bridging traditional ML approaches with neural networks and modern frameworks.</p>
+                    <a href="ml1/lecture13/index.html" class="button">13. Introduction to Neural Networks for ML
+                        Practitioners</a>
+                    <p class="description">Bridging traditional ML approaches with neural networks and modern
+                        frameworks.</p>
                     <div class="resources">
                         <a href="output/ml1/lecture13/ml1_week13.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/10umkNtjwgsrTuhX_Lk9YU0JuecPLCb1b?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/drive/10umkNtjwgsrTuhX_Lk9YU0JuecPLCb1b?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
-                    <a href="ml1/lecture14/index.html" class="button">14. Understanding Bias in Deep Learning Systems</a>
-                    <p class="description">Examining bias introduction, detection, and mitigation in deep learning systems.</p>
+                    <a href="ml1/lecture14/index.html" class="button">14. Understanding Bias in Deep Learning
+                        Systems</a>
+                    <p class="description">Examining bias introduction, detection, and mitigation in deep learning
+                        systems.</p>
                     <div class="resources">
                         <a href="output/ml1/lecture14/ml1_week14.pdf" class="textbook-button">Textbook</a>
                     </div>
@@ -352,9 +475,11 @@
         <div id="ml2-content" class="course-content active">
             <div class="course-description">
                 <h3>Advanced Machine Learning</h3>
-                <p>Dive deep into advanced ML concepts, neural architectures, and state-of-the-art techniques. This course builds on ML1 to explore cutting-edge applications, with a special focus on Large Language Models and modern architectures.</p>
+                <p>Dive deep into advanced ML concepts, neural architectures, and state-of-the-art techniques. This
+                    course builds on ML1 to explore cutting-edge applications, with a special focus on Large Language
+                    Models and modern architectures.</p>
             </div>
-            
+
             <div class="lesson-grid">
                 <div class="lesson-box">
                     <a href="ml2/lecture01/index.html" class="button">1. Introduction to Deep Learning</a>
@@ -362,69 +487,87 @@
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture01/ml2_week01.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/1qiMwu8NNn5DLCIP_FUWZ1lLd-ylbNUQg?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/drive/1qiMwu8NNn5DLCIP_FUWZ1lLd-ylbNUQg?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="ml2/lecture02/index.html" class="button">2. Neural Networks & Backpropagation</a>
-                    <p class="description">Detailed backpropagation, gradient descent variations, and training challenges.</p>
+                    <p class="description">Detailed backpropagation, gradient descent variations, and training
+                        challenges.</p>
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture02/ml2_week02.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/1dXyE15qbFU_DvFouBH_cYNUvgjPBU4HT?usp=sharing" class="textbook-button" target="_blank">Colab</a>
-                        <a href="https://claude.ai/public/artifacts/2911b947-7623-48c7-836b-6023ebecced0" class="textbook-button" target="_blank">Example</a>
+                        <a href="https://colab.research.google.com/drive/1dXyE15qbFU_DvFouBH_cYNUvgjPBU4HT?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://claude.ai/public/artifacts/2911b947-7623-48c7-836b-6023ebecced0"
+                            class="textbook-button" target="_blank">Example</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
-                    <a href="ml2/lecture03/index.html" class="button">3. Building a Real-World Housing Price Predictor</a>
-                    <p class="description">Practical implementation of neural networks for housing price prediction using the California Housing Dataset.</p>
+                    <a href="ml2/lecture03/index.html" class="button">3. Building a Real-World Housing Price
+                        Predictor</a>
+                    <p class="description">Practical implementation of neural networks for housing price prediction
+                        using the California Housing Dataset.</p>
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture03/ml2_week03.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/1MvuyQ7ARJb3QpHsU7lPG0nCeXKH3o7ll?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/drive/1MvuyQ7ARJb3QpHsU7lPG0nCeXKH3o7ll?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
-                    <a href="ml2/lecture04/index.html" class="button">4. Vector Representations & Similarity Measures</a>
-                    <p class="description">Explore vector representations and similarity measures through practical examples, including food preference vectors, sparse representation challenges, and learned representations.</p>
+                    <a href="ml2/lecture04/index.html" class="button">4. Vector Representations & Similarity
+                        Measures</a>
+                    <p class="description">Explore vector representations and similarity measures through practical
+                        examples, including food preference vectors, sparse representation challenges, and learned
+                        representations.</p>
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture04/ml2_week04.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/1Q9rZxweBRbfyUqLcUF1traFobtltbrkL?usp=sharing" class="textbook-button" target="_blank">Colab 1</a>
-                        <a href="https://colab.research.google.com/drive/10rz1Ev7Olngkln0xUredKsidly6l5hYT?usp=sharing" class="textbook-button" target="_blank">Colab 2</a>
+                        <a href="https://colab.research.google.com/drive/1Q9rZxweBRbfyUqLcUF1traFobtltbrkL?usp=sharing"
+                            class="textbook-button" target="_blank">Colab 1</a>
+                        <a href="https://colab.research.google.com/drive/10rz1Ev7Olngkln0xUredKsidly6l5hYT?usp=sharing"
+                            class="textbook-button" target="_blank">Colab 2</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="ml2/lecture05/index.html" class="button">5. Autoencoders & Embeddings</a>
-                    <p class="description">Autoencoder architectures, embedding spaces, and dimensionality reduction.</p>
+                    <p class="description">Autoencoder architectures, embedding spaces, and dimensionality reduction.
+                    </p>
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture05/ml2_week05.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/" class="colab-button-disabled"
+                            target="_blank">Colab</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="ml2/lecture06/index.html" class="button">6. From Autoencoders to Embeddings</a>
-                    <p class="description">Explore the evolution from autoencoders to modern embedding techniques, focusing on Word2Vec, GloVe, and practical applications in recommendation systems.</p>
+                    <p class="description">Explore the evolution from autoencoders to modern embedding techniques,
+                        focusing on Word2Vec, GloVe, and practical applications in recommendation systems.</p>
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture06/ml2_week06.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/" class="colab-button-disabled"
+                            target="_blank">Colab</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="ml2/lecture07/index.html" class="button">7. Sequence Models & Attention</a>
-                    <p class="description">Understanding sequence models, attention mechanisms, and their applications.</p>
+                    <p class="description">Understanding sequence models, attention mechanisms, and their applications.
+                    </p>
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture07/ml2_week07.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/" class="colab-button-disabled"
+                            target="_blank">Colab</a>
                     </div>
                 </div>
 
@@ -434,8 +577,10 @@
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture08/ml2_week08.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/1QXEoP7ReX-Zvy3wJH4KKRp0lViR-4cKT?usp=sharing" class="textbook-button" target="_blank">Colab 1</a>
-                        <a href="https://colab.research.google.com/drive/1Ws2P4CVGLKlCi6EITpjAE4qD7P4ybl9G?usp=sharing" class="textbook-button" target="_blank">Colab 2</a>
+                        <a href="https://colab.research.google.com/drive/1QXEoP7ReX-Zvy3wJH4KKRp0lViR-4cKT?usp=sharing"
+                            class="textbook-button" target="_blank">Colab 1</a>
+                        <a href="https://colab.research.google.com/drive/1Ws2P4CVGLKlCi6EITpjAE4qD7P4ybl9G?usp=sharing"
+                            class="textbook-button" target="_blank">Colab 2</a>
                     </div>
                 </div>
 
@@ -445,7 +590,8 @@
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture09/ml2_week09.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/1P6ynRBU_O2sJpYLIbjnjEjVk42C0-_NP?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/drive/1P6ynRBU_O2sJpYLIbjnjEjVk42C0-_NP?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
                     </div>
                 </div>
 
@@ -455,17 +601,20 @@
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture10/ml2_week10.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/1Zl3NRkX5hV60bqDUhyRfYT4xbTrbDXfb?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/drive/1Zl3NRkX5hV60bqDUhyRfYT4xbTrbDXfb?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
-                    <a href="ml2/lecture11/index.html" class="button">11. Practical LLM Integration & API Development</a>
+                    <a href="ml2/lecture11/index.html" class="button">11. Practical LLM Integration & API
+                        Development</a>
                     <p class="description">Learn to integrate and develop with LLM APIs effectively.</p>
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture11/ml2_week11.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/1DBNtx14KKxp6eyu4VOxYFIVurhIepk-M?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/drive/1DBNtx14KKxp6eyu4VOxYFIVurhIepk-M?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
                     </div>
                 </div>
 
@@ -475,7 +624,8 @@
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture12/ml2_week12.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/drive/13bnBpV_5IK0lRJSRX2bP1m6ESXdzmxj6?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/drive/13bnBpV_5IK0lRJSRX2bP1m6ESXdzmxj6?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
                     </div>
                 </div>
 
@@ -485,7 +635,8 @@
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture13/ml2_week13.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/" class="colab-button-disabled"
+                            target="_blank">Colab</a>
                     </div>
                 </div>
 
@@ -495,7 +646,8 @@
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture14/ml2_week14.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/" class="colab-button-disabled"
+                            target="_blank">Colab</a>
                     </div>
                 </div>
 
@@ -505,7 +657,8 @@
                     <div class="resources">
                         <a href="#" class="video-button" target="_blank">Videos</a>
                         <a href="output/ml2/lecture15/ml2_week15.pdf" class="textbook-button">Textbook</a>
-                        <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/" class="colab-button-disabled"
+                            target="_blank">Colab</a>
                     </div>
                 </div>
             </div>
@@ -515,31 +668,39 @@
         <div id="mltopics-content" class="course-content">
             <div class="course-description">
                 <h3>Special Topics in Machine Learning</h3>
-                <p>Explore specialized topics and cutting-edge developments in machine learning, featuring guest lectures and focused deep dives into specific areas of ML.</p>
+                <p>Explore specialized topics and cutting-edge developments in machine learning, featuring guest
+                    lectures and focused deep dives into specific areas of ML.</p>
             </div>
-            
+
             <div class="lesson-grid">
                 <div class="lesson-box">
                     <a href="mltopics/topic01/index.html" class="button">1. AI Suite</a>
-                    <p class="description">A co-developed libary with Andrew Ng, that allows for rapid swaping of LLM providers.</p>
+                    <p class="description">A co-developed libary with Andrew Ng, that allows for rapid swaping of LLM
+                        providers.</p>
                     <div class="resources">
-                        <a href="https://youtu.be/aK7Jqiwpsvc?si=Q0-hM8xOQJxdOZQf" class="textbook-button" target="_blank">Videos</a>
-                        <a href="https://colab.research.google.com/drive/1DBNtx14KKxp6eyu4VOxYFIVurhIepk-M?usp=sharing" class="textbook-button" target="_blank">Colab</a>
-                        <a href="https://github.com/andrewyng/aisuite" class="textbook-button" target="_blank">GitHub</a>
+                        <a href="https://youtu.be/aK7Jqiwpsvc?si=Q0-hM8xOQJxdOZQf" class="textbook-button"
+                            target="_blank">Videos</a>
+                        <a href="https://colab.research.google.com/drive/1DBNtx14KKxp6eyu4VOxYFIVurhIepk-M?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://github.com/andrewyng/aisuite" class="textbook-button"
+                            target="_blank">GitHub</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="mltopics/topic02/index.html" class="button">2. Ranking Systems</a>
-                    <p class="description">Explore different approaches to ranking and evaluation, from traditional methods to modern ML-based systems.</p>
+                    <p class="description">Explore different approaches to ranking and evaluation, from traditional
+                        methods to modern ML-based systems.</p>
                     <div class="resources">
-                        <a href="https://www.apnews.com/188531d476214dadaed5fd1eaf75bca3" class="textbook-button" target="_blank">Case Study</a>
+                        <a href="https://www.apnews.com/188531d476214dadaed5fd1eaf75bca3" class="textbook-button"
+                            target="_blank">Case Study</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="mltopics/topic03/index.html" class="button">3. SVD: Theory & Applications</a>
-                    <p class="description">Deep dive into Singular Value Decomposition, its mathematical foundations, and applications in machine learning.</p>
+                    <p class="description">Deep dive into Singular Value Decomposition, its mathematical foundations,
+                        and applications in machine learning.</p>
                     <div class="resources">
                         <a href="#" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -547,7 +708,8 @@
 
                 <div class="lesson-box">
                     <a href="mltopics/topic04/index.html" class="button">4. Reinforcement Learning</a>
-                    <p class="description">Explore the fundamentals and advanced concepts of reinforcement learning, from Q-learning to deep RL architectures.</p>
+                    <p class="description">Explore the fundamentals and advanced concepts of reinforcement learning,
+                        from Q-learning to deep RL architectures.</p>
                     <div class="resources">
                         <a href="#" class="textbook-button" target="_blank">Colab</a>
                     </div>
@@ -555,53 +717,66 @@
 
                 <div class="lesson-box">
                     <a href="mltopics/topic05/index.html" class="button">5. Principal Component Analysis (PCA)</a>
-                    <p class="description">A comprehensive exploration of PCA, from intuitive understanding to mathematical foundations and practical applications.</p>
+                    <p class="description">A comprehensive exploration of PCA, from intuitive understanding to
+                        mathematical foundations and practical applications.</p>
                     <div class="resources">
-                        <a href="https://arxiv.org/pdf/1404.1100.pdf" class="textbook-button" target="_blank">Tutorial</a>
+                        <a href="https://arxiv.org/pdf/1404.1100.pdf" class="textbook-button"
+                            target="_blank">Tutorial</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="mltopics/topic06/index.html" class="button">6. Markov Processes</a>
-                    <p class="description">Deep dive into Markov chains, Hidden Markov Models, and their applications in machine learning and sequential data analysis.</p>
+                    <p class="description">Deep dive into Markov chains, Hidden Markov Models, and their applications in
+                        machine learning and sequential data analysis.</p>
                     <div class="resources">
-                        <a href="http://setosa.io/ev/markov-chains/" class="textbook-button" target="_blank">Interactive Demo</a>
+                        <a href="http://setosa.io/ev/markov-chains/" class="textbook-button" target="_blank">Interactive
+                            Demo</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="mltopics/topic07/index.html" class="button">7. Transfer Learning</a>
-                    <p class="description">Leveraging pre-trained models for new tasks and domains, with practical implementations and best practices.</p>
+                    <p class="description">Leveraging pre-trained models for new tasks and domains, with practical
+                        implementations and best practices.</p>
                     <div class="resources">
-                        <a href="https://keras.io/examples/mnist_transfer_cnn/" class="textbook-button" target="_blank">Example</a>
-                        <a href="https://cs231n.github.io/transfer-learning/" class="textbook-button" target="_blank">Guide</a>
+                        <a href="https://keras.io/examples/mnist_transfer_cnn/" class="textbook-button"
+                            target="_blank">Example</a>
+                        <a href="https://cs231n.github.io/transfer-learning/" class="textbook-button"
+                            target="_blank">Guide</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="mltopics/topic08/index.html" class="button">8. Retrieval Augmented Generation</a>
-                    <p class="description">Enhancing LLMs with external knowledge retrieval, focusing on architecture, implementation, and best practices.</p>
+                    <p class="description">Enhancing LLMs with external knowledge retrieval, focusing on architecture,
+                        implementation, and best practices.</p>
                     <div class="resources">
-                        <a href="https://python.langchain.com/docs/use_cases/question_answering/" class="textbook-button" target="_blank">Tutorial</a>
+                        <a href="https://python.langchain.com/docs/use_cases/question_answering/"
+                            class="textbook-button" target="_blank">Tutorial</a>
                         <a href="https://arxiv.org/abs/2005.11401" class="textbook-button" target="_blank">Paper</a>
                     </div>
                 </div>
 
                 <div class="lesson-box">
                     <a href="mltopics/topic09/index.html" class="button">9. Probabilistic Programming</a>
-                    <p class="description">Explore probabilistic programming frameworks, Bayesian inference, and MCMC methods for modern machine learning.</p>
+                    <p class="description">Explore probabilistic programming frameworks, Bayesian inference, and MCMC
+                        methods for modern machine learning.</p>
                 </div>
 
                 <div class="lesson-box">
                     <a href="mltopics/topic10/index.html" class="button">10. Applied Examples</a>
-                    <p class="description">Hands-on examples using real-world datasets, featuring detailed notebooks with data analysis, model development, and evaluation techniques.</p>
+                    <p class="description">Hands-on examples using real-world datasets, featuring detailed notebooks
+                        with data analysis, model development, and evaluation techniques.</p>
                 </div>
 
                 <div class="lesson-box">
                     <a href="mltopics/topic11/index.html" class="button">11. Logistic Regression</a>
-                    <p class="description">Deep dive into logistic regression, covering theory, implementation, and practical applications in classification tasks.</p>
+                    <p class="description">Deep dive into logistic regression, covering theory, implementation, and
+                        practical applications in classification tasks.</p>
                     <div class="resources">
-                        <a href="https://colab.research.google.com/drive/17EDQH8BcdYKtcPuicIdCaTxZiDBho5R_?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+                        <a href="https://colab.research.google.com/drive/17EDQH8BcdYKtcPuicIdCaTxZiDBho5R_?usp=sharing"
+                            class="textbook-button" target="_blank">Colab</a>
                     </div>
                 </div>
             </div>
@@ -614,10 +789,10 @@
             document.querySelectorAll('.course-content').forEach(content => {
                 content.classList.remove('active');
             });
-            
+
             // Show selected course content
             document.getElementById(courseId + '-content').classList.add('active');
-            
+
             // Update button styles
             document.querySelectorAll('.course-button').forEach(button => {
                 button.classList.remove('active');
@@ -626,4 +801,5 @@
         }
     </script>
 </body>
-</html> 
+
+</html>
