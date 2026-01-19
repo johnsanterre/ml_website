@@ -3,154 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neural Networks & Backpropagation - ML2</title>
+    <title>Week 2: Neural Networks Fundamentals & Backpropagation | SMU</title>
     <style>
-        body {
-            font-family: "Times New Roman", Times, serif;
-            background-color: #000000;
-            color: #ffffff;
-            line-height: 1.6;
+        /* Modern Reset & Base */
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header / Navbar */
+        .site-header {
+            background-color: #354CA1; /* SMU Blue */
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+        }
+        
+        .site-title:hover {
+            opacity: 1;
+        }
+
+        .nav-link {
+            background-color: rgba(255,255,255,0.15);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.25);
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
+            padding: 0 20px 60px;
         }
 
+        /* Content Box */
         .content-box {
-            background: #0f0f0f;
-            padding: 30px;
+            background: white;
+            padding: 40px;
             border-radius: 8px;
-            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-top: 5px solid #CC0035; /* SMU Red accent */
         }
 
-        h1, h2, h3 {
-            color: #ffffff;
+        h1 {
+            color: #354CA1;
+            font-size: 2.2rem;
+            margin-bottom: 0.5em;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.5rem;
             margin-top: 1.5em;
             margin-bottom: 0.5em;
         }
 
-        h1 {
-            font-size: 2em;
-            border-bottom: 2px solid #ff9900;
-            padding-bottom: 0.3em;
-        }
-
-        h2 {
-            font-size: 1.5em;
-            color: #ff9900;
-        }
-
         h3 {
-            font-size: 1.2em;
-            color: #ffb84d;
+            color: #555;
+            font-size: 1.2rem;
+            margin-top: 1.2em;
+            margin-bottom: 0.5em;
+        }
+
+        p {
+            margin-bottom: 1em;
+            color: #444;
         }
 
         ul, ol {
             padding-left: 1.5em;
-            margin: 1em 0;
+            margin-bottom: 1.5em;
+            color: #444;
         }
 
         li {
-            margin: 0.5em 0;
-        }
-
-        ul ul {
-            margin: 0.2em 0;
+            margin-bottom: 0.5em;
         }
 
         a {
-            color: #ff9900;
+            color: #CC0035;
             text-decoration: none;
-            transition: color 0.3s ease;
+            font-weight: 500;
         }
 
         a:hover {
-            color: #ffb84d;
+            text-decoration: underline;
         }
 
-        .back-button {
-            display: inline-block;
-            padding: 8px 16px;
-            background: none;
-            border: 1px solid #ff9900;
-            color: #ff9900;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: #ff9900;
-            color: #000000;
-        }
-
+        /* Resources Section within Content */
         .resources {
-            background: #1f1f1f;
-            padding: 20px;
+            background: #f8f9fa;
+            padding: 25px;
             border-radius: 8px;
-            margin-top: 2em;
+            margin-top: 3em;
+            border: 1px solid #eee;
+            border-left: 4px solid #354CA1;
         }
 
         .resources h2 {
             margin-top: 0;
+            color: #354CA1;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
         }
 
-        .textbook-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #ff9900;
-            color: #000000;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-top: 20px;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .textbook-button:hover {
-            background: #ffb84d;
-        }
-
-        .colab-button-disabled {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #666666;
-            color: #999999;
-            text-decoration: line-through;
-            text-decoration-thickness: 2px;
-            text-decoration-color: #ff0000;
-            border-radius: 4px;
-            margin-top: 20px;
-            font-weight: bold;
-            margin-right: 10px;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .top-resources {
+        .action-buttons {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
+
+        .btn-action {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-textbook {
+            background-color: #CC0035;
+            color: white;
+        }
+        .btn-textbook:hover {
+            background-color: #a8002b;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .btn-colab {
+            background-color: #354CA1;
+            color: white;
+        }
+        .btn-colab:hover {
+            background-color: #2a3c80;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+        
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <a href="../../index.html" class="back-button">← Back to Course List</a>
-        
-        <div class="top-resources">
-            <a href="#" class="video-button" target="_blank">Videos</a>
-            <a href="../../output/ml2/lecture02/ml2_week02.pdf" class="textbook-button">Textbook</a>
-            <a href="https://colab.research.google.com/drive/1dXyE15qbFU_DvFouBH_cYNUvgjPBU4HT?usp=sharing" class="textbook-button" target="_blank">Colab</a>
-            <a href="https://claude.ai/public/artifacts/2911b947-7623-48c7-836b-6023ebecced0" class="textbook-button" target="_blank">Example</a>
+
+    <!-- Professional Navbar -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
         </div>
+    </header>
+
+    <div class="container">
 
         <div class="content-box">
-            <h1>Week 2: Neural Networks Fundamentals & Backpropagation</h1>
+<h1>Week 2: Neural Networks Fundamentals & Backpropagation</h1>
 
             <p><strong>Course Generated Slides:</strong> <a href="../../topics/backpropagation/backpropagation_slides.html" target="_blank">Backpropagation</a> | <a href="../../topics/gradient_descent/gradient_descent_slides.html" target="_blank">Gradient Descent</a> | <a href="../../topics/learning_rate_schedulers/learning_rate_schedulers_slides.html" target="_blank">Learning Rate Schedulers</a> | <a href="../../topics/search_algorithms/search_algorithms_slides.html" target="_blank">Search Algorithms</a></p>
 
@@ -227,6 +274,7 @@
                 </ul>
             </section>
 
+            
             <div class="resources">
                 <h2>Required Reading</h2>
                 <ul>
@@ -254,13 +302,15 @@
                     <li>Identify and address common training challenges</li>
                 </ul>
 
-                <div style="margin-top: 20px;">
-                    <a href="#" class="textbook-button" target="_blank">Videos</a>
-                    <a href="../../output/ml2/lecture02/ml2_week02.pdf" class="textbook-button">Textbook</a>
-                    <a href="https://colab.research.google.com/" class="colab-button-disabled" target="_blank">Colab</a>
+                
+            </div>
+        
+</html>
+                <div class="action-buttons">
+                    <a href="https://sinews.siam.org/Details-Page/deep-learning-in-scientific-computing-understanding-the-instability-mystery" class="btn-action btn-colab" target="_blank">🔗 Deep Learning in Scientific Computing: Understanding the Instability Mystery</a><a href="https://en.m.wikipedia.org/wiki/General_linear_group" class="btn-action btn-colab" target="_blank">🔗 General Linear Group</a><a href="https://distill.pub/2020/bayesian-optimization/" class="btn-action btn-colab" target="_blank">🔗 Exploring Bayesian Optimization</a><a href="https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/src/network.py" class="btn-action btn-colab" target="_blank">🔗 Neural Networks Implementation</a><a href="../../output/ml2/lecture02/ml2_week02.pdf" class="btn-action btn-textbook">📚 Download Textbook</a><a href="https://colab.research.google.com/" class="btn-action btn-colab" target="_blank">📝 Open in Colab</a>
                 </div>
             </div>
         </div>
     </div>
 </body>
-</html> 
+</html>

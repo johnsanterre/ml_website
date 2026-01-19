@@ -3,137 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>From Supervised to Generative Learning - ML2</title>
+    <title>Week 9: From Supervised to Generative Learning | SMU</title>
     <style>
-        body {
-            font-family: "Times New Roman", Times, serif;
-            background-color: #000000;
-            color: #ffffff;
-            line-height: 1.6;
+        /* Modern Reset & Base */
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header / Navbar */
+        .site-header {
+            background-color: #354CA1; /* SMU Blue */
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+        }
+        
+        .site-title:hover {
+            opacity: 1;
+        }
+
+        .nav-link {
+            background-color: rgba(255,255,255,0.15);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.25);
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
+            padding: 0 20px 60px;
         }
 
+        /* Content Box */
         .content-box {
-            background: #0f0f0f;
-            padding: 30px;
+            background: white;
+            padding: 40px;
             border-radius: 8px;
-            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-top: 5px solid #CC0035; /* SMU Red accent */
         }
 
-        h1, h2, h3 {
-            color: #ffffff;
+        h1 {
+            color: #354CA1;
+            font-size: 2.2rem;
+            margin-bottom: 0.5em;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.5rem;
             margin-top: 1.5em;
             margin-bottom: 0.5em;
         }
 
-        h1 {
-            font-size: 2em;
-            border-bottom: 2px solid #ff9900;
-            padding-bottom: 0.3em;
-        }
-
-        h2 {
-            font-size: 1.5em;
-            color: #ff9900;
-        }
-
         h3 {
-            font-size: 1.2em;
-            color: #ffb84d;
+            color: #555;
+            font-size: 1.2rem;
+            margin-top: 1.2em;
+            margin-bottom: 0.5em;
+        }
+
+        p {
+            margin-bottom: 1em;
+            color: #444;
         }
 
         ul, ol {
             padding-left: 1.5em;
-            margin: 1em 0;
+            margin-bottom: 1.5em;
+            color: #444;
         }
 
         li {
-            margin: 0.5em 0;
-        }
-
-        ul ul {
-            margin: 0.2em 0;
+            margin-bottom: 0.5em;
         }
 
         a {
-            color: #ff9900;
-            text-decoration: underline;
-            transition: color 0.3s ease;
+            color: #CC0035;
+            text-decoration: none;
+            font-weight: 500;
         }
 
         a:hover {
-            color: #ffb84d;
+            text-decoration: underline;
         }
 
-        .back-button {
-            display: inline-block;
-            padding: 8px 16px;
-            background: none;
-            border: 1px solid #ff9900;
-            color: #ff9900;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: #ff9900;
-            color: #000000;
-        }
-
+        /* Resources Section within Content */
         .resources {
-            background: #1f1f1f;
-            padding: 20px;
+            background: #f8f9fa;
+            padding: 25px;
             border-radius: 8px;
-            margin-top: 2em;
+            margin-top: 3em;
+            border: 1px solid #eee;
+            border-left: 4px solid #354CA1;
         }
 
         .resources h2 {
             margin-top: 0;
+            color: #354CA1;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
         }
 
-        .textbook-button {
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn-action {
             display: inline-block;
             padding: 10px 20px;
-            background: #ff9900;
-            color: #000000;
-            text-decoration: none;
             border-radius: 4px;
-            margin-top: 20px;
-            font-weight: bold;
-            margin-right: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
         }
 
-        .textbook-button:hover {
-            background: #ffb84d;
+        .btn-textbook {
+            background-color: #CC0035;
+            color: white;
+        }
+        .btn-textbook:hover {
+            background-color: #a8002b;
+            text-decoration: none;
+            transform: translateY(-1px);
         }
 
-        .top-resources {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+        .btn-colab {
+            background-color: #354CA1;
+            color: white;
         }
+        .btn-colab:hover {
+            background-color: #2a3c80;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+        
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <a href="../../index.html" class="back-button">← Back to Course List</a>
-        
-        <div class="top-resources">
-            <a href="#" class="textbook-button" target="_blank">Videos</a>
-            <a href="output/ml2/lecture09/ml2_week09.pdf" class="textbook-button">Textbook</a>
-            <a href="https://colab.research.google.com/drive/1P6ynRBU_O2sJpYLIbjnjEjVk42C0-_NP?usp=sharing" class="textbook-button" target="_blank">Colab</a>
+
+    <!-- Professional Navbar -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
         </div>
+    </header>
+
+    <div class="container">
 
         <div class="content-box">
-            <h1>Week 9: From Supervised to Generative Learning</h1>
+<h1>Week 9: From Supervised to Generative Learning</h1>
 
             <p><strong>Course Generated Slides:</strong> <a href="../../topics/generative_adversarial_networks/generative_adversarial_networks_slides.html" target="_blank">GANs</a></p>
 
@@ -206,8 +270,9 @@
                 </ul>
             </section>
 
+            
             <div class="resources">
-                <h2>Required Reading</h2>
+               <h2>Required Reading</h2>
                 <ul>
                     <li>"Denoising Diffusion Probabilistic Models" (Ho et al.)</li>
                     <li>"Understanding Diffusion Models: A Unified Perspective"</li>
@@ -221,7 +286,13 @@
                     <li>Connect diffusion concepts across modalities</li>
                 </ul>
             </div>
+        
+</html>
+<div class="action-buttons">
+                    <a href="../../output/ml2/lecture09/ml2_week09.pdf" class="btn-action btn-textbook">📚 Download Textbook</a>
+                </div>
+            </div>
         </div>
     </div>
 </body>
-</html> 
+</html>
