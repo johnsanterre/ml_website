@@ -171,12 +171,12 @@ def create_notebook(lecture_num, lecture_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            f"# Week {lecture_num}: {lecture_info['title']}\\n",
-            "\\n",
-            "**ML2: Advanced Machine Learning**\\n",
-            "\\n",
-            "---\\n",
-            "\\n",
+            f"# Week {lecture_num}: {lecture_info['title']}\n",
+            "\n",
+            "**ML2: Advanced Machine Learning**\n",
+            "\n",
+            "---\n",
+            "\n",
             "This notebook contains teaching material, examples, and 10 practice questions to reinforce your understanding of this week's topics."
         ]
     })
@@ -186,11 +186,11 @@ def create_notebook(lecture_num, lecture_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "## Learning Objectives\\n",
-            "\\n",
-            "By the end of this week, you should be able to:\\n",
-            "\\n"
-        ] + [f"- {concept}\\n" for concept in lecture_info['concepts']]
+            "## Learning Objectives\n",
+            "\n",
+            "By the end of this week, you should be able to:\n",
+            "\n"
+        ] + [f"- {concept}\n" for concept in lecture_info['concepts']]
     })
     
     # Prerequisites / Setup
@@ -198,8 +198,8 @@ def create_notebook(lecture_num, lecture_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "## Setup\\n",
-            "\\n",
+            "## Setup\n",
+            "\n",
             "Run this cell to import necessary libraries:"
         ]
     })
@@ -210,16 +210,16 @@ def create_notebook(lecture_num, lecture_info):
         "metadata": {},
         "outputs": [],
         "source": [
-            "import numpy as np\\n",
-            "import matplotlib.pyplot as plt\\n",
-            "import torch\\n",
-            "import torch.nn as nn\\n",
-            "import torch.optim as optim\\n",
-            "\\n",
-            "# Set random seeds for reproducibility\\n",
-            "np.random.seed(42)\\n",
-            "torch.manual_seed(42)\\n",
-            "\\n",
+            "import numpy as np\n",
+            "import matplotlib.pyplot as plt\n",
+            "import torch\n",
+            "import torch.nn as nn\n",
+            "import torch.optim as optim\n",
+            "\n",
+            "# Set random seeds for reproducibility\n",
+            "np.random.seed(42)\n",
+            "torch.manual_seed(42)\n",
+            "\n",
             "print('✓ Libraries imported successfully')"
         ]
     })
@@ -229,12 +229,12 @@ def create_notebook(lecture_num, lecture_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "---\\n",
-            "## Teaching Material\\n",
-            "\\n",
-            f"### Key Topics for Week {lecture_num}\\n",
-            "\\n"
-        ] + [f"{i+1}. **{topic}**\\n" for i, topic in enumerate(lecture_info['topics'])]
+            "---\n",
+            "## Teaching Material\n",
+            "\n",
+            f"### Key Topics for Week {lecture_num}\n",
+            "\n"
+        ] + [f"{i+1}. **{topic}**\n" for i, topic in enumerate(lecture_info['topics'])]
     })
     
     # Add a brief example/demo (placeholder for now)
@@ -242,8 +242,8 @@ def create_notebook(lecture_num, lecture_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "### Example: Core Concept Demonstration\\n",
-            "\\n",
+            "### Example: Core Concept Demonstration\n",
+            "\n",
             "Below is a simple example demonstrating one of this week's key concepts:"
         ]
     })
@@ -255,9 +255,9 @@ def create_notebook(lecture_num, lecture_info):
         "metadata": {},
         "outputs": [],
         "source": [
-            "# Example code demonstrating a key concept\\n",
-            "# TODO: Add specific examples for each lecture\\n",
-            "\\n",
+            "# Example code demonstrating a key concept\n",
+            "# TODO: Add specific examples for each lecture\n",
+            "\n",
             f"print('Example for Week {lecture_num}: {title_str}')"
         ]
     })
@@ -267,15 +267,15 @@ def create_notebook(lecture_num, lecture_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "---\\n",
-            "## Practice Questions\\n",
-            "\\n",
-            "Complete the following 10 questions to test your understanding. Questions progress from conceptual to applied.\\n",
-            "\\n",
-            "**Instructions:**\\n",
-            "- Read each question carefully\\n",
-            "- Fill in code cells where indicated\\n",
-            "- Check your understanding with the provided hints\\n",
+            "---\n",
+            "## Practice Questions\n",
+            "\n",
+            "Complete the following 10 questions to test your understanding. Questions progress from conceptual to applied.\n",
+            "\n",
+            "**Instructions:**\n",
+            "- Read each question carefully\n",
+            "- Fill in code cells where indicated\n",
+            "- Check your understanding with the provided hints\n",
             "- Solutions are available in a separate file"
         ]
     })
@@ -287,12 +287,12 @@ def create_notebook(lecture_num, lecture_info):
             "cell_type": "markdown",
             "metadata": {},
             "source": [
-                f"### Question {q_num}\\n",
-                "\\n",
-                f"**Topic:** {lecture_info['topics'][(q_num-1) % len(lecture_info['topics'])]}\\n",
-                "\\n",
-                f"[Question text for Question {q_num} - to be customized per lecture]\\n",
-                "\\n",
+                f"### Question {q_num}\n",
+                "\n",
+                f"**Topic:** {lecture_info['topics'][(q_num-1) % len(lecture_info['topics'])]}\n",
+                "\n",
+                f"[Question text for Question {q_num} - to be customized per lecture]\n",
+                "\n",
                 "**Hint:** Think about how this concept relates to the learning objectives above."
             ]
         })
@@ -303,8 +303,8 @@ def create_notebook(lecture_num, lecture_info):
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    "**Your Answer:**\\n",
-                    "\\n",
+                    "**Your Answer:**\n",
+                    "\n",
                     "[Write your answer here]"
                 ]
             })
@@ -315,8 +315,8 @@ def create_notebook(lecture_num, lecture_info):
                 "metadata": {},
                 "outputs": [],
                 "source": [
-                    "# Your code here\\n",
-                    "\\n"
+                    "# Your code here\n",
+                    "\n"
                 ]
             })
     
@@ -325,15 +325,15 @@ def create_notebook(lecture_num, lecture_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "---\\n",
-            "## Reflection\\n",
-            "\\n",
-            "Take a moment to reflect on what you've learned:\\n",
-            "\\n",
-            "1. What was the most challenging concept this week?\\n",
-            "2. How might you apply these concepts to a real-world problem?\\n",
-            "3. What questions do you still have?\\n",
-            "\\n",
+            "---\n",
+            "## Reflection\n",
+            "\n",
+            "Take a moment to reflect on what you've learned:\n",
+            "\n",
+            "1. What was the most challenging concept this week?\n",
+            "2. How might you apply these concepts to a real-world problem?\n",
+            "3. What questions do you still have?\n",
+            "\n",
             "**Your reflections:**"
         ]
     })
@@ -351,16 +351,16 @@ def create_notebook(lecture_num, lecture_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "---\\n",
-            "## Additional Resources\\n",
-            "\\n",
-            "- Course textbook: See week's reading assignments\\n",
-            "- Office hours: Check course schedule\\n",
-            f"- Course website: [Week {lecture_num} Materials](../../ml2/lecture{lecture_num:02d}/index.html)\\n",
-            "\\n",
-            "**Next Steps:**\\n",
-            "- Review any questions you found challenging\\n",
-            "- Complete the week's coding assignments\\n",
+            "---\n",
+            "## Additional Resources\n",
+            "\n",
+            "- Course textbook: See week's reading assignments\n",
+            "- Office hours: Check course schedule\n",
+            f"- Course website: [Week {lecture_num} Materials](../../ml2/lecture{lecture_num:02d}/index.html)\n",
+            "\n",
+            "**Next Steps:**\n",
+            "- Review any questions you found challenging\n",
+            "- Complete the week's coding assignments\n",
             "- Prepare for next week's topics"
         ]
     })
