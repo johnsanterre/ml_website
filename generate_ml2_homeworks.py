@@ -753,14 +753,14 @@ def create_homework_notebook(hw_num, hw_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            f"# Week {hw_num}: {hw_info['title']} - Homework\\n",
-            "\\n",
-            "**ML2: Advanced Machine Learning**\\n",
-            "\\n",
-            "**Estimated Time**: 1 hour\\n",
-            "\\n",
-            "---\\n",
-            "\\n",
+            f"# Week {hw_num}: {hw_info['title']} - Homework\n",
+            "\n",
+            "**ML2: Advanced Machine Learning**\n",
+            "\n",
+            "**Estimated Time**: 1 hour\n",
+            "\n",
+            "---\n",
+            "\n",
             "This homework combines programming exercises and knowledge-based questions to reinforce this week's concepts."
         ]
     })
@@ -770,8 +770,8 @@ def create_homework_notebook(hw_num, hw_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "## Setup\\n",
-            "\\n",
+            "## Setup\n",
+            "\n",
             "Run this cell to import necessary libraries:"
         ]
     })
@@ -782,15 +782,15 @@ def create_homework_notebook(hw_num, hw_info):
         "metadata": {},
         "outputs": [],
         "source": [
-            "import numpy as np\\n",
-            "import matplotlib.pyplot as plt\\n",
-            "import torch\\n",
-            "import torch.nn as nn\\n",
-            "\\n",
-            "# Set random seed for reproducibility\\n",
-            "np.random.seed(42)\\n",
-            "torch.manual_seed(42)\\n",
-            "\\n",
+            "import numpy as np\n",
+            "import matplotlib.pyplot as plt\n",
+            "import torch\n",
+            "import torch.nn as nn\n",
+            "\n",
+            "# Set random seed for reproducibility\n",
+            "np.random.seed(42)\n",
+            "torch.manual_seed(42)\n",
+            "\n",
             "print('✓ Libraries imported successfully')"
         ]
     })
@@ -800,9 +800,9 @@ def create_homework_notebook(hw_num, hw_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "---\\n",
-            "## Part 1: Programming Exercises (60%)\\n",
-            "\\n",
+            "---\n",
+            "## Part 1: Programming Exercises (60%)\n",
+            "\n",
             "Complete the following programming tasks. Read each description carefully and implement the requested functionality."
         ]
     })
@@ -812,10 +812,10 @@ def create_homework_notebook(hw_num, hw_info):
             "cell_type": "markdown",
             "metadata": {},
             "source": [
-                f"### Exercise {i}: {exercise['title']}\\n",
-                "\\n",
-                f"**Time**: {exercise['time']}\\n",
-                "\\n",
+                f"### Exercise {i}: {exercise['title']}\n",
+                "\n",
+                f"**Time**: {exercise['time']}\n",
+                "\n",
                 f"{exercise['description']}"
             ]
         })
@@ -833,9 +833,9 @@ def create_homework_notebook(hw_num, hw_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "---\\n",
-            "## Part 2: Knowledge Questions (40%)\\n",
-            "\\n",
+            "---\n",
+            "## Part 2: Knowledge Questions (40%)\n",
+            "\n",
             "Answer the following questions to test your conceptual understanding."
         ]
     })
@@ -846,12 +846,12 @@ def create_homework_notebook(hw_num, hw_info):
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    f"### Question {i} (Multiple Choice)\\n",
-                    "\\n",
-                    f"{question['question']}\\n",
-                    "\\n"
-                ] + [f"{opt}\\n" for opt in question['options']] + [
-                    "\\n",
+                    f"### Question {i} (Multiple Choice)\n",
+                    "\n",
+                    f"{question['question']}\n",
+                    "\n"
+                ] + [f"{opt}\n" for opt in question['options']] + [
+                    "\n",
                     f"**Hint**: {question['hint']}"
                 ]
             })
@@ -860,8 +860,8 @@ def create_homework_notebook(hw_num, hw_info):
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    "**Your Answer**: [Write your answer here - e.g., 'B']\\n",
-                    "\\n",
+                    "**Your Answer**: [Write your answer here - e.g., 'B']\n",
+                    "\n",
                     "**Explanation**: [Explain why this is correct]"
                 ]
             })
@@ -871,10 +871,10 @@ def create_homework_notebook(hw_num, hw_info):
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    f"### Question {i} (Short Answer)\\n",
-                    "\\n",
-                    f"{question['question']}\\n",
-                    "\\n",
+                    f"### Question {i} (Short Answer)\n",
+                    "\n",
+                    f"{question['question']}\n",
+                    "\n",
                     f"**Hint**: {question['hint']}"
                 ]
             })
@@ -883,8 +883,8 @@ def create_homework_notebook(hw_num, hw_info):
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    "**Your Answer**:\\n",
-                    "\\n",
+                    "**Your Answer**:\n",
+                    "\n",
                     "[Write your answer here in 2-4 sentences]"
                 ]
             })
@@ -894,14 +894,14 @@ def create_homework_notebook(hw_num, hw_info):
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    f"### Question {i} (Code Reading)\\n",
-                    "\\n",
-                    f"{question['question']}\\n",
-                    "\\n",
-                    "```python\\n",
-                    f"{question['code']}\\n",
-                    "```\\n",
-                    "\\n",
+                    f"### Question {i} (Code Reading)\n",
+                    "\n",
+                    f"{question['question']}\n",
+                    "\n",
+                    "```python\n",
+                    f"{question['code']}\n",
+                    "```\n",
+                    "\n",
                     f"**Hint**: {question['hint']}"
                 ]
             })
@@ -919,18 +919,18 @@ def create_homework_notebook(hw_num, hw_info):
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "---\\n",
-            "## Submission\\n",
-            "\\n",
-            "Before submitting:\\n",
-            "1. Run all cells to ensure code executes without errors\\n",
-            "2. Check that all questions are answered\\n",
-            "3. Review your explanations for clarity\\n",
-            "\\n",
-            "**To Submit**:\\n",
-            "- File → Download → Download .ipynb\\n",
-            "- Submit the notebook file to your course LMS\\n",
-            "\\n",
+            "---\n",
+            "## Submission\n",
+            "\n",
+            "Before submitting:\n",
+            "1. Run all cells to ensure code executes without errors\n",
+            "2. Check that all questions are answered\n",
+            "3. Review your explanations for clarity\n",
+            "\n",
+            "**To Submit**:\n",
+            "- File → Download → Download .ipynb\n",
+            "- Submit the notebook file to your course LMS\n",
+            "\n",
             "**Note**: Make sure your name is in the filename (e.g., homework_01_yourname.ipynb)"
         ]
     })
