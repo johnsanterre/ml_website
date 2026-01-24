@@ -14,52 +14,101 @@ HOMEWORKS = {
         "title": "Introduction to Deep Learning",
         "programming": [
             {
-                "title": "Implement Activation Functions",
-                "description": "Implement ReLU, Sigmoid, and Tanh activation functions from scratch and visualize their behavior.",
-                "time": "15 min",
+                "title": "Question 1: Implement ReLU",
+                "description": "Implement the ReLU (Rectified Linear Unit) activation function from scratch.",
+                "time": "3 min",
                 "starter_code": """import numpy as np
-import matplotlib.pyplot as plt
 
 def relu(x):
-    # TODO: Implement ReLU activation
+    # TODO: Implement ReLU - returns max(0, x)
     pass
 
-def sigmoid(x):
-    # TODO: Implement Sigmoid activation
-    pass
-
-def tanh(x):
-    # TODO: Implement Tanh activation
-    pass
-
-# Test your implementations
-x = np.linspace(-5, 5, 100)
-# TODO: Plot all three activation functions"""
+# Test
+test_input = np.array([-2, -1, 0, 1, 2])
+print(relu(test_input))  # Should output: [0, 0, 0, 1, 2]"""
             },
             {
-                "title": "Build a Simple Neural Network",
-                "description": "Create a 2-layer neural network class with forward propagation.",
-                "time": "25 min",
+                "title": "Question 2: Implement Sigmoid",
+                "description": "Implement the Sigmoid activation function.",
+                "time": "4 min",
+                "starter_code": """import numpy as np
+
+def sigmoid(x):
+    # TODO: Implement Sigmoid - returns 1 / (1 + e^(-x))
+    pass
+
+# Test
+test_input = np.array([-2, 0, 2])
+print(sigmoid(test_input))  # Should be close to [0.12, 0.5, 0.88]"""
+            },
+            {
+                "title": "Question 3: Create a Linear Layer",
+                "description": "Create a simple linear (fully-connected) layer using PyTorch.",
+                "time": "5 min",
                 "starter_code": """import torch
 import torch.nn as nn
 
-class SimpleNN(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size):
-        super(SimpleNN, self).__init__()
-        # TODO: Define layers
-        pass
-    
-    def forward(self, x):
-        # TODO: Implement forward pass
-        pass
+# TODO: Create a linear layer that transforms 10 inputs to 5 outputs
+linear_layer = None
 
-# TODO: Create network instance and test with random input"""
+# Test
+x = torch.randn(1, 10)  # batch_size=1, input_size=10
+output = linear_layer(x)
+print(output.shape)  # Should be torch.Size([1, 5])"""
+            },
+            {
+                "title": "Question 4: Forward Pass Calculation",
+                "description": "Manually compute the output of a simple network.",
+                "time": "6 min",
+                "starter_code": """import torch
+
+# Given weights and input
+x = torch.tensor([1.0, 2.0])
+W = torch.tensor([[0.5, 0.3], [0.2, 0.6]])
+b = torch.tensor([0.1, 0.1])
+
+# TODO: Compute y = W @ x + b (matrix multiplication)
+y = None
+
+print(y)  # Verify your calculation"""
+            },
+            {
+                "title": "Question 5: Apply Activation to Layer",
+                "description": "Chain a linear layer with a ReLU activation.",
+                "time": "5 min",
+                "starter_code": """import torch
+import torch.nn as nn
+
+# TODO: Create a Sequential model with:
+# - Linear layer (input=20, output=10)
+# - ReLU activation
+model = None
+
+# Test
+x = torch.randn(5, 20)  # batch of 5 samples
+output = model(x)
+print(output.shape)  # Should be torch.Size([5, 10])"""
+            },
+            {
+                "title": "Question 6: Count Parameters",
+                "description": "Calculate the number of parameters in a neural network layer.",
+                "time": "4 min",
+                "starter_code": """import torch.nn as nn
+
+# Given layer
+layer = nn.Linear(100, 50)
+
+# TODO: Calculate total number of parameters (weights + biases)
+# Hint: Weights are 100 x 50, biases are 50
+num_params = None
+
+print(f\"Total parameters: {num_params}\")  # Should be 5050"""
             }
         ],
         "knowledge": [
             {
                 "type": "mc",
-                "question": "What is the main advantage of deep learning over traditional machine learning?",
+                "question": "Question 7: What is the main advantage of deep learning over traditional machine learning?",
                 "options": [
                     "A) Requires less data",
                     "B) Automatically learns hierarchical features",
@@ -69,19 +118,30 @@ class SimpleNN(nn.Module):
                 "hint": "Think about feature engineering in traditional ML vs deep learning."
             },
             {
+                "type": "mc",
+                "question": "Question 8: Which activation function outputs values in the range (0, 1)?",
+                "options": [
+                    "A) ReLU",
+                    "B) Tanh",
+                    "C) Sigmoid",
+                    "D) Linear"
+                ],
+                "hint": "Consider which activation is commonly used for binary classification."
+            },
+            {
                 "type": "short",
-                "question": "Explain the vanishing gradient problem in your own words. Why does it primarily affect deep networks?",
-                "hint": "Consider what happens to gradients as they backpropagate through many layers."
+                "question": "Question 9: In 1-2 sentences, explain what a 'bias' term does in a neural network layer.",
+                "hint": "Think about what happens when all inputs are zero."
             },
             {
                 "type": "code_reading",
-                "question": "What will be the output shape of this network given input shape (32, 784)?",
+                "question": "Question 10: What will be the output shape given input shape (32, 784)?",
                 "code": """nn.Sequential(
     nn.Linear(784, 256),
     nn.ReLU(),
     nn.Linear(256, 10)
 )""",
-                "hint": "Trace the dimensions through each layer."
+                "hint": "Trace the dimensions through each layer. Batch size stays the same."
             }
         ]
     },
