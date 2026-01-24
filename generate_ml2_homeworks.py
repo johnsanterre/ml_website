@@ -162,56 +162,225 @@ print("Without ReLU output:", output_without)
         "title": "Neural Networks & Backpropagation",
         "programming": [
             {
-                "title": "Compute Gradients Manually",
-                "description": "Calculate gradients for a simple network using chain rule, then verify with PyTorch autograd.",
-                "time": "20 min",
+                "title": "Experiment: Tracing the Chain Rule",
+                "description": "This experiment demonstrates how backpropagation systematically applies the chain rule. You'll manually trace gradients through a simple computation graph.",
+                "time": "12 min",
                 "starter_code": """import torch
 
-# Create simple computation graph
+# Simple computation graph: z = (x * w + b)^2
 x = torch.tensor(2.0, requires_grad=True)
 w = torch.tensor(3.0, requires_grad=True)
 b = torch.tensor(1.0, requires_grad=True)
 
-# Forward pass: y = w*x + b, loss = (y - target)^2
-target = torch.tensor(10.0)
+# Forward pass
+y = x * w + b  # Intermediate value
+z = y ** 2      # Final output
 
-# TODO: Compute forward pass and loss
-# TODO: Manually calculate gradients using chain rule
-# TODO: Verify with PyTorch autograd"""
+print(f"Forward pass: x={x.item()}, w={w.item()}, b={b.item()}")
+print(f"Intermediate y = x*w + b = {y.item()}")
+print(f"Final z = y^2 = {z.item()}")
+
+# Backpropagation (automatic)
+z.backward()
+
+print(f"\\nAutomatic gradients:")
+print(f"dz/dx = {x.grad.item()}")
+print(f"dz/dw = {w.grad.item()}")
+print(f"dz/db = {b.grad.item()}")
+
+# TODO: Now manually compute these gradients using the chain rule:
+# dz/dx = dz/dy * dy/dx
+# What is dz/dy? What is dy/dx?
+# Verify your manual calculation matches PyTorch's automatic result"""
             },
             {
-                "title": "Implement Gradient Descent Variants",
-                "description": "Implement and compare SGD, Mini-batch GD, and Batch GD on a toy dataset.",
-                "time": "20 min",
-                "starter_code": """import numpy as np
+                "title": "Experiment: Gradient Descent with Different Batch Sizes",
+                "description": "Compare how different batch sizes affect training dynamics. Observe convergence speed, stability, and final loss.",
+                "time": "10 min",
+                "starter_code": """import torch
+import torch.nn as nn
+import matplotlib.pyplot as plt
 
-def batch_gd(X, y, lr=0.01, epochs=100):
-    # TODO: Implement batch gradient descent
-    pass
+# Generate synthetic data: y = 2x + 1 + noise
+torch.manual_seed(42)
+X = torch.randn(1000, 1) * 10
+y = 2 * X + 1 + torch.randn(1000, 1) * 2
 
-def mini_batch_gd(X, y, batch_size=32, lr=0.01, epochs=100):
-    # TODO: Implement mini-batch gradient descent
-    pass
+def train_with_batch_size(batch_size, epochs=50):
+    model = nn.Linear(1, 1)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+    criterion = nn.MSELoss()
+    
+    losses = []
+    for epoch in range(epochs):
+        # Shuffle and create batches
+        perm = torch.randperm(len(X))
+        epoch_loss = 0
+        num_batches = 0
+        
+        for i in range(0, len(X), batch_size):
+            batch_idx = perm[i:i+batch_size]
+            X_batch, y_batch = X[batch_idx], y[batch_idx]
+            
+            optimizer.zero_grad()
+            pred = model(X_batch)
+            loss = criterion(pred, y_batch)
+            loss.backward()
+            optimizer.step()
+            
+            epoch_loss += loss.item()
+            num_batches += 1
+        
+        losses.append(epoch_loss / num_batches)
+    
+    return losses, model.weight.item(), model.bias.item()
 
-# Generate toy data and compare methods"""
+# Compare different batch sizes
+batch_sizes = [1, 32, 256, 1000]  # SGD, mini-batch, large batch, full batch
+results = {}
+
+for bs in batch_sizes:
+    losses, final_w, final_b = train_with_batch_size(bs)
+    results[bs] = {'losses': losses, 'w': final_w, 'b': final_b}
+    print(f"Batch size {bs}: Final w={final_w:.3f}, b={final_b:.3f}")
+
+# TODO: After running, answer reflection questions about what you observe"""
             }
         ],
         "knowledge": [
             {
-                "type": "mc",
-                "question": "Which statement about batch size is TRUE?",
-                "options": [
-                    "A) Larger batch sizes always lead to better generalization",
-                    "B) Smaller batch sizes provide more frequent updates but noisier gradients",
-                    "C) Batch size has no effect on training dynamics",
-                    "D) Batch size must always equal the dataset size"
-                ],
-                "hint": "Consider the trade-off between update frequency and gradient quality."
+                "type": "short",
+                "question": """**Question 1 - The Chain Rule IS Backpropagation (Conceptual)**
+
+Consider a 3-layer network: Input → Layer1 → Layer2 → Layer3 → Loss
+
+To update Layer1's weights, you need dLoss/dWeights_Layer1.
+
+Explain:
+1. Why must you compute gradients for Layer3, then Layer2, THEN Layer1 (in that order)?
+2. What mathematical principle requires this backward ordering?
+3. What would go wrong if you tried to compute Layer1's gradient first?""",
+                "hint": "Think about the chain rule: df/dx = df/dg × dg/dx. What do you need to know first?"
             },
             {
                 "type": "short",
-                "question": "Why is the choice of learning rate critical? What happens if it's too large or too small?",
-                "hint": "Think about convergence speed and stability."
+                "question": """**Question 2 - Manual Chain Rule Calculation**
+
+Based on the 'Tracing the Chain Rule' experiment:
+
+For the computation graph z = (x*w + b)², manually calculate dz/dw step by step:
+
+1. What is dz/dy (where y = x*w + b)?
+2. What is dy/dw?
+3. Using the chain rule, what is dz/dw = dz/dy × dy/dw?
+4. Verify this matches the PyTorch automatic gradient.""",
+                "hint": "Remember: d/dy(y²) = 2y and d/dw(x*w + b) involves x."
+            },
+            {
+                "type": "short",
+                "question": """**Question 3 - Why Backward Propagation?**
+
+Explain why we call it "backpropagation" rather than just "gradient computation."
+
+What specific property of the chain rule makes the backward direction necessary and efficient?""",
+                "hint": "Consider: could you compute gradients going forward instead? Why or why not?"
+            },
+            {
+                "type": "mc",
+                "question": """**Question 4 - Vanishing Gradients**
+
+In a very deep network (100 layers), gradients in early layers become extremely small. This is called the "vanishing gradient problem."
+
+Why does this happen?
+
+A) Early layers have fewer parameters
+B) The chain rule multiplies many numbers less than 1 together
+C) Early layers receive less data
+D) Backpropagation doesn't reach early layers""",
+                "options": [
+                    "A) Early layers have fewer parameters",
+                    "B) The chain rule multiplies many numbers less than 1 together",
+                    "C) Early layers receive less data",
+                    "D) Backpropagation doesn't reach early layers"
+                ],
+                "hint": "Think about what happens when you multiply 0.5 × 0.5 × 0.5 × 0.5... many times."
+            },
+            {
+                "type": "short",
+                "question": """**Question 5 - Gradient as Directional Information**
+
+A gradient magnitude of 0.001 vs 100.0 tells you very different things about the loss landscape.
+
+Explain:
+1. What does a gradient magnitude of 0.001 indicate?
+2. What does a gradient magnitude of 100.0 indicate?
+3. Which situation might require adjusting the learning rate, and how?""",
+                "hint": "Large gradient = steep slope. Small gradient = flat region (or near minimum)."
+            },
+            {
+                "type": "short",
+                "question": """**Question 6 - Batch Size Experiment Reflection**
+
+After running the 'Gradient Descent with Different Batch Sizes' experiment:
+
+Compare batch_size=1 vs batch_size=1000:
+1. Which had smoother loss curves?
+2. Which made more weight updates per epoch?
+3. Which do you think explored the solution space better? Why?""",
+                "hint": "More updates = more opportunities to correct course, but also more noise."
+            },
+            {
+                "type": "short",
+                "question": """**Question 7 - The Bias-Variance Tradeoff in Batch Size**
+
+Large batch sizes give accurate gradient estimates (low variance) but fewer updates.
+Small batch sizes give noisy estimates (high variance) but more frequent updates.
+
+Explain: Why might the NOISE from small batches actually be BENEFICIAL for finding better solutions?""",
+                "hint": "Think about escaping local minima. Can noise help you 'jump out' of a bad spot?"
+            },
+            {
+                "type": "mc",
+                "question": """**Question 8 - Learning Rate Impact**
+
+If your learning rate is too large, what typically happens?
+
+A) Training is slow but converges smoothly
+B) The loss oscillates wildly or increases
+C) Gradients become more accurate
+D) The model memorizes the training data""",
+                "options": [
+                    "A) Training is slow but converges smoothly",
+                    "B) The loss oscillates wildly or increases",
+                    "C) Gradients become more accurate",
+                    "D) The model memorizes the training data"
+                ],
+                "hint": "Think about taking huge steps in the direction of the gradient. Can you overshoot the minimum?"
+            },
+            {
+                "type": "short",
+                "question": """**Question 9 - Connecting Backpropagation to Learning**
+
+Integrate the concepts:
+
+Explain how backpropagation (chain rule) and gradient descent work together to enable learning.
+
+Your answer should connect:
+- How backpropagation computes what gradients are
+- How gradient descent uses those gradients to update weights
+- Why you need both for deep learning to work""",
+                "hint": "Backpropagation tells you the direction, gradient descent tells you how far to step."
+            },
+            {
+                "type": "short",
+                "question": """**Question 10 - Real-World Implications**
+
+Modern deep learning models (like GPT or BERT) have billions of parameters across hundreds of layers.
+
+Explain: 
+1. Why is automatic differentiation (backpropagation) absolutely essential for training these models?
+2. What would be impossible without it?""",
+                "hint": "Imagine manually calculating gradients for 175 billion parameters. How long would that take?"
             }
         ]
     },
