@@ -820,12 +820,16 @@ def create_homework_notebook(hw_num, hw_info):
             ]
         })
         
+        # Split code and add newlines back to each line
+        code_lines = exercise['starter_code'].split('\n')
+        code_source = [line + '\n' for line in code_lines[:-1]] + ([code_lines[-1]] if code_lines[-1] else [])
+        
         cells.append({
             "cell_type": "code",
             "execution_count": None,
             "metadata": {},
             "outputs": [],
-            "source": exercise['starter_code'].split('\n')
+            "source": code_source
         })
     
     # Knowledge Questions
