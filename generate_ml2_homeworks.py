@@ -14,134 +14,147 @@ HOMEWORKS = {
         "title": "Introduction to Deep Learning",
         "programming": [
             {
-                "title": "Question 1: Implement ReLU",
-                "description": "Implement the ReLU (Rectified Linear Unit) activation function from scratch.",
-                "time": "3 min",
-                "starter_code": """import numpy as np
+                "title": "Experiment: Observing Feature Learning",
+                "description": "Run this code to visualize what happens when a network learns features automatically vs. using hand-crafted features. Observe the outputs and answer the reflection questions below.",
+                "time": "8 min",
+                "starter_code": """import torch
+import torch.nn as nn
+import numpy as np
 
-def relu(x):
-    # TODO: Implement ReLU - returns max(0, x)
-    pass
+# Simulate a simple pattern recognition task
+# Pattern: Detect if sum of inputs > 5
+np.random.seed(42)
+torch.manual_seed(42)
 
-# Test
-test_input = np.array([-2, -1, 0, 1, 2])
-print(relu(test_input))  # Should output: [0, 0, 0, 1, 2]"""
+# Generate data
+X = torch.randn(100, 4)  # 100 samples, 4 features
+y = (X.sum(dim=1) > 0).float()  # Label: 1 if sum > 0, else 0
+
+# Network that LEARNS features
+model = nn.Sequential(
+    nn.Linear(4, 8),   # Learned feature extraction
+    nn.ReLU(),
+    nn.Linear(8, 1),
+    nn.Sigmoid()
+)
+
+# Train for a few steps
+optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+loss_fn = nn.BCELoss()
+
+for epoch in range(20):
+    optimizer.zero_grad()
+    predictions = model(X).squeeze()
+    loss = loss_fn(predictions, y)
+    loss.backward()
+    optimizer.step()
+
+print(f"Final loss: {loss.item():.4f}")
+print(f"First layer weights (learned features):")
+print(model[0].weight.data)
+
+# TODO: After running, answer reflection questions below"""
             },
             {
-                "title": "Question 2: Implement Sigmoid",
-                "description": "Implement the Sigmoid activation function.",
-                "time": "4 min",
-                "starter_code": """import numpy as np
-
-def sigmoid(x):
-    # TODO: Implement Sigmoid - returns 1 / (1 + e^(-x))
-    pass
-
-# Test
-test_input = np.array([-2, 0, 2])
-print(sigmoid(test_input))  # Should be close to [0.12, 0.5, 0.88]"""
-            },
-            {
-                "title": "Question 3: Create a Linear Layer",
-                "description": "Create a simple linear (fully-connected) layer using PyTorch.",
-                "time": "5 min",
+                "title": "Experiment: Network Without Nonlinearity",
+                "description": "This experiment demonstrates why activation functions are essential. Compare two networks: one with ReLU, one without.",
+                "time": "10 min",
                 "starter_code": """import torch
 import torch.nn as nn
 
-# TODO: Create a linear layer that transforms 10 inputs to 5 outputs
-linear_layer = None
+# Network WITH nonlinearity (ReLU)
+network_with_relu = nn.Sequential(
+    nn.Linear(10, 20),
+    nn.ReLU(),
+    nn.Linear(20, 15),
+    nn.ReLU(),
+    nn.Linear(15, 5)
+)
 
-# Test
-x = torch.randn(1, 10)  # batch_size=1, input_size=10
-output = linear_layer(x)
-print(output.shape)  # Should be torch.Size([1, 5])"""
-            },
-            {
-                "title": "Question 4: Forward Pass Calculation",
-                "description": "Manually compute the output of a simple network.",
-                "time": "6 min",
-                "starter_code": """import torch
+# Network WITHOUT nonlinearity (just linear layers)
+network_without_relu = nn.Sequential(
+    nn.Linear(10, 20),
+    nn.Linear(20, 15),
+    nn.Linear(15, 5)
+)
 
-# Given weights and input
-x = torch.tensor([1.0, 2.0])
-W = torch.tensor([[0.5, 0.3], [0.2, 0.6]])
-b = torch.tensor([0.1, 0.1])
+# Test input
+x = torch.randn(1, 10)
 
-# TODO: Compute y = W @ x + b (matrix multiplication)
-y = None
+# Compare outputs
+output_with = network_with_relu(x)
+output_without = network_without_relu(x)
 
-print(y)  # Verify your calculation"""
-            },
-            {
-                "title": "Question 5: Apply Activation to Layer",
-                "description": "Chain a linear layer with a ReLU activation.",
-                "time": "5 min",
-                "starter_code": """import torch
-import torch.nn as nn
+print("With ReLU output:", output_with)
+print("Without ReLU output:", output_without)
 
-# TODO: Create a Sequential model with:
-# - Linear layer (input=20, output=10)
-# - ReLU activation
-model = None
-
-# Test
-x = torch.randn(5, 20)  # batch of 5 samples
-output = model(x)
-print(output.shape)  # Should be torch.Size([5, 10])"""
-            },
-            {
-                "title": "Question 6: Count Parameters",
-                "description": "Calculate the number of parameters in a neural network layer.",
-                "time": "4 min",
-                "starter_code": """import torch.nn as nn
-
-# Given layer
-layer = nn.Linear(100, 50)
-
-# TODO: Calculate total number of parameters (weights + biases)
-# Hint: Weights are 100 x 50, biases are 50
-num_params = None
-
-print(f\"Total parameters: {num_params}\")  # Should be 5050"""
+# TODO: Now manually compute what network_without_relu is equivalent to
+# Hint: Multiple linear transformations collapse into a single linear transformation
+# Can you express the 3-layer linear network as a SINGLE equivalent linear layer?"""
             }
         ],
         "knowledge": [
             {
-                "type": "mc",
-                "question": "Question 7: What is the main advantage of deep learning over traditional machine learning?",
-                "options": [
-                    "A) Requires less data",
-                    "B) Automatically learns hierarchical features",
-                    "C) Always runs faster",
-                    "D) Doesn't need any hyperparameter tuning"
-                ],
-                "hint": "Think about feature engineering in traditional ML vs deep learning."
-            },
-            {
-                "type": "mc",
-                "question": "Question 8: Which activation function outputs values in the range (0, 1)?",
-                "options": [
-                    "A) ReLU",
-                    "B) Tanh",
-                    "C) Sigmoid",
-                    "D) Linear"
-                ],
-                "hint": "Consider which activation is commonly used for binary classification."
+                "type": "short",
+                "question": "**Question 1 - Automatic Feature Learning (Conceptual)**\n\nTraditional machine learning for image classification requires manually designing features (e.g., edge detectors, color histograms, texture filters). Deep learning does not.\n\nExplain in 3-4 sentences:\n1. WHY can deep networks learn features automatically?\n2. WHAT enables this (what architectural property)?\n3. What is the tradeoff (what does deep learning need more of)?",
+                "hint": "Think about what happens in each layer of a deep network and how backpropagation adjusts those layers."
             },
             {
                 "type": "short",
-                "question": "Question 9: In 1-2 sentences, explain what a 'bias' term does in a neural network layer.",
-                "hint": "Think about what happens when all inputs are zero."
+                "question": "**Question 2 - Feature Hierarchy (Conceptual)**\n\nIn a deep CNN for face recognition:\n- Layer 1 might detect edges\n- Layer 2 might detect facial features (eyes, nose)\n- Layer 3 might detect whole faces\n\nExplain: Why does depth create this hierarchy? What would happen if you used a single-layer network instead?",
+                "hint": "Consider how each layer builds on representations from the previous layer."
             },
             {
-                "type": "code_reading",
-                "question": "Question 10: What will be the output shape given input shape (32, 784)?",
-                "code": """nn.Sequential(
-    nn.Linear(784, 256),
-    nn.ReLU(),
-    nn.Linear(256, 10)
-)""",
-                "hint": "Trace the dimensions through each layer. Batch size stays the same."
+                "type": "short",
+                "question": "**Question 3 - Nonlinearity Experiment Reflection**\n\nBased on the 'Network Without Nonlinearity' experiment above:\n\nProve mathematically or explain conceptually why the 3-layer network without ReLU is equivalent to a SINGLE linear layer. What does this tell you about the necessity of activation functions?",
+                "hint": "Remember: Linear(Linear(x)) = Linear(x) because you can multiply weight matrices together."
+            },
+            {
+                "type": "mc",
+                "question": "**Question 4 - Understanding Nonlinearity**\n\nA neural network with 10 layers but NO activation functions can represent:\n\nA) Any possible function (universal approximation)\nB) Only linear functions\nC) Only polynomial functions\nD) Only step functions",
+                "options": [
+                    "A) Any possible function (universal approximation)",
+                    "B) Only linear functions",
+                    "C) Only polynomial functions",
+                    "D) Only step functions"
+                ],
+                "hint": "What happens when you compose linear transformations?"
+            },
+            {
+                "type": "short",
+                "question": "**Question 5 - ReLU Design Choice**\n\nReLU(x) = max(0, x) is one of the simplest possible nonlinear functions. Yet it became the dominant activation function (replacing sigmoid).\n\nExplain TWO advantages ReLU has over sigmoid for deep networks. One should relate to gradients, one to computation.",
+                "hint": "Think about what happens to gradients when x is large and positive in sigmoid vs ReLU."
+            },
+            {
+                "type": "short",
+                "question": "**Question 6 - Gradient Descent Intuition**\n\nGradient descent updates weights using: θ_new = θ_old - α × ∇L\n\nWhere ∇L is the gradient of the loss.\n\nExplain in simple terms:\n1. What does the gradient ∇L represent geometrically?\n2. Why do we SUBTRACT it (the negative sign)?\n3. What role does α (learning rate) play?",
+                "hint": "Think of the loss function as a landscape/terrain you're trying to navigate."
+            },
+            {
+                "type": "mc",
+                "question": "**Question 7 - Loss Function Purpose**\n\nThe loss function in deep learning serves to:\n\nA) Measure how wrong the model is, providing a signal for gradient descent\nB) Prevent overfitting by penalizing complex models\nC) Speed up training by reducing computation\nD) Automatically select which features to learn",
+                "options": [
+                    "A) Measure how wrong the model is, providing a signal for gradient descent",
+                    "B) Prevent overfitting by penalizing complex models",
+                    "C) Speed up training by reducing computation",
+                    "D) Automatically select which features to learn"
+                ],
+                "hint": "What do we need to compute gradients?"
+            },
+            {
+                "type": "short",
+                "question": "**Question 8 - Feature Learning Reflection**\n\nAfter running the 'Observing Feature Learning' experiment:\n\nLook at the learned weights in the first layer. These represent the FEATURES the network learned.\n\nExplain: How did the network 'know' which features to learn? What guided it to learn useful features rather than random ones?",
+                "hint": "The answer involves both the loss function and backpropagation."
+            },
+            {
+                "type": "short",
+                "question": "**Question 9 - Connecting the Concepts**\n\nIntegrate all three key insights:\n\nExplain how (1) automatic feature learning, (2) nonlinearity, and (3) gradient descent work TOGETHER to enable deep learning. \n\nYour answer should show how all three are necessary and how they interact.",
+                "hint": "Think: What would happen if you removed any one of these three components?"
+            },
+            {
+                "type": "short",
+                "question": "**Question 10 - Scaling to Real Problems**\n\nImageNet (image classification) has 1000 classes and ~1.2 million training images. Traditional ML would require human experts to manually design thousands of features.\n\nExplain: Why does deep learning have an advantage that GROWS as the problem gets more complex (more classes, more data)? What breaks down in the traditional approach?",
+                "hint": "Consider both the human effort required and what happens when you have more data."
             }
         ]
     },
