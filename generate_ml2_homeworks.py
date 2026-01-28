@@ -2260,131 +2260,537 @@ Explain:
         ]
     },
     13: {
-        "title": "Evaluating LLMs",
+        "title": "Evaluating LLMs - Metrics and Methods",
         "programming": [
             {
-                "title": "Implement Evaluation Metrics",
-                "description": "Code BLEU, ROUGE, and perplexity from scratch.",
-                "time": "25 min",
-                "starter_code": """def bleu_score(reference, candidate):
-    # TODO: Implement BLEU
-    pass
+                "title": "Experiment: Why Metrics Disagree",
+                "description": "Compare different metrics on the same outputs and observe disagreements.",
+                "time": "10 min",
+                "starter_code": """# Three model outputs for \"Summarize: The quick brown fox jumps over the lazy dog\"
 
-def rouge_score(reference, candidate):
-    # TODO: Implement ROUGE
-    pass
+reference = "A fast fox jumps over a lazy dog."
 
-def perplexity(model, text):
-    # TODO: Compute perplexity
-    pass"""
-            },
-            {
-                "title": "Create Evaluation Suite",
-                "description": "Build test cases and run systematic evaluation.",
-                "time": "15 min",
-                "starter_code": """# TODO: Define test cases
-# TODO: Run model on tests
-# TODO: Compute metrics
-# TODO: Generate evaluation report"""
+candidate_a = "A quick brown fox jumps over a lazy dog."  # Almost exact
+candidate_b = "A fox leaps over a dog."  # Concise, captures meaning
+candidate_c = "The agile fox bounds over the sleepy canine."  # Different words, same meaning
+
+# Simplified BLEU (measures n-gram overlap)
+def simple_bleu(ref, cand):
+    ref_words = set(ref.lower().split())
+    cand_words = set(cand.lower().split())
+    overlap = len(ref_words & cand_words) / len(cand_words) if cand_words else 0
+    return overlap
+
+print(f"Candidate A BLEU: {simple_bleu(reference, candidate_a):.2f}")
+print(f"Candidate B BLEU: {simple_bleu(reference, candidate_b):.2f}")
+print(f"Candidate C BLEU: {simple_bleu(reference, candidate_c):.2f}")
+
+# TODO: Which is best? Do the metrics agree with human judgment?"""
             }
         ],
         "knowledge": [
             {
-                "type": "mc",
-                "question": "What does perplexity measure?",
-                "options": [
-                    "A) Model size",
-                    "B) How surprised the model is by the text",
-                    "C) Training time",
-                    "D) Number of parameters"
-                ],
-                "hint": "Lower perplexity means the model predicts the text better."
+                "type": "short",
+                "question": """**Question 1 - No Single Metric Captures Everything**
+
+BLEU: Measures word overlap
+ROUGE: Measures recall of n-grams
+BERTScore: Measures semantic similarity using embeddings
+Human evaluation: Subjective quality judgment
+
+Explain:
+1. Why might BLEU give a high score to a bad summary?
+2. Why might a paraphrase (different words, same meaning) score poorly on BLEU?
+3. Why do we need multiple metrics?""",
+                "hint": "BLEU rewards literal word matches, ignoring semantics. Multiple metrics = multiple perspectives."
             },
             {
                 "type": "short",
-                "question": "Why are automatic metrics like BLEU insufficient for evaluating LLMs? What's missing?",
-                "hint": "Consider the diversity of valid responses."
+                "question": """**Question 2 - Perplexity**
+
+Perplexity = how \"surprised\" a language model is by text.
+Low perplexity = model assigned high probability to the text.
+
+Explain:
+1. Why is perplexity a good metric for language modeling?
+2. Can you use perplexity to evaluate summarization quality? Why or why not?
+3. What are the limitations?""",
+                "hint": "Perplexity measures likelihood, not quality/helpfulness/correctness."
+            },
+            {
+                "type": "mc",
+                "question": """**Question 3 - BLEU Score**
+
+BLEU was invented for machine translation. It measures n-gram overlap between reference and candidate.
+
+BLEU = 1.0 means:
+
+A) Perfect translation
+B) Exact word-for-word match with reference
+C) The model is 100% confident
+D) Zero perplexity""",
+                "options": [
+                    "A) Perfect translation",
+                    "B) Exact word-for-word match with reference",
+                    "C) The model is 100% confident",
+                    "D) Zero perplexity"
+                ],
+                "hint": "BLEU = 1.0 means perfect n-gram overlap, not necessarily perfect translation quality."
+            },
+            {
+                "type": "short",
+                "question": """**Question 4 - Human Evaluation**
+
+Human evaluation is considered the \"gold standard\" but it's expensive and slow.
+
+Explain:
+1. What aspects can humans evaluate that automatic metrics cannot?
+2. What problems arise with human evaluation (inter-annotator agreement, bias)?
+3. When is human evaluation worth the cost?""",
+                "hint": "Humans assess fluency, coherence, factuality, helpfulness. But humans disagree and have biases."
+            },
+            {
+                "type": "short",
+                "question": """**Question 5 - Benchmark Saturation**
+
+GPT-4 achieves near-perfect scores on many NLP benchmarks (GLUE, SuperGLUE).
+
+Explain:
+1. Why is benchmark saturation a problem?
+2. What does it mean when models \"solve\" a benchmark?
+3. How do researchers respond? (Hint: new, harder benchmarks)""",
+                "hint": "Saturated benchmarks no longer differentiate model quality. Need harder tests that reflect real-world use."
+            },
+            {
+                "type": "mc",
+                "question": """**Question 6 - BERTScore vs BLEU**
+
+BERTScore uses BERT embeddings to measure semantic similarity.
+BLEU uses n-gram overlap.
+
+Which would score higher for: \"The cat sat\" vs \"The feline rested\"?
+
+A) BLEU (they have very different words)
+B) BERTScore (semantically similar)
+C) Both equally
+D) Neither would score it""",
+                "options": [
+                    "A) BLEU (they have very different words)",
+                    "B) BERTScore (semantically similar)",
+                    "C) Both equally",
+                    "D) Neither would score it"
+                ],
+                "hint": "BERTScore captures semantic similarity. \"cat\" ≈ \"feline\" in embedding space."
+            },
+            {
+                "type": "short",
+                "question": """**Question 7 - LLM-as-Judge**
+
+New trend: Use GPT-4 to evaluate other models' outputs.
+
+Prompt: \"Rate this summary on a scale of 1-10 for accuracy and coherence.\"
+
+Explain:
+1. What advantages does this have over BLEU/ROUGE?
+2. What risks/limitations exist?
+3. When is this approach appropriate?""",
+                "hint": "Advantages: nuanced, flexible criteria. Risks: GPT-4 has biases, can be manipulated, costly."
+            },
+            {
+                "type": "short",
+                "question": """**Question 8 - Task-Specific Evaluation**
+
+For a medical diagnosis LLM:
+- Accuracy on medical exams
+- Factual correctness
+- Safety (avoiding harmful advice)
+
+Explain: Why are general metrics (BLEU, perplexity) insufficient for this use case?""",
+                "hint": "Domain-specific tasks need domain-specific evaluation criteria (medical accuracy, safety)."
+            },
+            {
+                "type": "short",
+                "question": """**Question 9 - Evaluation Dimensions**
+
+LLMs should be evaluated on multiple dimensions:
+- Helpfulness: Does it solve the user's problem?
+- Truthfulness: Is it factually accurate?
+- Harmlessness: Does it avoid harmful content?
+
+Explain: Why might a model excel on one dimension but fail on another?""",
+                "hint": "Trade-offs exist. A very helpful model might hallucinate. A very cautious model might refuse valid requests."
+            },
+            {
+                "type": "short",
+                "question": """**Question 10 - Evaluation Paradox**
+
+As models get better, evaluation gets harder.
+
+GPT-4's outputs are often indistinguishable from humans. How do you evaluate something when there's no clear \"right answer\"?
+
+Explain: What new evaluation approaches are needed for super-human AI?""",
+                "hint": "Need process-based evaluation (how it thinks), adversarial testing, long-term outcome measurement."
             }
         ]
     },
     14: {
-        "title": "LLMs as Decision Makers",
+        "title": "LLMs as Decision Makers and Agents",
         "programming": [
             {
-                "title": "Build ReAct Agent",
-                "description": "Implement simple reasoning and acting loop.",
-                "time": "25 min",
-                "starter_code": """# TODO: Define tools (functions the agent can call)
-# TODO: Create agent loop:
-#   - Think (reason about what to do)
-#   - Act (call tool)
-#   - Observe (get results)
-# TODO: Test with multi-step task"""
-            },
-            {
-                "title": "Tool Use Evaluation",
-                "description": "Test agent's ability to choose and use appropriate tools.",
-                "time": "15 min",
-                "starter_code": """# TODO: Create test scenarios
-# TODO: Track tool selection accuracy
-# TODO: Measure task completion rate"""
+                "title": "Experiment: ReAct Pattern",
+                "description": "Observe how LLMs can reason and act in a loop to solve multi-step problems.",
+                "time": "10 min",
+                "starter_code": """# ReAct = Reasoning + Acting
+
+# Task: \"What's the weather in the capital of France?\"
+
+# Traditional LLM (single response):
+# Output: \"I don't have access to current weather data.\"
+
+# ReAct Agent:
+# Thought: \"I need to find the capital of France first.\"
+# Action: search(\"capital of France\")
+# Observation: \"Paris\"
+# Thought: \"Now I need current weather for Paris.\"
+# Action: weather_api(\"Paris\")
+# Observation: \"75°F, sunny\"
+# Thought: \"I have the answer.\"
+# Answer: \"The weather in Paris (capital of France) is 75°F and sunny.\"
+
+# TODO: Observe how the agent breaks down the problem into steps
+# TODO: What happens if a tool call fails? How does it recover?"""
             }
         ],
         "knowledge": [
             {
-                "type": "mc",
-                "question": "What is the main challenge in using LLMs as agents?",
-                "options": [
-                    "A) They're too slow",
-                    "B) Ensuring reliable and safe decision making",
-                    "C) They can't use tools",
-                    "D) They only work with text"
-                ],
-                "hint": "Consider errors, hallucinations, and consequences of actions."
+                "type": "short",
+                "question": """**Question 1 - LLMs as Reasoners vs Actors**
+
+Traditional LLM: Input → Output (single step)
+Agent LLM: Input → Think → Act → Observe → Think → Act → ... → Output (loop)
+
+Explain:
+1. What new capabilities does the agentic loop enable?
+2. Why can't a single LLM call solve multi-step problems?
+3. What are the risks of autonomous agents?""",
+                "hint": "Agents can interact with tools, gather information, and make decisions over time."
             },
             {
                 "type": "short",
-                "question": "Explain the ReAct framework. How does it combine reasoning and acting?",
-                "hint": "Think about the thought-action-observation loop."
+                "question": """**Question 2 - ReAct Framework**
+
+ReAct = Reason + Act in alternating steps.
+
+Thought: \"I need to check the database\"
+Action: query_database(\"SELECT * FROM users\")
+Observation: [results]
+Thought: \"Based on the results...\"
+
+Explain:
+1. Why is explicit reasoning (\"Thought\") important?
+2. How does this differ from just calling functions?
+3. What role does the observation step play?""",
+                "hint": "Explicit reasoning helps the LLM plan, self-correct, and explain its actions."
+            },
+            {
+                "type": "mc",
+                "question": """**Question 3 - Agent Safety**
+
+An LLM agent has access to: email, database, file system, internet.
+
+What's the PRIMARY safety concern?
+
+A) Computational cost
+B) Agent taking harmful or unintended actions
+C) Speed of execution
+D) Token limits""",
+                "options": [
+                    "A) Computational cost",
+                    "B) Agent taking harmful or unintended actions",
+                    "C) Speed of execution",
+                    "D) Token limits"
+                ],
+                "hint": "Agent actions have real-world consequences. Need safeguards to prevent harm."
+            },
+            {
+                "type": "short",
+                "question": """**Question 4 - Tool Use**
+
+Agents can invoke tools (calculators, APIs, databases, code execution).
+
+Explain:
+1. How do you teach an LLM what tools are available?
+2. How does the LLM decide which tool to use?
+3. What happens if the LLM hallucinates a tool call?""",
+                "hint": "Tools are described in the prompt/system message. LLM chooses based on task. Hallucinated calls fail."
+            },
+            {
+                "type": "short",
+                "question": """**Question 5 - Agent Planning**
+
+For complex tasks, agents need to PLAN before acting.
+
+Task: \"Book the cheapest flight to Paris next month\"
+
+Explain:
+1. What sub-steps are needed?
+2. How can an LLM generate a plan?
+3. What if the plan is wrong? How does the agent adapt?""",
+                "hint": "Sub-steps: search dates, compare prices, book. LLM can generate plan in \"Thought\" step. Adapt based on observations."
+            },
+            {
+                "type": "mc",
+                "question": """**Question 6 - Chain-of-Thought for Agents**
+
+Chain-of-thought prompting helps agents by:
+
+A) Making them slower
+B) Forcing explicit reasoning steps that improve decision quality
+C) Reducing token usage
+D) Eliminating hallucinations""",
+                "options": [
+                    "A) Making them slower",
+                    "B) Forcing explicit reasoning steps that improve decision quality",
+                    "C) Reducing token usage",
+                    "D) Eliminating hallucinations"
+                ],
+                "hint": "CoT makes reasoning explicit, helping agents plan better and self-correct."
+            },
+            {
+                "type": "short",
+                "question": """**Question 7 - Memory for Agents**
+
+Agents need memory to:
+- Remember past actions
+- Avoid repeating mistakes
+- Maintain context across long tasks
+
+Explain: How do you implement memory for an LLM agent given context window limits?""",
+                "hint": "Options: conversation history in prompt, external memory/database, summarization."
+            },
+            {
+                "type": "short",
+                "question": """**Question 8 - Multi-Agent Systems**
+
+Instead of one agent, use multiple specialized agents:
+- Researcher agent (gathers info)
+- Planner agent (creates plan)
+- Executor agent (takes actions)
+
+Explain:
+1. What advantages does specialization provide?
+2. How do agents communicate?
+3. What coordination challenges arise?""",
+                "hint": "Specialization = better at specific tasks. Communication = passing outputs. Challenges = coordination, agreement."
+            },
+            {
+                "type": "short",
+                "question": """**Question 9 - Evaluation of Agents**
+
+How do you evaluate an LLM agent's performance?
+
+Task success rate?
+Efficiency (number of tool calls)?
+Cost?
+Safety (avoiding harmful actions)?
+
+Explain: Why is this harder than evaluating a regular LLM?""",
+                "hint": "Agents have multiple dimensions (success, efficiency, safety). Outcomes depend on environment."
+            },
+            {
+                "type": "short",
+                "question": """**Question 10 - Real-World Deployment**
+
+Deploying autonomous agents in production requires:
+- Sandboxing (limit what they can access)
+- Human-in-the-loop for critical actions
+- Monitoring and logging
+- Rollback mechanisms
+
+Explain: Why are these safeguards necessary? What could go wrong without them?""",
+                "hint": "Agents can make mistakes, be manipulated, or take harmful actions. Safeguards prevent damage."
             }
         ]
     },
     15: {
-        "title": "Future Trends in LLMs",
+        "title": "Future Trends in AI",
         "programming": [
             {
-                "title": "Experiment with Multimodal Model",
-                "description": "Use GPT-4V or similar to analyze images and text together.",
-                "time": "20 min",
-                "starter_code": """# TODO: Load image and create prompt
-# TODO: Send to multimodal API
-# TODO: Test various vision-language tasks"""
-            },
-            {
-                "title": "Compare Model Sizes",
-                "description": "Benchmark different model sizes on the same task.",
-                "time": "20 min",
-                "starter_code": """# TODO: Test same prompts on different models
-# TODO: Compare: quality, latency, cost
-# TODO: Analyze scaling behavior"""
+                "title": "Experiment: Multimodal Capabilities",
+                "description": "Explore how models can process text AND images together.",
+                "time": "10 min",
+                "starter_code": """# Multimodal models (GPT-4V, Gemini) can understand images + text
+
+# Task 1: Image captioning
+# Input: [image of a cat]
+# Output: \"A gray cat sitting on a windowsill\"
+
+# Task 2: Visual question answering
+# Input: [image of a chart] + \"What's the trend in 2023?\"
+# Output: \"The trend shows an upward trajectory in 2023\"
+
+# Task 3: OCR + reasoning
+# Input: [image of a receipt] + \"How much did I spend on groceries?\"
+# Output: \"$45.67\"
+
+# TODO: Consider what new applications multimodality enables"""
             }
         ],
         "knowledge": [
             {
-                "type": "mc",
-                "question": "What is a key benefit of LoRA (Low-Rank Adaptation)?",
-                "options": [
-                    "A) Makes models larger",
-                    "B) Enables efficient fine-tuning with few parameters",
-                    "C) Only works for vision models",
-                    "D) Eliminates need for GPUs"
-                ],
-                "hint": "Think about parameter-efficient fine-tuning."
+                "type": "short",
+                "question": """**Question 1 - Multimodality**
+
+Text-only LLMs:
+- Input: text → Output: text
+
+Multimodal LLMs:
+- Input: text + images + audio → Output: text (or images)
+
+Explain:
+1. What new capabilities does multimodality unlock?
+2. What challenges arise from combining modalities?
+3. Give 3 real-world applications.""",
+                "hint": "New: visual reasoning, accessibility, richer understanding. Challenges: alignment, training complexity."
             },
             {
                 "type": "short",
-                "question": "Explain the alignment problem in LLMs. Why is RLHF necessary?",
-                "hint": "What's the difference between predicting next tokens and being helpful/safe?"
+                "question": """**Question 2 - Efficiency Frontiers**
+
+Trends in making LLMs more efficient:
+- LoRA: Fine-tune only a small subset of parameters
+- Quantization: Use fewer bits per parameter (FP16 → INT8)
+- Distillation: Train smaller model to mimic larger model
+- Mixture of Experts: Activate only relevant parts of model
+
+Explain: Why is efficiency becoming critical as models grow?""",
+                "hint": "Cost, energy, environmental impact, accessibility. Can't keep scaling infinitely."
+            },
+            {
+                "type": "mc",
+                "question": """**Question 3 - LoRA (Low-Rank Adaptation)**
+
+Instead of fine-tuning 175B parameters, LoRA fine-tunes ~1M parameters.
+
+How does this work?
+
+A) It removes most of the model
+B) It trains small adapter layers while freezing the base model
+C) It only works on small models
+D) It eliminates the need for training data""",
+                "options": [
+                    "A) It removes most of the model",
+                    "B) It trains small adapter layers while freezing the base model",
+                    "C) It only works on small models",
+                    "D) It eliminates the need for training data"
+                ],
+                "hint": "LoRA adds small trainable matrices that adapt the frozen base model efficiently."
+            },
+            {
+                "type": "short",
+                "question": """**Question 4 - Open Source vs Closed Source**
+
+Closed: GPT-4 (OpenAI), Claude (Anthropic)
+Open: Llama, Mistral, Falcon
+
+Explain:
+1. What advantages does open source provide?
+2. What are the risks of fully open models?
+3. What's the trend in the community?""",
+                "hint": "Open = transparency, customization, research. Risks = misuse, safety. Trend = moving toward open."
+            },
+            {
+                "type": "short",
+                "question": """**Question 5 - Mixture of Experts (MoE)**
+
+Instead of activating the ENTIRE model, MoE activates only relevant \"experts\" for each input.
+
+Example: For a coding question, activate coding expert. For medical, activate medical expert.
+
+Explain:
+1. What efficiency gains does this provide?
+2. How does the model decide which experts to activate?
+3. What's the tradeoff?""",
+                "hint": "Efficiency: less computation per input. Router network selects experts. Tradeoff: complexity."
+            },
+            {
+                "type": "mc",
+                "question": """**Question 6 - Context Window Scaling**
+
+GPT-3: 4k tokens
+GPT-4: 8k-128k tokens
+Claude: 100k-200k tokens
+
+Why is longer context important?
+
+A) Makes model bigger
+B) Enables processing entire books, codebases, conversations
+C) Faster inference
+D) Lower cost""",
+                "options": [
+                    "A) Makes model bigger",
+                    "B) Enables processing entire books, codebases, conversations",
+                    "C) Faster inference",
+                    "D) Lower cost"
+                ],
+                "hint": "Longer context = can fit more information without external memory/retrieval."
+            },
+            {
+                "type": "short",
+                "question": """**Question 7 - Synthetic Data**
+
+Running out of internet text to train on? Use LLMs to GENERATE training data.
+
+Phi-2: Trained largely on synthetic data, performs well despite small size.
+
+Explain:
+1. How can you use GPT-4 to generate training data for smaller models?
+2. What are the risks of synthetic data?
+3. When is this approach valuable?""",
+                "hint": "GPT-4 generates diverse examples. Risks: bias amplification, homogenization. Valuable when real data scarce."
+            },
+            {
+                "type": "short",
+                "question": """**Question 8 - Constitutional AI**
+
+Instead of RLHF, train LLMs using a \"constitution\" (set of principles).
+
+Example principle: \"Be helpful, harmless, and honest.\"
+
+Explain:
+1. How does this differ from RLHF?
+2. What advantages might it have?
+3. What challenges remain?""",
+                "hint": "Constitution = explicit rules vs implicit human feedback. Advantages: transparency, scalability."
+            },
+            {
+                "type": "short",
+                "question": """**Question 9 - Compute Trends**
+
+GPT-3: ~3.14 × 10²³ FLOPs to train
+GPT-4: (estimated) ~10²⁵ FLOPs
+
+Explain:
+1. Can this exponential growth continue?
+2. What are the bottlenecks (energy, cost, hardware)?
+3. What alternatives to \"bigger is better\" are being explored?""",
+                "hint": "Can't scale forever. Bottlenecks: power, chips, cost. Alternatives: efficiency, architecture improvements."
+            },
+            {
+                "type": "short",
+                "question": """**Question 10 - Your Prediction**
+
+Crystal ball time! What do you predict for LLMs in the next 5 years?
+
+Consider:
+- Model capabilities
+- Accessibility (open source, cost)
+- Multimodality
+- Applications
+- Societal impact
+
+Explain your reasoning.""",
+                "hint": "No wrong answer! Think about current trends and extrapolate."
             }
         ]
     }
