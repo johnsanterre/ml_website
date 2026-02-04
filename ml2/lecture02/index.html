@@ -127,6 +127,34 @@
             text-decoration: underline;
         }
 
+        /* Top Resources Links */
+        .top-resources {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .resource-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            background-color: white;
+            color: #354CA1;
+            border: 1px solid #354CA1;
+            text-align: center;
+        }
+
+        .resource-btn:hover {
+            background-color: #f0f4ff;
+            text-decoration: none;
+        }
+
         /* Resources Section within Content */
         .resources {
             background: #f8f9fa;
@@ -142,44 +170,6 @@
             color: #354CA1;
             font-size: 1.3rem;
             margin-bottom: 15px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .btn-action {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .btn-textbook {
-            background-color: #CC0035;
-            color: white;
-        }
-        .btn-textbook:hover {
-            background-color: #a8002b;
-            text-decoration: none;
-            transform: translateY(-1px);
-        }
-
-        .btn-colab {
-            background-color: #354CA1;
-            color: white;
-        }
-        .btn-colab:hover {
-            background-color: #2a3c80;
-            text-decoration: none;
-            transform: translateY(-1px);
         }
         
     </style>
@@ -199,6 +189,13 @@
 
         <div class="content-box">
 <h1>Week 2: Neural Networks Fundamentals & Backpropagation</h1>
+
+            <div class="top-resources">
+                <a href="#" class="resource-btn">Videos</a>
+                <a href="../../output/ml2/lecture02/ml2_week02.pdf" class="resource-btn">Textbook</a>
+                <a href="https://colab.research.google.com/github/johnsanterre/ml_website/blob/main/ml2/lecture02/week_02_exercises.ipynb" class="resource-btn" target="_blank">Colab</a>
+                <a href="https://colab.research.google.com/" class="resource-btn" target="_blank">Colab 2</a>
+            </div>
 
             <p><strong>Course Generated Slides:</strong> <a href="../../topics/backpropagation/backpropagation_slides.html" target="_blank">Backpropagation</a> | <a href="../../topics/gradient_descent/gradient_descent_slides.html" target="_blank">Gradient Descent</a> | <a href="../../topics/learning_rate_schedulers/learning_rate_schedulers_slides.html" target="_blank">Learning Rate Schedulers</a> | <a href="../../topics/search_algorithms/search_algorithms_slides.html" target="_blank">Search Algorithms</a></p>
 
@@ -305,12 +302,6 @@
 
                 
             </div>
-        
-
-                <div class="action-buttons">
-                    <a href="https://colab.research.google.com/github/johnsanterre/ml_website/blob/main/ml2/lecture02/week_02_exercises.ipynb" class="btn-action btn-colab" target="_blank">📝 Practice Exercises</a>
-                    <a href="https://sinews.siam.org/Details-Page/deep-learning-in-scientific-computing-understanding-the-instability-mystery" class="btn-action btn-colab" target="_blank">🔗 Deep Learning in Scientific Computing: Understanding the Instability Mystery</a><a href="https://en.m.wikipedia.org/wiki/General_linear_group" class="btn-action btn-colab" target="_blank">🔗 General Linear Group</a><a href="https://distill.pub/2020/bayesian-optimization/" class="btn-action btn-colab" target="_blank">🔗 Exploring Bayesian Optimization</a><a href="https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/src/network.py" class="btn-action btn-colab" target="_blank">🔗 Neural Networks Implementation</a><a href="../../output/ml2/lecture02/ml2_week02.pdf" class="btn-action btn-textbook">📚 Download Textbook</a><a href="https://colab.research.google.com/" class="btn-action btn-colab" target="_blank">📝 Open in Colab</a>
-                </div>
             </div>
         </div>
     </div>
