@@ -1,0 +1,16 @@
+# This file contains the redesigned homework content for weeks 5-15
+# To be integrated into generate_ml2_homeworks.py
+
+# Week 5: Autoencoders & Embeddings - KEY INSIGHT: Compression forces learning of important features
+# Week 6: Word Embeddings - KEY INSIGHT: Semantic relationships emerge from distributional patterns
+# Week 7: Transformers - KEY INSIGHT: Attention mechanism allows dynamic context-dependent representations
+# Week 8: CNNs - KEY INSIGHT: Local spatial patterns + hierarchical features
+# Week 9: Generative Learning - KEY INSIGHT: Learning the data distribution vs just discriminating
+# Week 10: LLMs - KEY INSIGHT: Scale + pretraining enables emergence
+# Week 11: LLM APIs - KEY INSIGHT: Prompting is programming
+# Week 12: RAG - KEY INSIGHT: Retrieval augments generation with external knowledge
+# Week 13: LLM Evaluation - KEY INSIGHT: No single metric captures all aspects
+# Week 14: LLM Agents - KEY INSIGHT: LLMs as reasoners and planners
+# Week 15: Future Trends - KEY INSIGHT: Multimodality and efficiency frontiers
+
+# Due to file size, implementing these as individual replacements
