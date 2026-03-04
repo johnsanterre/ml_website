@@ -55,19 +55,19 @@
                 <span class="score-value">10</span>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "This describes the parameter count of the full weight matrix, not the LoRA addition. LoRA avoids training the full matrix by factoring the update into two smaller matrices.",
-                "b": "Correct. Matrix B is d x r and matrix A is r x k, giving r*d + r*k = r*(d+k) trainable parameters, which is far smaller than d*k when r is small.",
-                "c": "Both matrices A and B are trained in LoRA. Freezing only one of them would give d*r parameters, but this is not how LoRA works.",
-                "d": "r squared would only be the parameter count if both matrices were r x r. Since B is d x r and A is r x k, the total depends on d and k."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "LoRA does not change the model size at inference — the small matrices are typically merged back in. The benefit is during fine-tuning, not deployment.",
+                "b": "Correct. Fine-tuning a 70-billion parameter model normally requires updating all 70 billion weights, which demands enormous GPU memory. LoRA instead trains a tiny fraction of parameters while achieving comparable results.",
+                "c": "LoRA helps somewhat with catastrophic forgetting, but that is not its primary purpose. Its main value is efficiency.",
+                "d": "LoRA is applied to specific layers chosen by the practitioner — it does not automatically select which layers to update."
             }'>
                 <span class="question-number">Question 1</span>
-                <h4>In Low-Rank Adaptation (LoRA), the weight update is expressed as the product of two low-rank matrices: delta_W = BA, where B is d x r and A is r x k. What is the total number of trainable parameters added by a single LoRA update?</h4>
+                <h4>LoRA is a technique for fine-tuning large AI models without updating every single weight. Instead of modifying a massive weight matrix directly, it learns two much smaller matrices. What is the main practical benefit of this approach?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q1" value="a"> A) d * k, the same as the full weight matrix</label></li>
-                    <li><label><input type="radio" name="q1" value="b"> B) r * (d + k), which is much smaller than d * k when r is small</label></li>
-                    <li><label><input type="radio" name="q1" value="c"> C) d * r only, because matrix A is always kept frozen</label></li>
-                    <li><label><input type="radio" name="q1" value="d"> D) r squared, independent of d and k</label></li>
+                    <li><label><input type="radio" name="q1" value="a"> It makes the final model smaller and faster at inference time</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> It allows fine-tuning on modest hardware by drastically reducing the number of parameters that need to be trained</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> It prevents the model from forgetting what it learned during pre-training</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> It automatically selects the most important layers to update based on the task</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
@@ -157,19 +157,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Output diversity is controlled by temperature or nucleus sampling, not KL divergence. KL divergence in RLHF addresses policy stability, not generation variety.",
-                "b": "Correct. The KL penalty prevents the fine-tuned policy from drifting too far from the reference model, guarding against reward hacking where the model exploits flaws in the reward function.",
-                "c": "KL divergence bounds policy change in the RL objective, but its purpose is alignment stability, not computational efficiency of the PPO update step.",
-                "d": "The reward model and policy model have different architectures and purposes. The KL penalty does not push them toward the same parameter values."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Using fewer steps is a blunt approach that limits how much the model can improve. The goal is to allow improvement while constraining unwanted drift.",
+                "b": "Correct. The penalty makes the model pay a cost whenever its outputs diverge too far from what the original model would have said. This keeps improvements targeted without accidentally destroying the model's broader capabilities.",
+                "c": "Dataset size affects what patterns the model learns, but not how much the model's behavior is allowed to drift from its starting point.",
+                "d": "Freezing early layers is a common fine-tuning strategy but is a different mechanism from the penalty described here."
             }'>
                 <span class="question-number">Question 7</span>
-                <h4>In RLHF, a KL divergence penalty is included in the RL fine-tuning objective. What is the purpose of this penalty?</h4>
+                <h4>When fine-tuning a language model using human feedback, there is a risk that the model chases the reward signal too aggressively and becomes completely different from the original. What technique prevents this?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q7" value="a"> A) To maximize the diversity of outputs so the model does not generate repetitive text</label></li>
-                    <li><label><input type="radio" name="q7" value="b"> B) To prevent the policy from deviating too far from the reference model, guarding against reward hacking where the model exploits flaws in the reward function to score highly while producing poor outputs</label></li>
-                    <li><label><input type="radio" name="q7" value="c"> C) To reduce the computational cost of the PPO update step by bounding gradient magnitudes</label></li>
-                    <li><label><input type="radio" name="q7" value="d"> D) To ensure the reward model and the policy model converge to the same parameter values</label></li>
+                    <li><label><input type="radio" name="q7" value="a"> Running the fine-tuning for fewer training steps so the model does not drift too far</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> Adding a penalty that keeps the model's outputs close to the original, so it improves without losing its general capabilities</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> Using a smaller dataset of human preferences to limit how much the model can change</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> Freezing the first half of the model's layers and only updating the later ones</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

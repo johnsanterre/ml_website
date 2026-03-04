@@ -72,19 +72,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="a" data-explanations='{
-                "a": "Correct. Large dot products push softmax outputs toward near-zero gradients. Dividing by the square root of d_k keeps scores in a numerically stable range during training.",
-                "b": "The scaling factor acts on query-key dot products, not on the value vectors. Value vectors are weighted by the softmax output, not rescaled by this factor.",
-                "c": "The scaling factor is a fixed mathematical constant applied to the dot product, not a learned parameter that controls the learning rate.",
-                "d": "Output dimensionality is controlled by the value projection matrix, not by the scaling factor in the attention formula."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The scores do not become identical with larger representations — the opposite problem occurs: they become too extreme and peaked.",
+                "b": "Correct. With larger representations, the dot products between query and key vectors get very large, pushing the softmax output to near 0 or 1 and killing the gradient. Scaling prevents this.",
+                "c": "The problem is scores getting too large, not too small.",
+                "d": "Softmax handles negative inputs fine — they produce small but non-zero outputs. The issue is scores becoming too large, not negative."
             }'>
                 <span class="question-number">Question 2</span>
-                <h4>In the self-attention mechanism, what role does the scaling factor 1/&#x221A;d_k serve in the attention formula Attention(Q, K, V) = softmax(QK^T / &#x221A;d_k) V?</h4>
+                <h4>In transformer attention, every word computes a relevance score against every other word. As the size of these representations grows larger, what problem can arise with those scores?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q2" value="a"> A) It prevents dot products from growing too large, which would push the softmax into regions with very small gradients.</label></li>
-                    <li><label><input type="radio" name="q2" value="b"> B) It normalizes the value vectors so they sum to one.</label></li>
-                    <li><label><input type="radio" name="q2" value="c"> C) It controls the learning rate of the attention weights during backpropagation.</label></li>
-                    <li><label><input type="radio" name="q2" value="d"> D) It sets the dimensionality of the output embedding to match the input.</label></li>
+                    <li><label><input type="radio" name="q2" value="a"> The scores become identical for all word pairs, making attention useless</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> The scores can get very large, making the attention output so peaked that learning effectively stops</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> The scores grow too slowly, making the model unable to distinguish between relevant and irrelevant words</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> The scores become negative, causing the attention weights to sum to zero</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

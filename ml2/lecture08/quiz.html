@@ -140,36 +140,36 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Overfitting is a generalization problem that worsens with depth, but the degradation problem the ResNet paper addresses is specifically training accuracy declining with depth — an optimization issue, not a regularization one.",
-                "b": "Correct. Skip connections provide a direct gradient path back through the network, bypassing weight layers, so gradients do not have to multiply through many weight matrices and can remain large enough to drive learning in early layers.",
-                "c": "CNNs without skip connections can still learn hierarchical features. The limitation ResNet solves is optimization depth, not representational capability.",
-                "d": "Weight initialization schemes like He initialization address early-training instability, but the degradation problem persists well into training — it is not purely an initialization issue."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Overfitting shows up as good training performance but poor test performance. The degradation problem the ResNet paper addressed was worse training performance with more layers — an optimization issue, not a generalization one.",
+                "b": "Correct. This was called the degradation problem — very deep networks were harder to optimize, not just harder to generalize. Skip connections give gradients a shortcut path back to early layers, making deep training feasible.",
+                "c": "Training time was a factor but not the root cause. The model was not learning well even given unlimited time.",
+                "d": "Activation functions like ReLU work consistently at any depth — the issue was gradient flow, not activation behavior."
             }'>
                 <span class="question-number">Question 6</span>
-                <h4>In ResNet, a residual block computes x_{l+1} = x_l + F(x_l, W_l), where F represents the learned residual function. What problem in deep network training does this skip connection design directly solve?</h4>
+                <h4>Adding more layers to a neural network should in theory make it more powerful. But researchers found that very deep networks (50+ layers) sometimes performed worse than shallower networks even on training data. What was causing this?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q6" value="a"> A) Overfitting caused by too many parameters in very deep architectures.</label></li>
-                    <li><label><input type="radio" name="q6" value="b"> B) The vanishing gradient problem — skip connections provide a direct path for gradients to flow backward through the network without diminishing through many layers of weights.</label></li>
-                    <li><label><input type="radio" name="q6" value="c"> C) The inability of deep networks to learn spatial hierarchies of features.</label></li>
-                    <li><label><input type="radio" name="q6" value="d"> D) Slow convergence caused by random weight initialization in networks deeper than 10 layers.</label></li>
+                    <li><label><input type="radio" name="q6" value="a"> Deeper networks require more training data and were overfitting to what they had</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> The optimization process itself was struggling — adding more layers made the network harder to train, not just harder to generalize</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> Deeper networks are slower to train and ran out of compute budget before converging</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> The activation functions stopped working correctly beyond a certain network depth</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Residual functions do not necessarily have fewer parameters than the full mapping H(x). Both F(x) and H(x) use the same weight matrices; the difference is in what the weights are asked to learn.",
-                "b": "Correct. If the optimal transformation is close to identity, the block only needs to learn small corrections F(x) near zero, which is an easier optimization target than learning the full desired output H(x) from scratch.",
-                "c": "The subtraction in F(x) = H(x) - x is a conceptual reformulation, not an operation applied to data. No actual subtraction of data values occurs; the network learns F(x) directly.",
-                "d": "Residual connections do not enforce orthogonality between blocks. Each block can learn any function its weights can represent."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Residual blocks do not necessarily have fewer parameters — the skip connection is added on top of the same computation. The advantage is in what the weights are asked to learn, not how many there are.",
+                "b": "Correct. If a layer should ideally do nothing, outputting zero is trivial. Without skip connections, the network has to learn to perfectly preserve input signals through nonlinear layers — which turns out to be surprisingly hard.",
+                "c": "The amount of computation is the same — skip connections do not reduce the number of operations, only what those operations need to learn.",
+                "d": "Skip connections do not enforce any geometric relationship between what different blocks learn."
             }'>
                 <span class="question-number">Question 7</span>
-                <h4>ResNet&#39;s key insight is that it is easier to learn a residual function F(x) = H(x) - x than to learn the full desired mapping H(x) directly. Why might this be true?</h4>
+                <h4>ResNet's skip connections mean each block only needs to learn the small adjustment needed on top of what already exists, rather than learning the full transformation from scratch. Why is learning a small adjustment easier than learning the full mapping?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q7" value="a"> A) Because residual functions always have fewer parameters than the full mapping H(x).</label></li>
-                    <li><label><input type="radio" name="q7" value="b"> B) Because if the optimal transformation is close to the identity (i.e., not much needs to change), the network only needs to learn small corrections rather than reconstruct the full output from scratch.</label></li>
-                    <li><label><input type="radio" name="q7" value="c"> C) Because the subtraction operation in F(x) = H(x) - x acts as a form of data normalization that improves training stability.</label></li>
-                    <li><label><input type="radio" name="q7" value="d"> D) Because residual connections force each block to learn features that are orthogonal to those of the previous block.</label></li>
+                    <li><label><input type="radio" name="q7" value="a"> Small adjustments require fewer parameters, making the model more compact</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> If no adjustment is needed, the block can simply output zero — learning to do nothing is easy, whereas learning an identity mapping through nonlinear layers is surprisingly hard</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> Small adjustments are computed faster because they use fewer matrix operations</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> Skip connections enforce that adjacent blocks learn orthogonal, non-redundant features</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

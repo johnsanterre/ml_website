@@ -106,36 +106,36 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Measuring reconstruction quality is the role of the reconstruction loss term (e.g., MSE or binary cross-entropy), not the KL divergence term.",
-                "b": "The KL divergence term pushes the learned posterior q(z|x) toward the prior p(z), typically a standard Gaussian. Without this, the latent space would be irregular and sampling from it would produce meaningless outputs.",
-                "c": "Penalizing large latent vector magnitudes would require an L2 norm penalty, not KL divergence. KL divergence measures distributional distance, not vector magnitude.",
-                "d": "The KL term is a regularizer on the latent distribution, not a balancing mechanism between encoder and decoder computational cost."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The size of the encoder is determined by architecture design, not by the training objective.",
+                "b": "Correct. Without this second goal, the compressed space would be chaotic and irregular. Sampling a random point from it would decode to nonsense. The regularization term keeps it smooth and organized.",
+                "c": "Training objectives do not affect inference speed — that depends on model size and hardware.",
+                "d": "Counting active neurons is not part of VAE training."
             }'>
                 <span class="question-number">Question 4</span>
-                <h4>The VAE loss function contains two terms. What is the purpose of the KL divergence term?</h4>
+                <h4>A Variational Autoencoder (VAE) has two goals at the same time. One is to reconstruct the input accurately. What is the second goal?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q4" value="a"> A) It measures how well the decoder reconstructs the original input</label></li>
-                    <li><label><input type="radio" name="q4" value="b"> B) It regularizes the latent distribution to stay close to a known prior, enabling generation from that prior</label></li>
-                    <li><label><input type="radio" name="q4" value="c"> C) It penalizes the encoder for producing latent vectors with high magnitude</label></li>
-                    <li><label><input type="radio" name="q4" value="d"> D) It ensures that the encoder and decoder share equal computational costs</label></li>
+                    <li><label><input type="radio" name="q4" value="a"> To make the encoder as small as possible to save memory</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> To keep the compressed representation in a well-organized, structured space so that new samples can be generated from it</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> To make the decoder run faster at inference time</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> To count how many neurons are active during encoding</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="a" data-explanations='{
-                "a": "Sampling from a Gaussian is a stochastic operation with no gradient. The reparameterization trick rewrites z = mu + sigma * epsilon where epsilon ~ N(0,I), making sampling deterministic with respect to the learned parameters so gradients can flow.",
-                "b": "The reparameterization trick does not change the choice of prior. VAEs still use a Gaussian prior; the trick only addresses the gradient flow problem through the sampling step.",
-                "c": "The reparameterization trick does not affect the loss function. Both the reconstruction loss and KL divergence remain in the VAE objective.",
-                "d": "The decoder output type is independent of the reparameterization trick. The trick is specifically about making the latent sampling step differentiable."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Speed is not the issue here. The problem is fundamentally about how learning works, not computational cost.",
+                "b": "Correct. Gradient-based learning needs to trace how every decision affected the final error. A random sampling step breaks that chain because you cannot differentiate through randomness — the trick fixes this.",
+                "c": "Random sampling by definition produces different outputs each time.",
+                "d": "Sampling frequency has nothing to do with how many calculations the decoder performs."
             }'>
                 <span class="question-number">Question 5</span>
-                <h4>Why is the reparameterization trick necessary when training Variational Autoencoders?</h4>
+                <h4>A VAE needs to randomly sample from the latent space during training. Why is this a problem for the learning process?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q5" value="a"> A) Sampling from a Gaussian is non-differentiable, so gradients cannot flow through the sampling step without reparameterization</label></li>
-                    <li><label><input type="radio" name="q5" value="b"> B) It allows the VAE to use a uniform prior instead of a Gaussian prior</label></li>
-                    <li><label><input type="radio" name="q5" value="c"> C) It replaces the KL divergence term with a simpler mean squared error</label></li>
-                    <li><label><input type="radio" name="q5" value="d"> D) It enables the decoder to output probability distributions rather than single values</label></li>
+                    <li><label><input type="radio" name="q5" value="a"> Random sampling produces too many numbers and slows down training</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> You cannot compute gradients through a random sampling step, so the model cannot learn which direction to improve</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> Random sampling always produces the same output, making training repetitive</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> Sampling requires the decoder to run twice as many calculations</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
@@ -174,53 +174,53 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "An L2 penalty on decoder weights is standard weight decay, which discourages large weights but does not enforce sparsity in the latent activations themselves.",
-                "b": "Sparse autoencoders penalize the average activation of neurons using a KL divergence between the target sparsity rho and the observed average activation, encouraging most neurons to be inactive for any given input.",
-                "c": "Contrastive loss is used in self-supervised and metric learning frameworks, not in sparse autoencoders. Sparse autoencoders focus on activation sparsity, not on pushing dissimilar inputs apart.",
-                "d": "Dropout during inference would randomly zero out latent dimensions rather than learning a structured sparse code. Sparse autoencoders learn which neurons should be inactive through a training-time penalty."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The opposite is true — sparse autoencoders are specifically designed to use as few neurons as possible for any given input.",
+                "b": "Correct. This sparsity constraint forces the network to find a compact, selective code for each input — similar to how the brain activates only a small fraction of neurons at any moment.",
+                "c": "Tying encoder and decoder weights is a separate architectural choice, not what sparse autoencoders do.",
+                "d": "Learning rate scheduling is a separate training technique completely unrelated to sparse autoencoders."
             }'>
                 <span class="question-number">Question 8</span>
-                <h4>A sparse autoencoder adds which term to the standard reconstruction loss?</h4>
+                <h4>A sparse autoencoder is trained with an extra penalty in addition to reconstruction quality. What does this penalty encourage the network to do?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q8" value="a"> A) A L2 penalty on the decoder weights</label></li>
-                    <li><label><input type="radio" name="q8" value="b"> B) A KL divergence penalty that encourages only a small fraction of neurons to be active for any given input</label></li>
-                    <li><label><input type="radio" name="q8" value="c"> C) A contrastive loss that pushes dissimilar inputs apart in latent space</label></li>
-                    <li><label><input type="radio" name="q8" value="d"> D) A dropout term applied during inference to zero out latent dimensions</label></li>
+                    <li><label><input type="radio" name="q8" value="a"> Use as many neurons as possible to represent each input as richly as possible</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> Keep most neurons inactive for any given input, so only a few fire at once</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> Force the decoder to have identical weights to the encoder</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> Reduce the learning rate automatically whenever reconstruction loss stops improving</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "A larger bottleneck does not guarantee smooth interpolation. Without regularization, the latent space can have "holes" where intermediate points are not on the learned data manifold.",
-                "b": "The KL regularization in VAEs explicitly encourages a continuous and structured latent space. Points interpolated between two valid latent vectors are therefore also likely to decode meaningfully.",
-                "c": "Dataset size affects generalization but is not the reason interpolation is smoother in VAEs. The key mechanism is the KL regularization that shapes the latent space topology.",
-                "d": "Standard autoencoders can technically interpolate in latent space, but the results are often incoherent because the latent space is not regularized to be continuous."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The size of the compressed representation does not determine smoothness — the structure of that space does.",
+                "b": "Correct. The VAE is explicitly trained to keep its compressed space smooth and connected. In a regular autoencoder, the space can have gaps where intermediate points decode to nonsense.",
+                "c": "Dataset size affects generalization but is not the reason for the smooth latent space — that comes from the VAE training objective.",
+                "d": "Regular autoencoders do compress images — they just produce an unstructured latent space where blending two encodings may not work."
             }'>
                 <span class="question-number">Question 9</span>
-                <h4>Latent space interpolation — linearly blending two latent vectors z1 and z2 — is particularly smooth in VAEs compared to standard autoencoders because:</h4>
+                <h4>If you take two images encoded by a VAE and gradually blend their compressed representations, you get a smooth transition between them. Why is this smoother in a VAE than in a regular autoencoder?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q9" value="a"> A) VAEs use a larger bottleneck, leaving more room for smooth transitions</label></li>
-                    <li><label><input type="radio" name="q9" value="b"> B) The KL regularization encourages the latent space to be continuous and well-structured, so intermediate points are also meaningful</label></li>
-                    <li><label><input type="radio" name="q9" value="c"> C) VAEs always train on larger datasets, producing better generalization</label></li>
-                    <li><label><input type="radio" name="q9" value="d"> D) Standard autoencoders do not support latent space interpolation at all</label></li>
+                    <li><label><input type="radio" name="q9" value="a"> VAEs use a larger compressed representation, leaving more room for smooth transitions</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> VAEs are trained to keep their compressed space structured and continuous, so any point between two valid encodings also decodes to something meaningful</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> VAEs always train on larger datasets, giving them better generalization</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> Regular autoencoders cannot compress images at all</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Using a discriminator to match the latent distribution to a prior describes an adversarial autoencoder, not a VQ-VAE. VQ-VAEs use vector quantization, not adversarial training.",
-                "b": "VQ-VAEs replace the continuous latent space with a discrete codebook. Each encoder output is mapped to its nearest codebook vector, making the latent representation discrete and enabling use with autoregressive priors.",
-                "c": "VQ-VAEs do separate the encoder from an autoregressive prior model at generation time, but they do not replace the decoder itself with an autoregressive model as a defining feature.",
-                "d": "VQ-VAEs retain a reconstruction loss. Eliminating the reconstruction loss would make learning the codebook impossible. The VQ-VAE modifies how the latent space is structured, not the objectives."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The autoencoder has no concept of tumor — it learned to reconstruct what healthy scans look like, not to classify disease types.",
+                "b": "Correct. This is the basis of autoencoder-based anomaly detection. The model learned what normal looks like, so abnormal inputs reconstruct poorly, producing a high error that flags something unusual.",
+                "c": "The autoencoder will still attempt to process any input — it just will not reconstruct unusual inputs well.",
+                "d": "The output will not be random — it will look like a healthy scan, because that is what the model learned to generate."
             }'>
                 <span class="question-number">Question 10</span>
-                <h4>How do Vector Quantized VAEs (VQ-VAEs) differ fundamentally from standard VAEs?</h4>
+                <h4>An autoencoder is trained only on medical scans from healthy patients. It is then shown a scan that contains a tumor it has never seen before. What would you expect to happen?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q10" value="a"> A) VQ-VAEs use a discriminator to match the latent distribution to a prior</label></li>
-                    <li><label><input type="radio" name="q10" value="b"> B) VQ-VAEs quantize continuous latent representations to a discrete learned codebook of vectors</label></li>
-                    <li><label><input type="radio" name="q10" value="c"> C) VQ-VAEs replace the decoder with an autoregressive model</label></li>
-                    <li><label><input type="radio" name="q10" value="d"> D) VQ-VAEs eliminate the reconstruction loss and rely entirely on the KL term</label></li>
+                    <li><label><input type="radio" name="q10" value="a"> It would correctly identify the tumor because medical autoencoders always detect anomalies</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> It would reconstruct a healthy-looking version poorly, producing a high reconstruction error that flags the anomaly</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> It would refuse to process the scan because the tumor was not in its training data</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> It would produce a completely random output since it has never seen a tumor</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

@@ -106,19 +106,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="c" data-explanations='{
-                "a": "The learning rate is a training hyperparameter for neural networks, not a Bellman equation component. The discount factor is a planning concept distinct from learning rates.",
-                "b": "The parameter-to-data ratio is a training scale concept, not related to the Bellman equation. The discount factor governs temporal reward weighting.",
-                "c": "Correct. The discount factor gamma (0 to 1) weights future rewards relative to immediate ones. A value near 1 makes the agent far-sighted; a value near 0 makes it myopic.",
-                "d": "The probability of transitioning to a terminal state is part of the environment dynamics, not the discount factor. The discount factor controls reward temporal weighting."
+                        <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "The learning rate is about how fast the model updates its beliefs, not about how it values rewards that arrive in the future.",
+                "b": "Temperature controls how randomly the agent explores new actions, not how it weighs future vs. immediate rewards.",
+                "c": "Correct. A discount factor near 1 makes the agent patient — it values future rewards almost as much as immediate ones. A low discount factor makes it short-sighted, preferring quick gains even at the cost of better future outcomes.",
+                "d": "A confidence threshold determines when the agent acts — not how it values the timing of rewards."
             }'>
                 <span class="question-number">Question 4</span>
-                <h4>The Bellman equation is central to optimal policy derivation in agentic decision-making. In this context, what does the discount factor gamma represent?</h4>
+                <h4>An AI agent can take a shortcut that gives a small reward right now, or take a longer path that gives a bigger reward later. What concept in agent design controls how much the agent values future rewards compared to immediate ones?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q4" value="a"> A) The learning rate used to update the agent&#39;s neural network weights</label></li>
-                    <li><label><input type="radio" name="q4" value="b"> B) The ratio of model parameters to training data size</label></li>
-                    <li><label><input type="radio" name="q4" value="c"> C) The balance between the importance of immediate rewards and future rewards — values closer to 1 make the agent more far-sighted</label></li>
-                    <li><label><input type="radio" name="q4" value="d"> D) The probability that the environment transitions to a terminal state on any given step</label></li>
+                    <li><label><input type="radio" name="q4" value="a"> The learning rate — how quickly the agent updates its beliefs based on new information</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> The temperature — how randomly the agent explores new actions</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> The discount factor — how much the agent values rewards that arrive in the future vs. right now</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> The confidence threshold — how certain the agent must be before committing to an action</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

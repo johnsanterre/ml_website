@@ -55,53 +55,53 @@
                 <span class="score-value">10</span>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "A recall penalty addresses coverage, not the length gaming that BLEU needs to prevent. BLEU is precision-based and does not use a recall penalty.",
-                "b": "Correct. The brevity penalty multiplies the score by exp(1 - r/c) when the candidate is shorter than the reference, discouraging trivially short outputs that would otherwise game precision.",
-                "c": "Perplexity is a separate language modeling metric unrelated to BLEU. BLEU has no perplexity penalty component.",
-                "d": "BLEU does not use a sentence-count normalization term. The brevity penalty is based on total character length, not the number of sentences."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Computation speed has nothing to do with this flaw — precision can be computed quickly for any output length.",
+                "b": "Correct. This is exactly why BLEU adds a brevity penalty — to ensure that suspiciously short outputs are penalized even if their word-level precision is technically high.",
+                "c": "Precision actually favors shorter outputs, not longer ones — which is precisely the flaw being described.",
+                "d": "Precision-based metrics can be applied to any task where you compare n-gram overlap, not just multiple-choice."
             }'>
                 <span class="question-number">Question 1</span>
-                <h4>BLEU is primarily a precision-based metric. Which penalty does it apply to prevent models from gaming the score by generating very short outputs?</h4>
+                <h4>A translation model tries to cheat by outputting just one word that happens to appear in the correct translation — and gets 100% precision. What does this reveal about using precision alone to evaluate translation quality?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q1" value="a"> A) A recall penalty that reduces scores when coverage is low</label></li>
-                    <li><label><input type="radio" name="q1" value="b"> B) A brevity penalty that multiplies the score down for outputs shorter than the reference</label></li>
-                    <li><label><input type="radio" name="q1" value="c"> C) A perplexity penalty applied to rare n-grams</label></li>
-                    <li><label><input type="radio" name="q1" value="d"> D) A length normalization term based on the number of sentences</label></li>
+                    <li><label><input type="radio" name="q1" value="a"> Precision is too slow to compute for long texts</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> A one-word output that is technically correct is useless — precision alone does not check whether the translation is complete</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> Precision favors longer translations and needs to be balanced against output speed</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> Precision can only be applied to multiple-choice tasks, not open-ended generation</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="c" data-explanations='{
-                "a": "ROUGE-N measures overlap based on contiguous n-grams, not longest common subsequences. It is the most basic ROUGE variant.",
-                "b": "ROUGE-S measures skip-bigram overlap, allowing gaps between word pairs. It does not use the LCS algorithm.",
-                "c": "Correct. ROUGE-L uses the longest common subsequence, which captures flexible word-order matches without requiring contiguous n-gram overlap.",
-                "d": "ROUGE-W is a weighted variant of ROUGE-L that gives more credit to consecutive LCS matches, but ROUGE-L is the standard LCS-based variant."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "ROUGE would give credit here because several words appear in both outputs — it does not require exact word order.",
+                "b": "Correct. The words the, cat, and mat all appear in both. ROUGE counts overlapping words, so it gives partial credit. This is both its strength and its weakness — it can reward scrambled outputs.",
+                "c": "ROUGE counts all overlapping words throughout both texts, not just the first and last words.",
+                "d": "ROUGE is purely word-based and does not use semantic similarity. Synonyms like sat and rested would not be counted as equivalent."
             }'>
                 <span class="question-number">Question 2</span>
-                <h4>Unlike BLEU, ROUGE is a recall-oriented metric. Which ROUGE variant measures overlap based on the longest common subsequence (LCS) rather than contiguous n-grams?</h4>
+                <h4>ROUGE measures how much of a reference summary is covered by a model's output. If the reference says "The cat sat on the mat" and the model outputs "The mat had a cat," ROUGE would still award partial credit because:</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q2" value="a"> A) ROUGE-N</label></li>
-                    <li><label><input type="radio" name="q2" value="b"> B) ROUGE-S</label></li>
-                    <li><label><input type="radio" name="q2" value="c"> C) ROUGE-L</label></li>
-                    <li><label><input type="radio" name="q2" value="d"> D) ROUGE-W</label></li>
+                    <li><label><input type="radio" name="q2" value="a"> ROUGE requires word-for-word matching, so this example would actually score zero</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> ROUGE counts individual word overlap regardless of order, and several words appear in both outputs</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> ROUGE only checks the first and last word of each sentence</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> ROUGE uses semantic meaning, so synonyms like "sat" and "rested" count as equivalent</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Requiring more bits per word describes higher perplexity, not lower. Higher perplexity indicates the model is less certain about predictions.",
-                "b": "Correct. Lower perplexity means the model assigns higher probability to test sequences, indicating greater confidence and a better fit to the underlying language patterns.",
-                "c": "Perplexity and BLEU are independent metrics measuring different things. A lower perplexity does not imply a higher BLEU score.",
-                "d": "Perplexity measures model confidence, not training corpus size. A smaller model trained well can achieve lower perplexity than a larger, poorly trained one."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Perplexity is a measure of prediction quality, not memory usage.",
+                "b": "Correct. Think of perplexity as how many choices the model feels equally uncertain between at each word. A perplexity of 10 means it is effectively choosing among 10 equally likely options. Lower is better.",
+                "c": "Perplexity measures model quality on a given dataset — not the size of the dataset it was trained on.",
+                "d": "Perplexity has no relationship to how fast the model runs at inference time."
             }'>
                 <span class="question-number">Question 3</span>
-                <h4>In language modeling, perplexity measures the model&#39;s uncertainty when predicting the next word. Which statement best describes what a lower perplexity value indicates?</h4>
+                <h4>Perplexity measures how surprised a language model is when it sees text it hasn't encountered before. What does a lower perplexity value indicate?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q3" value="a"> A) The model requires more bits per word and is less confident in its predictions</label></li>
-                    <li><label><input type="radio" name="q3" value="b"> B) The model is more confident and better captures the underlying language patterns</label></li>
-                    <li><label><input type="radio" name="q3" value="c"> C) The model has a higher BLEU score on the test set</label></li>
-                    <li><label><input type="radio" name="q3" value="d"> D) The model was trained on a larger corpus</label></li>
+                    <li><label><input type="radio" name="q3" value="a"> The model requires more memory to make predictions</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> The model is better at predicting text — it is less surprised by typical word sequences</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> The model was trained on a smaller dataset</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> The model is slower but more accurate</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

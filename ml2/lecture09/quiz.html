@@ -55,19 +55,19 @@
                 <span class="score-value">10</span>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "This answer reverses the definitions. Discriminative models learn P(Y|X), not P(X), and generative models learn P(X) or P(X,Y), not P(Y|X).",
-                "b": "Correct. Discriminative models learn the conditional P(Y|X), mapping directly from inputs to labels. Generative models learn P(X) or P(X,Y), capturing the underlying data distribution and allowing them to generate new samples.",
-                "c": "Both model families can produce outputs in multiple modalities. The defining distinction is the probability distribution each family models, not the modality of output.",
-                "d": "Both discriminative and generative models can use labeled or unlabeled data depending on the specific approach. The distinction is formal and probabilistic, not simply about label availability."
+                        <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "The type of data does not determine the model type — what the model does with the data does.",
+                "b": "This is reversed. A spam filter makes a decision between two categories — that is discriminative. An image generator creates new examples — that is generative.",
+                "c": "Correct. Discriminative models learn to classify or distinguish between categories. Generative models learn what the data looks like so they can produce new examples.",
+                "d": "Every model produces some output, but generative specifically means the model can create new data similar to its training examples."
             }'>
                 <span class="question-number">Question 1</span>
-                <h4>What is the fundamental difference between a discriminative model and a generative model in terms of what probability distribution each learns?</h4>
+                <h4>A spam filter decides whether an email is spam or not. An image generator creates new photos of cats. Which is the generative model and which is the discriminative model?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q1" value="a"> A) Discriminative models learn P(X), the distribution of inputs; generative models learn P(Y|X), the conditional distribution of labels given inputs.</label></li>
-                    <li><label><input type="radio" name="q1" value="b"> B) Discriminative models learn P(Y|X), the conditional distribution of labels given inputs; generative models learn P(X) or P(X, Y), the underlying data distribution.</label></li>
-                    <li><label><input type="radio" name="q1" value="c"> C) Both types of models learn P(Y|X), but generative models additionally learn to produce outputs in multiple modalities.</label></li>
-                    <li><label><input type="radio" name="q1" value="d"> D) Discriminative models require labeled data while generative models require unlabeled data; no probabilistic distinction between them is formally defined.</label></li>
+                    <li><label><input type="radio" name="q1" value="a"> Both are discriminative — they both operate on digital data</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> The spam filter is generative; the image generator is discriminative</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> The spam filter is discriminative (deciding between classes); the image generator is generative (creating new data)</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> Both are generative — any model that produces an output is generative</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
@@ -106,36 +106,36 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "This reverses the Markov property. The Markov condition says each state depends only on the immediately preceding state, not on all previous states simultaneously.",
-                "b": "Correct. The Markov property means q(x_t | x_{t-1}, ..., x_0) = q(x_t | x_{t-1}). This makes each step a simple Gaussian perturbation and greatly simplifies both the forward and reverse processes.",
-                "c": "The Markov property means the opposite: noise at each step is independent of all states except the immediately prior one. Correlated noise across steps would violate the Markov assumption.",
-                "d": "The Markov property concerns the conditional independence structure of the forward process, not the statistical relationship between generated samples and training data."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The model still processes each step in order — the simplification is that each step only needs to look at the immediately previous noisy image, not the entire history.",
+                "b": "Correct. Because each step only depends on the immediately previous one, you can compute any intermediate noisy version directly without simulating every step before it. This makes the math tractable.",
+                "c": "Different noise is added at each step — the structure is about dependency between steps, not reuse of noise.",
+                "d": "The structure does not say anything about skipping steps during training or inference."
             }'>
                 <span class="question-number">Question 4</span>
-                <h4>Diffusion models use the Markov property in their forward process. What does the Markov property mean in this context, and why is it computationally useful?</h4>
+                <h4>In a diffusion model's forward process, noise is added to an image step by step. At each step, the amount of noise added depends only on the current image — not on the full history of how it got there. Why is this useful?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q4" value="a"> A) The Markov property means each step in the forward process depends on all previous steps simultaneously, enabling batch computation.</label></li>
-                    <li><label><input type="radio" name="q4" value="b"> B) The Markov property means each noisy state depends only on the immediately preceding state, not the full history. This makes the forward process tractable and simplifies learning the reverse denoising steps.</label></li>
-                    <li><label><input type="radio" name="q4" value="c"> C) The Markov property ensures that the noise added at each step is correlated with previous steps to create smooth transitions.</label></li>
-                    <li><label><input type="radio" name="q4" value="d"> D) The Markov property in diffusion models refers to the fact that generated samples are statistically independent of the training data.</label></li>
+                    <li><label><input type="radio" name="q4" value="a"> It means the model only needs to see the very first step to predict what the final noisy image looks like</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> It means each step can be computed from just the previous one, which massively simplifies the math and makes the process tractable</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> It means the same noise pattern is reused at every step to save computation</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> It means the model can skip most steps and only process every other one</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "A discriminator score is used in GANs, not diffusion models. The score function in diffusion models is a mathematical quantity from the data distribution, not a quality rating.",
-                "b": "Correct. The score function is the gradient of the log probability density with respect to the input: s(x) = grad log p(x). It points toward regions of higher data density and guides noisy samples back toward the data manifold.",
-                "c": "The score function is a gradient vector in input space, not an embedding of the input. It encodes directional information about the data distribution, not a semantic summary.",
-                "d": "The noise magnitude at a given time step is a schedule parameter, not the score function. The score function is a gradient of the log density, which is a fundamentally different quantity."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Predicting the final clean image in one leap would be too large a jump — the network instead makes small, incremental corrections over many steps.",
+                "b": "Correct. The network learns to estimate what noise is present in the current image so it can subtract it and recover a slightly cleaner version. This is then repeated hundreds of times to go from pure noise to a clean image.",
+                "c": "Score has a precise technical meaning in the mathematical literature, but the practical job of the network is predicting and removing noise — not assigning a quality rating.",
+                "d": "The network does not match the noisy image back to a specific training example — it learns the general pattern of what noise looks like at each level of noisiness."
             }'>
                 <span class="question-number">Question 5</span>
-                <h4>In the reverse process of a diffusion model, the model learns to denoise by estimating the "score" of the data distribution. What does the score function represent?</h4>
+                <h4>During the reverse process of a diffusion model, the network takes a noisy image and tries to clean it up step by step. What is the network actually predicting at each step?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q5" value="a"> A) A scalar quality metric that rates how realistic a generated sample is, similar to the discriminator score in a GAN.</label></li>
-                    <li><label><input type="radio" name="q5" value="b"> B) The gradient of the log probability density of the data with respect to the input — i.e., the direction in which to move a noisy sample to make it more likely under the data distribution.</label></li>
-                    <li><label><input type="radio" name="q5" value="c"> C) A learned embedding vector that summarizes the semantic content of the noisy input at a given time step.</label></li>
-                    <li><label><input type="radio" name="q5" value="d"> D) The magnitude of the noise that was added to the data at a specific time step in the forward process.</label></li>
+                    <li><label><input type="radio" name="q5" value="a"> The final clean image directly, in one step</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> The noise that was added at that step, so it can be subtracted to recover a slightly cleaner image</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> A quality score for how realistic the current noisy image looks</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> Which specific training image the current noisy version originally came from</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
@@ -208,19 +208,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Standard contrastive learning handles augmentation naturally. MoCo does not change the augmentation strategy; it addresses the memory and computational cost of maintaining large numbers of negative examples.",
-                "b": "Correct. Large batches of negatives improve contrastive learning but are GPU-memory-intensive. MoCo maintains a queue of past key representations updated with a slowly moving-average encoder, providing many negatives without requiring a proportionally large batch.",
-                "c": "Representation collapse — where all outputs converge to the same vector — is addressed by methods like BYOL or SimSiam using stop-gradient or EMA techniques, not by MoCo. MoCo was designed to address the large-batch memory problem.",
-                "d": "Standard contrastive learning is already self-supervised and does not require labeled positive pairs. Positive pairs are defined by augmentation, not class labels, in methods like SimCLR."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Memorizing pairs would not generalize. Good representations work on new images the model has never seen during training.",
+                "b": "Correct. If the model can consistently recognize that two very different-looking crops of the same image are related, it must be capturing something real about the content — not just surface appearance.",
+                "c": "Contrastive learning is genuinely self-supervised — it creates useful representations without any class labels.",
+                "d": "The model does not memorize pairings — it learns a general representation that transfers to new tasks."
             }'>
                 <span class="question-number">Question 10</span>
-                <h4>Momentum contrast (MoCo) was introduced as an advancement in contrastive learning. What practical limitation of standard contrastive learning does it address?</h4>
+                <h4>Contrastive learning trains a model by showing it pairs of similar images (two crops of the same photo) and pairs of different images. What is the core idea behind why this teaches useful representations?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q10" value="a"> A) Standard contrastive learning cannot handle data augmentation, so MoCo introduces a way to generate augmented views without distorting the semantic content.</label></li>
-                    <li><label><input type="radio" name="q10" value="b"> B) Effective contrastive learning requires a large number of negative examples, but maintaining a large batch size is computationally prohibitive; MoCo uses a dynamic queue and momentum-updated encoder to maintain a large set of negatives without large batches.</label></li>
-                    <li><label><input type="radio" name="q10" value="c"> C) Standard contrastive learning produces collapsed representations where all outputs converge to the same point; MoCo prevents collapse by adding a momentum term to the loss function.</label></li>
-                    <li><label><input type="radio" name="q10" value="d"> D) Standard contrastive learning requires labeled positive pairs, and MoCo eliminates this requirement by using unsupervised clustering to identify positives.</label></li>
+                    <li><label><input type="radio" name="q10" value="a"> Similar images are always brighter, so the model learns to detect brightness and lighting</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> By learning what makes two different views of the same thing "the same," the model is forced to capture real content rather than surface details</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> The model memorizes which specific images are paired together during training</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> Contrastive learning is just supervised classification without labels</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

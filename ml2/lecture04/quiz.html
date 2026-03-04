@@ -208,19 +208,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "This expression normalizes the difference of vectors by the sum of their norms, which is not a standard similarity formula. It resembles a normalized distance, not cosine similarity.",
-                "b": "Cosine similarity is defined as the dot product of vectors a and b divided by the product of their L2 norms: (a · b) / (||a|| * ||b||). This gives the cosine of the angle between them.",
-                "c": "Dividing the dot product by the sum of norms rather than their product gives a different, non-standard measure. The denominator must be the product, not the sum.",
-                "d": "This formula inverts the correct expression, placing the product of norms in the numerator and the dot product in the denominator. The result is the reciprocal of cosine similarity."
+                        <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "A similarity of 0 means the vectors are at right angles — pointing in completely unrelated directions. These two users point in exactly the same direction.",
+                "b": "-1 means the users have completely opposite preferences — one likes everything the other dislikes.",
+                "c": "Correct. Cosine similarity ignores the overall scale of ratings and focuses on the pattern. Both users rate everything the same way — just at different scales. The angle between their vectors is zero.",
+                "d": "0.5 would mean some but not complete alignment. These users are perfectly aligned in their preference patterns."
             }'>
                 <span class="question-number">Question 10</span>
-                <h4>Which of the following is the correct formula for cosine similarity between vectors a and b?</h4>
+                <h4>One user rates every movie a 5 out of 10. Another user rates every movie a 10 out of 10. They have identical taste — they both love everything equally. What would their cosine similarity be?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q10" value="a"> A) ||a - b|| / (||a|| + ||b||)</label></li>
-                    <li><label><input type="radio" name="q10" value="b"> B) (a · b) / (||a|| * ||b||)</label></li>
-                    <li><label><input type="radio" name="q10" value="c"> C) (a · b) / (||a|| + ||b||)</label></li>
-                    <li><label><input type="radio" name="q10" value="d"> D) ||a|| * ||b|| / (a · b)</label></li>
+                    <li><label><input type="radio" name="q10" value="a"> 0 — they use different rating scales so they appear unrelated</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> -1 — one rates twice as high, which cosine similarity treats as opposite</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> 1 — perfectly similar, because they have identical relative preferences</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> 0.5 — somewhat similar because the scales overlap halfway</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

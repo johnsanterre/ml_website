@@ -55,19 +55,19 @@
                 <span class="score-value">10</span>
             </div>
 
-            <div class="quiz-question" data-correct="c" data-explanations='{
-                "a": "Incorrect. The weight matrix is denoted W, not A; they are distinct quantities in the forward pass equation.",
-                "b": "Incorrect. The raw input data is A at layer 0, but A^[l-1] more generally refers to the post-activation output of whichever layer precedes layer l.",
-                "c": "Correct. A^[l-1] is the post-activation output of the previous layer, which feeds into the weight multiplication to produce the next pre-activation.",
-                "d": "Incorrect. Loss gradients are computed during backpropagation, not stored in the A notation used during the forward pass."
+                        <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "The raw training data is only the input to the very first layer. After that, each layer receives the transformed outputs of the previous layer.",
+                "b": "The weight matrix is what the layer applies to its inputs — it is not the input itself.",
+                "c": "Correct. Each layer takes the activated outputs from the previous layer and applies its own weights and biases to produce the next representation.",
+                "d": "Error signals flow backward during backpropagation, not forward during the forward pass."
             }'>
                 <span class="question-number">Question 1</span>
-                <h4>In forward propagation, the pre-activation for layer l is written as Z<sup>[l]</sup> = W<sup>[l]</sup>A<sup>[l&minus;1]</sup> + b<sup>[l]</sup>. What does A<sup>[l&minus;1]</sup> represent?</h4>
+                <h4>When information flows forward through a neural network, each layer receives some input, transforms it, and passes the result to the next layer. What is the input to any given hidden layer?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q1" value="a"> The weight matrix of the previous layer</label></li>
-                    <li><label><input type="radio" name="q1" value="b"> The raw input data to the network</label></li>
-                    <li><label><input type="radio" name="q1" value="c"> The activated outputs (post-activation values) from the previous layer</label></li>
-                    <li><label><input type="radio" name="q1" value="d"> The loss gradient for the previous layer</label></li>
+                    <li><label><input type="radio" name="q1" value="a"> The raw training data, always passed directly from the original inputs</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> The weight matrix that will be applied at that layer</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> The activated outputs from the previous layer</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> The error signal computed during the backward pass</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
@@ -89,19 +89,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. A high learning rate leads to large, unstable updates, not slower but better training.",
-                "b": "Correct. A learning rate that is too high causes updates to overshoot the minimum, leading to oscillating or diverging loss.",
-                "c": "Incorrect. Vanishing gradients are caused by activation function saturation or poor initialization, not by a high learning rate.",
-                "d": "Incorrect. No learning rate guarantees immediate convergence to a global minimum; the loss landscape is non-convex."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "A very high learning rate does not speed up learning usefully — it makes training unstable, not faster.",
+                "b": "Correct. Imagine a ball rolling downhill that keeps jumping over the valley. Steps that are too large cause the model to overshoot and oscillate instead of converging.",
+                "c": "Vanishing gradients are caused by deep networks with saturating activations, not by a high learning rate.",
+                "d": "No choice of learning rate guarantees immediate convergence — the loss landscape is complex and non-convex."
             }'>
                 <span class="question-number">Question 3</span>
-                <h4>The gradient descent update rule is &theta;<sub>t+1</sub> = &theta;<sub>t</sub> &minus; &eta; &middot; &nabla;<sub>&theta;</sub>J(&theta;<sub>t</sub>). If the learning rate &eta; is set too high, what is the most likely consequence?</h4>
+                <h4>During training, the model takes a step in a direction that should reduce its error. What happens if those steps are made too large?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q3" value="a"> The model will train more slowly but find a better minimum</label></li>
-                    <li><label><input type="radio" name="q3" value="b"> The parameter updates may overshoot the minimum, causing the loss to oscillate or diverge</label></li>
-                    <li><label><input type="radio" name="q3" value="c"> Gradients will vanish and the network will stop learning</label></li>
-                    <li><label><input type="radio" name="q3" value="d"> The model will immediately converge to a global minimum</label></li>
+                    <li><label><input type="radio" name="q3" value="a"> The model trains faster and finds a better solution</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> The model's updates overshoot the target, causing the loss to bounce around or get worse</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> The gradients disappear and the network stops learning</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> The model immediately settles on the perfect solution</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
@@ -123,36 +123,36 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="c" data-explanations='{
-                "a": "Incorrect. Multi-class classification tasks with softmax outputs use categorical cross-entropy, not MSE.",
-                "b": "Incorrect. Binary classification with sigmoid outputs is best served by binary cross-entropy, which aligns with probabilistic interpretation.",
-                "c": "Correct. MSE measures average squared prediction error and is the natural loss for regression tasks predicting continuous values.",
-                "d": "Incorrect. Sequence-to-sequence tasks use specialized losses such as cross-entropy over token distributions."
+                        <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Classification tasks use cross-entropy loss, which is designed for comparing predicted class probabilities against true labels, not MSE.",
+                "b": "Spam detection is binary classification — binary cross-entropy is the right tool, not MSE.",
+                "c": "Correct. MSE measures average squared prediction error, which is exactly what you want when predicting a continuous value like a price or temperature.",
+                "d": "Translation uses sequence-level cross-entropy losses, since the output is a sequence of words, not a single number."
             }'>
                 <span class="question-number">Question 5</span>
-                <h4>Mean Squared Error (MSE) is defined as (1/n) &Sigma;(y<sub>i</sub> &minus; &ycirc;<sub>i</sub>)<sup>2</sup>. For which type of task is MSE the most natural loss function?</h4>
+                <h4>Different tasks need different ways to measure how wrong a model's predictions are. For which type of task is Mean Squared Error (MSE) the most natural choice?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q5" value="a"> Multi-class classification with a softmax output</label></li>
-                    <li><label><input type="radio" name="q5" value="b"> Binary classification with a sigmoid output</label></li>
-                    <li><label><input type="radio" name="q5" value="c"> Regression tasks where the output is a continuous real-valued quantity</label></li>
-                    <li><label><input type="radio" name="q5" value="d"> Sequence-to-sequence generation tasks</label></li>
+                    <li><label><input type="radio" name="q5" value="a"> Classifying images into categories like "cat" or "dog"</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> Deciding whether an email is spam or not</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> Predicting a continuous number, like a house price or tomorrow's temperature</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> Generating a translation of a sentence into another language</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. The loss contribution is small, not large, when the model makes a confident correct prediction.",
-                "b": "Correct. When the predicted probability approaches 1.0, -log(1) approaches 0, so the loss contribution for that correct prediction is near zero.",
-                "c": "Incorrect. The loss contribution varies with the predicted probability; it is not a constant value of 1.0.",
-                "d": "Incorrect. Cross-entropy is always non-negative because log of a probability (between 0 and 1) is non-positive, and the negative sign makes it non-negative."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Confidence in correct predictions is rewarded, not penalized. The loss function is designed to push the model toward being confidently right.",
+                "b": "Correct. When the model correctly identifies the class with very high confidence, the loss contribution for that example is essentially zero — mission accomplished.",
+                "c": "The loss depends on the predicted confidence level, not a fixed constant. A correct prediction at 51% confidence has a higher loss than one at 99%.",
+                "d": "Losses are always non-negative in classification. Individual losses cannot go negative."
             }'>
                 <span class="question-number">Question 6</span>
-                <h4>Categorical Cross-Entropy loss is defined as CCE = &minus;(1/N) &Sigma;<sub>i</sub> &Sigma;<sub>j</sub> y<sub>ij</sub> log(&ycirc;<sub>ij</sub>). What happens to the loss for a correct prediction when the model assigns probability close to 1.0?</h4>
+                <h4>A model predicts that an image is a cat with 99% confidence — and it is correct. What does the loss for that prediction look like?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q6" value="a"> The loss contribution is large, penalizing confident correct predictions</label></li>
-                    <li><label><input type="radio" name="q6" value="b"> The loss contribution approaches zero, since &minus;log(1) = 0</label></li>
-                    <li><label><input type="radio" name="q6" value="c"> The loss contribution is exactly 1.0 regardless of the predicted probability</label></li>
-                    <li><label><input type="radio" name="q6" value="d"> The loss contribution becomes negative, reducing the total loss below zero</label></li>
+                    <li><label><input type="radio" name="q6" value="a"> The loss is large, because the model should never be that confident</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> The loss is close to zero — a confident correct prediction is exactly what we want</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> The loss is exactly 1.0 regardless of confidence level</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> The loss goes negative, pulling the overall total down</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
@@ -174,19 +174,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="a" data-explanations='{
-                "a": "Correct. Reverse-mode AD computes gradients of a scalar output (the loss) with respect to all inputs in a single backward pass, which is highly efficient for training networks with many parameters.",
-                "b": "Incorrect. Forward-mode is not always faster; it is efficient when there are many outputs relative to inputs, the opposite of most neural network training scenarios.",
-                "c": "Incorrect. Reverse-mode AD requires storing intermediate activations, not the training dataset; these are very different memory considerations.",
-                "d": "Incorrect. Both forward-mode and reverse-mode can in principle be used for training or inference; the choice is made based on efficiency."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Backpropagation processes every layer, moving from the output back to the input. No layers are skipped.",
+                "b": "Correct. This is the elegant efficiency of backpropagation — one backward pass gives you the gradient for every single weight simultaneously, no matter how many layers there are.",
+                "c": "Backpropagation stores intermediate activations from the forward pass, not the training dataset. These are much smaller.",
+                "d": "Backpropagation is exclusively a training-time operation. At test time, only the forward pass is needed."
             }'>
                 <span class="question-number">Question 8</span>
-                <h4>Automatic differentiation (AD) is used in deep learning frameworks to compute gradients. How does reverse-mode AD (backpropagation) differ from forward-mode AD?</h4>
+                <h4>During training, a neural network needs to figure out how much each weight contributed to the overall error so it can adjust them all. Why is working backward through the network (backpropagation) efficient for this?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q8" value="a"> Reverse-mode computes gradients of outputs with respect to all inputs in one backward pass, making it efficient when there are many parameters and few outputs</label></li>
-                    <li><label><input type="radio" name="q8" value="b"> Forward-mode is always faster because it runs in the same direction as the forward pass</label></li>
-                    <li><label><input type="radio" name="q8" value="c"> Reverse-mode requires storing the entire training dataset in memory simultaneously</label></li>
-                    <li><label><input type="radio" name="q8" value="d"> Forward-mode is used exclusively for training; reverse-mode only for inference</label></li>
+                    <li><label><input type="radio" name="q8" value="a"> It only needs to look at the final output layer, ignoring all hidden layers</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> It computes how the loss depends on every single weight in one backward pass, regardless of how many weights there are</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> It stores the entire training dataset in GPU memory to calculate gradients</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> It is used only during testing, not during training</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

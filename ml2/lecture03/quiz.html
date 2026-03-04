@@ -89,19 +89,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. R-squared is a variance-explained metric, not a measure of average absolute error.",
-                "b": "Correct. An R-squared of 0.85 means the model accounts for 85% of the variance in the target variable, leaving 15% as residual unexplained variance.",
-                "c": "Incorrect. R-squared is not an accuracy metric and does not describe the percentage of predictions within a price bin.",
-                "d": "Incorrect. R-squared does not describe a prediction interval or percentage-within-tolerance; it specifically measures explained variance."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "A 15% average error would be measured by something like MAPE (mean absolute percentage error), not R-squared.",
+                "b": "Correct. R-squared measures explained variance. A value of 0.85 means the model captures 85% of why prices differ from each other — 15% remains unexplained.",
+                "c": "Predicting within 15% accuracy 85% of the time describes a specific tolerance metric, not what R-squared means.",
+                "d": "Accuracy as a percentage concept applies to classification. R-squared is a regression metric about how much variation the model explains."
             }'>
                 <span class="question-number">Question 3</span>
-                <h4>R-squared (R&sup2;) is computed as R&sup2; = 1 &minus; SS<sub>res</sub>/SS<sub>tot</sub>. An R&sup2; of 0.85 means:</h4>
+                <h4>R-squared (R&sup2;) is a way to measure how well a regression model explains the variation in the data. If a housing price model has an R&sup2; of 0.85, what does that mean?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q3" value="a"> The model makes errors of 0.15 on average for each prediction</label></li>
-                    <li><label><input type="radio" name="q3" value="b"> The model explains 85% of the variance in the target variable, with 15% remaining unexplained</label></li>
-                    <li><label><input type="radio" name="q3" value="c"> The model achieves 85% accuracy in predicting the correct price bin</label></li>
-                    <li><label><input type="radio" name="q3" value="d"> The model&#39;s predictions are within 15% of the true values 85% of the time</label></li>
+                    <li><label><input type="radio" name="q3" value="a"> The model makes an average error of 15% on each prediction</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> The model explains 85% of the variation in house prices — 15% remains unexplained</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> The model correctly predicts the price to within 15% accuracy 85% of the time</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> The model achieves 85% classification accuracy on the test set</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
@@ -123,19 +123,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. L2 regularization shrinks weights toward zero but rarely forces them to exactly zero; that is the behavior of L1 regularization (which drives sparsity).",
-                "b": "Correct. L2 adds a cost proportional to squared weight magnitudes, encouraging the optimizer to prefer smaller weights, which reduces model complexity and overfitting.",
-                "c": "Incorrect. L2 regularization does not affect the learning rate; it adds a penalty term to the loss that influences weight magnitudes.",
-                "d": "Incorrect. L2 regularization is compatible with any activation function, including ReLU; the two are independent."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Forcing weights all the way to zero is what L1 regularization does. L2 shrinks weights toward zero but rarely eliminates them completely.",
+                "b": "Correct. By adding a cost for large weights, L2 encourages the model to spread influence more evenly rather than relying heavily on a few features, which helps generalization.",
+                "c": "L2 regularization has no effect on the learning rate. It only adds a penalty cost for large weights.",
+                "d": "Regularization and activation functions are completely independent choices — L2 works fine with any activation."
             }'>
                 <span class="question-number">Question 5</span>
-                <h4>L2 regularization adds a penalty term &lambda; &Sigma; w<sub>i</sub>&sup2; to the loss function. What effect does this penalty have on the model&#39;s learned weights?</h4>
+                <h4>L2 regularization adds an extra penalty to the training loss that discourages the model from using very large weights. What is the practical effect of this?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q5" value="a"> It forces all weights to exactly zero, effectively removing unused neurons</label></li>
-                    <li><label><input type="radio" name="q5" value="b"> It penalizes large weight magnitudes, encouraging smaller weights that produce a simpler model less prone to overfitting</label></li>
-                    <li><label><input type="radio" name="q5" value="c"> It increases the learning rate proportionally to the number of weights</label></li>
-                    <li><label><input type="radio" name="q5" value="d"> It prevents the use of ReLU activation functions in the network</label></li>
+                    <li><label><input type="radio" name="q5" value="a"> It forces all weights to become exactly zero, shutting down unused neurons</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> It encourages the model to keep weights small, which tends to reduce overfitting and improve generalization</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> It increases the learning rate proportionally to how many weights the model has</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> It prevents the use of ReLU as an activation function</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

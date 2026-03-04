@@ -208,19 +208,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "The raw input token embedding is the initial representation before any transformer layers have processed it. h_t is the output after all transformer layers have run, encoding the full context.",
-                "b": "Correct. h_t is the hidden state produced by the full transformer stack at position t. It encodes the contextual representation of the entire sequence up to that point and is projected by W_o to produce vocabulary logits.",
-                "c": "Attention weights are intermediate values computed within the self-attention sublayer. They are used to weight values but are not the same as the final hidden state h_t.",
-                "d": "The target token is part of the training objective, not a component of the output probability computation. h_t is the model output, not the training label."
+                        <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "If the model only looked at the most recent word, it would produce incoherent text — it needs the full context to understand what has been said.",
+                "b": "Correct. The final hidden state is a rich encoding of the whole context — who is speaking, what topic has been discussed, what the question was — all compressed into a single representation that drives the next word prediction.",
+                "c": "The internal state is not a lookup table of training frequencies — it is a learned representation that captures meaning, context, and intent.",
+                "d": "Attention weights are intermediate values computed inside the transformer layers. The final hidden state is the output after all those computations have run."
             }'>
                 <span class="question-number">Question 10</span>
-                <h4>The output token probability in a transformer LLM is computed as P(x_t | x_&lt;t) = softmax(W_o h_t + b_o). What does h_t represent in this equation?</h4>
+                <h4>When a language model is about to predict the next word, it first builds a rich internal representation of everything it has read so far. What does this final internal state capture?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q10" value="a"> A) The raw embedding of the input token at position t</label></li>
-                    <li><label><input type="radio" name="q10" value="b"> B) The hidden state of the model at time step t, which encodes the full context up to that point</label></li>
-                    <li><label><input type="radio" name="q10" value="c"> C) The attention weight assigned to token t by the query-key interaction</label></li>
-                    <li><label><input type="radio" name="q10" value="d"> D) The target token used during supervised fine-tuning</label></li>
+                    <li><label><input type="radio" name="q10" value="a"> Just the most recent word that appeared in the input</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> A summary of all the context up to that point — what the model has understood about the full conversation so far</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> The raw probabilities from training data for what word typically follows</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> The specific attention weights used in the final transformer layer</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
