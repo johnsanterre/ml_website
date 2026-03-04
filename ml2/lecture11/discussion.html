@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 11: Practical LLM Integration &amp; API Development — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 11</a>
+        <div class="content-box">
+            <h1>Week 11: Practical LLM Integration &amp; API Development</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>1. The Art and Science of Prompt Engineering</h3>
+                <p>System prompts, few-shot examples, and output formatting instructions are the primary tools a developer has to steer LLM behavior without modifying model weights. Crafting effective prompts can be the difference between a reliable production system and one that fails unpredictably. Yet prompt engineering remains more craft than science — changes that seem minor can have large and unexpected effects on output quality.</p>
+                <ul class="probing-questions">
+                    <li>Why do you think specifying output format (e.g., "respond only with a JSON object") tends to improve reliability in automated pipelines? What is happening from the model's perspective?</li>
+                    <li>Few-shot examples guide the model through demonstration rather than instruction. In what situations might few-shot prompting outperform a detailed system prompt, and vice versa?</li>
+                    <li>As LLM capabilities improve, do you think prompt engineering will become less important or more nuanced? Is it a skill that will remain valuable in five years?</li>
+                </ul>
+                <p class="activity-note">Try: Give student pairs the same task (e.g., extracting structured data from a paragraph) and have each pair write a different system prompt. Then test all versions live on the same inputs and compare which prompts produce the most consistent outputs, discussing what differences in phrasing drove different results.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>2. Chain-of-Thought Reasoning: Transparency or Theater?</h3>
+                <p>Chain-of-thought (CoT) prompting encourages the model to show its reasoning step by step before arriving at a final answer. This approach demonstrably improves accuracy on complex tasks and produces outputs that are easier to debug. However, it raises a deeper question: does the visible reasoning reflect the model's actual internal computation, or is it a fluent rationalization generated after the fact?</p>
+                <ul class="probing-questions">
+                    <li>If a model produces a correct answer via an incorrect chain of thought (or vice versa), what does this tell us about the relationship between the visible reasoning and the underlying computation?</li>
+                    <li>In a high-stakes domain like medical diagnosis or financial risk assessment, how much weight should a human reviewer place on the model's stated reasoning chain when deciding whether to trust its conclusion?</li>
+                    <li>The textbook mentions validation checkpoints within a CoT to catch errors early. Design a CoT prompt structure with embedded checkpoints for a specific domain problem of your choosing.</li>
+                </ul>
+                <p class="activity-note">Try: Present the class with a multi-step math or logic problem, show two model outputs side by side — one with a confident but subtly incorrect chain of thought and one with a correct chain — and ask students to evaluate which they would trust and why before revealing which is actually correct.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>3. Cost, Rate Limits, and the Economics of Production LLM Systems</h3>
+                <p>LLM API costs follow a per-token pricing model, with charges for both input and output tokens. At scale, token consumption costs can become substantial. The textbook describes a range of optimization strategies — caching, batching, prompt compression, model selection based on task requirements — that together form the cost management discipline for production LLM systems.</p>
+                <ul class="probing-questions">
+                    <li>Caching responses to repeated prompts can dramatically reduce costs, but introduces the risk of serving stale responses. How would you design a cache invalidation policy for a knowledge-intensive application like a customer support bot?</li>
+                    <li>The textbook recommends implementing per-user limits, project-level budgets, and organization-wide caps. What organizational dynamics or failure modes do these layers protect against?</li>
+                    <li>Consider an application that could use either a small, fast, inexpensive model or a large, capable, expensive one. What criteria would you use to decide which to route each request to?</li>
+                </ul>
+                <p class="activity-note">Try: Give small groups a hypothetical monthly API budget of $500 and a set of sample request volumes and query types, then ask each group to design a cost management strategy (caching policy, model routing rules, batch scheduling) and present it to the class for critique.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>4. Human-in-the-Loop Systems: When Is AI Oversight Enough?</h3>
+                <p>For critical applications, production LLM systems include human review as a safety net. The textbook describes systems that automatically flag outputs for human review based on confidence scores, unusual patterns, or domain-specific risk factors. But implementing effective human oversight requires more than just routing uncertain outputs to a queue — it requires designing interfaces that enable reviewers to make informed, efficient decisions.</p>
+                <ul class="probing-questions">
+                    <li>What information would you include in a human review interface to help a reviewer quickly and accurately assess whether an LLM output is acceptable? What makes reviewer interfaces succeed or fail?</li>
+                    <li>If a system routes 5% of cases for human review, what happens to those 95% that are automatically approved? How do you build confidence that the automated approval threshold is set correctly?</li>
+                    <li>Human review introduces latency and cost. How would you decide which applications warrant human-in-the-loop oversight versus fully automated processing? Where do you draw the line?</li>
+                </ul>
+                <p class="activity-note">Try: Run a small-group design sprint where each group sketches a human review interface for a specific domain (medical triage, content moderation, legal document processing), then presents it to the class and receives critique on what information was included or omitted.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>5. Monitoring, Observability, and the Challenge of Measuring LLM Quality in Production</h3>
+                <p>Unlike traditional software systems where correctness is binary and deterministic, LLM application quality is probabilistic and context-dependent. The textbook describes a range of metrics — token efficiency, prompt success rates, response quality metrics, cache hit rates, human review triggers — that together constitute an observability framework for LLM systems. Defining and measuring "quality" in this context is a non-trivial challenge.</p>
+                <ul class="probing-questions">
+                    <li>Traditional software monitoring focuses on error rates and latency. What additional dimensions of quality are specific to LLM applications, and how would you instrument a system to track them?</li>
+                    <li>The textbook mentions anomaly detection for "unexpected changes in response patterns." How would you define a baseline for normal LLM response patterns, and what would constitute a meaningful anomaly in that context?</li>
+                    <li>User satisfaction is listed as a key metric, but it can be difficult to collect at scale. What proxy metrics could you use to infer user satisfaction without requiring explicit ratings from users?</li>
+                </ul>
+                <p class="activity-note">Try: Ask students to design a monitoring dashboard for a fictional LLM-powered customer service application, specifying which five metrics they would display on the primary screen and what alert thresholds they would set, then compare and debate the choices across groups.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>Prompt engineering discussions benefit enormously from live experimentation. If possible, have a shared LLM interface open during class so students can test prompt variations in real time. Seeing the model respond differently to small phrasing changes is far more instructive than describing it hypothetically.</li>
+                    <li>The chain-of-thought transparency debate often splits the class. Some students find visible reasoning highly reassuring; others are skeptical. Encourage both camps to articulate their criteria for what would actually count as evidence that the reasoning is genuine versus post-hoc rationalization — this pushes the discussion toward more rigorous epistemics.</li>
+                    <li>When discussing cost management, make the numbers concrete. Show a sample API pricing page and walk through what a real-world request volume (e.g., 1 million customer support queries per month) would cost at different token counts. This grounds the optimization strategies in genuine economic stakes rather than abstract principles.</li>
+                    <li>For the human-in-the-loop topic, bring in the concept of automation bias — the tendency of human reviewers to over-trust automated recommendations. Ask students how a well-designed interface might counteract this bias, and what the failure mode looks like when reviewers rubber-stamp AI outputs without genuine evaluation.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

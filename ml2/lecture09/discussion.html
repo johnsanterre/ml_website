@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9: From Supervised to Generative Learning — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 9</a>
+        <div class="content-box">
+            <h1>Week 9: From Supervised to Generative Learning</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>1. The Annotation Bottleneck: Is Supervised Learning Fundamentally Constrained?</h3>
+                <p>Supervised learning has driven remarkable progress in computer vision, NLP, and speech recognition, but it depends on labeled datasets whose construction is costly, slow, and in specialized domains often impossible to scale. The textbook frames this as a fundamental epistemological constraint — the information-theoretic demands of the task grow faster than our ability to provide labeled examples. Generative and self-supervised approaches have emerged partly as engineering solutions to this problem.</p>
+                <ul class="probing-questions">
+                    <li>In what domains do you think the annotation bottleneck is most severe and least likely to be solved by crowdsourcing or automation? What properties of those domains create the bottleneck?</li>
+                    <li>Self-supervised learning creates its own supervisory signal from unlabeled data. In what sense is this "free" supervision, and in what sense does the task design (e.g., which tokens to mask, which augmentations to use) encode human knowledge about the problem?</li>
+                    <li>Some researchers argue that large-scale self-supervised pre-training followed by minimal fine-tuning is converging on a "foundation model" paradigm that will replace task-specific supervised training. What are the strongest arguments for and against this view?</li>
+                </ul>
+                <p class="activity-note">Try: Ask each student to estimate how long it would take a layperson to annotate 1000 images for general object classification, then ask the same question for tumor segmentation. Use the gap in their estimates to open a discussion on what makes expert annotation irreplaceable.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>2. Diffusion Models vs. GANs: Two Paths to Generative Modeling</h3>
+                <p>Generative Adversarial Networks (GANs) dominated image generation for several years and produced remarkably realistic outputs, but they are notoriously difficult to train due to mode collapse, training instability, and the adversarial minimax objective. Diffusion models have largely displaced GANs in image synthesis benchmarks, offering more stable training and better sample diversity. Understanding why diffusion models succeeded where GANs struggled reveals fundamental trade-offs in generative model design.</p>
+                <ul class="probing-questions">
+                    <li>GANs train a generator and a discriminator in an adversarial game. Diffusion models train a single denoising network using a simple regression objective. What practical training challenges arise from adversarial objectives that are avoided by the diffusion approach?</li>
+                    <li>GANs can generate samples in a single forward pass, while diffusion models require hundreds or thousands of sequential denoising steps at inference time. How significant is this computational cost in practice, and what recent techniques (e.g., DDIM, consistency models) attempt to address it?</li>
+                    <li>Mode collapse in GANs means the generator learns to produce only a narrow subset of the true data distribution. How does the diffusion model&#39;s training objective — which minimizes reconstruction error at every noise level — help ensure better coverage of the data distribution?</li>
+                </ul>
+                <p class="activity-note">Try: Show a side-by-side grid of GAN-generated faces (StyleGAN2) and diffusion-generated images (Stable Diffusion) without labels and ask students to identify differences in diversity, artifacts, and failure modes before revealing which is which.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Knowledge/Comprehension</span>
+                <h3>3. What Does "Learning the Data Distribution" Actually Mean?</h3>
+                <p>Generative models are described as learning the underlying data distribution P(X). But what does it mean for a model to have learned a distribution? A diffusion model never writes down an explicit probability for any input — it only knows how to denoise. A GAN cannot evaluate the likelihood of a given sample. An autoregressive model can compute exact likelihoods but generates samples differently from how it computes them. The gap between the intuitive description and the mathematical reality is worth examining carefully.</p>
+                <ul class="probing-questions">
+                    <li>What does it mean for a diffusion model to have "learned" P(X) if it cannot assign an explicit probability to an arbitrary input image? In what practical sense does it capture the data distribution?</li>
+                    <li>A generative model could achieve a low reconstruction loss on training data by simply memorizing examples. How would you distinguish between a model that has genuinely learned the data distribution and one that has memorized training examples? What experiments would help?</li>
+                    <li>Evaluation of generative models is notoriously difficult. Metrics like FID (Frechet Inception Distance) measure distributional similarity between real and generated samples. What are the limitations of using FID as the primary evaluation metric for a generative model?</li>
+                </ul>
+                <p class="activity-note">Try: Present two generated images — one clearly a memorized training sample and one novel interpolation — without identifying which is which, and ask students to design a test that could distinguish them. Then discuss what those tests reveal about what "generalization" means for generative models.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>4. Self-Supervised Learning: Designing the Right Pretext Task</h3>
+                <p>Self-supervised learning works by defining a "pretext task" — a task the model can be trained on without labels, where solving the task forces the model to learn useful representations. Masked token prediction (BERT), contrastive learning (SimCLR, MoCo), image patch prediction (MAE), and denoising (diffusion models) are all pretext tasks. The choice of pretext task fundamentally determines what the resulting representations capture and what downstream tasks they will support well.</p>
+                <ul class="probing-questions">
+                    <li>BERT masks random tokens and predicts them from context. This forces the model to understand language semantics and syntax. What would happen if instead you trained BERT to predict only the next character (rather than masked words from context)? Would the representations be better or worse for downstream NLP tasks?</li>
+                    <li>In contrastive learning, "positive pairs" are defined by data augmentation (e.g., two crops of the same image). The choice of augmentation encodes a strong assumption: the model should be invariant to whatever transformations define the positive pair. What if the augmentation strategy is wrong for your downstream task?</li>
+                    <li>The textbook notes that representations learned through self-supervised approaches often exceed what can be achieved through supervised learning. Why might learning to reconstruct or denoise data produce richer internal representations than learning to classify it?</li>
+                </ul>
+                <p class="activity-note">Try: Divide the class into groups and assign each a domain (audio, video, protein sequences, time-series sensor data). Ask each group to design a self-supervised pretext task for their domain and present their rationale. Discuss what assumptions each task encodes about the structure of that data type.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>5. Cross-Modal Generation and the Limits of Generative Models</h3>
+                <p>One of the most exciting capabilities of modern diffusion models is cross-modal generation: given a text description, generate a photorealistic image (text-to-image); given an image, generate a description (image captioning); or translate between modalities in ways that were previously impossible. Systems like Stable Diffusion and DALL-E demonstrate that generative models can learn deep correspondences between language and visual content. But these same capabilities raise important questions about what the models actually understand versus what they have statistically associated.</p>
+                <ul class="probing-questions">
+                    <li>Text-to-image models generate images consistent with a prompt by conditioning the diffusion process on text embeddings. Does the model "understand" the text, or is it performing sophisticated pattern matching between text and visual features seen during training? How would you design an experiment to distinguish between these two hypotheses?</li>
+                    <li>Diffusion models allow fine-grained control over the generation process through techniques like classifier-free guidance. This lets users interpolate between a guided and unguided generation. What does it mean for a model to be "guided" by a text prompt at the level of the reverse diffusion process?</li>
+                    <li>Generative models trained on internet-scale image-text pairs inevitably learn and amplify biases present in that data (stereotypes, demographic imbalances, cultural assumptions). How should practitioners think about the relationship between scale, capability, and risk when deploying cross-modal generative systems?</li>
+                </ul>
+                <p class="activity-note">Try: Have students generate images using a public text-to-image tool with a deliberately ambiguous or compositionally complex prompt (e.g., "a red ball to the left of a blue cube on top of a green box"), then analyze where the model fails to follow instructions and discuss what this reveals about its compositional understanding.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>The discriminative vs. generative distinction is abstract until grounded in examples. Begin by asking students what a classifier predicts versus what a generative model produces, then formalize the P(Y|X) vs. P(X,Y) distinction using their intuitions as a foundation.</li>
+                    <li>The GAN vs. diffusion model comparison is a rich topic, but students often focus on output quality rather than training dynamics. Redirect discussions toward the training stability question: ask whether they have ever seen a minimax optimization in another context and what made it difficult, which connects to the adversarial instability problem in GANs.</li>
+                    <li>When discussing self-supervised pretext tasks, emphasize that the choice of task is a form of inductive bias just as architectural choices are. Students who understand this can reason about why a task designed for images (contrastive crops) would transfer poorly to text, building cross-topic synthesis.</li>
+                    <li>The cross-modal generation discussion can become philosophical quickly. Keep it grounded by requiring students to propose a specific, falsifiable experiment that would help answer the "understanding vs. pattern matching" question — this prevents the conversation from drifting into unproductive abstraction.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1: Introduction to Deep Learning — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 1</a>
+        <div class="content-box">
+            <h1>Week 1: Introduction to Deep Learning</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>1. The Feature Engineering Trade-off</h3>
+                <p>Traditional machine learning required data scientists to manually engineer features — carefully crafting representations like edge detectors or bag-of-words encodings before a model ever sees the data. Deep learning's core promise is that it can learn these representations automatically from raw data. However, this shift comes with its own costs and assumptions.</p>
+                <ul class="probing-questions">
+                    <li>In what domains might handcrafted features still outperform automatically learned ones, and why?</li>
+                    <li>What does "end-to-end learning" mean in practice, and what are its failure modes?</li>
+                    <li>How does the scale of available data change the trade-off between manual feature engineering and learned representations?</li>
+                </ul>
+                <p class="activity-note">Try: Ask students to brainstorm one domain where they believe handcrafted features would beat learned features, then hold a quick class vote and debate the top two contenders.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>2. The Deep Learning Hardware Revolution</h3>
+                <p>The lecture notes that three factors converged to enable the deep learning revolution: large-scale datasets, powerful GPU hardware, and open-source frameworks. GPUs were originally designed for rendering graphics, yet they became the backbone of deep learning training. This was not an obvious outcome at the time.</p>
+                <ul class="probing-questions">
+                    <li>Why are GPUs particularly well-suited to the matrix operations used in neural network training?</li>
+                    <li>How might the next generation of hardware (TPUs, neuromorphic chips) change what kinds of models are practical?</li>
+                    <li>What are the environmental and accessibility implications of a field that depends on large-scale computational infrastructure?</li>
+                </ul>
+                <p class="activity-note">Try: Show a live energy-cost calculator for training a large model (e.g., using published figures from papers on GPT training), then ask small groups to discuss who benefits and who bears the cost of this infrastructure.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>3. Choosing an Activation Function</h3>
+                <p>The choice of activation function has significant consequences for training dynamics. The sigmoid function dominated early neural network research, but ReLU (f(x) = max(0, x)) became the de facto standard for hidden layers in modern networks. This seemingly simple change had profound practical effects on training deep models.</p>
+                <ul class="probing-questions">
+                    <li>Why does sigmoid cause gradients to vanish in deep networks, and how does ReLU address this?</li>
+                    <li>ReLU "kills" neurons whose pre-activation is always negative — the "dying ReLU" problem. What variants (Leaky ReLU, ELU, GELU) were proposed to address this, and what are their trade-offs?</li>
+                    <li>Should the output layer always use a different activation than hidden layers? What determines the right choice?</li>
+                </ul>
+                <p class="activity-note">Try: Draw the sigmoid and ReLU curves side by side on the board, then ask students to trace the derivative through three layers by hand to viscerally experience gradient shrinkage with sigmoid.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>4. PyTorch vs. TensorFlow: Research vs. Production</h3>
+                <p>The dominance of PyTorch in academic research and TensorFlow in production deployment reflects deeper philosophical differences between the two frameworks — dynamic versus static computation graphs, eager versus deferred execution. With TensorFlow 2.0 adopting eager execution by default, the lines have blurred, yet the two communities remain distinct.</p>
+                <ul class="probing-questions">
+                    <li>What specific aspects of dynamic computation graphs make PyTorch more natural for research, and what did this cost in early production deployments?</li>
+                    <li>As a practitioner, at what point in a project's lifecycle would you consider switching from a research framework to a production-focused one?</li>
+                    <li>What risks arise when research code written in one framework must be redeployed or reproduced using another?</li>
+                </ul>
+                <p class="activity-note">Try: Pose a scenario — "You need to ship a model to a mobile app in 6 weeks. Which framework do you start with and why?" — and run a quick poll before opening the floor to debate.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>5. Machine Learning Paradigms and Their Ethical Assumptions</h3>
+                <p>Supervised learning requires labeled data, unsupervised learning looks for patterns without labels, and reinforcement learning learns from environmental feedback. Each paradigm embeds implicit assumptions about what counts as "correct" behavior and who decides it. These assumptions have significant ethical implications when models are deployed at scale.</p>
+                <ul class="probing-questions">
+                    <li>In supervised learning, labels reflect the judgments of whoever created them — how does labeling bias propagate into a deployed model?</li>
+                    <li>Unsupervised clustering can reinforce existing social categories (e.g., demographic groupings). How should practitioners decide when discovered clusters are meaningful vs. spurious?</li>
+                    <li>Reinforcement learning optimizes a reward signal — what happens when the reward is misspecified? Can you think of real-world examples where reward misspecification led to unintended behavior?</li>
+                </ul>
+                <p class="activity-note">Try: Split students into three groups, one per paradigm, and ask each group to design a labeling or reward scheme for a hiring tool, then compare the embedded assumptions across groups.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>Ground abstract concepts early: before discussing deep learning's advantages, ask students what they already know about traditional ML pipelines so you can build on prior knowledge rather than starting from scratch.</li>
+                    <li>Use the feature engineering topic to establish a recurring theme for the course — the tension between automation and control — which will resurface in regularization, architecture design, and AutoML discussions.</li>
+                    <li>When discussing GPUs and compute costs, acknowledge that students have varying access to hardware; emphasize free-tier cloud options (Google Colab, Kaggle) so the conversation stays grounded and inclusive.</li>
+                    <li>For the ethics discussion, model intellectual humility by acknowledging genuine uncertainty — there are no clean answers to reward misspecification or labeling bias, and framing this as an open research area helps students engage critically rather than seeking a "right" answer.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

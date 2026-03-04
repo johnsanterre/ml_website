@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 12: Retrieval Augmented Generation — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 12</a>
+        <div class="content-box">
+            <h1>Week 12: Retrieval Augmented Generation (RAG)</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>1. Chunking Strategy: The Hidden Foundation of RAG Performance</h3>
+                <p>Before any retrieval can happen, documents must be divided into chunks that are embedded and stored in the vector database. The textbook describes several strategies — fixed-size, sentence-based, paragraph-based, and semantic chunking — each with different trade-offs between precision, context preservation, and computational cost. The choice of chunking strategy is often the single most impactful decision in building a RAG system, yet it receives far less attention than model selection.</p>
+                <ul class="probing-questions">
+                    <li>Smaller chunks tend to improve retrieval precision by reducing noise, but may lose important surrounding context. Larger chunks preserve context but may dilute relevance. How would you decide on an appropriate chunk size for a technical documentation corpus versus a corpus of news articles?</li>
+                    <li>Semantic chunking uses embeddings to identify topic boundaries — it is potentially the most effective but also the most computationally expensive. Under what circumstances would the added cost be justified?</li>
+                    <li>The textbook mentions metadata enrichment — augmenting chunks with document title, section headers, and creation dates. How might this metadata change the retrieval behavior, and what retrieval scenarios would benefit most from it?</li>
+                </ul>
+                <p class="activity-note">Try: Give student groups a printed multi-page technical document and ask each group to manually chunk it using a different strategy (fixed-size, sentence-level, paragraph-level, semantic topic boundaries). Then have groups compare their chunk boundaries and discuss which strategy would produce the best retrievable units for different types of queries against that document.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>2. Semantic Search vs. Keyword Search: When Does Meaning Matter?</h3>
+                <p>Traditional keyword-based search (including BM25) matches documents to queries based on term frequency and exact vocabulary overlap. Semantic search using dense vector embeddings captures conceptual similarity even when no exact terms are shared. RAG systems increasingly use hybrid approaches that combine both. Understanding when each mode of search excels — and when it fails — is essential for designing effective retrieval systems.</p>
+                <ul class="probing-questions">
+                    <li>Give a concrete example of a query where pure semantic search would outperform BM25, and one where BM25 would outperform semantic search. What do these examples reveal about the failure modes of each approach?</li>
+                    <li>The choice of similarity metric (cosine similarity, Euclidean distance, dot product) should align with how the embedding model was trained. Why does the training objective of the embedding model determine which metric is most appropriate?</li>
+                    <li>Approximate nearest neighbor (ANN) algorithms like HNSW trade accuracy for speed. In a production RAG system, how much retrieval accuracy loss would you consider acceptable, and how would you measure it?</li>
+                </ul>
+                <p class="activity-note">Try: Run a live demo using a simple keyword search and a semantic search on the same small document corpus, querying it with paraphrases and rare technical terms. Ask students to predict which system will retrieve better results before seeing the output, then analyze the cases where predictions were wrong.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>3. Advanced Retrieval: HyDE, Multi-Query, and Active RAG</h3>
+                <p>The basic RAG retrieval step — embed query, find nearest neighbors, retrieve top-k — is a starting point, not an endpoint. The textbook describes several advanced retrieval strategies: HyDE (embedding a hypothetical answer), multi-query retrieval (generating variations of the query), and Active RAG (iterative multi-step retrieval). Each addresses a different failure mode of naive retrieval, but each also adds latency and complexity.</p>
+                <ul class="probing-questions">
+                    <li>HyDE generates a hypothetical answer using the LLM before retrieval. This means the LLM is run twice — once before and once after retrieval. When do you think the added latency and cost of HyDE would be justified by improved retrieval quality?</li>
+                    <li>Multi-query retrieval generates multiple reformulations of the original query. What types of questions would benefit most from this? What are the risks of combining results from multiple queries?</li>
+                    <li>Active RAG (iterative retrieval) is described as particularly powerful for complex multi-step questions. Design a concrete example of a complex question and sketch out how Active RAG would proceed to answer it over multiple retrieval rounds.</li>
+                </ul>
+                <p class="activity-note">Try: Present students with a complex multi-hop question (e.g., one that requires finding information from two separate documents and synthesizing it) and ask small groups to manually trace through how Active RAG would retrieve, evaluate, and re-query to build toward an answer — then compare the paths different groups took.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>4. Evaluating RAG: What Does a "Good" Answer Mean?</h3>
+                <p>Evaluating RAG systems is more complex than evaluating traditional information retrieval because quality depends on both the retrieval step and the generation step, and these can fail independently. The textbook describes retrieval metrics (Recall@k, Precision@k, MRR, NDCG), generation metrics (faithfulness, answer relevance, hallucination rate), and end-to-end metrics (answer correctness, human preference). Building a comprehensive evaluation framework requires balancing all of these.</p>
+                <ul class="probing-questions">
+                    <li>A RAG system might retrieve the right documents but generate an unfaithful response, or retrieve the wrong documents but still produce a correct answer from parametric knowledge. How would you design an evaluation pipeline that detects and distinguishes these different failure modes?</li>
+                    <li>Ground truth labels for retrieval evaluation (knowing which documents are relevant for each query) are expensive to obtain. What alternative approaches could you use to evaluate retrieval quality without human-annotated relevance labels?</li>
+                    <li>Human preference is listed as a key end-to-end metric, but it can conflict with faithfulness — users sometimes prefer confident, well-written responses even when they are not fully grounded in the retrieved context. How would you handle this tension in a real application?</li>
+                </ul>
+                <p class="activity-note">Try: Have students rate a set of five RAG-generated answers on two separate dimensions (how much they prefer the response overall, and how well they think it is grounded in a provided source document), then compare the rankings across both dimensions and discuss where they diverge and why.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>5. Privacy, Security, and Access Control in RAG Systems</h3>
+                <p>RAG systems often access proprietary or sensitive knowledge bases — internal company documents, patient records, legal case files. This creates security challenges that are distinct from those in standard software systems: the retrieval step must respect document-level access permissions, retrieved content must be sanitized before being included in prompts, and every retrieval action should be auditable. These requirements add significant architectural complexity to what might otherwise seem like a straightforward pipeline.</p>
+                <ul class="probing-questions">
+                    <li>In a multi-tenant RAG system where different users have access to different subsets of documents, how would you implement access control at the retrieval layer? What are the risks if this control is implemented incorrectly?</li>
+                    <li>The textbook mentions "sanitizing retrieved content before including in prompts." What types of sensitive information would need to be sanitized, and how would you implement this without destroying the informational value of the retrieved content?</li>
+                    <li>Audit logging is described as a requirement for RAG systems handling sensitive data. What events should be logged, what metadata should be captured for each, and how would you use these logs to investigate a potential data access incident?</li>
+                </ul>
+                <p class="activity-note">Try: Present a small-group scenario: a healthcare company is building a RAG system over patient records, and a user submits a query that retrieves a record they are not supposed to access. Ask each group to trace where the access control failure could have occurred and what logging would be needed to detect and investigate it.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>The chunking discussion is most productive when students have handled real text. If time allows, paste a multi-page document into a shared editor before class and ask students to draw chunk boundaries in different colors using different strategies. The disagreements that emerge — especially around paragraph breaks, tables, and figures — reveal the genuine difficulty of the problem far better than any abstract description.</li>
+                    <li>When discussing retrieval metrics like Recall@k and Precision@k, it helps to frame them as two different types of librarian failures: a librarian who retrieves irrelevant books (low precision) versus one who misses important books that exist in the collection (low recall). This analogy lets students reason about the metrics intuitively before working through the formal definitions.</li>
+                    <li>The HyDE and advanced retrieval discussion can easily become too hypothetical. Ground it by asking students to identify a specific domain (customer support, academic research, legal discovery) and explain concretely which advanced technique would add the most value for queries in that domain — and which would be wasted overhead. Specificity forces genuine reasoning rather than generic answers.</li>
+                    <li>Privacy and access control in RAG is an area where students often underestimate the complexity. A useful provocation: ask students whether a retrieval system that returns only document summaries (rather than full text) is sufficient to protect sensitive data. This usually surfaces the insight that semantic information can be leaked even without returning raw content, leading to a richer discussion about what "sanitization" really means.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

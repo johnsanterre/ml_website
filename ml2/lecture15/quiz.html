@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 15: Future Trends in LLMs — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 15</a>
+        <div class="content-box">
+            <h1>Week 15: Future Trends in LLMs</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "This describes the parameter count of the full weight matrix, not the LoRA addition. LoRA avoids training the full matrix by factoring the update into two smaller matrices.",
+                "b": "Correct. Matrix B is d x r and matrix A is r x k, giving r*d + r*k = r*(d+k) trainable parameters, which is far smaller than d*k when r is small.",
+                "c": "Both matrices A and B are trained in LoRA. Freezing only one of them would give d*r parameters, but this is not how LoRA works.",
+                "d": "r squared would only be the parameter count if both matrices were r x r. Since B is d x r and A is r x k, the total depends on d and k."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>In Low-Rank Adaptation (LoRA), the weight update is expressed as the product of two low-rank matrices: delta_W = BA, where B is d x r and A is r x k. What is the total number of trainable parameters added by a single LoRA update?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) d * k, the same as the full weight matrix</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) r * (d + k), which is much smaller than d * k when r is small</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) d * r only, because matrix A is always kept frozen</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) r squared, independent of d and k</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Processing every token through all experts would give full MoE capacity but also full inference cost, defeating the purpose. MoE efficiency comes from sparse activation.",
+                "b": "Correct. A gating network routes each token to only a small subset of experts (e.g., 2 of 64), keeping most experts idle per token and inference cost manageable despite large total capacity.",
+                "c": "1-bit quantization is a separate technique called BitNet, not the mechanism that makes MoE efficient. MoE efficiency comes from sparse expert routing.",
+                "d": "MoE architectures use a shared tokenizer. Using separate tokenizers per expert would add complexity without addressing the computational efficiency goal."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>Mixture of Experts (MoE) architectures scale model capacity without proportionally increasing inference cost. What mechanism enables this efficiency?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) All expert sub-networks process every input token and their outputs are averaged, spreading the compute</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) A gating network routes each input to only a small subset of expert sub-networks, so most experts remain inactive for any given token</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) Expert weights are quantized to 1-bit precision to reduce memory bandwidth during inference</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) The model uses separate tokenizers for each expert to reduce vocabulary processing overhead</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Constitutional AI retains the language model and does not replace it with a symbolic rule engine. It guides the model using principles expressed in natural language.",
+                "b": "Correct. Constitutional AI prompts the model to critique and revise its own outputs using a written set of principles, reducing dependence on large volumes of direct human preference labels compared to standard RLHF.",
+                "c": "Constitutional AI modifies the training process itself, not just post-deployment checking. The self-critique loop produces training data used for supervised fine-tuning and RLHF.",
+                "d": "Differential privacy is a separate technique for preventing memorization of training data. Constitutional AI is about alignment through self-critique, not privacy preservation."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>Constitutional AI aims to make the alignment process more scalable and principle-driven. What distinguishes it from standard RLHF?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) It replaces the language model with a symbolic rule engine for all safety-critical outputs</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) It uses a set of principles to guide the model in self-critiquing and revising its own outputs, reducing dependence on large volumes of direct human preference labels</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) It trains a separate constitutional model that checks outputs after deployment, with no changes to the base model training</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) It applies differential privacy during training to prevent the model from memorizing sensitive constitutional documents</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Chinchilla showed that larger models do NOT always win; undertrained smaller models were outperformed by compute-optimally trained smaller models with more data.",
+                "b": "Correct. Chinchilla (Hoffmann et al., 2022) showed that prior models were significantly undertrained, and that compute-optimal training requires scaling dataset size proportionally with model parameters.",
+                "c": "Scaling laws follow a power-law relationship with compute, not exponential. Chinchilla refined the coefficients, not the functional form.",
+                "d": "Chinchilla showed the optimal token count scales with model size, not a fixed 300 billion tokens. Larger models require proportionally more training data."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>The Chinchilla scaling laws refined earlier scaling work by Kaplan et al. What was their key finding about compute-optimal training?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) Larger models always outperform smaller models regardless of dataset size, so compute should be spent entirely on increasing parameters</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) Previous large models were undertrained; optimal compute allocation requires scaling dataset size proportionally with model parameters, not focusing solely on parameter count</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) Training loss follows an exponential rather than a power-law relationship with compute, invalidating earlier scaling predictions</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) The optimal dataset size is fixed at approximately 300 billion tokens regardless of model scale</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Flash Attention does not change the feed-forward layers or use sparse activations there. It is a memory-efficient implementation of the attention operation itself.",
+                "b": "Correct. Flash Attention tiles the computation to fit in fast SRAM, avoiding materializing the full N x N attention matrix in HBM, achieving 2-4x speedups and enabling much longer contexts.",
+                "c": "Flash Attention preserves exact softmax attention; it is an IO-aware implementation, not an approximation. Linear attention is a different, approximate method.",
+                "d": "Flash Attention does not quantize attention weights. It achieves efficiency through memory access pattern optimization, keeping the computation in full precision."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Flash Attention addresses a key computational bottleneck in transformer training. What problem does it solve?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) It reduces the number of parameters in the feed-forward layers by using sparse activations</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) It eliminates the quadratic memory complexity of standard attention by reorganizing computation to avoid materializing the full attention matrix, achieving 2-4x speedups and enabling longer contexts</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) It replaces softmax attention with a linear approximation, changing the expressive power of each attention head</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) It quantizes attention weights to 4-bit precision during the forward pass to reduce memory bandwidth</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Grokking is specifically characterized by a sudden, non-gradual jump in generalization, not a steady improvement. Gradual improvement is the normal expected training behavior.",
+                "b": "Correct. Grokking describes models that initially memorize training data with poor generalization, then suddenly achieve near-perfect generalization after extended training beyond the point of low training loss.",
+                "c": "Copying training examples verbatim is memorization or extraction, not grokking. Grokking is about a late transition to genuine generalization.",
+                "d": "Interpretability of representations is a separate research area. Grokking is specifically about the timing and suddenness of the generalization transition during training."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>"Grokking" is a training phenomenon relevant to understanding LLM generalization. What does it describe?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) The gradual, steady improvement in generalization performance throughout training that scales predictably with compute</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) A sudden, sharp jump to near-perfect generalization that occurs after prolonged training, even after the model has already achieved low training loss through apparent memorization</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) The phenomenon where models copy exact training examples verbatim into their outputs, indicating overfitting</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) The process by which a model&#39;s internal representations become interpretable to human researchers after sufficient training</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Output diversity is controlled by temperature or nucleus sampling, not KL divergence. KL divergence in RLHF addresses policy stability, not generation variety.",
+                "b": "Correct. The KL penalty prevents the fine-tuned policy from drifting too far from the reference model, guarding against reward hacking where the model exploits flaws in the reward function.",
+                "c": "KL divergence bounds policy change in the RL objective, but its purpose is alignment stability, not computational efficiency of the PPO update step.",
+                "d": "The reward model and policy model have different architectures and purposes. The KL penalty does not push them toward the same parameter values."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>In RLHF, a KL divergence penalty is included in the RL fine-tuning objective. What is the purpose of this penalty?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) To maximize the diversity of outputs so the model does not generate repetitive text</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) To prevent the policy from deviating too far from the reference model, guarding against reward hacking where the model exploits flaws in the reward function to score highly while producing poor outputs</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) To reduce the computational cost of the PPO update step by bounding gradient magnitudes</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) To ensure the reward model and the policy model converge to the same parameter values</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Masked image modeling is used by models like MAE, not CLIP. CLIP uses paired image-text supervision, not self-supervised image patch prediction.",
+                "b": "Correct. CLIP maximizes cosine similarity between matching image-text pairs while minimizing it for non-matching pairs through contrastive learning, enabling zero-shot transfer by comparing image embeddings to text descriptions of categories.",
+                "c": "CLIP is not fine-tuned on ImageNet labels with cross-entropy loss during pre-training. Its strength is that it learns from raw image-caption pairs without class label supervision.",
+                "d": "CLIP is not a generative model and does not produce captions evaluated with BLEU. It is a discriminative model that learns joint image-text representations."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>CLIP (Contrastive Language-Image Pre-training) learns to associate images and text. What training objective enables its strong zero-shot classification capabilities?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) It is pre-trained with a masked image modeling objective, predicting missing image patches from surrounding context</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) It maximizes the cosine similarity between matching image-text pairs while minimizing similarity between non-matching pairs through contrastive learning on large image-caption datasets</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) It is fine-tuned on labeled ImageNet categories using standard cross-entropy loss, then adapted to text descriptions</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) It uses a generative decoder to produce image captions and is evaluated on BLEU score against human-written captions</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Capabilities that improve gradually with scale are not emergent; they are expected scaling behavior. Emergent abilities are specifically those that appear sharply at certain scale thresholds.",
+                "b": "Correct. Emergent abilities are absent or near-random in smaller models and appear suddenly at certain scale thresholds, making them difficult to predict in advance and challenging for capability forecasting.",
+                "c": "Emergent abilities appear through scaling pre-training, not fine-tuning. They are observed in base models without task-specific training data.",
+                "d": "Emergent abilities improve, not degrade, with scale at the relevant threshold. Capabilities that worsen with scale are referred to as inverse scaling phenomena."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>"Emergent abilities" in large language models refer to capabilities that appear suddenly at certain scales. Which of the following is the best characterization of this phenomenon?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) Capabilities that are explicitly trained at every scale but become more accurate as model size increases</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) Capabilities that are absent or near-random in smaller models but appear sharply and dramatically at certain scales, making them difficult to predict in advance</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) Capabilities that emerge only after fine-tuning on task-specific data, regardless of the base model scale</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) Capabilities that degrade with scale due to interference from increasingly diverse training data</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Full-precision fine-tuning with gradient accumulation does not reduce memory enough for consumer hardware. QLoRA specifically requires quantization of the base model to achieve its memory savings.",
+                "b": "Correct. QLoRA quantizes the frozen base model to 4-bit NF4 format, keeps LoRA adapters in BF16, and uses paged optimizers and gradient checkpointing to enable fine-tuning of large models on consumer GPUs.",
+                "c": "Replacing attention with linear recurrence describes architectures like Mamba or RWKV. QLoRA retains the standard transformer attention; its efficiency comes from quantization and LoRA.",
+                "d": "Multi-GPU data parallelism scales training across many machines but does not reduce per-device memory. QLoRA targets single-GPU memory reduction, not distributed scaling."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>QLoRA extends LoRA to allow fine-tuning of very large models on consumer hardware. Which combination of techniques is central to QLoRA&#39;s memory efficiency?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) Full-precision fine-tuning combined with gradient accumulation over many small batches</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) Quantizing pre-trained model weights to 4-bit precision while keeping LoRA adapter parameters in higher precision, combined with paged optimizers and gradient checkpointing</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) Replacing all attention layers with linear recurrent layers to reduce the quadratic memory cost of attention</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) Distributing fine-tuning across hundreds of GPUs using data parallelism with synchronized gradient updates</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

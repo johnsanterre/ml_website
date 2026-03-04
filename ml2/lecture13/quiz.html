@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 13: Evaluating LLMs — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 13</a>
+        <div class="content-box">
+            <h1>Week 13: Evaluating LLMs — Metrics and Methods</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "A recall penalty addresses coverage, not the length gaming that BLEU needs to prevent. BLEU is precision-based and does not use a recall penalty.",
+                "b": "Correct. The brevity penalty multiplies the score by exp(1 - r/c) when the candidate is shorter than the reference, discouraging trivially short outputs that would otherwise game precision.",
+                "c": "Perplexity is a separate language modeling metric unrelated to BLEU. BLEU has no perplexity penalty component.",
+                "d": "BLEU does not use a sentence-count normalization term. The brevity penalty is based on total character length, not the number of sentences."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>BLEU is primarily a precision-based metric. Which penalty does it apply to prevent models from gaming the score by generating very short outputs?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) A recall penalty that reduces scores when coverage is low</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) A brevity penalty that multiplies the score down for outputs shorter than the reference</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) A perplexity penalty applied to rare n-grams</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) A length normalization term based on the number of sentences</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "ROUGE-N measures overlap based on contiguous n-grams, not longest common subsequences. It is the most basic ROUGE variant.",
+                "b": "ROUGE-S measures skip-bigram overlap, allowing gaps between word pairs. It does not use the LCS algorithm.",
+                "c": "Correct. ROUGE-L uses the longest common subsequence, which captures flexible word-order matches without requiring contiguous n-gram overlap.",
+                "d": "ROUGE-W is a weighted variant of ROUGE-L that gives more credit to consecutive LCS matches, but ROUGE-L is the standard LCS-based variant."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>Unlike BLEU, ROUGE is a recall-oriented metric. Which ROUGE variant measures overlap based on the longest common subsequence (LCS) rather than contiguous n-grams?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) ROUGE-N</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) ROUGE-S</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) ROUGE-L</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) ROUGE-W</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Requiring more bits per word describes higher perplexity, not lower. Higher perplexity indicates the model is less certain about predictions.",
+                "b": "Correct. Lower perplexity means the model assigns higher probability to test sequences, indicating greater confidence and a better fit to the underlying language patterns.",
+                "c": "Perplexity and BLEU are independent metrics measuring different things. A lower perplexity does not imply a higher BLEU score.",
+                "d": "Perplexity measures model confidence, not training corpus size. A smaller model trained well can achieve lower perplexity than a larger, poorly trained one."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>In language modeling, perplexity measures the model&#39;s uncertainty when predicting the next word. Which statement best describes what a lower perplexity value indicates?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) The model requires more bits per word and is less confident in its predictions</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) The model is more confident and better captures the underlying language patterns</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) The model has a higher BLEU score on the test set</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) The model was trained on a larger corpus</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The harmonic mean is not easier to compute based on class balance. Its value is its behavior when precision and recall are imbalanced.",
+                "b": "Correct. The harmonic mean is low whenever either precision or recall is low, so a model with 100% precision but 0% recall gets an F1 of 0, which the arithmetic mean would inflate to 50%.",
+                "c": "The harmonic mean always produces values less than or equal to the arithmetic mean, not higher. It is stricter, not more lenient.",
+                "d": "The harmonic mean and geometric mean are different operations and are not identical. The harmonic mean is specifically chosen for the precision-recall trade-off."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>The F1 score is defined as the harmonic mean of precision and recall. Why is the harmonic mean preferred over the arithmetic mean in this context?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) It is easier to compute when class distributions are balanced</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) It penalizes extreme imbalances between precision and recall, requiring both to be reasonably high for a good F1 score</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) It always produces higher values than the arithmetic mean, making models look better</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) It is identical to the geometric mean and therefore more statistically robust</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "GLUE and SuperGLUE are designed to measure language understanding, not training throughput or inference latency. Those are engineering metrics, not benchmark goals.",
+                "b": "GLUE and SuperGLUE are text-based benchmarks for language understanding. Image generation is outside their scope entirely.",
+                "c": "Correct. GLUE and SuperGLUE evaluate natural language understanding across tasks such as sentiment analysis, textual entailment, coreference resolution, and question answering.",
+                "d": "Code generation benchmarks such as HumanEval use unit test pass rates. GLUE and SuperGLUE focus on natural language understanding, not code."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>The GLUE and SuperGLUE benchmark suites are specifically designed to evaluate which aspect of large language models?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) The model&#39;s training throughput and inference latency</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) The model&#39;s ability to generate photorealistic images from text prompts</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) Natural language understanding capabilities across tasks like sentiment analysis, textual entailment, and question answering</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) Code generation ability measured by unit test pass rates</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Vocabulary size is a surface property that does not capture semantic meaning. A large vocabulary does not indicate that outputs are semantically accurate.",
+                "b": "Correct. Metrics like BERTScore use contextualized embeddings from models like BERT to compare the semantic similarity of generated and reference text, going beyond word-level overlap.",
+                "c": "Counting unique sentences per second measures throughput, not semantic quality. It provides no information about meaning.",
+                "d": "Restricting evaluation to single-sentence outputs would limit applicability without solving the semantic alignment problem. It does not address meaning capture."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>One fundamental limitation of traditional metrics like BLEU and perplexity is that they focus on surface-level word overlap rather than meaning. Which evaluation approach has been proposed to better capture semantic understanding?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) Measuring the vocabulary size of generated outputs</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) Using contextualized embeddings from models like BERT to compute semantic similarity between generated and reference text</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) Counting the number of unique sentences the model can produce per second</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) Restricting evaluation to single-sentence outputs to eliminate context ambiguity</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Pearson&#39;s r measures linear correlation between continuous variables. It is not designed to measure annotator agreement on categorical ratings.",
+                "b": "Correct. Cohen&#39;s kappa (for two annotators) and Fleiss&#39; kappa (for multiple annotators) measure agreement above chance, providing a standardized inter-rater reliability score.",
+                "c": "The BLEU brevity penalty is a text generation metric, not a measure of annotator agreement. It has no role in inter-rater reliability.",
+                "d": "A paired t-test compares means of two groups and is not designed to quantify agreement between annotators on categorical labels."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>In human evaluation protocols, inter-rater reliability measures agreement among multiple annotators. Which statistic is commonly used for this purpose?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) Pearson&#39;s r correlation coefficient</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) Cohen&#39;s kappa or Fleiss&#39; kappa</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) The BLEU brevity penalty factor</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) A paired t-test comparing annotator scores</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Generating text faster than a baseline is a latency or throughput metric, not a measure of chain-of-thought accuracy. Speed does not assess reasoning quality.",
+                "b": "Correct. Chain-of-thought accuracy evaluates whether the model provides step-by-step reasoning that is logically sound, not just whether the final answer is correct.",
+                "c": "Predicting masked tokens is a pre-training objective, not chain-of-thought evaluation. Chain-of-thought assesses reasoning quality in generative outputs.",
+                "d": "Grammatical error rate is a surface-level fluency metric. Chain-of-thought evaluation focuses on the logical validity of the reasoning process, not grammatical form."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>Behavioral evaluation of LLMs assesses chain-of-thought accuracy. What does this specifically evaluate?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) Whether the model can generate text faster than a baseline system</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) The model&#39;s ability to provide step-by-step reasoning and logically sound explanations for its outputs</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) The percentage of tokens the model correctly predicts in a masked language modeling task</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) Whether the model&#39;s outputs contain fewer grammatical errors than a reference baseline</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Skipping difficult examples would introduce systematic bias, not reduce it. Blind evaluation is about hiding source identity, not reducing annotation effort.",
+                "b": "Correct. Blind evaluation hides whether text is human-written or AI-generated, preventing evaluators from applying assumptions about AI quality that would bias their ratings.",
+                "c": "Blind evaluation concerns the evaluator seeing the source, not the model seeing its own outputs. These are entirely different concerns in evaluation design.",
+                "d": "Blind evaluation addresses evaluator bias in human studies. It has nothing to do with reference translations or the BLEU metric."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>Blind evaluation is used as a systematic assessment technique in human evaluation protocols. What is its primary purpose?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) To reduce annotation costs by having evaluators skip difficult examples</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) To prevent evaluators&#39; prior knowledge of whether text is human-written or AI-generated from biasing their ratings</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) To ensure the model never sees its own outputs during self-evaluation</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) To eliminate the need for reference translations when computing BLEU scores</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Architecture depth and attention head count are design choices, not evaluation dimensions. HELM measures holistic real-world performance, not internal model structure.",
+                "b": "HELM goes far beyond aggregating BLEU and ROUGE scores. It uses a wide range of tasks and includes non-accuracy dimensions like fairness and efficiency.",
+                "c": "Correct. HELM evaluates robustness under distribution shift, fairness across demographic groups, and efficiency alongside task accuracy, providing a multidimensional assessment.",
+                "d": "Server geography is irrelevant to model evaluation. HELM focuses on model behavior, not the infrastructure used to run inference."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>The HELM (Holistic Evaluation of Language Models) framework takes a more comprehensive approach than task accuracy alone. Which additional dimensions does HELM consider?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) Model architecture depth and the number of attention heads</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) Only the BLEU and ROUGE scores aggregated across all tasks</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) Robustness, fairness, and efficiency alongside task performance</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) The geographic location of the servers used for inference</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

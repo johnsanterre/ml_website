@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 14: LLMs as Decision Makers and Agents — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 14</a>
+        <div class="content-box">
+            <h1>Week 14: LLMs as Decision Makers and Agents</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Token count and API cost are engineering concerns, not the primary reason to use structured output. Free-form text can be equally concise.",
+                "b": "Correct. Structured formats like JSON capture the decision, rationale, and metadata in a consistent schema, making outputs interpretable and easy to integrate with downstream systems.",
+                "c": "Structured formats do not eliminate hallucinations. JSON outputs can still contain fabricated content; the format aids integration, not factual accuracy.",
+                "d": "Structured output does not eliminate the need for confidence scoring. Confidence is a separate field within the structured schema that remains important."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>When using an LLM as a decision maker, structured output formats such as JSON are preferred over free-form text. What is the primary reason for this?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) JSON outputs require fewer tokens and therefore reduce API costs</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) Structured formats make the decision interpretable and easier to integrate with downstream systems by capturing the selected option, rationale, and metadata in a consistent schema</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) Free-form text outputs always contain hallucinations, while JSON outputs do not</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) Structured formats eliminate the need for confidence scoring</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Confidence scoring is about individual output reliability, not ranking AI providers. Provider comparison is a separate evaluation task.",
+                "b": "Correct. Confidence scores communicate how certain the model is about a decision, enabling downstream systems or human reviewers to decide whether to trust the output or escalate to a fallback.",
+                "c": "Confidence scoring does not trigger automatic retraining. It is used at inference time to gate decisions, not to update model weights.",
+                "d": "FLOPs measure compute cost, not decision reliability. Confidence scoring is a quality signal, not a computational cost measurement."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>Confidence scoring is an important component of LLM-based decision frameworks. What is its primary purpose?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) To rank competing LLM providers by their average response accuracy</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) To allow the model to communicate the reliability of its output, enabling downstream systems or humans to assess trustworthiness before acting on a decision</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) To automatically retrain the model when its confidence falls below a threshold</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) To measure the computational cost of each decision in terms of FLOPs</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Memory capacity is part of the agent&#39;s state representation, not its action space. The action space defines what the agent can do, not what it can remember.",
+                "b": "Correct. The action space defines the complete set of possible actions available to the agent, subject to constraints from the environment and the agent&#39;s capabilities.",
+                "c": "Token generation limits relate to the language model&#39;s context window, not the action space. The action space is defined by what the agent can actually do in its environment.",
+                "d": "Physical hardware is an infrastructure concern, not a part of the agent&#39;s action space definition. Action spaces are defined in terms of environment interactions."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>In agentic workflows, what does the agent&#39;s "action space" define?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) The memory capacity available to the agent for storing past observations</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) The set of actions the agent can perform, subject to the constraints and limitations imposed by the environment and the agent&#39;s capabilities</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) The maximum number of tokens the agent can generate per request</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) The physical hardware on which the agent is deployed</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "The learning rate is a training hyperparameter for neural networks, not a Bellman equation component. The discount factor is a planning concept distinct from learning rates.",
+                "b": "The parameter-to-data ratio is a training scale concept, not related to the Bellman equation. The discount factor governs temporal reward weighting.",
+                "c": "Correct. The discount factor gamma (0 to 1) weights future rewards relative to immediate ones. A value near 1 makes the agent far-sighted; a value near 0 makes it myopic.",
+                "d": "The probability of transitioning to a terminal state is part of the environment dynamics, not the discount factor. The discount factor controls reward temporal weighting."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>The Bellman equation is central to optimal policy derivation in agentic decision-making. In this context, what does the discount factor gamma represent?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) The learning rate used to update the agent&#39;s neural network weights</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) The ratio of model parameters to training data size</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) The balance between the importance of immediate rewards and future rewards — values closer to 1 make the agent more far-sighted</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) The probability that the environment transitions to a terminal state on any given step</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Accepting all outputs regardless of confidence defeats the purpose of fallback mechanisms and introduces reliability risks in production systems.",
+                "b": "Correct. A valid fallback strategy routes low-confidence decisions to human experts or specialized models, maintaining reliability when the LLM is uncertain.",
+                "c": "Edge cases disproportionately cause failures and cannot be safely ignored. Fallback strategies exist precisely to handle these situations.",
+                "d": "Increasing temperature generates more diverse but not necessarily more reliable outputs. It does not provide a safe fallback for low-confidence decisions."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Fallback mechanisms in LLM decision frameworks are designed to handle situations where the model cannot make a confident decision. Which of the following is a valid example of a fallback strategy?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) Automatically accepting the model&#39;s output regardless of confidence score to maintain throughput</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) Deferring to a human expert or a more specialized model when the LLM&#39;s confidence score falls below a threshold</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) Ignoring edge cases because they represent a small fraction of production traffic</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) Switching to a higher-temperature sampling setting to generate more diverse outputs</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Batching requests reduces latency through parallelism but is not the purpose of feedback loops. Feedback loops are about learning and adaptation over time.",
+                "b": "Correct. Feedback loops let the router learn from past routing outcomes and adapt its logic, keeping the workflow optimized as data distributions and task patterns change.",
+                "c": "Data redundancy for fault tolerance is a systems engineering concern, not the function of feedback loops in router architectures.",
+                "d": "Translating structured outputs to natural language is a presentation concern, not what feedback loops accomplish in a router architecture."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>In router architectures for LLM-based data science workflows, what is the primary role of feedback loops?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) To batch requests together to reduce latency</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) To enable the system to learn from past routing decisions and adapt over time, so the workflow remains optimized as conditions change</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) To duplicate data across multiple nodes for redundancy</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) To translate structured outputs back into natural language for human review</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Negotiation-based resolution has agents communicate directly to reach agreement. It does not rely on predefined rules; it is dynamic and agent-driven.",
+                "b": "Consensus-based resolution requires agents to converge on a shared position through voting or agreement protocols, not through predefined rules.",
+                "c": "Correct. Rule-based resolution uses predefined constraints and priority rules to settle conflicts without requiring agents to negotiate, offering speed and predictability.",
+                "d": "Auction-based resolution allocates tasks or resources by having agents bid competitively. It is a market-mechanism approach, not a rule-application approach."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>Conflict resolution in multi-agent systems is needed when agents&#39; goals or actions are incompatible. Which approach uses predefined rules and constraints to guide resolution rather than having agents negotiate directly?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) Negotiation-based resolution</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) Consensus-based resolution</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) Rule-based resolution</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) Auction-based resolution</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Audit trails are about accountability and traceability, not data compression. Compressing outputs would actually undermine the detailed record-keeping purpose.",
+                "b": "Correct. Decision logs create a historical record enabling post-hoc failure analysis, regulatory compliance, and targeted improvements, providing accountability that automated operation alone cannot supply.",
+                "c": "Audit trails record what happened but do not automatically trigger model rollbacks. Rollback decisions require separate human or system oversight processes.",
+                "d": "Audit trails support human oversight rather than replacing it. Automated pipelines without human review would undermine accountability goals."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>Decision logging and audit trails are cited as key components of safety and reliability in LLM-based data science systems. What primary function do they serve?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) They compress model outputs to reduce storage costs</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) They enable tracking and analysis of system behavior over time, facilitating identification of issues and supporting corrective measures and accountability</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) They automatically roll back the model to a previous version when errors are detected</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) They replace the need for human oversight by providing an automated review pipeline</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "When each step depends strictly on the previous result, parallel processing cannot be applied safely. Sequential dependency requires sequential execution.",
+                "b": "Correct. Parallel processing excels when multiple independent sub-tasks can run concurrently, such as querying multiple data sources or handling real-time events simultaneously.",
+                "c": "A single available action at each step means there is nothing to parallelize. Parallel processing requires multiple independent tasks.",
+                "d": "A known optimal policy in a deterministic environment still benefits from parallelism only if sub-tasks are independent. A fully deterministic environment alone does not justify parallel processing."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>Parallel processing is described as a control flow mechanism in agentic workflows. In which scenario is it most beneficial compared to sequential decision-making?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) When each step of a task strictly depends on the outcome of the previous step</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) When the agent needs to process large volumes of data or coordinate with multiple entities simultaneously in real time</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) When the action space contains only a single available action at each time step</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) When the environment is fully deterministic and the optimal policy is already known</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "LLMs do not automatically refuse out-of-distribution inputs. Without defined boundaries, they often respond to any prompt, even ones outside their intended domain.",
+                "b": "Correct. Without clear boundaries, a system may be called on to make decisions in domains where it lacks sufficient knowledge, increasing the risk of confidently wrong outputs with real-world consequences.",
+                "c": "GPU memory requirements are determined by model size and hardware, not by whether system boundaries are defined. Boundary definition is a design decision, not a hardware concern.",
+                "d": "Natural language input is independent of system boundary definitions. Users can always provide natural language regardless of how boundaries are specified."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>System boundaries are described as critical for defining the scope of LLM-based decision systems. What is the main risk of deploying a system without clearly defined boundaries?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) The system will always refuse to generate outputs outside the training distribution</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) The model may exceed its intended purpose and make decisions in domains where it lacks sufficient knowledge or expertise, potentially causing unintended consequences</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) The system will require more GPU memory at inference time</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) Users will be unable to provide natural language inputs to the system</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 7: Sequence Models &amp; Attention — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 7</a>
+        <div class="content-box">
+            <h1>Week 7: Sequence Models &amp; Attention</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>1. The Attention Revolution: Why Did Self-Attention Replace Recurrence?</h3>
+                <p>Recurrent neural networks (RNNs) and LSTMs were the dominant approach to sequence modeling for many years before the Transformer displaced them. The shift was not merely about accuracy — it was driven by fundamental architectural trade-offs around parallelism, long-range dependency capture, and gradient flow. Understanding why attention succeeded where recurrence struggled illuminates core principles of modern deep learning design.</p>
+                <ul class="probing-questions">
+                    <li>What specific failure modes of RNNs (vanishing gradients, bottleneck hidden states) does the self-attention mechanism directly address, and how?</li>
+                    <li>Self-attention has O(n&#xB2;) complexity with respect to sequence length, while RNNs are O(n). In what scenarios might RNNs still be preferable despite Transformers&#39; other advantages?</li>
+                    <li>If you were designing a new architecture for very long sequences (e.g., entire books or genomic sequences), what modifications to standard self-attention would you consider and why?</li>
+                </ul>
+                <p class="activity-note">Try: Draw a side-by-side diagram of an RNN and a Transformer on the board, then ask students to annotate each node with its computational dependencies. This makes the parallelism gap concrete and visceral.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>2. Interpreting Attention: What Does an Attention Head Actually Learn?</h3>
+                <p>Researchers have visualized attention weights in trained Transformer models and observed that individual heads appear to specialize — some seem to track syntactic dependencies like subject-verb agreement, others focus on positional relationships, and others on semantic similarity. However, the field debates whether attention weights constitute a reliable explanation of model behavior or whether this interpretability is largely illusory.</p>
+                <ul class="probing-questions">
+                    <li>What is the difference between position attention and content attention, and why does this distinction matter for understanding what a model has learned?</li>
+                    <li>Attention weights show which tokens a given position attends to, but not how the value vectors at those positions contribute to the output. Does this limit the interpretability of attention? Explain your reasoning.</li>
+                    <li>If you found that pruning 60% of attention heads had no measurable effect on a model&#39;s performance, what would that imply about head specialization and redundancy?</li>
+                </ul>
+                <p class="activity-note">Try: Show the class BertViz or another attention visualization tool applied to a sentence with a polysemous word. Ask small groups to form hypotheses about what each head is doing, then compare explanations.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>3. Static vs. Contextual Embeddings: When Does Context Actually Matter?</h3>
+                <p>The move from static embeddings (Word2Vec, GloVe) to contextual embeddings (ELMo, BERT) was a defining shift in NLP. Contextual embeddings represent the same word token differently depending on its surrounding context, enabling models to handle polysemy, idioms, and pragmatic meaning. Yet static embeddings remain in use in resource-constrained settings and some retrieval systems. The trade-offs between the two approaches are worth examining carefully.</p>
+                <ul class="probing-questions">
+                    <li>Give two concrete examples of NLP tasks where contextual embeddings would significantly outperform static embeddings, and explain the mechanism behind the improvement.</li>
+                    <li>Static embeddings produce a fixed lookup table that can be precomputed once. What deployment constraints (latency, compute, storage) might make static embeddings the right engineering choice even when contextual embeddings are available?</li>
+                    <li>BERT generates different embeddings for the same word in different sentences. Could two sentences that are semantically opposite (e.g., "great" used sarcastically vs. sincerely) still produce similar embeddings? What does this imply about the limits of contextual representations?</li>
+                </ul>
+                <p class="activity-note">Try: Poll the class on a deployment scenario (e.g., a mobile spell-checker with 50 ms latency budget) and have them vote for static vs. contextual. Use the split results to open a debate about where the threshold lies.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>4. Positional Encoding Design Choices and Their Consequences</h3>
+                <p>The original Transformer used fixed sinusoidal positional encodings, while many subsequent models (e.g., BERT, GPT) switched to learned positional embeddings. More recent architectures (e.g., RoPE, ALiBi) use relative positional encodings that encode the distance between tokens rather than their absolute positions. Each design choice encodes different inductive biases about how position should influence attention.</p>
+                <ul class="probing-questions">
+                    <li>Sinusoidal encodings use alternating sine and cosine functions at different frequencies. Why might using multiple frequencies help the model learn both local and long-range positional relationships?</li>
+                    <li>A model trained with absolute positional encodings on sequences up to length 512 is asked to process a sequence of length 1024 at test time. What problem would arise, and how do relative positional encoding schemes address it?</li>
+                    <li>In tasks like sentiment classification of short sentences, does the precise encoding of word position matter as much as in machine translation? Justify your answer and consider what this implies for architecture choice.</li>
+                </ul>
+                <p class="activity-note">Try: Have students sketch sine waves at three different frequencies on graph paper, then discuss how superimposing them creates unique patterns for each position — connecting the math to the intuition before returning to the code.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>5. Multi-Head Attention: Hyperparameter Choices and Their Effects</h3>
+                <p>The number of attention heads h and the per-head dimension d_k are critical hyperparameters in the Transformer. The original paper used h = 8 heads with d_k = 64 in a model of dimension d_model = 512. Large language models scale these dramatically — GPT-3 uses 96 heads with d_model = 12288. These choices govern the balance between model expressiveness, computational cost, and the diversity of representations each head can capture.</p>
+                <ul class="probing-questions">
+                    <li>If you double the number of attention heads while keeping d_model fixed, each head operates in a lower-dimensional subspace. What is the practical effect on what each head can learn, and is there a point of diminishing returns?</li>
+                    <li>Multi-head attention outputs are concatenated and then projected by a weight matrix W_O. What function does this output projection serve, and what would happen if it were removed?</li>
+                    <li>Some research suggests that not all heads learn distinct patterns — many are redundant and can be pruned without hurting performance. If you were designing a production system constrained by latency, how would you decide how many heads to keep?</li>
+                </ul>
+                <p class="activity-note">Try: Give small groups a fixed parameter budget and ask them to design a Transformer (setting d_model, h, layers, FFN size). Compare designs and debate the trade-offs in a whole-class share-out.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>Ground abstract attention mechanics by starting with a concrete example sentence. Ask students to manually compute which words they would attend to in order to understand an ambiguous word — this builds intuition before the math.</li>
+                    <li>The RNN vs. Transformer comparison is best handled as a structured debate. Assign half the class to defend RNNs for a given deployment scenario (e.g., low-resource edge inference) and the other half to argue for Transformers — then flip the scenario.</li>
+                    <li>Attention interpretability is an active research controversy. Encourage students to look up the "Attention is not Explanation" and "Attention is not not Explanation" papers and come prepared to take a side, which creates productive conflict in discussion.</li>
+                    <li>When discussing positional encoding choices, connect them to real model releases students may have heard of (BERT uses learned embeddings, RoPE is used in LLaMA). Naming specific systems makes the design space feel real rather than theoretical.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

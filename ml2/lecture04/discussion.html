@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4: Vector Representations &amp; Similarity Measures — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 4</a>
+        <div class="content-box">
+            <h1>Week 4: Vector Representations &amp; Similarity Measures</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>1. The Granularity Dilemma in Recommender Systems</h3>
+                <p>Streaming services like Spotify and Netflix must choose how finely to represent user preferences. A genre-level representation ("user likes Action films") is coarse but generalizes well, while a scene-level representation ("user engages when there is rapid editing") is precise but produces extreme sparsity and cold-start problems for new content.</p>
+                <ul class="probing-questions">
+                    <li>How would you decide on the right level of granularity for a given recommender system? What signals or data would guide that decision?</li>
+                    <li>Could a hierarchical vector — representing preferences at multiple levels of specificity simultaneously — solve the granularity problem? What are the tradeoffs?</li>
+                    <li>When does over-generalization cause real harm to users — for instance, by erasing culturally specific preferences under a broad category?</li>
+                </ul>
+                <p class="activity-note">Try: Ask students to sketch a two-level hierarchy (genre and sub-genre) for a domain they know, then vote on which level they would use for a recommender system and defend their choice in small groups.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>2. Cosine Similarity and the Erasure of Intensity</h3>
+                <p>Cosine similarity measures the angle between vectors and is therefore insensitive to vector magnitude. This means a user who rated three items "mildly positive" and a user who rated the same three items "extremely positive" receive a perfect similarity score of 1.0, even though their intensity of preference is very different.</p>
+                <ul class="probing-questions">
+                    <li>In which real-world applications does ignoring magnitude actually help — and in which does it hurt?</li>
+                    <li>Could you design a hybrid similarity measure that captures both directional alignment and intensity difference? What would it look like mathematically?</li>
+                    <li>How might magnitude differences reflect not just preference strength but also user behavior patterns (e.g., a user who rates everything highly versus one who uses the full scale)?</li>
+                </ul>
+                <p class="activity-note">Try: Have students compute cosine similarity and Euclidean distance for two pairs of toy vectors by hand, then compare how each measure responds when one vector is scaled up by a factor of 3.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>3. Manual Feature Engineering vs. Learned Representations: Who Decides What Matters?</h3>
+                <p>Traditional survey-based feature engineering puts human experts in control of which dimensions are captured. Deep learning reverses this: the model learns what dimensions matter from data. Each approach embeds assumptions — either the researcher's or the dataset's — about what is meaningful.</p>
+                <ul class="probing-questions">
+                    <li>What kinds of biases might be baked into manually engineered feature spaces that would not appear in learned representations, and vice versa?</li>
+                    <li>If a learned representation discovers a feature dimension that correlates with race or socioeconomic status in a food-preference dataset, what ethical obligations does the developer have?</li>
+                    <li>Is interpretability always desirable? Are there contexts where a black-box learned representation is preferable to an interpretable manual one?</li>
+                </ul>
+                <p class="activity-note">Try: Split the class — one half designs a manual feature set for food preferences and the other brainstorms what a neural network might discover instead. Have groups compare their lists and discuss what each approach would miss.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>4. Sparse Representations and the Zero-Similarity Trap in Healthcare</h3>
+                <p>Medical informatics frequently uses sparse binary vectors to represent patient histories — each dimension corresponds to a specific diagnosis code or medication. Two patients with very similar underlying conditions may have near-zero cosine similarity if their physicians used different but equivalent diagnostic codes.</p>
+                <ul class="probing-questions">
+                    <li>What are the clinical consequences of a patient-similarity system failing to identify two patients as similar because of coding differences rather than medical differences?</li>
+                    <li>How might ontologies (like SNOMED CT or ICD hierarchies) be incorporated into a vector representation to reduce spurious dissimilarity?</li>
+                    <li>Should we prefer a system that produces explainable similarity scores (e.g., "similar because both have hypertension") over a black-box learned embedding, even if the learned embedding is more accurate?</li>
+                </ul>
+                <p class="activity-note">Try: Present two fictional patient records coded differently for the same condition and ask students to compute their cosine similarity, then discuss how an ontology-aware approach would change the result.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>5. Factor Analysis and PCA: What Do the Latent Dimensions Actually Mean?</h3>
+                <p>When PCA is applied to a food preference dataset, the first principal component might explain 35% of variance. Researchers often try to interpret this component by examining which original features load heavily onto it — perhaps it separates "health-conscious" from "indulgent" eaters. But this interpretation is post-hoc and potentially misleading.</p>
+                <ul class="probing-questions">
+                    <li>How confident should we be in human-generated interpretations of PCA components? What can go wrong when we label a latent dimension and act on it?</li>
+                    <li>PCA assumes linearity. What kinds of preference structures would be fundamentally undetectable by PCA but discoverable by a nonlinear method?</li>
+                    <li>If you were building a food-preference product and PCA revealed an unexpected latent dimension, how would you decide whether it reflects a genuine user segment or a statistical artifact?</li>
+                </ul>
+                <p class="activity-note">Try: Show students a real PCA biplot from a public dataset and run a class poll asking them to name the latent dimensions — then compare their labels and discuss how much agreement exists and why disagreement arises.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>Ground abstract vector concepts in concrete examples early — food preferences, movie ratings, or playlist data are immediately accessible and help students move from formula to intuition before engaging with edge cases.</li>
+                    <li>When discussing cosine similarity versus Euclidean distance, use a live in-class calculation with small 2D or 3D vectors drawn on the board so students can see geometrically why magnitude is ignored by cosine similarity.</li>
+                    <li>For the ethics discussions (especially topics 3 and 4), establish early whether the class is reasoning from a developer perspective, a regulator perspective, or an affected-user perspective — different framings produce very different and complementary insights.</li>
+                    <li>Encourage students to challenge each other on the granularity tradeoff: push them to identify a specific domain where their preferred level of granularity would fail, which develops critical thinking about context-dependence in representation design.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

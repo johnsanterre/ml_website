@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 13: Evaluating LLMs — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 13</a>
+        <div class="content-box">
+            <h1>Week 13: Evaluating LLMs — Metrics and Methods</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>1. The Gap Between Automated Metrics and Human Judgment</h3>
+                <p>BLEU and ROUGE scores are convenient and reproducible, but research has repeatedly shown they correlate poorly with human judgments of translation and summarization quality. A system can achieve a high BLEU score by closely matching surface-level word patterns while producing output that is semantically incoherent or factually wrong. At the same time, a creative but accurate paraphrase will score poorly because it does not match reference n-grams.</p>
+                <ul class="probing-questions">
+                    <li>In what real-world applications would a mismatch between BLEU and human quality be most dangerous?</li>
+                    <li>Should automated metrics be abandoned, improved, or used only in combination with human evaluation? What does each choice cost?</li>
+                    <li>How would you design a study to measure how well a new automated metric correlates with expert human judgment in a domain like medical report generation?</li>
+                </ul>
+                <p class="activity-note">Try: Show students two model outputs side by side — one with a high BLEU score and one with a low BLEU score — and have the class vote on which is higher quality before revealing the scores. Discuss the surprise factor.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>2. Benchmark Saturation and the Arms Race in LLM Evaluation</h3>
+                <p>Benchmark suites like GLUE, SuperGLUE, and BIG-bench were introduced to provide standardized, challenging tests for LLMs. However, frontier models now approach or exceed human-level performance on many of these benchmarks, sometimes through contamination of training data rather than genuine understanding. This phenomenon — often called "benchmark saturation" — raises questions about what benchmarks actually measure and how to keep evaluation meaningful as models improve.</p>
+                <ul class="probing-questions">
+                    <li>What does it mean for a model to "pass" a benchmark, and does passing indicate true comprehension or sophisticated pattern matching?</li>
+                    <li>How can the research community design benchmarks that remain challenging and contamination-resistant as training datasets grow?</li>
+                    <li>Should benchmark performance be weighted differently based on the risk of data contamination from pre-training corpora?</li>
+                </ul>
+                <p class="activity-note">Try: Split the class into two groups — one argues that benchmark saturation proves models truly understand language, the other argues it proves the benchmarks are flawed. Hold a structured four-minute debate, then debrief together.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>3. Designing Reliable Human Evaluation Protocols</h3>
+                <p>Human evaluation is considered the gold standard for assessing LLM output quality, but it is expensive, slow, and susceptible to annotator bias and inconsistency. Protocols based on Likert scales, A/B comparisons, and expert review each have different trade-offs in reliability and cost. Inter-rater reliability measured by Cohen&#39;s kappa can reveal significant disagreement even among trained annotators, especially for subjective qualities like creativity or coherence.</p>
+                <ul class="probing-questions">
+                    <li>How would you structure an annotation rubric for evaluating LLM-generated patient-facing medical explanations? What criteria matter most?</li>
+                    <li>What sample size and annotator diversity would you need to obtain statistically significant results in an A/B comparison of two chatbot systems?</li>
+                    <li>How should annotation guidelines handle cases where two responses are equally good but in different ways, such as one being more accurate and the other more readable?</li>
+                </ul>
+                <p class="activity-note">Try: Give small groups of three students the same three LLM outputs to rate independently on a 1-5 scale for quality, then calculate the inter-rater agreement in class. Use the results to illustrate why annotation guidelines and training matter.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>4. Context Sensitivity and the Limits of Token-Level Metrics</h3>
+                <p>Traditional NLP metrics evaluate language in isolation, scoring individual sentences or n-grams without regard for the broader discourse. Yet language is inherently context-dependent: the same sentence can be coherent or absurd depending on what came before it. LLMs used in dialogue, story generation, or long-form writing need to maintain consistency and relevance across hundreds or thousands of tokens, which token-level metrics like perplexity completely miss.</p>
+                <ul class="probing-questions">
+                    <li>What would a "contextual coherence" metric need to measure, and how would you collect ground-truth data to train or validate it?</li>
+                    <li>Are there tasks — such as short factual question answering — where token-level metrics remain fully adequate? What distinguishes these tasks from those that demand context-aware evaluation?</li>
+                    <li>How do recent approaches like G-Eval (using an LLM as an evaluator) attempt to capture context sensitivity, and what are the risks of using one LLM to judge another?</li>
+                </ul>
+                <p class="activity-note">Try: Present the class with a passage from a long generated story where a character&#39;s name or trait is inconsistent with an earlier paragraph. Ask students to identify what kind of metric would catch this error and what data you would need to build it.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>5. Evaluating Reasoning, Knowledge, and Behavioral Consistency</h3>
+                <p>LLM-specific evaluation goes beyond text quality to probe whether models genuinely reason, retain factual knowledge, and behave consistently when prompts are rephrased. Chain-of-thought accuracy, knowledge probing, and instruction-following assessments reveal that models can give correct final answers through flawed reasoning, "hallucinate" facts with high confidence, and respond differently to semantically identical questions depending on phrasing.</p>
+                <ul class="probing-questions">
+                    <li>Should a model that arrives at a correct answer through incorrect reasoning receive the same credit as one that reasons correctly? How does the answer change depending on the application?</li>
+                    <li>What techniques can be used to distinguish genuine knowledge retention from superficial pattern matching on knowledge-probing tasks?</li>
+                    <li>If a model gives contradictory answers to the same question asked in different ways, what does this reveal about its underlying representations, and how should this inconsistency be factored into evaluation scores?</li>
+                </ul>
+                <p class="activity-note">Try: Live demo — ask a public LLM the same factual question five different ways and display all responses. Have students classify each response as consistent or inconsistent, then discuss what the variation implies for deployment in a high-stakes setting.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>Ground abstract metric debates in concrete examples: bring in published side-by-side comparisons of BLEU scores and human ratings from MT or summarization papers to show the disconnect is real and quantifiable.</li>
+                    <li>When discussing benchmark saturation, encourage students to distinguish between two distinct failure modes — data contamination versus genuine generalization — since they have different policy implications.</li>
+                    <li>For the human evaluation protocol discussion, emphasize that inter-rater reliability is not just a statistical formality: low kappa indicates the task definition itself is ambiguous and needs revision before data collection scales.</li>
+                    <li>Connect the reasoning and consistency topic to real stakes: a student loan approval system that gives different decisions based on how an application is worded is not a hypothetical — help students see the regulatory and ethical weight of behavioral inconsistency.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

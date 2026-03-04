@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10: Introduction to Large Language Models — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 10</a>
+        <div class="content-box">
+            <h1>Week 10: Introduction to Large Language Models</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>1. The Transformer Revolution: Why Did Self-Attention Displace RNNs?</h3>
+                <p>Recurrent architectures like LSTMs were the dominant approach to sequence modeling before the transformer's introduction in 2017. The self-attention mechanism — computing Attention(Q, K, V) = softmax(QK^T / sqrt(d_k))V — enabled a fundamentally different way of relating tokens in a sequence. Within just a few years, transformers became the default architecture for virtually all large-scale language modeling.</p>
+                <ul class="probing-questions">
+                    <li>What specific limitations of RNNs and LSTMs does self-attention directly address (consider parallelism, long-range dependency capture, and gradient flow)?</li>
+                    <li>The attention formula scales with O(n^2) in sequence length. How does this compare to the computational profile of a recurrent model, and what trade-offs does it introduce?</li>
+                    <li>Are there any task types or data modalities where you think recurrent architectures might still have an advantage over transformers?</li>
+                </ul>
+                <p class="activity-note">Try: Draw a side-by-side diagram on the whiteboard showing token processing in an RNN versus a transformer, then ask students to annotate which steps can run in parallel and where information bottlenecks occur in each architecture.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>2. Scaling Laws and the Economics of Intelligence</h3>
+                <p>Empirical scaling laws show that model performance follows a power law relationship with model size, compute budget, and dataset size. The progression from GPT-1 (117M parameters) to GPT-3 (175B parameters) exemplifies this trend. However, the compute and energy costs of training these models are enormous, and the returns are not unlimited — performance gains diminish as scale increases.</p>
+                <ul class="probing-questions">
+                    <li>If you had a fixed compute budget for training a language model, how would you decide how to allocate it between model size and dataset size?</li>
+                    <li>What are the broader societal and environmental implications of continually scaling up model training? Who bears these costs, and who benefits?</li>
+                    <li>Do you think there is a limit to what can be achieved purely through scaling, or do you believe emergent capabilities will continue to appear at larger scales indefinitely?</li>
+                </ul>
+                <p class="activity-note">Try: Run a live poll asking students to allocate a hypothetical $10M training budget between model parameters, data collection, and compute infrastructure, then compare results and discuss the reasoning behind different allocation strategies.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Knowledge/Comprehension</span>
+                <h3>3. Pre-training Objectives: What Does an LLM Actually Learn?</h3>
+                <p>Foundation models are pre-trained on web-scale datasets using self-supervised objectives like next token prediction and masked language modeling. The pre-training process requires enormous data curation efforts — deduplication, language filtering, content filtering — because the model's downstream capabilities are directly shaped by what it sees during training.</p>
+                <ul class="probing-questions">
+                    <li>Next token prediction seems like a simple objective. Why do you think it gives rise to such rich and general capabilities in the resulting model?</li>
+                    <li>The textbook notes that web-scale datasets contain "noise, irrelevant content, and biases." What types of biases do you think are most likely to be absorbed during pre-training, and how might they manifest in model behavior?</li>
+                    <li>If you were designing a pre-training dataset from scratch for a model intended for use in healthcare, what sources would you include or exclude, and why?</li>
+                </ul>
+                <p class="activity-note">Try: Have small groups each design a data curation checklist for a different target domain (healthcare, law, education, creative writing), then share and compare what each group chose to include or exclude and the reasoning behind those decisions.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>4. Hallucinations, Reasoning Gaps, and the Limits of Fluency</h3>
+                <p>LLMs can generate text that is grammatically impeccable and stylistically convincing while being factually wrong — a phenomenon called hallucination. Additionally, despite impressive surface-level performance, LLMs often exhibit reasoning gaps when faced with multi-step logical problems. These limitations raise important questions about how and when to trust model outputs.</p>
+                <ul class="probing-questions">
+                    <li>Why do you think a model trained purely on next-token prediction is prone to hallucination? What would need to change in the training process to reduce this tendency?</li>
+                    <li>In what high-stakes domains (medicine, law, finance, engineering) would hallucinations be most dangerous? What mitigation strategies would you recommend for deploying LLMs in those domains?</li>
+                    <li>Is fluency a good proxy for correctness? How should end-users be educated to interact with LLMs in a way that accounts for their limitations?</li>
+                </ul>
+                <p class="activity-note">Try: Show the class two LLM-generated paragraphs on a factual topic — one accurate and one containing plausible-sounding hallucinations — and ask students to identify which is which and explain the signals they used to make their judgment.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>5. Emergent Capabilities and the Unpredictability of Scale</h3>
+                <p>One of the most surprising findings from LLM research is the emergence of qualitatively new capabilities at certain scale thresholds — abilities that were essentially absent in smaller models and then appeared suddenly with sufficient size. Examples include few-shot reasoning, code generation, and arithmetic. This unpredictability has profound implications for both opportunity and risk.</p>
+                <ul class="probing-questions">
+                    <li>Why might capabilities emerge discontinuously rather than smoothly as model size increases? What does this tell us about how knowledge is encoded in model weights?</li>
+                    <li>If emergent capabilities cannot be reliably predicted in advance, what implications does this have for AI safety and the responsible development of increasingly large models?</li>
+                    <li>PaLM demonstrated impressive zero-shot learning — performing tasks with no examples at all. How do you think a model acquires this ability from pre-training, and what kinds of tasks do you think will remain beyond zero-shot capability regardless of scale?</li>
+                </ul>
+                <p class="activity-note">Try: Ask student pairs to design a hypothetical capability evaluation benchmark for a model that is 10x larger than GPT-3, predicting which tasks would show emergent improvement and which would not, then debate their predictions as a class.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>When discussing self-attention versus RNNs, use the analogy of reading a sentence: an RNN reads word by word and must remember earlier words, while self-attention reads all words simultaneously and can directly compare any two. This makes the parallelism and long-range dependency advantages concrete for students who have not yet worked through the math.</li>
+                    <li>The scaling laws discussion often becomes abstract. Ground it with actual numbers: GPT-3 required roughly 3.14 x 10^23 floating point operations to train and cost an estimated $4-12 million. Asking students what else that budget could fund (research labs, clinical trials, public datasets) tends to sharpen the ethical dimension of the conversation.</li>
+                    <li>For the hallucination topic, consider having students interact with a live LLM and deliberately prompt it for obscure facts or complex multi-step reasoning. Observing failures in real time is far more persuasive than describing them abstractly, and it gives students concrete intuition about where the model breaks down.</li>
+                    <li>On emergent capabilities, remind students that "emergent" does not mean "magical." Encourage them to think about what combinations of sub-capabilities (pattern matching, syntactic understanding, world knowledge) might compose into a higher-level ability like arithmetic, and where those sub-capabilities come from in the pre-training data.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

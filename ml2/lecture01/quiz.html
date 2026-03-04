@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1: Introduction to Deep Learning — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 1</a>
+        <div class="content-box">
+            <h1>Week 1: Introduction to Deep Learning</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. Deep learning does not always train faster; in fact it often requires far more compute and time than classical methods.",
+                "b": "Correct. Deep learning automatically learns hierarchical feature representations from raw data, eliminating the need for manual feature engineering.",
+                "c": "Incorrect. Deep learning typically requires more data than traditional ML, not less, to achieve good performance.",
+                "d": "Incorrect. Deep learning models are generally far more complex and less interpretable than classical methods."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>What is the primary advantage of deep learning over traditional machine learning approaches?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> Deep learning always trains faster than classical algorithms</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> Deep learning automatically learns hierarchical feature representations without manual feature engineering</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> Deep learning requires less data than traditional ML methods</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> Deep learning models are always simpler and more interpretable</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Incorrect. The gradient of the loss is represented by the term that is being subtracted, denoted as the nabla symbol, not alpha.",
+                "b": "Incorrect. The number of training iterations is tracked separately and is not encoded in the update rule itself.",
+                "c": "Correct. Alpha is the learning rate, which scales the gradient to control how large each parameter update step is.",
+                "d": "Incorrect. The total number of model parameters is determined by the network architecture, not by a symbol in the update rule."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>In the gradient descent update rule &theta;<sub>t+1</sub> = &theta;<sub>t</sub> &minus; &alpha;&nabla;L(&theta;<sub>t</sub>), what does &alpha; represent?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> The gradient of the loss function</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> The number of training iterations</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> The learning rate, which controls the step size of parameter updates</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> The total number of model parameters</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Incorrect. The range (negative infinity, positive infinity) describes linear activations, not sigmoid.",
+                "b": "Incorrect. The range (-1, 1) describes the tanh activation function, not sigmoid.",
+                "c": "Correct. The sigmoid function maps any real-valued input to the open interval (0, 1), making it useful for probability outputs.",
+                "d": "Incorrect. The range (0, positive infinity) describes ReLU, which passes non-negative values unchanged."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>The sigmoid activation function &sigma;(x) = 1/(1 + e<sup>&minus;x</sup>) maps inputs to what range?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> (&minus;&infin;, +&infin;)</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> (&minus;1, 1)</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> (0, 1)</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> (0, +&infin;)</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. Sigmoid outputs are indeed bounded between 0 and 1; that is one of its defining properties.",
+                "b": "Correct. Sigmoid saturates near 0 and 1, producing near-zero gradients in those regions, which causes gradients to vanish in deep networks.",
+                "c": "Incorrect. Sigmoid is not especially expensive to compute; the vanishing gradient issue is the dominant concern, not compute cost.",
+                "d": "Incorrect. Sigmoid is actually a natural choice for the output layer of binary classification networks."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>Which of the following best describes a key limitation of the sigmoid activation function that motivated the adoption of ReLU?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> Sigmoid outputs are not bounded between 0 and 1</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> Sigmoid suffers from the vanishing gradient problem, slowing learning in deep networks</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> Sigmoid is computationally more expensive than any other activation function</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> Sigmoid cannot be used in the output layer of classification networks</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. MSE is designed for regression tasks; using it for classification produces poor gradient signal compared to cross-entropy.",
+                "b": "Correct. Binary Cross-Entropy is specifically designed to compare predicted probabilities with true binary labels (0 or 1).",
+                "c": "Incorrect. Categorical Cross-Entropy is used for multi-class classification with more than two classes, not binary tasks.",
+                "d": "Incorrect. MAE is a regression metric and does not align with the probabilistic interpretation needed for classification."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Which loss function is most appropriate for a binary classification task?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> Mean Squared Error (MSE)</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> Binary Cross-Entropy</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> Categorical Cross-Entropy</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> Mean Absolute Error (MAE)</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. This reverses the comparison: static graphs (not dynamic) have historically offered inference-time optimization advantages.",
+                "b": "Correct. Dynamic graphs are built at runtime, so the network can be inspected or changed using ordinary Python debugging tools.",
+                "c": "Incorrect. Dynamic graphs do not inherently use less GPU memory; memory usage is more dependent on model size and batch size.",
+                "d": "Incorrect. Dynamic graphs do not have any automatic learning rate tuning capability."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>PyTorch uses dynamic computation graphs, while early TensorFlow (before version 2.0) used static computation graphs. What is a key practical benefit of dynamic graphs?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> Static graphs are always faster at inference time</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> Dynamic graphs allow the network structure to be defined and modified on-the-fly, making debugging more intuitive</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> Dynamic graphs require less GPU memory than static graphs</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> Dynamic graphs automatically tune the learning rate</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Incorrect. Image classification with labeled data is supervised learning, since the labels guide the model.",
+                "b": "Incorrect. Predicting house prices from historical records with known prices is supervised regression.",
+                "c": "Correct. Discovering customer segments without predefined labels is unsupervised learning; the model finds structure on its own.",
+                "d": "Incorrect. Training with win/loss rewards is reinforcement learning, where an agent learns from environmental feedback."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>Three major categories of machine learning are supervised, unsupervised, and reinforcement learning. Which of the following tasks is an example of unsupervised learning?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> Image classification using labeled training data</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> Predicting house prices from historical sales records</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> Discovering customer segments in purchase data without predefined labels</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> Training a game-playing agent using win/loss rewards</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. Initializing all weights to zero causes symmetry breaking failures, not a property of He initialization.",
+                "b": "Correct. He initialization scales weights by the square root of 2/n_in to keep activation variance stable across layers when using ReLU.",
+                "c": "Incorrect. No initialization scheme can guarantee convergence in a fixed number of iterations.",
+                "d": "Incorrect. He initialization is motivated by ReLU activation dynamics, not by matching input data normalization."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>In He initialization, weights for a layer with n<sub>in</sub> inputs are sampled from a distribution scaled by &radic;(2/n<sub>in</sub>). Why is this specific scaling used?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> To ensure all weights start at exactly zero</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> To keep the variance of activations stable across layers when using ReLU, preventing vanishing or exploding signals</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> To guarantee the network converges in a fixed number of iterations</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> To match the scale of the input data normalization</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. PyTorch was released after TensorFlow and became dominant in research, not production, first.",
+                "b": "Correct. TensorFlow historically dominated production due to its static graph optimizations and tools like TensorFlow Serving and TensorFlow Lite.",
+                "c": "Incorrect. Static graphs, not dynamic graphs, are associated with PyTorch production use cases in this comparison.",
+                "d": "Incorrect. TensorFlow is widely used for research as well; this claim is false."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>Which framework has historically been preferred in production and large-scale deployment environments, and why?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> PyTorch, because it was released first and has the largest ecosystem</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> TensorFlow, due to its static computation graph optimizations and tools like TensorFlow Serving and TensorFlow Lite</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> PyTorch, because static graphs are better suited for production</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> TensorFlow, because it cannot be used for research purposes</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Incorrect. The squaring operation produces non-negative values, so the loss is always non-negative, never negative.",
+                "b": "Incorrect. Squaring eliminates sign, so positive and negative errors do not cancel; they all become positive contributions.",
+                "c": "Correct. Squaring amplifies larger errors disproportionately, making MSE more sensitive to outliers than linear error metrics like MAE.",
+                "d": "Incorrect. Squaring is a smooth operation; the MSE loss function is fully differentiable everywhere."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>The MSE loss function is defined as (1/n) &Sigma;(y<sub>i</sub> &minus; &ycirc;<sub>i</sub>)<sup>2</sup>. What is a consequence of the squaring operation in this formula?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> It ensures the loss value is always negative</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> It cancels out positive and negative errors so they balance</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> It amplifies larger errors disproportionately, making the metric more sensitive to outliers</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> It makes the loss function non-differentiable</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

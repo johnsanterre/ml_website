@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 12: Retrieval Augmented Generation — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 12</a>
+        <div class="content-box">
+            <h1>Week 12: Retrieval Augmented Generation (RAG)</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="d" data-explanations='{
+                "a": "Knowledge cutoffs are one of the three core limitations RAG addresses. LLMs cannot access information about events that occurred after their training date.",
+                "b": "Inability to access private or proprietary data at inference time is one of the three core limitations RAG addresses. RAG allows connecting an LLM to internal knowledge bases.",
+                "c": "Hallucination is one of the three core limitations RAG addresses. By grounding responses in retrieved documents, RAG can reduce the model tendency to fabricate facts.",
+                "d": "Correct. Multi-language support is not one of the three core limitations motivating RAG. LLMs typically acquire multilingual capability through pre-training on diverse text, not through retrieval."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>RAG addresses fundamental limitations of standard LLMs. Which of the following is NOT one of the three core limitations described in the textbook?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) Knowledge cutoffs that prevent access to information after the training date</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) Inability to access private or proprietary data at inference time</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) Tendency to hallucinate plausible-sounding but incorrect facts</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) Inability to process multiple languages without separate fine-tuning per language</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Generating a draft response before retrieval inverts the RAG pipeline. Retrieval must happen first so that the retrieved context can inform the generation step.",
+                "b": "This sequence is incorrect because retrieval cannot happen before the query is embedded. The vector database search requires an embedded query to find similar documents.",
+                "c": "Correct. The standard RAG pipeline embeds the query, searches the vector database, retrieves relevant documents, augments the prompt with that context, and then generates a response from the augmented prompt.",
+                "d": "Retrieving documents after generating a response defeats the purpose of RAG. Post-processing with context is not the same as grounding the generation in retrieved information before responding."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>In the basic RAG workflow, what is the correct sequence of steps from user query to final response?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) Generate draft response → Embed query → Retrieve documents → Refine response</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) Retrieve documents → Embed query → Augment prompt → Generate response</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) Embed query → Search vector database → Retrieve relevant documents → Augment prompt with retrieved context → Generate response</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) Embed query → Generate response → Retrieve documents → Post-process with context</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Storing two copies of every vector is not a requirement of brute-force search. The computational problem is the number of comparisons required, not the storage duplication.",
+                "b": "Correct. Brute-force search requires comparing the query vector against every stored vector, giving O(n * d) operations. For millions of high-dimensional vectors this becomes too slow for real-time use.",
+                "c": "Brute-force search can use any distance metric including cosine similarity or Euclidean distance. The limitation is computational scale, not metric flexibility.",
+                "d": "While memory is a concern, the primary reason brute-force is prohibitive is the computational cost of performing millions of high-dimensional vector comparisons, not a hard GPU memory limit."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>Why is exact nearest neighbor (brute-force) search computationally prohibitive for large-scale vector databases?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) It requires storing two copies of every vector for comparison purposes</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) It requires O(n * d) operations where n is the number of vectors and d is the dimensionality, becoming too slow at scale</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) It can only compute cosine similarity and fails with Euclidean distance metrics</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) It requires in-memory storage of the entire dataset, which exceeds GPU memory limits</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Hashing similar vectors to shared buckets describes Locality-Sensitive Hashing (LSH), a different approximate nearest neighbor algorithm, not HNSW.",
+                "b": "Compressing vectors by quantizing subvectors with learned codebooks describes Product Quantization (PQ), another ANN technique distinct from HNSW.",
+                "c": "Correct. HNSW builds a multi-layer graph where upper layers have long-range connections for fast global navigation and lower layers have shorter-range connections for fine-grained local search, achieving logarithmic rather than linear complexity.",
+                "d": "Pre-sorting by a principal component and binary searching describes an inverted index or tree-based approach. HNSW uses a graph structure with hierarchical layers, not a sorted list."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>HNSW (Hierarchical Navigable Small World) achieves fast approximate nearest neighbor search through which mechanism?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) It hashes similar vectors to the same buckets and only compares vectors within matching buckets</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) It compresses vectors by quantizing subvectors with learned codebooks, reducing memory and compute</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) It builds a multi-layer graph where search starts at the top layer with long-range connections and progressively narrows through layers with finer granularity</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) It pre-sorts all vectors by their first principal component and performs binary search on the sorted index</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Increasing the number of chunks is a side effect of overlap, not its purpose. More chunks alone do not improve retrieval quality if boundary information is still lost.",
+                "b": "Correct. Overlap ensures that text near chunk boundaries is present in both adjacent chunks, so no sentence or concept that spans a boundary is incomplete in either chunk.",
+                "c": "Preventing identical input sequences is not a goal of overlap. Adjacent chunks with overlap will share content, making their embeddings more similar rather than distinct.",
+                "d": "Making adjacent chunk embeddings more similar so they are always co-retrieved would harm retrieval precision, not help it. Overlap is about preserving information, not forcing co-retrieval."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>When using fixed-size chunking with overlap (e.g., 512 tokens with 128-token overlap), what is the primary purpose of the overlap between consecutive chunks?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) To increase the total number of chunks so that more candidates are retrieved per query</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) To ensure that information near chunk boundaries is not lost between adjacent chunks</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) To prevent the embedding model from receiving identical input sequences</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) To make adjacent chunk embeddings more similar so they are always retrieved together</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Cross-encoders are actually slower than bi-encoders because they process each query-document pair jointly. Their value is accuracy, not speed.",
+                "b": "Correct. Cross-encoders take the query and document as joint input, enabling the model to capture fine-grained interaction signals between them that bi-encoders miss by encoding each independently.",
+                "c": "Cross-encoders do not reduce embedding dimensionality or lower storage costs. They operate on text pairs at inference time and produce a relevance score, not a compressed embedding.",
+                "d": "Cross-encoders produce a relevance score for a query-document pair, not a new document embedding. The vector database still uses the original pre-computed bi-encoder embeddings."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>Reranking in advanced RAG pipelines uses a cross-encoder model in a second pass over candidates retrieved by bi-encoder embeddings. What advantage does this provide?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) Cross-encoders are faster than bi-encoders and can rank larger candidate sets more efficiently</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) Cross-encoders process the query and document jointly, capturing fine-grained interactions that separate embeddings miss</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) Cross-encoders reduce embedding dimensionality, lowering storage costs in the vector database</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) Cross-encoders generate query-specific document embeddings that replace the static pre-computed ones</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Queries are not typically longer than documents, and the goal of HyDE is not length matching. The motivation is about where queries and answers sit in the embedding space.",
+                "b": "Correct. Queries and documents occupy different regions of the embedding space due to their different styles. A hypothetical answer resembles the documents in the knowledge base more closely than the question does, improving retrieval.",
+                "c": "HyDE does not skip retrieval for simple questions. The hypothetical answer is used to improve the embedding for retrieval, not to bypass it.",
+                "d": "The goal of HyDE is to produce a better query embedding for retrieval, not to force the model to use its parametric knowledge before retrieval occurs."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>The Hypothetical Document Embeddings (HyDE) technique retrieves documents by embedding a hypothetical answer rather than the query. What is the core intuition?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) Queries are typically longer than documents and must be compressed into answer-length representations before comparison</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) A hypothetical answer to the query is semantically closer to relevant documents in the embedding space than the query itself</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) Generating a hypothetical answer first allows the system to skip retrieval entirely for simple questions</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) It forces the model to consult its parametric knowledge before the external retrieval step</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Speed and accuracy are measured by latency and correctness metrics, not Recall@k or Precision@k. These retrieval metrics measure document-level relevance, not response time.",
+                "b": "Correct. Recall@k measures what fraction of all relevant documents appear in the top-k results (coverage), while Precision@k measures what fraction of the top-k retrieved documents are actually relevant (purity).",
+                "c": "Recall@k and Precision@k are distinct metrics that capture different failure modes. Recall misses relevant documents; Precision returns irrelevant ones. They are not identical.",
+                "d": "Faithfulness of the generated response is a separate generation quality metric. Both Recall@k and Precision@k are retrieval metrics that evaluate which documents were returned, not what was generated."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>Recall@k and Precision@k are both used to evaluate retrieval quality. How do they differ?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) Recall@k measures how fast the retriever returns results; Precision@k measures how accurate the results are</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) Recall@k measures the proportion of all relevant documents that appear in the top-k; Precision@k measures the proportion of top-k results that are relevant</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) Recall@k and Precision@k are identical metrics with different names used by different research communities</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) Recall@k measures the faithfulness of the generated response; Precision@k measures the relevance of retrieved documents</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Dense embeddings can be stored in vector databases. That is precisely how RAG systems work. There is no fundamental incompatibility between dense embeddings and vector databases.",
+                "b": "Correct. Dense semantic search can underperform on rare terms, specialized jargon, or proper nouns that may not be well-represented in the embedding space. BM25 excels at exact keyword matching, so combining both approaches makes the system more robust.",
+                "c": "BM25 is not faster than vector search in the general case, and it is not used as a caching layer for embedding model calls. It is a complementary retrieval method, not a performance optimization layer.",
+                "d": "Dense embeddings work for both queries and documents. The distinction is not between query type and document type but between semantic matching and exact keyword matching."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>Hybrid search in RAG systems combines dense vector embeddings with sparse methods like BM25. What gap in purely semantic (dense) search does this address?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) Dense embeddings cannot be stored in vector databases, so a sparse fallback is required</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) Semantic search can miss results for rare or specialized terms where exact keyword matching is more reliable, so combining both improves robustness</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) BM25 is faster than vector search and is used as a caching layer to reduce embedding model calls</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) Dense embeddings work only for questions, while BM25 is needed for document retrieval</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Using the same vocabulary as the source documents is about phrasing style, not faithfulness. A response can be faithful while using different words, or unfaithful while using identical words.",
+                "b": "Correct. Faithfulness checks whether each claim in the generated response is supported by the retrieved context, not by the model parametric memory. A faithful response is fully attributable to and verifiable against the retrieved sources.",
+                "c": "Semantic similarity between the query and response measures answer relevance, which is a separate metric. Faithfulness specifically concerns whether claims are grounded in retrieved documents.",
+                "d": "The proportion of retrieved documents used in generating a response is a coverage or utilization metric. Faithfulness does not measure document coverage; it measures whether the claims made are supported."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>Faithfulness (also called groundedness) is a key generation quality metric for RAG systems. What does it specifically measure?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) Whether the response uses the same vocabulary and phrasing as the retrieved documents</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) Whether every claim in the generated response is supported by the retrieved context, rather than drawn from the model's parametric memory</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) The semantic similarity between the user query and the generated response</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) The proportion of retrieved documents that were actually used in generating the response</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

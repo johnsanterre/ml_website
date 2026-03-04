@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5: Autoencoders &amp; Embeddings — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 5</a>
+        <div class="content-box">
+            <h1>Week 5: Autoencoders &amp; Embeddings</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Dropout is a regularization technique applied at various layers but it is not the defining role of the bottleneck. The bottleneck is about constraining the dimensionality of the representation.",
+                "b": "The bottleneck has fewer dimensions than the input, forcing the network to compress information into a compact representation. This compression pressure causes the network to learn meaningful structure rather than trivially copying the input.",
+                "c": "Reconstruction loss is computed at the output layer by comparing the decoder output to the original input. The bottleneck layer stores the compressed representation, not the loss.",
+                "d": "Batch normalization can be applied anywhere in a network but is not the defining role of the bottleneck layer. The bottleneck is specifically about dimensionality reduction."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>In a standard autoencoder, what is the role of the bottleneck (latent) layer?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) To apply dropout regularization to prevent overfitting</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) To force the network to learn a compressed representation of the input</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) To store the reconstruction loss for backpropagation</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) To apply batch normalization across the full feature space</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The relative sizes of the encoder and decoder do not define whether an autoencoder is undercomplete. The key relationship is between the latent dimension and the input dimension.",
+                "b": "An undercomplete autoencoder has a latent dimensionality strictly smaller than the input. This bottleneck forces the network to capture the most salient features and is the standard design for dimensionality reduction.",
+                "c": "The number of layers is not what defines an undercomplete autoencoder. The term refers to the size of the latent space relative to the input, not to network depth.",
+                "d": "Training loss completion has nothing to do with the definition of undercomplete. The term is a structural property based on latent dimension size, not a training outcome."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>An undercomplete autoencoder is defined as one where:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) The decoder is smaller than the encoder</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) The latent dimension is smaller than the input dimension</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) The network has fewer layers than a standard deep network</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) The training loss is not fully minimized</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "KL divergence loss is used in VAEs, not in standard denoising autoencoders. The DAE keeps the reconstruction objective, only modifying the training inputs.",
+                "b": "In a DAE, the input is deliberately corrupted (e.g., with Gaussian noise or random masking), but the reconstruction target remains the original clean input, forcing the network to learn denoising representations.",
+                "c": "Tied weights are a separate architectural choice unrelated to the denoising modification. DAEs are defined by their corrupted-input training strategy, not weight sharing.",
+                "d": "Constraining the latent space to a Gaussian distribution is the key feature of a VAE, not a DAE. The denoising autoencoder does not impose a distributional constraint on the latent space."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>In a denoising autoencoder (DAE), what is the key modification to the standard training procedure?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) The loss function is replaced with KL divergence</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) Corrupted inputs are fed to the network, but the target output is the original clean data</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) The encoder and decoder weights are shared (tied weights)</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) The latent space is constrained to a Gaussian distribution</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Measuring reconstruction quality is the role of the reconstruction loss term (e.g., MSE or binary cross-entropy), not the KL divergence term.",
+                "b": "The KL divergence term pushes the learned posterior q(z|x) toward the prior p(z), typically a standard Gaussian. Without this, the latent space would be irregular and sampling from it would produce meaningless outputs.",
+                "c": "Penalizing large latent vector magnitudes would require an L2 norm penalty, not KL divergence. KL divergence measures distributional distance, not vector magnitude.",
+                "d": "The KL term is a regularizer on the latent distribution, not a balancing mechanism between encoder and decoder computational cost."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>The VAE loss function contains two terms. What is the purpose of the KL divergence term?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) It measures how well the decoder reconstructs the original input</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) It regularizes the latent distribution to stay close to a known prior, enabling generation from that prior</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) It penalizes the encoder for producing latent vectors with high magnitude</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) It ensures that the encoder and decoder share equal computational costs</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="a" data-explanations='{
+                "a": "Sampling from a Gaussian is a stochastic operation with no gradient. The reparameterization trick rewrites z = mu + sigma * epsilon where epsilon ~ N(0,I), making sampling deterministic with respect to the learned parameters so gradients can flow.",
+                "b": "The reparameterization trick does not change the choice of prior. VAEs still use a Gaussian prior; the trick only addresses the gradient flow problem through the sampling step.",
+                "c": "The reparameterization trick does not affect the loss function. Both the reconstruction loss and KL divergence remain in the VAE objective.",
+                "d": "The decoder output type is independent of the reparameterization trick. The trick is specifically about making the latent sampling step differentiable."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Why is the reparameterization trick necessary when training Variational Autoencoders?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) Sampling from a Gaussian is non-differentiable, so gradients cannot flow through the sampling step without reparameterization</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) It allows the VAE to use a uniform prior instead of a Gaussian prior</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) It replaces the KL divergence term with a simpler mean squared error</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) It enables the decoder to output probability distributions rather than single values</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The magnitude of the latent vector is not a reliable anomaly signal because the model can produce large latent vectors for normal data. Reconstruction error directly measures the model fit to the input.",
+                "b": "An autoencoder trained on normal data learns to reconstruct normal patterns well. Anomalous inputs that deviate from the training distribution reconstruct poorly, producing high reconstruction error that flags the anomaly.",
+                "c": "KL divergence from the prior is a VAE-specific quantity and is not directly used as an anomaly score in standard reconstruction-based anomaly detection.",
+                "d": "Counting active neurons in the bottleneck is not a standard anomaly detection approach. Reconstruction error provides a more direct and interpretable measure of how well the model fits the input."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>In anomaly detection using autoencoders, what serves as the anomaly score?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) The magnitude of the latent vector</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) The reconstruction error — anomalous inputs that differ from training data tend to reconstruct poorly</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) The KL divergence from the standard normal prior</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) The number of active neurons in the bottleneck layer</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Disentanglement refers to the structure of the learned latent space, not the physical separation of encoder and decoder networks. The encoder and decoder remain connected during training.",
+                "b": "Disentanglement means each latent dimension independently controls one interpretable factor of variation. For example, in a face model, one dimension controls only pose while another controls only lighting.",
+                "c": "Removing correlations between training batches is a data-loading concern unrelated to disentanglement. Disentanglement is about the structure of the learned representation, not training data ordering.",
+                "d": "The relationship between reconstruction loss and KL loss is a training balance issue, not what disentanglement means. Disentanglement is a property of the latent space dimensions."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>What is "disentanglement" in the context of latent representations?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) The process of separating the encoder and decoder into independent networks</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) A property where different latent dimensions correspond to independent, interpretable factors of variation in the data</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) Removing correlations between training examples during batching</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) Ensuring the reconstruction loss and KL loss do not interfere with each other</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "An L2 penalty on decoder weights is standard weight decay, which discourages large weights but does not enforce sparsity in the latent activations themselves.",
+                "b": "Sparse autoencoders penalize the average activation of neurons using a KL divergence between the target sparsity rho and the observed average activation, encouraging most neurons to be inactive for any given input.",
+                "c": "Contrastive loss is used in self-supervised and metric learning frameworks, not in sparse autoencoders. Sparse autoencoders focus on activation sparsity, not on pushing dissimilar inputs apart.",
+                "d": "Dropout during inference would randomly zero out latent dimensions rather than learning a structured sparse code. Sparse autoencoders learn which neurons should be inactive through a training-time penalty."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>A sparse autoencoder adds which term to the standard reconstruction loss?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) A L2 penalty on the decoder weights</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) A KL divergence penalty that encourages only a small fraction of neurons to be active for any given input</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) A contrastive loss that pushes dissimilar inputs apart in latent space</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) A dropout term applied during inference to zero out latent dimensions</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "A larger bottleneck does not guarantee smooth interpolation. Without regularization, the latent space can have "holes" where intermediate points are not on the learned data manifold.",
+                "b": "The KL regularization in VAEs explicitly encourages a continuous and structured latent space. Points interpolated between two valid latent vectors are therefore also likely to decode meaningfully.",
+                "c": "Dataset size affects generalization but is not the reason interpolation is smoother in VAEs. The key mechanism is the KL regularization that shapes the latent space topology.",
+                "d": "Standard autoencoders can technically interpolate in latent space, but the results are often incoherent because the latent space is not regularized to be continuous."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>Latent space interpolation — linearly blending two latent vectors z1 and z2 — is particularly smooth in VAEs compared to standard autoencoders because:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) VAEs use a larger bottleneck, leaving more room for smooth transitions</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) The KL regularization encourages the latent space to be continuous and well-structured, so intermediate points are also meaningful</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) VAEs always train on larger datasets, producing better generalization</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) Standard autoencoders do not support latent space interpolation at all</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Using a discriminator to match the latent distribution to a prior describes an adversarial autoencoder, not a VQ-VAE. VQ-VAEs use vector quantization, not adversarial training.",
+                "b": "VQ-VAEs replace the continuous latent space with a discrete codebook. Each encoder output is mapped to its nearest codebook vector, making the latent representation discrete and enabling use with autoregressive priors.",
+                "c": "VQ-VAEs do separate the encoder from an autoregressive prior model at generation time, but they do not replace the decoder itself with an autoregressive model as a defining feature.",
+                "d": "VQ-VAEs retain a reconstruction loss. Eliminating the reconstruction loss would make learning the codebook impossible. The VQ-VAE modifies how the latent space is structured, not the objectives."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>How do Vector Quantized VAEs (VQ-VAEs) differ fundamentally from standard VAEs?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) VQ-VAEs use a discriminator to match the latent distribution to a prior</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) VQ-VAEs quantize continuous latent representations to a discrete learned codebook of vectors</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) VQ-VAEs replace the decoder with an autoregressive model</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) VQ-VAEs eliminate the reconstruction loss and rely entirely on the KL term</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

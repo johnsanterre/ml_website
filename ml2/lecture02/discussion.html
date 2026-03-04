@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2: Neural Networks &amp; Backpropagation — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 2</a>
+        <div class="content-box">
+            <h1>Week 2: Neural Networks &amp; Backpropagation</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>1. The Learning Rate Dilemma</h3>
+                <p>The learning rate &eta; is arguably the most consequential hyperparameter in gradient-based training. Too small and training is agonizingly slow and prone to getting stuck; too large and the optimization diverges. Practitioners often spend as much time tuning the learning rate as designing the model architecture itself. Techniques like learning rate warmup, decay schedules, and adaptive methods (Adam, RMSProp) attempt to automate this challenge.</p>
+                <ul class="probing-questions">
+                    <li>Why does the optimal learning rate depend on both the model architecture and the dataset, making it impossible to specify a universal default?</li>
+                    <li>Adaptive optimizers like Adam maintain per-parameter learning rates. What is the trade-off between using Adam and vanilla SGD in terms of generalization performance?</li>
+                    <li>Learning rate warmup starts training with a very small rate before increasing it. Why might jumping to the target rate immediately be harmful at the start of training?</li>
+                </ul>
+                <p class="activity-note">Try: Show a live training curve where the learning rate is too large (diverging loss) and one where it is too small (barely decreasing loss), then ask students to guess a better value before revealing the well-tuned result.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>2. Loss Functions as Inductive Biases</h3>
+                <p>The choice of loss function encodes assumptions about what kinds of errors matter and how they should be penalized. Mean Squared Error penalizes large errors quadratically, making it sensitive to outliers. Cross-entropy is derived from information theory and is natural for probabilistic classification. Selecting the wrong loss function can lead a model to learn the right pattern in entirely the wrong way.</p>
+                <ul class="probing-questions">
+                    <li>If you are predicting house prices and your dataset contains several luxury outlier properties, should you prefer MSE or MAE? What does this choice say about what you value?</li>
+                    <li>In a medical diagnosis task with severe class imbalance (1% positive cases), standard cross-entropy may train a model that ignores the minority class. What modifications to the loss function address this?</li>
+                    <li>Can you design a custom loss function for a specific business problem? What considerations guide that design?</li>
+                </ul>
+                <p class="activity-note">Try: Present two loss curves (MSE vs. MAE) on the same dataset with outliers included, and ask groups to predict which metric their model would report as "better" and why before checking the actual values.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>3. Understanding the Loss Landscape</h3>
+                <p>The loss landscape of a deep neural network is a high-dimensional surface where each point represents a set of parameter values and the height represents the loss. Gradient descent navigates this landscape seeking a minimum. Research has shown that this landscape has many saddle points (where the gradient is zero but the point is not a minimum) and that local minima in overparameterized networks tend to have similar loss values to global minima.</p>
+                <ul class="probing-questions">
+                    <li>If many local minima give similarly good generalization performance, does it still matter that gradient descent does not find the global minimum?</li>
+                    <li>The mini-batch noise in SGD is often cited as helping escape saddle points. Is this the whole story, or do other factors also contribute?</li>
+                    <li>How does increasing model size (more parameters) qualitatively change the structure of the loss landscape, and what are the implications for optimization?</li>
+                </ul>
+                <p class="activity-note">Try: Use a low-dimensional loss surface visualization tool (such as the loss-landscape library) to project a trained model onto 2D and let students identify valleys, saddle points, and ridges before discussing what gradient descent would do.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>4. Backpropagation: Elegant Algorithm or Black Box?</h3>
+                <p>Backpropagation is often described as a beautiful application of the chain rule, enabling the efficient computation of gradients in networks with millions of parameters. At the same time, it is the engine behind models whose internal reasoning is opaque. Critics argue that gradient-based optimization produces networks that work but cannot be interrogated, while proponents argue that the outcomes speak for themselves.</p>
+                <ul class="probing-questions">
+                    <li>Backpropagation was known in the 1970s but was not widely adopted until the 1980s-1990s. What factors explain this delay, and what does it tell us about how scientific ideas diffuse?</li>
+                    <li>Gradient-based training optimizes a single scalar loss — but real-world objectives are rarely single-dimensional. How do practitioners handle multi-objective trade-offs (e.g., accuracy vs. fairness vs. speed)?</li>
+                    <li>Are there classes of problems where backpropagation is fundamentally unsuitable, and what alternative learning algorithms exist for those cases?</li>
+                </ul>
+                <p class="activity-note">Try: Ask students to manually compute gradients for a tiny two-layer network with toy numbers, working through the chain rule step by step on paper, to build intuition before the algorithm becomes a black box.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>5. Batch Size as a Design Decision</h3>
+                <p>The choice of batch size in mini-batch gradient descent is rarely discussed as a principled design decision, yet it has significant consequences. Large batches provide accurate gradient estimates but use more memory, train more slowly per update (though fewer updates are needed), and have been shown empirically to generalize worse than small batches in some settings. This "generalization gap" between large and small batch training is an active area of research.</p>
+                <ul class="probing-questions">
+                    <li>What is the "sharp minima vs. flat minima" hypothesis, and why would small-batch training favor flat minima that generalize better?</li>
+                    <li>Distributed training across many GPUs effectively increases the batch size — what strategies have researchers proposed to recover the generalization benefits of small batches in distributed settings?</li>
+                    <li>Is there a principled way to choose batch size for a new problem, or is it always empirically determined through experimentation?</li>
+                </ul>
+                <p class="activity-note">Try: Assign small groups different batch sizes (8, 64, 512) for the same simple problem, run them live in a notebook, then compare final validation accuracy and training time to ground the theoretical discussion in observed data.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>When discussing backpropagation, resist moving too quickly to the matrix formulation; students benefit from tracing the chain rule through a concrete three-node toy network before generalizing to the full algorithm.</li>
+                    <li>The loss landscape discussion can feel abstract; anchor it with a published visualization (e.g., Li et al. 2018 "Visualizing the Loss Landscape of Neural Nets") to give students a concrete mental image before asking conceptual questions.</li>
+                    <li>For the batch size topic, help students distinguish between what is mathematically well-understood (gradient variance decreases with larger batches) and what is empirically observed but not fully explained (the generalization gap), to model good scientific epistemic hygiene.</li>
+                    <li>The learning rate discussion pairs well with a live demo: use a simple 1D quadratic loss and animate gradient descent steps at different learning rates so students can see overshooting and slow convergence before abstracting to higher dimensions.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

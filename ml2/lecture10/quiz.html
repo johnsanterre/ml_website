@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 10: Introduction to Large Language Models — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 10</a>
+        <div class="content-box">
+            <h1>Week 10: Introduction to Large Language Models</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Convolution is used in CNNs to process spatial data, not in transformer self-attention. Self-attention does not use learned filters sliding over a sequence.",
+                "b": "Correct. Self-attention computes Attention(Q,K,V) = softmax(QK^T / sqrt(d_k))V, which is a weighted sum of value vectors V where weights come from softmax-scaled query-key dot products.",
+                "c": "Recurrent hidden-state updates describe RNNs and LSTMs, not the transformer. Transformers process all tokens in parallel rather than sequentially.",
+                "d": "Feedforward projection of each token independently describes the FFN sublayer in a transformer, not the self-attention mechanism."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>Which mathematical operation is at the core of the transformer self-attention mechanism?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) A convolution over the input sequence using learned filters</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) A weighted sum of value vectors, where weights come from softmax-scaled query-key dot products</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) A recurrent update of a hidden state using the previous hidden state and the current input</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) A feedforward projection of each token embedding independently</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "N-gram models predate modern GPUs and did not depend on GPU availability. Their weakness was statistical, not hardware-related.",
+                "b": "N-gram models were trained on text data. The inability to train on text at all was not a limitation of these models.",
+                "c": "Correct. N-gram models only condition on a fixed window of n-1 words, making long-range dependencies impossible to capture. Rare n-grams also cause data sparsity problems.",
+                "d": "N-gram models actually produced very simple, often ungrammatical outputs. Excessive grammatical complexity was not a known failure mode."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>Early n-gram language models estimated the probability of a word given the previous n-1 words. What was a primary weakness of this approach compared to transformer-based LLMs?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) They required GPU hardware that was not available before 2012</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) They could not be trained on text data of any kind</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) They struggled to capture long-range dependencies and suffered from data sparsity</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) They generated outputs that were too grammatically complex for practical use</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Scaling laws show diminishing returns as scale increases, not unlimited linear improvement. Performance curves follow a power law, not a straight line.",
+                "b": "Correct. Empirical scaling laws show test loss follows a power law with respect to model size, compute budget, and dataset size, with performance improving but at diminishing rates.",
+                "c": "Scaling laws show that both dataset size and model size jointly determine performance. Ignoring model size would contradict the empirical findings.",
+                "d": "Larger models do not always overfit; scaling laws show that increasing model size in proportion with data and compute actually improves test performance."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>Scaling laws in deep learning describe a relationship between model performance and scale factors. Which of the following best describes this relationship?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) Performance improves linearly and without limit as model size increases</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) Test loss scales as a power law with respect to model size, compute budget, and dataset size</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) Performance is determined solely by dataset size and is independent of model size</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) Larger models always perform worse because they overfit to training data</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "GPT-3 is a text-only model. Multimodal image-text processing came with later systems and was not what the parameter scale increase primarily unlocked.",
+                "b": "Correct. GPT-3 demonstrated remarkable few-shot learning, performing diverse tasks from just a few in-context examples without any gradient updates or task-specific fine-tuning.",
+                "c": "GPT-3 still hallucinates and produces factual errors. Perfect factual accuracy was not achieved and remains an unsolved challenge.",
+                "d": "Real-time internet access was not a feature of GPT-3. That capability requires additional infrastructure such as retrieval-augmented generation."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>GPT-3 grew from GPT-1's 117 million parameters to 175 billion parameters. What primary capability did this dramatic increase in scale unlock?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) The ability to process images alongside text for the first time</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) Remarkable few-shot learning across diverse tasks without task-specific fine-tuning</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) Perfect factual accuracy with zero hallucinations</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) Real-time internet search integration</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Both MLM and CLM train on text, not images. The distinction is about how the training objective uses context, not the data modality.",
+                "b": "Correct. MLM (used in BERT) randomly masks tokens and predicts them using both left and right context (bidirectional). CLM (used in GPT) predicts the next token using only prior context (unidirectional).",
+                "c": "Both MLM and CLM are self-supervised objectives that do not require labeled data. The difference is in how context is used, not in supervision type.",
+                "d": "This reverses the descriptions. CLM is the autoregressive next-token prediction objective; MLM is the fill-in-the-blank (masked token prediction) objective."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Masked language modeling (MLM), used in BERT, differs from causal language modeling (CLM), used in GPT, in what fundamental way?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) MLM trains on images while CLM trains only on text</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) MLM predicts randomly masked tokens using bidirectional context; CLM predicts the next token using only prior context</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) MLM requires labeled data while CLM is entirely unsupervised</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) MLM generates text autoregressively while CLM uses a fill-in-the-blank objective</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Data parallelism splits training data across multiple devices to speed up training. It does not specifically address memory by discarding and recomputing activations.",
+                "b": "Mixed-precision training uses lower-precision numerical formats (e.g., FP16) to reduce memory and speed up computation. It does not involve discarding and recomputing activations.",
+                "c": "Correct. Gradient checkpointing discards intermediate activations during the forward pass and recomputes them during backpropagation, trading extra compute for significantly reduced memory usage.",
+                "d": "Layer normalization is a normalization technique applied within the network to stabilize training. It does not involve discarding and recomputing activations."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>In the context of LLM pre-training, what technique involves discarding intermediate activations during the forward pass and recomputing them during backpropagation to reduce memory usage?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) Data parallelism</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) Mixed-precision training</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) Gradient checkpointing</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) Layer normalization</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Refusing to answer out-of-domain questions is a refusal behavior, not hallucination. Hallucination specifically refers to generating confident but incorrect content.",
+                "b": "Correct. Hallucination refers to the model generating text that is fluent and plausible-sounding but factually incorrect or unsupported by reality, often because the model relies on learned patterns rather than grounded knowledge.",
+                "c": "Reproducing training data verbatim is called memorization or data leakage, which is a distinct problem from hallucination.",
+                "d": "Failing to generate output for ambiguous prompts describes a refusal or abstention behavior. Hallucination is the opposite problem: generating confidently wrong output."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>"Hallucination" in an LLM refers to which of the following behaviors?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) The model refusing to answer questions outside its training domain</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) The model generating text that is fluent and plausible but factually incorrect or unsupported</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) The model producing outputs that contain explicit content from its training data verbatim</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) The model failing to generate any output when given an ambiguous prompt</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="d" data-explanations='{
+                "a": "This ordering is incorrect. Zero-shot provides no task examples, which is the least context, not the most. In-context and few-shot are related terms, not a middle tier.",
+                "b": "This ordering is incorrect. Zero-shot provides the least context (no examples), so placing it in the middle is wrong.",
+                "c": "This ordering is also incorrect. In-context learning and few-shot learning are closely related and both involve providing task examples, so they cannot be neatly separated in this way.",
+                "d": "Correct. Few-shot and in-context learning both involve providing the model with task demonstrations or relevant context, making them similar in how much information is supplied. Zero-shot provides no examples at all, supplying the least context."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>In-context learning, few-shot learning, and zero-shot generalization are all emergent capabilities of large language models. Which of the following correctly orders them from most to least context provided to the model?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) Zero-shot, in-context, few-shot</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) Few-shot, zero-shot, in-context</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) Few-shot, in-context, zero-shot</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) In-context/few-shot (similar amounts of context), then zero-shot</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Training separate expert models per task and combining them at inference is a mixture-of-experts approach, not the Pathways vision. Pathways aims for unified multi-task training in a single model.",
+                "b": "Correct. The Pathways approach aims to train a single model capable of performing multiple tasks across different modalities by sharing learned knowledge, unlike conventional single-task or single-modality models.",
+                "c": "Using reinforcement learning from human feedback (RLHF) as the primary training objective describes the InstructGPT/ChatGPT training approach, not the Pathways architecture.",
+                "d": "Pruning weights not used across tasks describes model compression or sparsification, not the Pathways multi-task training paradigm."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>Google's PaLM architecture uses an approach called "Pathways." What distinguishes this approach from standard single-task model training?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) It trains a separate expert model for each task and combines their outputs at inference time</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) It aims to train a single model to perform multiple tasks across different modalities using shared knowledge</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) It uses reinforcement learning from human feedback as its primary training objective</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) It reduces model size by pruning weights that are not used across tasks</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The raw input token embedding is the initial representation before any transformer layers have processed it. h_t is the output after all transformer layers have run, encoding the full context.",
+                "b": "Correct. h_t is the hidden state produced by the full transformer stack at position t. It encodes the contextual representation of the entire sequence up to that point and is projected by W_o to produce vocabulary logits.",
+                "c": "Attention weights are intermediate values computed within the self-attention sublayer. They are used to weight values but are not the same as the final hidden state h_t.",
+                "d": "The target token is part of the training objective, not a component of the output probability computation. h_t is the model output, not the training label."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>The output token probability in a transformer LLM is computed as P(x_t | x_&lt;t) = softmax(W_o h_t + b_o). What does h_t represent in this equation?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) The raw embedding of the input token at position t</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) The hidden state of the model at time step t, which encodes the full context up to that point</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) The attention weight assigned to token t by the query-key interaction</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) The target token used during supervised fine-tuning</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

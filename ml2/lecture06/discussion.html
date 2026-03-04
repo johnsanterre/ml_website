@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 6: From Autoencoders to Embeddings — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 6</a>
+        <div class="content-box">
+            <h1>Week 6: From Autoencoders to Embeddings</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>1. Bias Encoded in Language: Word Embeddings as a Mirror of Society</h3>
+                <p>Researchers have demonstrated that standard word embeddings trained on web corpora consistently associate "nurse" more closely with "woman" and "engineer" more closely with "man." These biases are not introduced by the model designer — they are absorbed from the statistical regularities of human language in the training corpus. Debiasing techniques can reduce measured biases, but critics argue this is cosmetic rather than corrective.</p>
+                <ul class="probing-questions">
+                    <li>Is it possible to train embeddings that are "neutral" with respect to protected attributes without also erasing real and meaningful linguistic associations? Where is the line?</li>
+                    <li>If you deploy a resume-screening system using word embeddings and it systematically underranks candidates from certain groups, who bears responsibility — the embedding researchers, the model builders, or the deploying company?</li>
+                    <li>How should the existence of measurable embedding bias affect the regulatory treatment of NLP systems used in high-stakes decisions like hiring, lending, or bail?</li>
+                </ul>
+                <p class="activity-note">Try: Have students run a live nearest-neighbor query on a publicly available word embedding (e.g., GloVe) for profession words and record which gender-associated words appear — then compare their findings across different profession domains to surface patterns.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>2. Static vs. Contextual Embeddings: The Cost of Context</h3>
+                <p>Word2Vec assigns a single fixed vector to each word regardless of context — "bank" has one representation whether it appears in a financial document or a nature essay. BERT produces a different vector for each occurrence of "bank" depending on its sentence context. This contextual sensitivity dramatically improves performance on many NLP benchmarks, but at a significant increase in computational cost and model complexity.</p>
+                <ul class="probing-questions">
+                    <li>For which real-world NLP applications does the difference between static and contextual embeddings matter most? Are there applications where static embeddings are genuinely sufficient?</li>
+                    <li>The computational cost of contextual models like BERT raises questions about environmental impact and access. Should resource-intensive models be deployed when lighter alternatives exist?</li>
+                    <li>Static embeddings can be stored as a simple lookup table, making them highly interpretable and auditable. What does the shift to contextual embeddings mean for model transparency and accountability?</li>
+                </ul>
+                <p class="activity-note">Try: Give students two sentences containing the same ambiguous word (e.g., "bank" or "pitcher") and ask them to write down which meaning they would expect a static embedding versus BERT to capture — then discuss how this connects to downstream task performance.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>3. Multi-Modal Embeddings and the Collapse of Modality Boundaries</h3>
+                <p>Multi-modal embedding systems like CLIP learn a joint space where images and text are embedded together. This enables capabilities like finding images matching a text description or generating images from text prompts. These same systems power image generation tools and also underlie reverse-image-search-style surveillance capabilities.</p>
+                <ul class="probing-questions">
+                    <li>A joint embedding space that aligns "a photo of a protest" with corresponding images could be used by human rights organizations to document events — or by governments to identify participants. How should dual-use risks shape research and deployment decisions?</li>
+                    <li>Multi-modal embeddings trained on web-scraped image-text pairs inherit all the labeling noise, cultural biases, and consent issues of the underlying data. How should these limitations be communicated to downstream users?</li>
+                    <li>What would a responsible "model card" for a large multi-modal embedding model include? What disclosures would you consider mandatory?</li>
+                </ul>
+                <p class="activity-note">Try: In small groups, have students draft the key sections of a model card for a hypothetical multi-modal embedding system — then compare cards across groups and discuss which disclosures were considered essential versus optional.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>4. Domain Adaptation: When General Embeddings Fail Specialists</h3>
+                <p>A general-purpose word embedding trained on Wikipedia and news articles will likely represent "discharge" as related to electricity or leaving a job. In clinical NLP, "discharge" almost always means a patient leaving the hospital or a medical fluid. Without domain adaptation, general embeddings can systematically mislead clinical NLP models.</p>
+                <ul class="probing-questions">
+                    <li>Should organizations deploying NLP in specialized domains (medicine, law, finance) be required to evaluate and adapt their embeddings before deployment? What would appropriate evaluation look like?</li>
+                    <li>Domain-specific corpora (clinical notes, legal filings) are often private and sensitive. How does the scarcity of public domain-specific training data affect the quality and fairness of specialized embeddings?</li>
+                    <li>Fine-tuning on domain-specific data can overwrite general semantic knowledge. How would you decide what to fine-tune versus what to freeze when adapting a large pre-trained model to a specialized domain?</li>
+                </ul>
+                <p class="activity-note">Try: Give students a list of five ambiguous terms (e.g., discharge, lead, culture, base, order) and ask them to write both a general-domain and a clinical-domain interpretation for each — then discuss what a vector that conflates the two meanings would do to a downstream model.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>5. Semantic Search and the Future of Information Retrieval</h3>
+                <p>Traditional keyword-based search retrieves documents containing the exact query terms. Embedding-based semantic search retrieves documents that are semantically similar to the query, even without keyword overlap. This enables queries like "treatments for inflammation" to surface documents about "anti-inflammatory therapies" — but it also means the system&#39;s notion of "relevance" is shaped entirely by what the embedding model learned to treat as similar.</p>
+                <ul class="probing-questions">
+                    <li>Keyword search is transparent: you can see exactly why a document was retrieved. Semantic search is opaque: the similarity is computed in a high-dimensional space no human can inspect. What are the implications of this opacity for scientific literature search or legal discovery?</li>
+                    <li>If an embedding model was trained primarily on English-language Western sources, how might its notion of semantic similarity disadvantage researchers writing in other languages or working in non-Western intellectual traditions?</li>
+                    <li>As semantic search becomes the dominant mode of information retrieval, what incentives does it create for content creators who want their work to be discovered? Could this reshape the structure of academic or journalistic writing?</li>
+                </ul>
+                <p class="activity-note">Try: Run the same query using a keyword search tool and an embedding-based semantic search tool on the same corpus and display the top-5 results from each — ask students to evaluate which set is more relevant and discuss what "relevant" means in this context.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>The bias topic (Discussion 1) tends to generate strong reactions — anchor the conversation in the technical mechanism (geometric proximity in vector space) before moving to normative questions. Students engage more productively when they can trace the bias to a specific, concrete computational process.</li>
+                    <li>For the static vs. contextual embedding comparison, use a live demo if possible: query the same ambiguous word against a GloVe lookup and a BERT encoder and display the different nearest neighbors side by side. The contrast is immediately persuasive and makes the concept memorable.</li>
+                    <li>When discussing domain adaptation, ask students to identify a field they know well and name three terms that would be systematically misrepresented by a general-purpose embedding. This personalizes the problem and surfaces domain expertise in the room.</li>
+                    <li>Close the session by connecting the week&#39;s content back to the "what counts as similarity" question: every embedding model encodes a particular theory of what makes two things alike. Ask students to articulate whose theory it is and how that shapes who benefits from the system.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

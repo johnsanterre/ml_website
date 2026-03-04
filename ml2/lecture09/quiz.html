@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 9: From Supervised to Generative Learning — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 9</a>
+        <div class="content-box">
+            <h1>Week 9: From Supervised to Generative Learning</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "This answer reverses the definitions. Discriminative models learn P(Y|X), not P(X), and generative models learn P(X) or P(X,Y), not P(Y|X).",
+                "b": "Correct. Discriminative models learn the conditional P(Y|X), mapping directly from inputs to labels. Generative models learn P(X) or P(X,Y), capturing the underlying data distribution and allowing them to generate new samples.",
+                "c": "Both model families can produce outputs in multiple modalities. The defining distinction is the probability distribution each family models, not the modality of output.",
+                "d": "Both discriminative and generative models can use labeled or unlabeled data depending on the specific approach. The distinction is formal and probabilistic, not simply about label availability."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>What is the fundamental difference between a discriminative model and a generative model in terms of what probability distribution each learns?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) Discriminative models learn P(X), the distribution of inputs; generative models learn P(Y|X), the conditional distribution of labels given inputs.</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) Discriminative models learn P(Y|X), the conditional distribution of labels given inputs; generative models learn P(X) or P(X, Y), the underlying data distribution.</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) Both types of models learn P(Y|X), but generative models additionally learn to produce outputs in multiple modalities.</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) Discriminative models require labeled data while generative models require unlabeled data; no probabilistic distinction between them is formally defined.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Storage cost for high-resolution images is a practical concern, but it is not the defining bottleneck that makes medical annotation uniquely difficult compared to other domains.",
+                "b": "Correct. Labeling a medical image — such as drawing tumor boundaries in a CT scan — requires expert clinical training that cannot be crowdsourced, making annotation both slow and expensive to scale.",
+                "c": "Medical data sharing is restricted by privacy regulations (HIPAA, GDPR) but is not universally prohibited for research. Many curated medical datasets are publicly available for research purposes.",
+                "d": "File format incompatibilities (e.g., DICOM) add engineering overhead but are not the fundamental bottleneck. Conversion tools exist, and the harder problem is obtaining expert labels once data is accessible."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>The textbook identifies annotation cost as a fundamental scaling limitation of supervised learning. In specialized domains like medical imaging, what makes this limitation especially acute compared to general image classification?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) Medical images are higher resolution, making storage costs prohibitive even before annotation begins.</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) Accurate annotation requires expert knowledge (e.g., board-certified radiologists for pixel-wise segmentation), creating a bottleneck that cannot easily be crowdsourced or automated.</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) Medical institutions do not allow their data to be used for machine learning research, regardless of annotation cost.</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) Medical imaging uses different file formats that are incompatible with standard deep learning frameworks, slowing the annotation pipeline.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Compression into a latent code describes a variational autoencoder (VAE), not the forward diffusion process. The forward process does not compress; it destroys structure by adding noise.",
+                "b": "Correct. The forward process is a fixed, non-learned procedure that adds small amounts of Gaussian noise at each of T steps, gradually converting the original data into approximately pure Gaussian noise.",
+                "c": "Learning to transform noise into data is the reverse process, not the forward process. The forward process is fixed and runs in the opposite direction.",
+                "d": "Discretizing images into tokens describes vector-quantized models like VQ-VAE, not diffusion models. Diffusion models operate on continuous data."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>In the forward process of a diffusion model, what happens to the data over successive time steps?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) The data is compressed into a lower-dimensional latent code that captures its essential structure.</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) Gaussian noise is progressively added to the data in small steps until the original signal is completely destroyed, yielding approximately pure noise.</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) The model learns to transform random noise into realistic data by applying a series of learned refinement steps in the forward direction.</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) The data is discretized into tokens at each step, converting continuous images into a sequence of categorical values.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "This reverses the Markov property. The Markov condition says each state depends only on the immediately preceding state, not on all previous states simultaneously.",
+                "b": "Correct. The Markov property means q(x_t | x_{t-1}, ..., x_0) = q(x_t | x_{t-1}). This makes each step a simple Gaussian perturbation and greatly simplifies both the forward and reverse processes.",
+                "c": "The Markov property means the opposite: noise at each step is independent of all states except the immediately prior one. Correlated noise across steps would violate the Markov assumption.",
+                "d": "The Markov property concerns the conditional independence structure of the forward process, not the statistical relationship between generated samples and training data."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>Diffusion models use the Markov property in their forward process. What does the Markov property mean in this context, and why is it computationally useful?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) The Markov property means each step in the forward process depends on all previous steps simultaneously, enabling batch computation.</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) The Markov property means each noisy state depends only on the immediately preceding state, not the full history. This makes the forward process tractable and simplifies learning the reverse denoising steps.</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) The Markov property ensures that the noise added at each step is correlated with previous steps to create smooth transitions.</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) The Markov property in diffusion models refers to the fact that generated samples are statistically independent of the training data.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "A discriminator score is used in GANs, not diffusion models. The score function in diffusion models is a mathematical quantity from the data distribution, not a quality rating.",
+                "b": "Correct. The score function is the gradient of the log probability density with respect to the input: s(x) = grad log p(x). It points toward regions of higher data density and guides noisy samples back toward the data manifold.",
+                "c": "The score function is a gradient vector in input space, not an embedding of the input. It encodes directional information about the data distribution, not a semantic summary.",
+                "d": "The noise magnitude at a given time step is a schedule parameter, not the score function. The score function is a gradient of the log density, which is a fundamentally different quantity."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>In the reverse process of a diffusion model, the model learns to denoise by estimating the "score" of the data distribution. What does the score function represent?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) A scalar quality metric that rates how realistic a generated sample is, similar to the discriminator score in a GAN.</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) The gradient of the log probability density of the data with respect to the input — i.e., the direction in which to move a noisy sample to make it more likely under the data distribution.</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) A learned embedding vector that summarizes the semantic content of the noisy input at a given time step.</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) The magnitude of the noise that was added to the data at a specific time step in the forward process.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "A single shared network is used across all time steps; separate weights per step would be impractical given the number of steps (often hundreds to thousands). Time conditioning keeps a single model flexible.",
+                "b": "Correct. Without time conditioning, the network cannot distinguish high-noise from low-noise inputs and would apply the same denoising behavior everywhere. Conditioning on t lets one network handle the full spectrum from coarse to fine denoising.",
+                "c": "Each sample in a batch is processed independently. Time conditioning is about adapting denoising behavior to the noise level of each input, not about synchronizing samples across the batch.",
+                "d": "Skipping unnecessary denoising steps is addressed by accelerated sampling methods like DDIM, not by time conditioning itself. Time conditioning is about correctness of denoising, not speed."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>Time conditioning is a crucial aspect of the diffusion model&#39;s reverse process. What does conditioning the denoising network on the time step t accomplish?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) It allows the model to use a different set of weights for each time step, increasing the total parameter count.</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) It tells the model what noise level it is currently working with, allowing a single network to apply appropriate denoising behavior at every stage from high-noise to near-clean.</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) It synchronizes the denoising steps across different samples in a batch to ensure consistent generation quality.</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) It enables the model to skip unnecessary denoising steps when the input is already close to a clean sample.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Masked language modeling requires no human annotators. The supervision signal is entirely derived from the original text, which is why it is called self-supervised.",
+                "b": "Correct. The original text tokens serve as the ground truth targets. The model predicts masked tokens from surrounding context, creating a self-supervised task that requires no manually labeled data.",
+                "c": "Standard BERT does not use knowledge distillation from a teacher model. The signal comes directly from comparing predictions against the original masked tokens in the raw text.",
+                "d": "Linguistic grammars are not used as supervision. The signal is empirical — the model is rewarded for predicting what the actual word was in the original text, regardless of grammatical rules."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>In BERT-style masked language modeling, what is the "supervisory signal" and where does it come from?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) The supervisory signal comes from human annotators who label the masked tokens with their correct meanings.</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) The supervisory signal is derived from the data itself — the model is trained to predict the original tokens that were masked out, using the surrounding context as supervision without any manual labels.</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) The supervisory signal is provided by a separate teacher model that generates target distributions over the vocabulary for each masked position.</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) The supervisory signal comes from a fixed linguistic grammar that specifies the correct word at each masked position based on syntactic rules.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "This describes supervised classification, not contrastive learning. Contrastive learning does not use class labels; positive pairs are defined by augmentation, not by ground-truth labels.",
+                "b": "Correct. In SimCLR a positive pair is formed by two independently augmented crops of the same image. The model learns representations that are close for positive pairs and far apart for views from different images.",
+                "c": "Contrastive learning methods like SimCLR are self-supervised and do not use class labels to define positive pairs. Knowing two images share a class is supervised information not available in self-supervised settings.",
+                "d": "This describes a denoising autoencoder objective, not contrastive learning. In contrastive learning, positive pairs are defined by augmentation of the same image, not by a noise-then-reconstruct process."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>In contrastive learning (e.g., SimCLR), what constitutes a "positive pair" and what is the model trained to do with it?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) A positive pair consists of an image and its correct class label; the model is trained to assign high probability to the correct label.</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) A positive pair consists of two different augmented views of the same data point; the model is trained to produce similar representations for positive pairs and dissimilar representations for views from different data points.</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) A positive pair consists of two images from the same class in the dataset; the model is trained to classify them identically.</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) A positive pair consists of a noisy image and its clean counterpart; the model is trained to reconstruct the clean version from the noisy input.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Diffusion models do not use a discriminator. GANs use adversarial discriminators; diffusion models use a single denoising network trained with a regression objective.",
+                "b": "Correct. In BERT, masked tokens are the corruption and original tokens are the reconstruction target. In diffusion models, noise is the corruption and clean data is the target. Both define self-supervised tasks using data structure alone.",
+                "c": "Diffusion models do not maximize likelihood directly during training; they optimize a denoising objective (evidence lower bound). Neither framework is the same as straightforward maximum likelihood estimation.",
+                "d": "Standard diffusion models are not trained with contrastive objectives. The link between diffusion and self-supervised learning is through the denoising/reconstruction pretext task, not through contrastive loss functions."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>The textbook draws a connection between diffusion model denoising and self-supervised learning. What is the core conceptual link between these two paradigms?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) Both approaches require a separately trained discriminator network to provide a learning signal to the generative model.</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) Diffusion model denoising can be viewed as a form of masked prediction where Gaussian noise serves as the corruption, and the model learns to reconstruct the original data — creating its own supervision signal from the data structure without labels.</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) Both approaches model the data distribution P(X) explicitly using maximum likelihood estimation over the training set.</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) Diffusion models and self-supervised models both rely on contrastive objectives that push noise embeddings away from clean data embeddings in representation space.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Standard contrastive learning handles augmentation naturally. MoCo does not change the augmentation strategy; it addresses the memory and computational cost of maintaining large numbers of negative examples.",
+                "b": "Correct. Large batches of negatives improve contrastive learning but are GPU-memory-intensive. MoCo maintains a queue of past key representations updated with a slowly moving-average encoder, providing many negatives without requiring a proportionally large batch.",
+                "c": "Representation collapse — where all outputs converge to the same vector — is addressed by methods like BYOL or SimSiam using stop-gradient or EMA techniques, not by MoCo. MoCo was designed to address the large-batch memory problem.",
+                "d": "Standard contrastive learning is already self-supervised and does not require labeled positive pairs. Positive pairs are defined by augmentation, not class labels, in methods like SimCLR."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>Momentum contrast (MoCo) was introduced as an advancement in contrastive learning. What practical limitation of standard contrastive learning does it address?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) Standard contrastive learning cannot handle data augmentation, so MoCo introduces a way to generate augmented views without distorting the semantic content.</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) Effective contrastive learning requires a large number of negative examples, but maintaining a large batch size is computationally prohibitive; MoCo uses a dynamic queue and momentum-updated encoder to maintain a large set of negatives without large batches.</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) Standard contrastive learning produces collapsed representations where all outputs converge to the same point; MoCo prevents collapse by adding a momentum term to the loss function.</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) Standard contrastive learning requires labeled positive pairs, and MoCo eliminates this requirement by using unsupervised clustering to identify positives.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

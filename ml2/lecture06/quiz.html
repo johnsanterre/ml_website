@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 6: From Autoencoders to Embeddings — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 6</a>
+        <div class="content-box">
+            <h1>Week 6: From Autoencoders to Embeddings</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Predicting the target word from averaged context words describes the CBOW (Continuous Bag of Words) model, not Skip-gram. Skip-gram works in the opposite direction.",
+                "b": "The Skip-gram model takes a target word as input and tries to predict each of the surrounding context words within the context window. This is the reverse of CBOW.",
+                "c": "KL divergence is used in VAEs and information-theoretic frameworks, not in the Word2Vec Skip-gram training objective, which uses cross-entropy or negative sampling.",
+                "d": "Reconstructing a full sentence from a compressed embedding describes a sequence-to-sequence autoencoder, not the Skip-gram Word2Vec model."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>In Word2Vec&#39;s Skip-gram model, the training objective is to:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) Predict the target word given the average of its surrounding context words</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) Predict the surrounding context words given the target word</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) Minimize the KL divergence between word distributions</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) Reconstruct the full sentence from a compressed sentence embedding</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Cosine similarity measures closeness between individual word vectors, but this does not explain the analogy arithmetic. The analogy task specifically demonstrates directional offset structure.",
+                "b": "Word2Vec embeddings encode relational structure as consistent directional offsets. The vector difference king minus man captures royalty relative to a male, and adding woman navigates to queen along the same direction.",
+                "c": "The Word2Vec embedding space is continuous, not discrete. Words do not occupy fixed grid positions; they are points in a dense real-valued vector space.",
+                "d": "Gender information in Word2Vec is captured in the direction of vector differences, not in the magnitude of individual word vectors. Magnitude encodes frequency-related properties."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>The famous word embedding analogy "king - man + woman = queen" demonstrates which property of word vectors?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) Semantic similarity is measured by cosine similarity between individual word vectors</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) Relational structure is encoded as consistent geometric offsets, enabling vector arithmetic to solve analogies</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) The embedding space is discrete, with words occupying fixed grid positions</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) Gender information is stored in the magnitude of word vectors, not their direction</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Negative sampling does not generate hard examples for robustness. It randomly samples non-context words as negatives, which is primarily a computational efficiency technique.",
+                "b": "Computing the full softmax over the entire vocabulary at each training step is expensive. Negative sampling approximates this by treating the task as binary classification using only a few negative word samples per step.",
+                "c": "Negative sampling does not specifically target frequent words. Subword sampling (downsampling frequent words) is a separate technique used alongside negative sampling in Word2Vec.",
+                "d": "Maintaining orthogonal embeddings is not a goal of Word2Vec training. Negative sampling is purely a computational approximation to the full softmax, with no constraint on embedding geometry."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>Negative sampling in Word2Vec training is used primarily to:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) Generate hard training examples that improve robustness</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) Reduce the computational cost of the softmax by only updating a small number of word vectors per step</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) Prevent the model from memorizing frequent words</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) Ensure that the embedding vectors remain orthogonal to each other</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "GloVe and Word2Vec both use feedforward-style matrix operations, not recurrent neural networks. Neither model uses an RNN as its core architecture.",
+                "b": "GloVe builds a global word co-occurrence matrix from the entire corpus and factorizes it using weighted least squares. Word2Vec uses local sliding context windows and does not explicitly model global co-occurrence statistics.",
+                "c": "Contextual embeddings that change with sentence context describe models like BERT. Both GloVe and Word2Vec produce static embeddings where each word has one fixed vector.",
+                "d": "Representing words as bags of character n-grams describes FastText, not GloVe. GloVe treats each word as an atomic unit, the same as Word2Vec."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>How does GloVe (Global Vectors for Word Representation) differ from Word2Vec in its approach to learning embeddings?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) GloVe uses a recurrent neural network, while Word2Vec uses a feedforward network</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) GloVe learns from global word co-occurrence statistics across the entire corpus, while Word2Vec uses local context windows</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) GloVe produces contextual embeddings that change based on sentence, while Word2Vec produces static embeddings</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) GloVe represents words as bags of character n-grams, while Word2Vec treats each word as atomic</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "FastText does not use a transformer architecture. It is a shallow model that extends Word2Vec with subword (character n-gram) representations, not self-attention.",
+                "b": "FastText represents each word as a sum of its character n-gram vectors. This means even rare or unseen words can receive embeddings by composing their subword units, which is especially valuable for morphologically rich languages.",
+                "c": "Multilingual training describes cross-lingual models like mBERT or multilingual FastText variants, but it is not the core defining improvement of FastText over standard Word2Vec.",
+                "d": "FastText retains the original Word2Vec training objectives. Replacing softmax with contrastive loss describes other models; FastText uses negative sampling just like Word2Vec."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>FastText improves over Word2Vec primarily by:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) Using a transformer architecture with self-attention</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) Representing each word as a bag of character n-grams, enabling embeddings for out-of-vocabulary and rare words</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) Training on multilingual corpora to produce cross-lingual embeddings</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) Replacing the softmax output with a contrastive loss for faster convergence</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Dimensionality is an independent design choice. Contextual models like BERT can actually use the same or higher dimensionality than static models; the key difference is context-dependence.",
+                "b": "Static embeddings assign a single fixed vector to each word regardless of context. Contextual models like BERT generate a different vector for each word occurrence depending on the surrounding sentence, allowing bank in finance to differ from bank by a river.",
+                "c": "Contextual embeddings are widely used for similarity search, retrieval-augmented generation, and many other tasks beyond classification. This limitation does not apply.",
+                "d": "The architecture relationship is reversed. Contextual embeddings like BERT use transformers, while some early contextual models like ELMo used RNNs. Static embeddings like Word2Vec use simple feedforward networks."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>What is the key distinction between contextual embeddings (like BERT) and static embeddings (like Word2Vec)?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) Static embeddings have higher dimensionality than contextual embeddings</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) In contextual embeddings, each word has a different representation depending on its surrounding context; static embeddings assign one fixed vector per word</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) Contextual embeddings can only be used for classification tasks, not for similarity search</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) Static embeddings are produced by transformers, while contextual embeddings use RNNs</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Selecting the two highest-variance dimensions describes PCA, not t-SNE. t-SNE uses a fundamentally different, non-linear approach that does not rely on variance as its criterion.",
+                "b": "t-SNE models pairwise similarities as probability distributions in high- and low-dimensional space, then minimizes the KL divergence between them to produce a 2D layout that preserves local neighborhood structure.",
+                "c": "Computing average pairwise cosine similarity does not produce 2D coordinates. t-SNE is an iterative optimization procedure, not a formula applied to similarity averages.",
+                "d": "t-SNE does not cluster words first and then place centroids. It optimizes the position of every individual point simultaneously to preserve local neighborhoods."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>t-SNE is often used to visualize word embeddings. What does t-SNE do to make visualization possible?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) It selects the two dimensions with the highest variance, similar to PCA</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) It uses a non-linear dimensionality reduction that minimizes KL divergence between pairwise similarity distributions in high- and low-dimensional spaces</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) It converts embedding vectors into 2D coordinates by computing their average pairwise cosine similarity</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) It clusters words into groups and then places group centroids in 2D space</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Selecting a subset of dimensions is feature selection, not fine-tuning. Fine-tuning modifies weights through gradient descent on the downstream task, it does not filter dimensions.",
+                "b": "Fine-tuning initializes the embedding layer with pre-trained weights and then updates those weights through backpropagation during task-specific training, adapting the representations to the target domain.",
+                "c": "Freezing the embedding weights and training only downstream layers describes feature extraction, not fine-tuning. Fine-tuning specifically updates the pre-trained embedding weights.",
+                "d": "Re-running Word2Vec on a new corpus is domain-specific pre-training, not fine-tuning in the standard sense. Fine-tuning starts from pre-trained weights and adapts them on the downstream task directly."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>Fine-tuning pre-trained word embeddings for a downstream task means:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) Selecting a subset of embedding dimensions most relevant to the task</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) Initializing the embedding layer with pre-trained weights and then updating those weights via backpropagation during task-specific training</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) Freezing the embedding weights and training only the downstream model layers</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) Re-running Word2Vec on a new corpus specific to the target domain before task training</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Slow convergence at the start of training is a general optimization issue, not what cold start refers to. The cold start problem is about users or items with no interaction history, not about training speed.",
+                "b": "The cold start problem occurs when a new user or item enters the system with no interaction history. Without past behavior, the model cannot infer a meaningful embedding, making personalized recommendations difficult.",
+                "c": "Embedding quality degradation with corpus growth is a scalability concern, not the cold start problem. Cold start is specifically about the absence of interaction data for specific entities.",
+                "d": "The computational cost of initializing a large embedding table is an engineering concern, not the cold start problem. Cold start is about missing data for specific new users or items."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>The "cold start problem" in recommendation systems using user-item embeddings refers to:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) The slow convergence of embedding training at the beginning of the optimization process</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) The difficulty of generating meaningful recommendations for new users or items with little or no interaction history</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) The tendency for embeddings to degrade in quality when the corpus grows very large</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) The computational cost of initializing a large embedding lookup table from scratch</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The presence of offensive words in the vocabulary is a content moderation question, not a bias detection method. Bias detection examines the geometric relationships between word vectors, not vocabulary contents.",
+                "b": "Researchers measure bias by examining which gender or group-associated words are geometrically closest to target words like profession names. If nurse is consistently closer to woman than man, it reflects a gender bias absorbed from the training corpus.",
+                "c": "Comparing embedding predictions to human-annotated labels describes supervised evaluation of downstream tasks, not the geometric bias detection approach used in word embedding analysis.",
+                "d": "Monitoring reconstruction error in an autoencoder on sensitive text is not how embedding bias is measured. Bias detection in static embeddings uses vector arithmetic and nearest-neighbor analysis."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>Bias detection using word embeddings works by:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) Checking whether the embedding vocabulary contains offensive words</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) Analyzing geometric relationships between word vectors — for example, measuring whether profession words are closer to "man" or "woman" vectors</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) Comparing embedding-based predictions to human-annotated ground truth labels</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) Monitoring the reconstruction error of an autoencoder trained on sensitive text</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

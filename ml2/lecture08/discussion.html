@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8: Convolutional Neural Networks — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 8</a>
+        <div class="content-box">
+            <h1>Week 8: Convolutional Neural Networks</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>1. Why Are Convolutional Inductive Biases So Effective for Images?</h3>
+                <p>The design of CNNs encodes two strong assumptions about image data: locality (nearby pixels are more related than distant ones) and translation equivariance (a feature is equally meaningful wherever it appears in the image). These inductive biases dramatically reduce the hypothesis space the model must search, enabling effective learning from relatively small datasets. However, these same biases can be limitations in other settings.</p>
+                <ul class="probing-questions">
+                    <li>Fully connected networks can theoretically learn any function that a CNN can, yet CNNs consistently outperform them on image tasks when training data is limited. What does this tell us about the role of inductive biases in generalization?</li>
+                    <li>Vision Transformers (ViT) use self-attention rather than convolutions and have achieved state-of-the-art results on image benchmarks. What inductive biases does ViT lack compared to a CNN, and how does it compensate for this (in terms of data or architecture choices)?</li>
+                    <li>CNNs are effective for 2D images. If you were applying a CNN to 3D medical imaging data (e.g., CT scans), what architectural changes would you make, and what new challenges would arise?</li>
+                </ul>
+                <p class="activity-note">Try: Ask students to list properties of image data that justify the locality assumption (e.g., a pixel is more correlated with its neighbors than with a pixel on the opposite side of the image), then brainstorm data types where locality does not hold — which opens the door to discussing when CNNs would fail.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>2. The Residual Connection: A Simple Idea with Profound Consequences</h3>
+                <p>Before ResNet, practitioners found that adding more layers to a CNN beyond a certain depth would actually hurt accuracy — not just on the test set (overfitting) but also on the training set, which was unexpected. The authors of the ResNet paper (He et al., 2016) called this the "degradation problem" and proposed skip connections as a solution. This seemingly minor architectural change enabled networks of 100+ layers and fundamentally changed the field.</p>
+                <ul class="probing-questions">
+                    <li>The degradation problem showed that deeper networks can perform worse on training data — not just test data. Why does this rule out overfitting as the explanation, and what does it suggest about the optimization landscape of deep networks?</li>
+                    <li>A residual block with a skip connection can represent the identity function by setting all learned weights to zero. Why is this property valuable, and how does it relate to the concept of a good initialization point for optimization?</li>
+                    <li>Skip connections have appeared in many architectures beyond ResNet — U-Net for segmentation, DenseNet, and even the Transformer&#39;s residual connections. What general principle do they all share, and what might this imply about what makes deep networks hard to train?</li>
+                </ul>
+                <p class="activity-note">Try: Present the class with the original training accuracy curves from the ResNet paper (plain 20-layer vs. plain 56-layer networks on CIFAR-10) and ask them to explain the result before revealing the skip-connection solution — this recreates the original puzzle the authors faced.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>3. Transfer Learning: When Does It Work and When Does It Fail?</h3>
+                <p>Transfer learning from ImageNet-pre-trained CNNs has become the default starting point for most computer vision tasks. Instead of training from scratch, practitioners fine-tune a model that already knows how to detect edges, textures, object parts, and even entire objects. Yet transfer learning is not universally effective, and understanding its failure modes is as important as understanding its successes.</p>
+                <ul class="probing-questions">
+                    <li>ImageNet contains natural photos of everyday objects. If you were training a model to classify microscopy images of cells, which layers of a pre-trained ResNet would you expect to transfer best, and which would you expect to transfer poorly? Why?</li>
+                    <li>Domain shift refers to the statistical difference between the source training distribution and the target distribution. What are the risks of applying a fine-tuned model to data that shifts over time — for example, a medical imaging model deployed across different hospital scanner settings?</li>
+                    <li>Some research suggests that for very large target datasets, training from scratch can eventually match or exceed fine-tuning from a pre-trained model. What does this imply about the value of the pre-training signal, and how should a practitioner decide which approach to use given their dataset size?</li>
+                </ul>
+                <p class="activity-note">Try: Run a quick in-class poll asking which fine-tuning strategy students would choose given three scenarios (tiny dataset, moderate dataset, very large dataset). Use the responses to structure a small-group discussion, then reconvene to compare conclusions.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>4. Pooling vs. Strided Convolutions: Architectural Trade-offs</h3>
+                <p>Max pooling has long been the standard way to perform spatial downsampling in CNNs. However, many modern architectures (e.g., ResNet variants, all-convolutional networks) replace pooling with strided convolutions that perform learned downsampling. Both approaches reduce spatial resolution, but they differ in what they preserve, what they discard, and how they are learned.</p>
+                <ul class="probing-questions">
+                    <li>Max pooling is a fixed, non-learned operation that always selects the maximum value. Strided convolutions are learned operations. What is the potential advantage of learned downsampling, and under what conditions might max pooling be preferable?</li>
+                    <li>Average pooling computes the mean of a local region while max pooling takes the maximum. In what types of tasks or input patterns would average pooling be more appropriate than max pooling, and vice versa?</li>
+                    <li>Global average pooling (GAP) collapses an entire feature map to a single value per channel and is commonly used just before the classification layer in modern architectures. What advantages does GAP offer over a fully connected layer at the end of a CNN?</li>
+                </ul>
+                <p class="activity-note">Try: Give each small group a different target task (e.g., object detection, texture recognition, fine-grained classification) and ask them to argue for max pooling, average pooling, or strided convolution as the downsampling strategy. Share reasoning in a whole-class debrief.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>5. What Can and Cannot Be Captured by Local Receptive Fields?</h3>
+                <p>A core limitation of convolutions is that each neuron in an early layer has a small receptive field — it can only "see" a local patch of the input. As the network deepens, the effective receptive field grows as local features are combined, but for shallow networks or for tasks requiring very long-range spatial reasoning, this locality constraint can be a bottleneck. This has motivated architectural innovations including dilated convolutions, self-attention in vision, and multi-scale feature pyramids.</p>
+                <ul class="probing-questions">
+                    <li>Give a concrete example of an image understanding task where capturing long-range spatial relationships is critical for correct predictions, and explain why a shallow CNN with a small receptive field would struggle with it.</li>
+                    <li>Dilated (atrous) convolutions expand the receptive field without increasing the number of parameters by inserting gaps (dilation) between filter elements. What trade-off does this introduce in terms of what the filter can detect versus what it might miss?</li>
+                    <li>Feature Pyramid Networks (FPN) and U-Net architectures combine features from multiple scales by fusing representations from different depths of the network. What specific visual recognition problems does multi-scale feature fusion address, and how does it complement the hierarchical nature of CNN feature extraction?</li>
+                </ul>
+                <p class="activity-note">Try: Display a high-resolution image on screen and ask students to physically cover part of it with their hand, then judge how much of the hidden region they can infer from context. This builds intuition for why large receptive fields matter for scene understanding tasks.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>Use visualizations of learned filters from early CNN layers (e.g., from AlexNet or VGGNet) to open the session. Showing that the first layer genuinely learns Gabor-like edge detectors makes the hierarchical representation story concrete and memorable before abstract discussion begins.</li>
+                    <li>The transfer learning discussion benefits greatly from a concrete domain mismatch example. Prepare two side-by-side images — an ImageNet photo and a medical X-ray — and ask students to articulate what pixel statistics are shared and what is fundamentally different. This makes domain shift tactile rather than theoretical.</li>
+                    <li>When discussing ResNet and the degradation problem, resist the urge to immediately explain skip connections. Let students attempt to explain why a 56-layer plain network trains worse than a 20-layer one. The productive confusion that arises when their initial explanations fail (overfitting does not explain training set degradation) creates better motivation for the skip-connection insight.</li>
+                    <li>The pooling vs. strided convolution debate can be made more concrete by noting that modern architectures have largely moved away from max pooling for internal downsampling. Asking students why the field made this shift — and whether anything was lost — connects architectural history to present-day design decisions.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

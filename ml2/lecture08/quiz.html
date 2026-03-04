@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8: Convolutional Neural Networks — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 8</a>
+        <div class="content-box">
+            <h1>Week 8: Convolutional Neural Networks</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Floating point precision is identical across CNNs and fully connected networks and has no bearing on their parameter count difference.",
+                "b": "Correct. A CNN applies the same small filter kernel at every spatial position, so a 3x3 filter has only 9 weights regardless of image size, versus a fully connected layer that needs a weight for every input-output pair.",
+                "c": "Skip connections are an architectural feature of ResNets, not a mechanism for parameter reduction in basic CNNs.",
+                "d": "CNNs process the full spatial extent of the input, including borders, via their sliding filter operation. Ignoring borders is not how CNNs reduce parameters."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>What is the primary reason that convolutional neural networks (CNNs) use far fewer parameters than fully connected networks when processing images of the same size?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) CNNs use a lower-precision floating point representation for their weights.</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) CNNs use local connectivity and weight sharing — the same filter weights are applied across all spatial positions in the input.</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) CNNs skip connections between non-adjacent layers to reduce the total parameter count.</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) CNNs process only the center region of the image and ignore the borders.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Increasing stride makes the filter step over more positions, producing a smaller output, not a larger one.",
+                "b": "Correct. With stride 2, the filter moves two pixels at a time, visiting roughly half as many positions, so the output spatial dimensions are approximately halved.",
+                "c": "Stride controls how the filter slides across the input; it does not change the number of weights in the kernel, so the parameter count stays the same.",
+                "d": "Receptive field size is determined by kernel size and network depth, not by stride. Larger stride actually increases the effective receptive field of deeper neurons."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>In a convolutional layer, increasing the stride from 1 to 2 (while keeping kernel size constant) has what effect on the output feature map?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) The output feature map doubles in spatial size because the filter covers more of the input.</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) The output feature map spatial dimensions are roughly halved because the filter steps over the input less frequently.</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) The number of learnable parameters in the layer doubles because more positions are computed.</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) The receptive field of each output neuron decreases proportionally to the stride.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Zero-padding adds zeros, which carry no information about boundaries. It does not give the network additional meaningful content.",
+                "b": "Correct. Zero-padding preserves the spatial dimensions of the feature map after convolution, preventing the progressive shrinkage that would otherwise occur with many stacked layers.",
+                "c": "Zero-padding has the opposite effect: it allows border pixels to be covered by the filter the same number of times as interior pixels, which does not reduce the receptive field.",
+                "d": "Zero-padding has no direct effect on gradient magnitudes during backpropagation and is not used as a mechanism to prevent gradient explosion."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>Zero-padding is applied to the input before convolution. What is the main reason for using zero-padding in a CNN?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) It improves model accuracy by giving the network additional information about the input&#39;s boundaries.</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) It allows the output feature map to retain the same spatial dimensions as the input and prevents information loss at the borders.</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) It reduces the receptive field of filters so each neuron focuses on a smaller region.</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) It prevents gradient explosion during backpropagation through convolutional layers.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Max pooling does not affect the shape or orientation of learned filters. Rotational invariance requires different mechanisms such as data augmentation or specialized architectures.",
+                "b": "Correct. By taking the maximum activation in a local region, max pooling produces the same output regardless of exactly where within that region the peak activation occurred, giving robustness to small spatial shifts.",
+                "c": "Max pooling does not normalize activations by magnitude. It simply selects the single maximum value within each pooling window.",
+                "d": "Max pooling is a fixed, non-parametric operation with no trainable parameters. It cannot learn to compensate for shifts."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>How does max pooling contribute to translation invariance in a CNN?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) Max pooling forces the network to learn rotationally symmetric filters.</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) By selecting the maximum activation within a local region, max pooling makes the detection of a feature robust to small shifts in its exact position.</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) Max pooling normalizes feature map values so that spatial location does not affect the magnitude of activations.</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) Max pooling adds trainable parameters that learn to compensate for positional shifts in the input.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "ReLU is unbounded above zero; its outputs are not constrained to [0, 1]. Preventing gradient explosion requires gradient clipping or careful initialization, not the activation function itself.",
+                "b": "Correct. For positive inputs, ReLU has a constant gradient of 1, so gradients pass through undiminished. Sigmoid and tanh saturate at their extremes, producing near-zero gradients that cause the vanishing gradient problem in deep networks.",
+                "c": "ReLU is not differentiable at zero, making it technically less smooth than sigmoid. Its advantage is non-saturation, not mathematical differentiability.",
+                "d": "ReLU zeroes out negative activations, not weights. It does not reduce the parameter count of the layer, and this zeroing is input-dependent rather than a fixed fraction."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>ReLU activation (f(x) = max(0, x)) is widely used in CNNs after convolutional layers. Which of the following best explains why ReLU is preferred over sigmoid or tanh in deep networks?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) ReLU produces bounded outputs in the range [0, 1], which prevents gradient explosion.</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) ReLU does not saturate for positive inputs, so gradients flow without diminishing through many layers, while sigmoid and tanh saturate and cause vanishing gradients.</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) ReLU is differentiable everywhere, making backpropagation mathematically simpler than with sigmoid.</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) ReLU reduces the number of parameters in a layer by zeroing out a fixed fraction of weights during training.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Overfitting is a generalization problem that worsens with depth, but the degradation problem the ResNet paper addresses is specifically training accuracy declining with depth — an optimization issue, not a regularization one.",
+                "b": "Correct. Skip connections provide a direct gradient path back through the network, bypassing weight layers, so gradients do not have to multiply through many weight matrices and can remain large enough to drive learning in early layers.",
+                "c": "CNNs without skip connections can still learn hierarchical features. The limitation ResNet solves is optimization depth, not representational capability.",
+                "d": "Weight initialization schemes like He initialization address early-training instability, but the degradation problem persists well into training — it is not purely an initialization issue."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>In ResNet, a residual block computes x_{l+1} = x_l + F(x_l, W_l), where F represents the learned residual function. What problem in deep network training does this skip connection design directly solve?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) Overfitting caused by too many parameters in very deep architectures.</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) The vanishing gradient problem — skip connections provide a direct path for gradients to flow backward through the network without diminishing through many layers of weights.</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) The inability of deep networks to learn spatial hierarchies of features.</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) Slow convergence caused by random weight initialization in networks deeper than 10 layers.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Residual functions do not necessarily have fewer parameters than the full mapping H(x). Both F(x) and H(x) use the same weight matrices; the difference is in what the weights are asked to learn.",
+                "b": "Correct. If the optimal transformation is close to identity, the block only needs to learn small corrections F(x) near zero, which is an easier optimization target than learning the full desired output H(x) from scratch.",
+                "c": "The subtraction in F(x) = H(x) - x is a conceptual reformulation, not an operation applied to data. No actual subtraction of data values occurs; the network learns F(x) directly.",
+                "d": "Residual connections do not enforce orthogonality between blocks. Each block can learn any function its weights can represent."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>ResNet&#39;s key insight is that it is easier to learn a residual function F(x) = H(x) - x than to learn the full desired mapping H(x) directly. Why might this be true?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) Because residual functions always have fewer parameters than the full mapping H(x).</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) Because if the optimal transformation is close to the identity (i.e., not much needs to change), the network only needs to learn small corrections rather than reconstruct the full output from scratch.</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) Because the subtraction operation in F(x) = H(x) - x acts as a form of data normalization that improves training stability.</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) Because residual connections force each block to learn features that are orthogonal to those of the previous block.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "This describes partial fine-tuning, not linear probing. Linear probing specifically freezes all pre-trained layers, not just most of them.",
+                "b": "Correct. Linear probing freezes the entire backbone and trains only a new linear classifier on top of the fixed features. It is most appropriate when labeled target data is very scarce and overfitting the backbone is a major risk.",
+                "c": "Using a linear output activation for regression is a different concept unrelated to the transfer learning strategy called linear probing.",
+                "d": "Probing individual neurons to identify which filters detect specific concepts is a separate interpretability technique, not the transfer learning approach called linear probing."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>In transfer learning with CNNs, what does "linear probing" mean and when is it the most appropriate fine-tuning strategy?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) Training only the last few convolutional layers while freezing the rest; appropriate when the target domain is moderately different from the source domain.</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) Freezing all pre-trained layers and training only a new linear classifier on top of the extracted features; most appropriate when the target dataset is very small and overfitting is a major risk.</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) Using a linear activation function in the final layer to produce regression outputs rather than classification probabilities.</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) Probing individual neurons in the network to determine which filters are responsible for specific visual concepts before deciding which layers to freeze.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The classification layer is the most domain-specific part of the network and should be replaced, not frozen. Early convolutional layers contain general features that transfer broadly.",
+                "b": "Correct. Early layers learn universal features (edges, textures) that transfer to any visual domain. Later layers encode ImageNet-specific high-level features that may not transfer to medical imaging, so they should be fine-tuned.",
+                "c": "Fine-tuning all layers with the same learning rate risks destroying the useful general representations in early layers and can lead to catastrophic forgetting, especially with small target datasets.",
+                "d": "Freezing all layers and updating only batch normalization statistics is a specialized technique (sometimes called AdaptBN). It is not the standard fine-tuning recommendation for a new visual domain."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>When applying a pre-trained CNN (trained on ImageNet) to a new domain such as medical X-ray classification, which layers should typically be fine-tuned and which should be frozen, and why?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) Freeze the final classification layer (since it is domain-specific) and fine-tune the earlier convolutional layers (since they contain general features).</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) Freeze the early convolutional layers (which learn general low-level features like edges and textures that transfer well) and fine-tune the later layers (which learn high-level, domain-specific features).</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) Fine-tune all layers equally with the same learning rate to ensure the model adapts to the new domain as quickly as possible.</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) Freeze all layers and only train the batch normalization statistics, which is sufficient to adapt to a new domain.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "This description reverses the actual hierarchy. Deeper layers detect abstract, complex patterns while earlier layers detect simple, low-level features like edges.",
+                "b": "Correct. This is the well-established hierarchical feature learning property of CNNs: earlier layers respond to edges and colors, middle layers to textures and parts, and deeper layers to whole objects and task-specific abstractions.",
+                "c": "Different layers do not detect the same features at different scales. The features detected become qualitatively different and more abstract as depth increases.",
+                "d": "Global context is captured by deeper layers that have large effective receptive fields, not by earlier layers. Local texture refinement happens in early layers, not deeper ones."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>As CNN layers become deeper (further from the input), the features they detect tend to change in a predictable way. Which description most accurately characterizes this progression?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) Deeper layers detect simpler, more localized features such as single edges, while earlier layers detect complex object parts.</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) Earlier layers detect low-level features (edges, colors, simple textures) while deeper layers combine these into increasingly abstract and task-specific representations (object parts, entire objects).</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) All layers in a CNN detect the same types of features at different spatial scales simultaneously.</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) Earlier layers detect global context while deeper layers refine local texture details to sharpen the representation.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

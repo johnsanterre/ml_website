@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3: Housing Price Predictor — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 3</a>
+        <div class="content-box">
+            <h1>Week 3: Building a Real-World Housing Price Predictor</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>1. When Deep Learning Is and Is Not the Right Tool</h3>
+                <p>This week applies deep learning to the California Housing dataset — a structured tabular regression problem. However, deep learning is not always the best approach for tabular data. Classical methods like gradient-boosted trees (XGBoost, LightGBM) frequently outperform neural networks on structured data with hundreds or thousands of rows. Understanding when to use each approach is a crucial practical skill.</p>
+                <ul class="probing-questions">
+                    <li>What properties of tabular data make classical ensemble methods competitive with neural networks, even at moderate data scales?</li>
+                    <li>At what scale of data (in terms of rows and features) do neural networks typically begin to outperform gradient-boosted trees, and why?</li>
+                    <li>In a real project, how would you decide which approach to try first — and what would your evaluation criteria be?</li>
+                </ul>
+                <p class="activity-note">Try: Run both an XGBoost baseline and a neural network on the California Housing dataset live in class, compare their R-squared scores side by side, and ask students to predict which will win before revealing the results.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>2. The Ethics of Algorithmic Housing Valuation</h3>
+                <p>Automated Valuation Models (AVMs) — algorithmic systems that estimate property values — are now widely used in mortgage lending, property tax assessment, and real estate investment. The California Housing dataset includes geographic features like latitude and longitude that correlate strongly with historical patterns of racial and economic segregation. A model trained on this data could perpetuate or amplify historical inequities.</p>
+                <ul class="probing-questions">
+                    <li>How might a housing price model trained on historical data encode and perpetuate discriminatory patterns, even if race is not an explicit input feature?</li>
+                    <li>If you were asked to deploy a housing price model for a lending institution, what fairness audits would you require before approving it for use?</li>
+                    <li>Is there a tension between model accuracy and fairness in this domain? Can a model be optimized for both simultaneously, or must trade-offs be made?</li>
+                </ul>
+                <p class="activity-note">Try: Ask small groups to design a fairness audit checklist for a hypothetical AVM deployment, then compare the checklists across groups to surface different conceptions of fairness (individual vs. group, procedural vs. outcome-based).</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>3. Overfitting, Regularization, and the Bias-Variance Trade-off</h3>
+                <p>L2 regularization (weight decay), dropout, and early stopping are three distinct strategies for combating overfitting. Each operates through a different mechanism: L2 penalizes weight magnitudes, dropout stochastically disables neurons during training, and early stopping terminates training before the model memorizes the training set. Understanding these mechanisms helps practitioners choose the right tool for a given situation.</p>
+                <ul class="probing-questions">
+                    <li>L2 regularization and dropout both reduce overfitting — but through fundamentally different mechanisms. In what settings might one be preferable over the other?</li>
+                    <li>Early stopping relies on the validation loss as a stopping criterion. What happens if the validation set is not representative of the true deployment distribution?</li>
+                    <li>The bias-variance trade-off suggests that reducing variance (overfitting) often increases bias (underfitting). How do practitioners navigate this trade-off in practice, and what does "good enough" look like?</li>
+                </ul>
+                <p class="activity-note">Try: Train the same network with each of the three regularization strategies separately, plot all three validation curves on one figure, and invite students to compare where each strategy kicks in and at what cost to training performance.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>4. Evaluation Metrics and What They Obscure</h3>
+                <p>MSE, MAE, and R&sup2; are the standard metrics for regression, but each tells a different story about model quality. Practitioners often report one metric and move on, but the choice of metric can significantly influence what a model is optimized for and who benefits or is harmed by its predictions. In high-stakes domains, the choice of evaluation metric is as important as the choice of model.</p>
+                <ul class="probing-questions">
+                    <li>A housing price model with a low MSE might still perform poorly for homes in certain price ranges. What disaggregated evaluation strategies would help identify these failure modes?</li>
+                    <li>R&sup2; can appear high even when a model fails on a meaningful subpopulation. How would you design an evaluation protocol that goes beyond a single aggregate metric?</li>
+                    <li>In what real-world scenarios is optimizing for MSE the wrong objective, and what alternative objectives (e.g., minimizing worst-case error) might be more appropriate?</li>
+                </ul>
+                <p class="activity-note">Try: Compute MSE, MAE, and R-squared separately for different price quintiles of the California Housing dataset, display the disaggregated results, and ask students which quintile the model is most and least reliable for.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>5. Iterative Model Improvement as a Scientific Process</h3>
+                <p>The iterative improvement process described in this week — tuning the learning rate, adjusting architecture depth and width, applying regularization, conducting error analysis — resembles the scientific method: form a hypothesis, run an experiment, observe results, update your understanding. However, without discipline, this process can devolve into random tinkering that produces overly optimistic results through implicit data leakage.</p>
+                <ul class="probing-questions">
+                    <li>What practices help maintain the integrity of the evaluation process when iterating on a model many times — especially to avoid inadvertently tuning to the test set?</li>
+                    <li>Hyperparameter optimization methods (grid search, random search, Bayesian optimization) can automate much of the iteration process. What are the risks and benefits of delegating this to automation?</li>
+                    <li>When should a practitioner stop iterating and declare a model "good enough"? What external factors (business constraints, deployment deadlines, risk tolerance) should influence this decision?</li>
+                </ul>
+                <p class="activity-note">Try: Present a scenario where a student has run 50 experiments using the validation set to select the best model — ask the class to vote on whether that final validation score is still a trustworthy estimate, then discuss implicit leakage and the importance of a held-out test set.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>Anchor the "right tool" discussion in concrete numbers: bring published benchmarks comparing XGBoost and neural networks on tabular datasets so students argue from evidence rather than intuition alone.</li>
+                    <li>For the ethics discussion, acknowledge upfront that the California Housing dataset is a teaching artifact and that real AVMs involve far more complex data pipelines — this helps students generalize the ethical reasoning rather than treating it as a single dataset problem.</li>
+                    <li>When discussing evaluation metrics, use the phrase "a metric is a contract" to help students see that choosing MSE commits you to a specific definition of model quality, and that contract has downstream social consequences in high-stakes applications.</li>
+                    <li>For the iterative improvement topic, draw a timeline on the board mapping when each change was made and which dataset was consulted, making implicit data leakage visible and concrete before discussing how to prevent it.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

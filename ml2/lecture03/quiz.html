@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3: Housing Price Predictor — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 3</a>
+        <div class="content-box">
+            <h1>Week 3: Building a Real-World Housing Price Predictor</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. The roles are reversed: the validation set is used for tuning during development, while the test set is reserved for final evaluation only.",
+                "b": "Correct. The validation set guides hyperparameter tuning and overfitting detection during development; the test set is held out entirely and used only once for unbiased final reporting.",
+                "c": "Incorrect. The validation set does not replace the test set; they serve distinct roles at different stages of development.",
+                "d": "Incorrect. Monitoring training loss is done on the training set, not the validation or test sets."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>When building a regression model for housing prices, the data pipeline typically includes a train/validation/test split. What is the purpose of the validation set, as distinct from the test set?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> The validation set is used to train the model and the test set is used to tune hyperparameters</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> The validation set is used during development to tune hyperparameters and detect overfitting; the test set is held out and used only for final performance evaluation</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> The validation set replaces the test set in production deployments</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> Both the validation and test sets are used interchangeably to monitor training loss</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. The loss function remains differentiable regardless of feature scale; the problem is one of optimization efficiency, not differentiability.",
+                "b": "Correct. Features with very different magnitudes create an elongated loss surface, causing gradient descent to take inconsistently sized steps and converge slowly or oscillate.",
+                "c": "Incorrect. The model can still use all features without scaling, but training will be less efficient due to the poorly conditioned loss landscape.",
+                "d": "Incorrect. Feature scaling is important for all types of neural networks that use gradient-based optimization, including fully connected networks."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>Feature scaling (e.g., standardization) is an important preprocessing step for neural networks. Why does failing to scale input features often harm training?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> Unscaled features cause the loss function to become non-differentiable</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> Features with very different magnitudes cause the loss surface to be elongated, leading to inefficient gradient descent with slow convergence or oscillation</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> Unscaled features prevent the model from using all input features equally</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> Feature scaling is only necessary for convolutional networks, not fully connected networks</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. R-squared is a variance-explained metric, not a measure of average absolute error.",
+                "b": "Correct. An R-squared of 0.85 means the model accounts for 85% of the variance in the target variable, leaving 15% as residual unexplained variance.",
+                "c": "Incorrect. R-squared is not an accuracy metric and does not describe the percentage of predictions within a price bin.",
+                "d": "Incorrect. R-squared does not describe a prediction interval or percentage-within-tolerance; it specifically measures explained variance."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>R-squared (R&sup2;) is computed as R&sup2; = 1 &minus; SS<sub>res</sub>/SS<sub>tot</sub>. An R&sup2; of 0.85 means:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> The model makes errors of 0.15 on average for each prediction</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> The model explains 85% of the variance in the target variable, with 15% remaining unexplained</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> The model achieves 85% accuracy in predicting the correct price bin</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> The model&#39;s predictions are within 15% of the true values 85% of the time</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. Both losses decreasing together is the desired healthy training signal, not overfitting.",
+                "b": "Correct. Overfitting produces a characteristic divergence: training loss keeps falling while validation loss plateaus or rises, indicating the model is memorizing training-specific patterns.",
+                "c": "Incorrect. Training loss increasing while validation loss decreases would be unusual and does not correspond to classical overfitting.",
+                "d": "Incorrect. Both losses being high and stagnant indicates underfitting (the model has insufficient capacity or training), not overfitting."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>Overfitting is detected by comparing performance on the training and validation sets. Which pattern most clearly signals that a model is overfitting?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> Training loss and validation loss both decrease steadily throughout training</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> Training loss decreases but validation loss plateaus or begins to increase after some point</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> Training loss increases while validation loss decreases</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> Both training and validation losses are high and do not decrease</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. L2 regularization shrinks weights toward zero but rarely forces them to exactly zero; that is the behavior of L1 regularization (which drives sparsity).",
+                "b": "Correct. L2 adds a cost proportional to squared weight magnitudes, encouraging the optimizer to prefer smaller weights, which reduces model complexity and overfitting.",
+                "c": "Incorrect. L2 regularization does not affect the learning rate; it adds a penalty term to the loss that influences weight magnitudes.",
+                "d": "Incorrect. L2 regularization is compatible with any activation function, including ReLU; the two are independent."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>L2 regularization adds a penalty term &lambda; &Sigma; w<sub>i</sub>&sup2; to the loss function. What effect does this penalty have on the model&#39;s learned weights?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> It forces all weights to exactly zero, effectively removing unused neurons</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> It penalizes large weight magnitudes, encouraging smaller weights that produce a simpler model less prone to overfitting</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> It increases the learning rate proportionally to the number of weights</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> It prevents the use of ReLU activation functions in the network</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. Learning rate scheduling has no effect on GPU memory usage, which depends on model size and batch size.",
+                "b": "Correct. A decaying learning rate allows broad exploration early in training and fine-grained refinement near convergence, reducing the risk of overshooting a good minimum.",
+                "c": "Incorrect. Cosine annealing schedules the rate down to a minimum value (which can approach zero), not ensuring it never reaches zero.",
+                "d": "Incorrect. Learning rate and batch size are independent hyperparameters; cosine annealing does not modify the batch size."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>Cosine annealing adjusts the learning rate according to a smooth decreasing schedule. What is the primary motivation for reducing the learning rate during training?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A decreasing learning rate prevents the model from using too much GPU memory</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> As training progresses, finer adjustments are needed to settle into a minimum without overshooting; a decaying rate allows coarse exploration early and fine refinement later</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> Cosine annealing ensures the learning rate never reaches zero, preventing the model from stopping</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> A decreasing learning rate automatically increases batch size to compensate</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. K-fold trains multiple models but they are evaluated separately for their validation performance, not combined into an ensemble for final prediction.",
+                "b": "Correct. Because every data point serves as a validation example exactly once across the k folds, the performance estimate has lower variance than a single arbitrary split.",
+                "c": "Incorrect. A separate test set is still needed for unbiased final evaluation; cross-validation does not replace it.",
+                "d": "Incorrect. K-fold cross-validation does not duplicate training data; it partitions the existing data into rotating train/validation subsets."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>In k-fold cross-validation, the dataset is split into k equally sized folds. The model is trained k times, each time using a different fold as the validation set. What is the primary benefit of this approach over a single train/validation split?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> K-fold cross-validation trains k separate models that are then combined for better predictions</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> It provides a more reliable performance estimate with lower variance, since every data point is used for validation exactly once across the k iterations</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> It eliminates the need for a separate test set</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> It automatically prevents overfitting by duplicating the training data</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Incorrect. A sigmoid output restricts predictions to (0, 1), which is inappropriate for predicting unbounded continuous values like house prices.",
+                "b": "Incorrect. Softmax with multiple neurons is used for multi-class classification, not continuous regression output.",
+                "c": "Correct. A single neuron with no activation (linear output) allows the model to produce any real-valued number, which is necessary for regression.",
+                "d": "Incorrect. While ReLU would prevent negative predictions, it also caps the gradient at zero for negative inputs, making training unstable; a fully linear output is the standard regression choice."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>For a regression task like predicting housing prices, what should the output layer of a neural network look like?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A single neuron with a sigmoid activation function outputting a value between 0 and 1</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> Multiple neurons with softmax activation, one per price category</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> A single neuron with no activation function (linear output), allowing the model to predict any continuous real value</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> A single neuron with ReLU activation to ensure non-negative price predictions</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. MSE is more sensitive to outliers, not less, because squaring amplifies large errors disproportionately.",
+                "b": "Correct. MAE computes the mean of absolute errors, treating all magnitudes equally; MSE squares the errors, so large outliers dominate the metric.",
+                "c": "Incorrect. MSE and MAE respond very differently to outliers: MSE amplifies large errors quadratically while MAE weighs them linearly.",
+                "d": "Incorrect. MSE is not preferred for outlier-heavy datasets; MAE or Huber loss are typically recommended in those cases."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>MSE and MAE are both regression metrics, but they respond differently to outliers. Which statement best captures this difference?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> MSE is less sensitive to outliers because it averages the errors rather than squaring them</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> MAE treats all prediction errors equally regardless of magnitude, making it more robust to outliers than MSE, which amplifies large errors quadratically</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> Both MSE and MAE are equally sensitive to outliers since they both average across all samples</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> MSE is preferred when the dataset has outliers because it down-weights large errors</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. Removing outliers is a preprocessing decision made before modeling; error analysis is a post-training diagnostic, not an automated cleaning step.",
+                "b": "Correct. Error analysis identifies where and how the model fails, revealing patterns such as errors concentrated in specific feature ranges or underrepresented groups, which guides targeted improvements.",
+                "c": "Incorrect. Error analysis does not say anything about the convexity of the loss function or whether a global minimum was reached.",
+                "d": "Incorrect. Error analysis is a diagnostic tool; it guides what data to collect next, but it does not automatically generate new training examples."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>Error analysis involves examining cases where a model makes the largest mistakes. What is the most useful outcome of conducting a thorough error analysis?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> It provides a way to remove outliers from the dataset automatically</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> It reveals patterns in the types of examples the model struggles with, guiding targeted improvements such as collecting more data, engineering better features, or adjusting the architecture</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> It proves that the model has converged to a global minimum of the loss function</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> It automatically generates new training data to fill gaps in model knowledge</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 11: Practical LLM Integration &amp; API Development — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 11</a>
+        <div class="content-box">
+            <h1>Week 11: Practical LLM Integration &amp; API Development</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "High temperature values (0.7-0.9) encourage diverse, creative outputs. A temperature of 0.2-0.4 makes outputs more focused and deterministic, which is the opposite of what brainstorming needs.",
+                "b": "Correct. Low temperature (0.2-0.4) concentrates probability mass on the most likely tokens, producing focused and deterministic outputs ideal for structured extraction or code generation.",
+                "c": "Temperature does not control response length. The max_tokens parameter governs output length; temperature governs output diversity and randomness.",
+                "d": "Temperature has no effect on API call cost. Cost is determined by the number of tokens consumed, not by the temperature setting."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>When configuring an LLM API call, a temperature value of around 0.2–0.4 is most appropriate for which type of task?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) Brainstorming creative story ideas where diversity of output is desired</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) Generating focused, deterministic responses such as structured data extraction or code generation</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) Maximizing the length of responses regardless of content</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) Reducing the cost of an API call by limiting the number of tokens generated</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "System prompts work at inference time through the context window, not by updating model weights. Fine-tuning is the technique that modifies weights.",
+                "b": "Correct. System prompts set the role, behavioral constraints, tone, and output format at the start of an interaction, shaping how the model responds throughout the conversation.",
+                "c": "System prompts can guide the model toward a topic, but they do not cause absolute refusal of all other queries. The model may still respond to off-topic requests.",
+                "d": "System prompts and few-shot examples are distinct tools. System prompts provide instructions; few-shot examples provide demonstrations. They complement rather than replace each other."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>System prompts are a fundamental tool for controlling LLM behavior. Which of the following best describes their role?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) They inject examples of desired outputs directly into the model's weights through fine-tuning</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) They set the context and behavioral parameters — including role, constraints, and output format — at the start of the interaction</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) They are used exclusively to limit the model to a specific topic and will cause it to refuse all other queries</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) They replace the need for few-shot examples because they contain implicit demonstrations</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Chain-of-thought prompting produces more tokens, not fewer. The intermediate reasoning steps increase output length rather than compressing it.",
+                "b": "Correct. CoT guides the model to show intermediate reasoning steps before reaching a final answer, making the reasoning process transparent, debuggable, and significantly more accurate on multi-step problems.",
+                "c": "CoT does not connect to a database. Retrieval-augmented generation (RAG) is the technique that adds external database access; CoT works entirely within the prompt.",
+                "d": "CoT does not eliminate hallucinations. It improves reasoning accuracy but the model can still produce incorrect intermediate steps or conclusions."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>Chain-of-thought (CoT) prompting improves model performance on complex tasks primarily by doing what?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) Reducing the number of tokens the model needs to generate by compressing its reasoning into a single step</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) Guiding the model through a logical sequence of intermediate steps, making its reasoning transparent and debuggable</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) Forcing the model to retrieve information from a connected database before answering</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) Eliminating hallucinations by restricting the model to factual statements only</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Retrying immediately in a tight loop when rate limited will continue to trigger the same rate limit and may worsen the situation by sending even more requests.",
+                "b": "Switching providers for every request adds complexity and cost without addressing the underlying rate limit problem on the original provider.",
+                "c": "Correct. Exponential backoff waits progressively longer between retry attempts (e.g., 1s, 2s, 4s, 8s), giving the service time to recover and avoiding a flood of immediate retries.",
+                "d": "Canceling the request and telling the user the API is unavailable is unnecessarily disruptive. Rate limit errors are transient and a retry strategy should be attempted first."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>When handling API rate limit errors in a production LLM application, what is the recommended retry strategy?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) Immediately retry the request in a tight loop until it succeeds</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) Switch to a different LLM provider for every request to distribute load</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) Implement exponential backoff, waiting progressively longer between retry attempts</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) Cancel the request and inform the user that LLM APIs are unavailable</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Using the maximum number of examples can crowd out the actual query and other useful information. More examples are not always better; representativeness matters more than quantity.",
+                "b": "Example length should match the desired output length. Using very long examples teaches the model to be verbose, which wastes tokens and may not suit the task.",
+                "c": "Correct. The key is selecting a small set of representative examples that clearly demonstrate the target pattern without overwhelming the context window or competing with the actual query.",
+                "d": "Using only negative examples (what not to do) does not give the model a clear positive target pattern to follow, making it an ineffective few-shot strategy."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Few-shot prompting involves providing examples of the desired input-output pattern to the model. What is a key consideration when selecting which examples to include?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) Always use the maximum number of examples the context window allows to give the model as much information as possible</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) Select examples that are as long as possible so the model learns to produce verbose outputs</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) Choose representative examples that clearly demonstrate the target pattern without overwhelming the context window</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) Use only negative examples (showing what not to do) so the model learns by contrast</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Verifying that a response is valid JSON or XML is structural or syntactic validation, not semantic validation. Semantic validation goes beyond format to check meaning and logic.",
+                "b": "Correct. Semantic validation checks that the response makes logical sense within the domain, such as verifying that a recommended treatment is compatible with a diagnosed condition in a medical system.",
+                "c": "Measuring cosine similarity between a prompt and response is a form of relevance scoring, not semantic validation. It does not check domain-specific logical correctness.",
+                "d": "Grammar checking verifies surface-level language quality, not the logical or factual correctness of the content within a specific domain."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>In a production LLM system, "semantic validation" of model outputs refers to which of the following?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) Verifying that the model's response is valid JSON or XML</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) Checking that the response makes logical sense within the domain context, not just that it conforms to a structural format</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) Measuring the semantic similarity between the prompt and the response using cosine similarity</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) Running the response through a grammar checker to ensure proper English</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Temperature does not control response length and does not reduce cost. Higher temperature actually has no direct relationship with response token count.",
+                "b": "Correct. Caching frequent prompt responses avoids redundant API calls entirely, and prompt engineering to reduce token counts directly lowers the per-request cost since APIs charge per token.",
+                "c": "Batching can improve throughput but does not inherently reduce cost per token. Sending all requests in one large batch also introduces latency problems for time-sensitive queries.",
+                "d": "Disabling validation might save a small amount of compute but does not meaningfully reduce LLM API costs, which are driven by token consumption rather than validation overhead."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>LLM API costs are typically structured around token consumption. Which of the following strategies most directly reduces the per-request cost of an LLM application?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) Increasing the temperature to generate shorter responses</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) Caching responses to frequently repeated prompts and implementing prompt engineering to reduce token counts</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) Sending all requests in a single large batch regardless of urgency</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) Disabling response validation to avoid additional API calls</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Reformatting documents into a standard format before analysis is a preprocessing step, not the core role of the LLM in pattern recognition across documents.",
+                "b": "Correct. LLMs identify recurring structures and standard clauses across documents even when the language and phrasing varies, which is something rigid rule-based keyword systems cannot do robustly.",
+                "c": "LLMs assist human lawyers and legal analysts; they do not replace them or render legally binding interpretations autonomously.",
+                "d": "Keyword matching on pre-specified terms describes a simple rule-based system, not the LLM pattern recognition capability being discussed."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>In a synoptic tagging workflow for legal document analysis, what role does an LLM play in pattern recognition across documents?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) It rewrites all documents into a standardized legal format before any analysis occurs</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) It identifies recurring structures and standard clauses while accounting for variations in language and phrasing across documents</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) It replaces human lawyers entirely by rendering legally binding interpretations</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) It performs keyword matching on pre-specified terms to flag documents for review</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Reviewing every request would defeat the purpose of automation and make the system impractically slow and expensive. Human review is triggered selectively, not universally.",
+                "b": "Correct. Human-in-the-loop triggers are selective: they activate when model confidence is low, unusual patterns appear, or domain-specific risk factors are identified, not for every request.",
+                "c": "JSON parse failures trigger structural validation errors, not necessarily human review. Human review is triggered by semantic or risk-based conditions, not just formatting issues.",
+                "d": "Context window limits are handled by summarization or chunking strategies, not by routing to a human reviewer. Human review addresses output quality and risk, not input length."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>Human-in-the-loop systems in production LLM applications are primarily triggered by which condition?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) Every request, to ensure a human reviews all AI-generated content before it reaches users</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) Cases where model confidence falls below a threshold, unusual patterns are detected, or specific risk factors are identified</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) Only when the model returns a structured JSON response that fails to parse correctly</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) Requests that exceed the model's context window, requiring the human to summarize the input</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Batching does not require identical system prompts. Requests in a batch can have different prompts; the challenge is latency and failure handling, not prompt uniformity.",
+                "b": "Correct. Grouping requests into batches can introduce unacceptable delays for time-sensitive queries that must wait for a batch to fill, and a failure in one request must be handled without corrupting others in the same batch.",
+                "c": "Batching does not cause the LLM to generate longer responses. Response length is determined by the task and the max_tokens setting, not by whether a request is batched.",
+                "d": "Batching does not prevent caching. Identical prompts can still be cached regardless of whether they are processed individually or in batches."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>Batch processing of LLM requests can improve throughput and reduce cost, but it must be implemented carefully. What is the primary tension that makes naive batching problematic?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) Batching requires all requests in the batch to use identical system prompts</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) Grouping requests together can introduce unacceptable latency for time-sensitive queries and complicates failure handling within a batch</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) The LLM API will generate longer responses when requests are batched, increasing cost</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) Batching prevents the use of caching since each request in a batch is treated as unique</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

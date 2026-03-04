@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4: Vector Representations &amp; Similarity Measures — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 4</a>
+        <div class="content-box">
+            <h1>Week 4: Vector Representations &amp; Similarity Measures</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Euclidean distance measures the straight-line distance between endpoints, not the angle. Cosine similarity is a distinct measure focused on orientation.",
+                "b": "Cosine similarity computes the dot product of two vectors divided by the product of their magnitudes, which equals the cosine of the angle between them. It ranges from -1 to 1.",
+                "c": "The sum of element-wise differences describes L1 distance, not cosine similarity. Cosine similarity normalizes by magnitude and uses the dot product.",
+                "d": "The ratio of dot product to the sum of lengths is not a standard formula. The correct denominator is the product of the two vector magnitudes."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>What does cosine similarity measure between two vectors?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) The Euclidean distance between their endpoints</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) The cosine of the angle between them, normalized by their magnitudes</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) The sum of their element-wise differences</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) The ratio of their dot product to the sum of their lengths</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Cosine similarity actually ranges from -1 to 1, not 0 to 1, so this claim is incorrect. Euclidean distance also handles magnitude differently.",
+                "b": "Cosine similarity normalizes by vector magnitude, so two users with the same relative preferences but different rating scales still score highly similar. It focuses on direction, not absolute size.",
+                "c": "Both cosine similarity and Euclidean distance handle negative values. This is not the key distinguishing advantage for comparing preference vectors.",
+                "d": "Speed is not the primary advantage here. The key benefit is that cosine similarity is scale-invariant, capturing relative patterns rather than absolute magnitudes."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>A key advantage of cosine similarity over Euclidean distance for comparing preference vectors is that cosine similarity:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) Always produces a value between 0 and 1</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) Is less sensitive to absolute magnitude and more focused on relative patterns</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) Can handle negative values in vectors, while Euclidean distance cannot</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) Is computationally faster for high-dimensional vectors</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Sparsity is about the proportion of zero values within each vector, not the total number of dimensions. High-dimensional vectors are often the context, not the cause.",
+                "b": "Sparsity means most elements in the vector are zero. At the ingredient level, a user only interacts with a tiny fraction of all possible ingredients, leaving most dimensions empty.",
+                "c": "Sparse storage formats do exist, but sparsity itself refers to the mathematical property of having mostly zero values, not a storage scheme.",
+                "d": "Sparsity describes the structure of the vectors themselves, not the resulting similarity scores between users."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>When representing food preferences at the individual ingredient level, vectors become extremely sparse. What does "sparse" mean in this context?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) The vectors have very few dimensions overall</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) Most elements in the vector are zero because users interact with only a small subset of possible ingredients</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) The vectors are stored in a compressed format to save memory</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) The similarity scores between users are very low on average</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Visualization difficulty is a practical inconvenience but is not the formal definition of the curse of dimensionality. The issue is deeper than mere plotting limitations.",
+                "b": "As dimensions increase, the volume of the space grows exponentially, causing all points to appear nearly equidistant. This distance concentration makes similarity measures less informative.",
+                "c": "Increased matrix multiplication cost is a computational concern, not the core of the curse of dimensionality, which is about statistical and geometric properties of high-dimensional spaces.",
+                "d": "Overfitting is a related but separate concern. The curse of dimensionality specifically refers to the geometric effect where distances become less meaningful in very high dimensions."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>The "curse of dimensionality" in the context of sparse representations refers to:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) The difficulty of visualizing vectors with more than three dimensions</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) The exponential growth of space volume as dimensions increase, making distance measures less meaningful</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) The increased computational cost of matrix multiplication in high dimensions</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) The tendency for machine learning models to overfit with many features</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Ingredient-level binary vectors have no mechanism to encode the concept of spice preference. Two users sharing zero specific ingredients will not show high similarity regardless of shared tastes.",
+                "b": "A moderate score requires some shared non-zero dimensions. With zero ingredient overlap, the dot product evaluates to zero, producing a score near zero rather than 0.5.",
+                "c": "With no shared specific ingredients, the dot product in the cosine formula is zero, so the similarity score is near zero even though both users enjoy spicy food.",
+                "d": "Cosine similarity cannot go negative for binary vectors because the dot product of two non-negative vectors is always non-negative."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Two users both enjoy spicy food but have no overlap in the specific ingredients they use. Using highly specific ingredient-level binary vectors, their cosine similarity score will likely be:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) High, because their shared preference for spice is captured</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) Moderate, around 0.5</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) Near zero, because their non-zero elements do not overlap</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) Negative, indicating dissimilarity</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Denser vectors do increase computation, but that is a secondary concern. The primary problem is the false equivalences that broad categories create between fundamentally different users.",
+                "b": "Labeling both as preferring protein masks critical distinctions. A vegan preferring plant proteins and a carnivore eating only meat have completely different actual preferences despite matching on a broad category.",
+                "c": "Cosine similarity always remains between -1 and 1 regardless of how broadly categories are defined. Broad categories do not cause mathematical overflow.",
+                "d": "PCA is not prevented by broad categories. The problem with over-generalization is semantic, not a technical limitation of dimensionality reduction methods."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>Why is over-generalization of categories problematic for similarity measures? Consider two users both labeled as preferring "protein."</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) It makes vectors denser, which slows down computation</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) It can create false equivalences — one user may be vegan preferring plant proteins while another eats only meat</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) Broad categories cause cosine similarity scores to exceed 1.0</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) It prevents the use of PCA for dimensionality reduction</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Limiting the number of questions is a survey design choice unrelated to controlled vocabularies. Controlled vocabularies address terminology consistency, not question count.",
+                "b": "Controlled vocabularies provide standardized terms so all respondents interpret questions consistently, reducing ambiguity and improving the comparability of collected data.",
+                "c": "Vector magnitude is determined by response values, not by vocabulary standardization. Controlled vocabularies address meaning, not numerical scale.",
+                "d": "Converting categorical data to binary format is a separate encoding step. Controlled vocabularies standardize the semantic meaning of terms before any encoding is applied."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>In a food preference survey using a Likert scale, what is the primary purpose of using controlled vocabularies?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) To limit the number of questions respondents must answer</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) To reduce ambiguity and improve consistency across responses</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) To ensure all vectors have the same magnitude</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) To convert categorical data into binary format automatically</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "PCA does not directly remove noise from Likert ratings. It is a linear dimensionality reduction technique, not a denoising method.",
+                "b": "PCA transforms data into a new coordinate system where components are ordered by explained variance, compressing many correlated features into fewer meaningful dimensions.",
+                "c": "PCA components are mathematically defined by variance, not human interpretability. Interpretability of components is often limited and must be assessed post-hoc.",
+                "d": "PCA produces dense continuous projections, not binary vectors. It reduces dimensionality but does not convert sparse data to a dense binary format."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>Principal Component Analysis (PCA) helps address which core challenge in preference data collected from surveys?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) It removes noise from Likert scale ratings</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) It transforms high-dimensional data into a lower-dimensional space ordered by explained variance</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) It guarantees that learned representations are interpretable</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) It converts sparse vectors into dense binary vectors</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Deep networks typically require more training data than manual feature engineering, not less. The claim that they always need less data is incorrect.",
+                "b": "Deep networks can automatically extract features at multiple levels of abstraction, discovering relationships that human feature engineers might miss and adapting the representation to the data structure.",
+                "c": "Learned representations still use similarity measures such as cosine similarity or nearest-neighbor search in the embedding space. They do not eliminate the need for similarity computation.",
+                "d": "Autoencoders and PCA serve different objectives. Learned representations do not always outperform PCA on reconstruction; the advantage depends on the data and the task."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>A key advantage of deep learning-based learned representations over manually engineered feature vectors is:</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) Learned representations always require less training data</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) They can automatically discover non-obvious relationships and represent preferences at multiple scales simultaneously</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) They eliminate the need for any similarity measure</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) They always outperform PCA on reconstruction tasks</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "This expression normalizes the difference of vectors by the sum of their norms, which is not a standard similarity formula. It resembles a normalized distance, not cosine similarity.",
+                "b": "Cosine similarity is defined as the dot product of vectors a and b divided by the product of their L2 norms: (a · b) / (||a|| * ||b||). This gives the cosine of the angle between them.",
+                "c": "Dividing the dot product by the sum of norms rather than their product gives a different, non-standard measure. The denominator must be the product, not the sum.",
+                "d": "This formula inverts the correct expression, placing the product of norms in the numerator and the dot product in the denominator. The result is the reciprocal of cosine similarity."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>Which of the following is the correct formula for cosine similarity between vectors a and b?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) ||a - b|| / (||a|| + ||b||)</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) (a · b) / (||a|| * ||b||)</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) (a · b) / (||a|| + ||b||)</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) ||a|| * ||b|| / (a · b)</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

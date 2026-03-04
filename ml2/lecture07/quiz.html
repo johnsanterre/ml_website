@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 7: Sequence Models &amp; Attention — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 7</a>
+        <div class="content-box">
+            <h1>Week 7: Sequence Models &amp; Attention</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Memory size is not the defining limitation of static embeddings. The real issue is how meaning is represented, not storage.",
+                "b": "Correct. Static embeddings assign a single fixed vector per word, so the word bank receives the same vector whether it refers to a financial institution or a riverbank.",
+                "c": "Static embeddings are widely used in downstream NLP tasks. They were the standard approach for tasks like sentiment analysis for many years.",
+                "d": "Computation speed for lookup in a static embedding table is not the primary limitation compared to contextual models."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>What is the primary limitation of static word embeddings like Word2Vec when compared to contextual embeddings?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> A) They require significantly more memory to store.</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) They assign a single fixed vector to each word regardless of context, failing to capture multiple meanings.</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) They cannot be used in downstream NLP tasks like sentiment analysis.</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) They are too slow to compute for large vocabularies.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="a" data-explanations='{
+                "a": "Correct. Large dot products push softmax outputs toward near-zero gradients. Dividing by the square root of d_k keeps scores in a numerically stable range during training.",
+                "b": "The scaling factor acts on query-key dot products, not on the value vectors. Value vectors are weighted by the softmax output, not rescaled by this factor.",
+                "c": "The scaling factor is a fixed mathematical constant applied to the dot product, not a learned parameter that controls the learning rate.",
+                "d": "Output dimensionality is controlled by the value projection matrix, not by the scaling factor in the attention formula."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>In the self-attention mechanism, what role does the scaling factor 1/&#x221A;d_k serve in the attention formula Attention(Q, K, V) = softmax(QK^T / &#x221A;d_k) V?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> A) It prevents dot products from growing too large, which would push the softmax into regions with very small gradients.</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) It normalizes the value vectors so they sum to one.</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) It controls the learning rate of the attention weights during backpropagation.</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) It sets the dimensionality of the output embedding to match the input.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Embedding dimension size has nothing to do with the need for positional encodings. The key issue is parallel vs. sequential processing.",
+                "b": "Correct. Transformers process all positions simultaneously via matrix operations and have no inherent notion of order, so position must be explicitly added to the input.",
+                "c": "Positional encodings and multi-head attention serve different purposes. Positional encodings encode position; multi-head attention computes relationships between positions.",
+                "d": "RNNs process tokens one at a time in sequence, so each hidden state inherently encodes its position through the order of computation. No explicit positional encoding is needed."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>Why do Transformer models require positional encodings, while recurrent neural networks do not?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> A) Transformers use larger embedding dimensions and need positional information to reduce parameter count.</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) Transformers process all input positions in parallel without inherent sequential ordering, so position must be explicitly injected.</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) Positional encodings replace the need for multi-head attention in Transformers.</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) RNNs also require positional encodings but encode them implicitly through hidden state initialization.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="a" data-explanations='{
+                "a": "Correct. Sinusoidal encodings are deterministic functions that add no trainable parameters and can generalize to sequence lengths beyond those seen during training.",
+                "b": "Sinusoidal encodings do not avoid matrix multiplication. The computation cost difference is not the key advantage cited by the original paper.",
+                "c": "The paper found roughly comparable accuracy between sinusoidal and learned encodings. The main advantage of sinusoidal encodings is extrapolation, not superior task accuracy.",
+                "d": "Learned positional embeddings can handle variable-length sequences up to the maximum length they were trained on. The limitation is extrapolation beyond that maximum length."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>In the original Transformer paper ("Attention Is All You Need"), sinusoidal positional encodings use sine and cosine functions of varying frequencies. What is the key advantage of this choice over learned positional embeddings?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) Sinusoidal encodings add no additional trainable parameters and can generalize to sequence lengths not seen during training.</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) Sinusoidal encodings are faster to compute because they avoid matrix multiplication.</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) Sinusoidal encodings are always more accurate than learned embeddings on downstream tasks.</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) Learned positional embeddings cannot handle variable-length input sequences.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Multi-head attention typically has more parameters than single-head attention of the same total dimension, due to multiple projection matrices.",
+                "b": "Correct. Each head projects inputs into a different subspace and performs independent attention, allowing the model to capture syntactic, semantic, and positional patterns simultaneously.",
+                "c": "Heads are designed to learn diverse patterns, not converge to the same representation. Convergence would defeat the purpose of having multiple heads.",
+                "d": "The feed-forward layer is a separate component that serves a distinct purpose. Multi-head attention does not replace it."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Multi-head attention computes multiple attention outputs in parallel and then combines them. What is the primary benefit of this design?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) It reduces the total number of parameters compared to single-head attention.</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) It allows the model to attend to different representation subspaces simultaneously, capturing diverse relationship types.</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) It ensures that all attention heads converge to the same representation for stability.</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) It replaces the need for feed-forward layers within each Transformer block.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "The FFN does not compute attention weights. Attention weights are computed by the multi-head attention sub-layer that precedes the FFN.",
+                "b": "Correct. The FFN applies two linear transformations with a non-linearity in between at each position independently, adding representational capacity beyond what attention alone provides.",
+                "c": "The FFN does not reduce dimensionality. It typically expands the hidden dimension (often 4x) and then projects back, and does not serve as a regularization mechanism.",
+                "d": "Aggregating across sequence positions is the role of attention, not the FFN. The FFN operates independently at each position without cross-position interaction."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>In the Transformer architecture, what is the purpose of the position-wise feed-forward network (FFN) that follows each multi-head attention layer?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) It computes the attention weights used by the next layer&#39;s multi-head attention module.</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) It introduces non-linearity and increases the model&#39;s capacity to learn complex relationships between attended features.</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) It reduces the dimensionality of the sequence to prevent overfitting.</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) It aggregates information across all sequence positions to form a single context vector.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Padding masks address padding tokens in batched sequences, but the causal mask serves a different purpose: preventing access to future positions during training.",
+                "b": "Correct. The causal mask sets future-position attention scores to negative infinity before softmax, ensuring position t can only attend to positions 1 through t — matching inference-time conditions.",
+                "c": "Randomly dropping attention weights is a regularization technique called attention dropout, which is separate from causal masking.",
+                "d": "Identifying informative tokens via a classifier is not what attention masks do. Attention masks control which positions are accessible, not which are most informative."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>In decoder-only Transformer architectures (such as GPT), attention masks are applied during training. What is their purpose?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) To mask padding tokens so they do not contribute to the loss calculation.</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) To prevent the model from attending to future positions, ensuring autoregressive generation remains causal.</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) To randomly drop attention weights during training as a form of regularization.</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) To focus attention exclusively on the most informative tokens identified by a separate classifier.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "This describes batch normalization, which normalizes across the batch dimension using running statistics. Layer normalization operates per-example across the feature dimension.",
+                "b": "Correct. Layer normalization computes mean and variance across the feature dimension for each token independently, then applies learnable scale (gamma) and shift (beta) parameters.",
+                "c": "Clipping activation values is gradient clipping, not normalization. Layer normalization rescales activations statistically but does not impose a hard range.",
+                "d": "Dropout randomly zeros activations during training, which is a separate regularization technique from layer normalization."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>Layer normalization is applied after each sub-layer in the Transformer. Which of the following correctly describes what layer normalization computes?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> A) It normalizes activations across the batch dimension using running statistics accumulated during training.</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) It normalizes activations across the feature dimension for each individual example, then applies learnable scale and shift parameters.</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) It clips activation values to a fixed range to prevent gradient explosion.</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) It applies dropout to each layer&#39;s output before passing it to the next sub-layer.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Contextual embeddings require computing representations through the full model at inference time, which is more expensive than a simple table lookup — not faster.",
+                "b": "Correct. Because the same token receives different vectors depending on surrounding context, the model can correctly distinguish polysemous words such as the word bank in financial vs. geographical contexts.",
+                "c": "Contextual embeddings do not inherently extend the maximum sequence length. Length limits are imposed by the architecture, not the embedding type.",
+                "d": "Contextual models are larger and generally require more training data, not less. The benefit is richer representations, not reduced data requirements."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>Contextual embeddings (e.g., from BERT) differ from static embeddings (e.g., Word2Vec) in that they produce different vector representations of the same word token depending on its context. Which practical NLP capability does this most directly enable?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> A) Faster inference because fewer unique vectors need to be stored in the embedding table.</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) Word sense disambiguation — correctly interpreting polysemous words based on the surrounding text.</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) The ability to process arbitrarily long documents without truncation.</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) Training with smaller datasets because context reduces data requirements.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Self-attention does not use a fixed window. It attends to all positions simultaneously, which is why it has quadratic rather than linear complexity in sequence length.",
+                "b": "Correct. Self-attention computes all pairwise query-key interactions as one matrix multiplication, so all positions are updated simultaneously. RNNs must process tokens one step at a time due to sequential state dependencies.",
+                "c": "Self-attention still requires backpropagation through the matrix operations during training. Avoiding backpropagation is not the source of its parallelizability.",
+                "d": "Self-attention actually has quadratic memory usage with respect to sequence length for the attention matrix, not constant memory usage."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>A key computational advantage of self-attention over recurrent neural networks is parallelizability. Why is self-attention more parallelizable than an RNN?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> A) Self-attention processes only a fixed window of tokens at a time, reducing memory requirements.</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) Self-attention computations for all positions can be performed simultaneously via matrix operations, while RNNs must process tokens sequentially.</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) Self-attention does not require backpropagation, eliminating the sequential dependency during training.</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) RNNs require GPU memory proportional to sequence length, while self-attention has constant memory usage.</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

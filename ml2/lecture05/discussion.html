@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5: Autoencoders &amp; Embeddings — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 5</a>
+        <div class="content-box">
+            <h1>Week 5: Autoencoders &amp; Embeddings</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>1. Autoencoders for Anomaly Detection: Promise and Peril</h3>
+                <p>Credit card fraud detection systems have been built using autoencoders trained on "normal" transactions. The assumption is that fraudulent transactions will have high reconstruction error because they differ from the training distribution. However, sophisticated fraudsters may learn to mimic normal transaction patterns, and rare-but-legitimate transactions (e.g., a customer's first international purchase) may also appear anomalous.</p>
+                <ul class="probing-questions">
+                    <li>How would you design an autoencoder-based fraud detection system to minimize false positives (blocking legitimate transactions) while still catching fraud?</li>
+                    <li>What does the reconstruction error threshold represent as a business decision? Who should set it and using what criteria?</li>
+                    <li>If an autoencoder is continuously retrained on recent transactions, how might adversarial fraudsters gradually shift what the model considers "normal"?</li>
+                </ul>
+                <p class="activity-note">Try: Present students with three transaction profiles — one clearly fraudulent, one clearly normal, and one ambiguous — and have small groups set a reconstruction error threshold and justify the business trade-off their threshold implies.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>2. The VAE Latent Space: Generative Power vs. Reconstruction Fidelity</h3>
+                <p>The beta-VAE framework adjusts the weight on the KL divergence term. A high beta value produces a more structured, disentangled latent space suitable for generation and interpolation, but typically at the cost of lower reconstruction quality. A low beta collapses toward a standard autoencoder with sharper reconstructions but a less regular latent space.</p>
+                <ul class="probing-questions">
+                    <li>For which downstream applications would you prioritize reconstruction fidelity, and for which would you prioritize latent space structure?</li>
+                    <li>Is there a principled way to choose the beta hyperparameter, or is it always a task-specific judgment call?</li>
+                    <li>The tradeoff between compression and reconstruction quality is a fundamental tension in information theory. How does this connect to Shannon&#39;s rate-distortion theory?</li>
+                </ul>
+                <p class="activity-note">Try: Show side-by-side image reconstructions from a beta-VAE trained with a low and a high beta on the same dataset and run a live poll asking students which result they would prefer for a medical imaging task versus a creative generation task.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>3. Denoising Autoencoders and the Definition of "Signal" vs. "Noise"</h3>
+                <p>Denoising autoencoders are trained to remove corruption from inputs. In medical imaging, this has been used to enhance low-dose CT scans by training a network to recover high-dose-quality images from noisy low-dose inputs. However, critics point out that aggressive denoising can hallucinate structures that were not present in the original scan.</p>
+                <ul class="probing-questions">
+                    <li>Who defines what counts as "noise" versus "signal" in a clinical context, and what happens when a model&#39;s learned definition of noise conflicts with clinical reality?</li>
+                    <li>How should we evaluate a denoising model in a medical setting — what metrics are appropriate, and are there metrics that could be dangerously misleading?</li>
+                    <li>What regulatory or ethical frameworks should govern the deployment of AI denoising in medical imaging pipelines?</li>
+                </ul>
+                <p class="activity-note">Try: Show students a pair of images (denoised vs. original noisy scan) and ask them to identify which structures they would trust — then reveal whether any structures were hallucinated to spark discussion about evaluation standards.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>4. Autoencoders vs. PCA: When Does Nonlinearity Actually Matter?</h3>
+                <p>Undercomplete autoencoders with linear activations and MSE loss are mathematically equivalent to PCA — they learn the same subspace. Only when nonlinear activations are introduced does the autoencoder diverge meaningfully. In practice, many practitioners default to deep autoencoders without asking whether the added complexity is justified by the data.</p>
+                <ul class="probing-questions">
+                    <li>What properties of a dataset would signal that the data lies on a nonlinear manifold, making a nonlinear autoencoder clearly preferable to PCA?</li>
+                    <li>If a deep autoencoder only marginally outperforms PCA on a reconstruction benchmark, should you still use the autoencoder? What other factors matter?</li>
+                    <li>In what scientific domains might interpretability of PCA components outweigh the representational power of a neural autoencoder?</li>
+                </ul>
+                <p class="activity-note">Try: Have students train both a linear autoencoder and PCA on the same toy dataset in a shared notebook and compare their reconstructed outputs — seeing identical results live makes the mathematical equivalence concrete.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>5. Latent Space Interpolation and the Ethics of Generative Control</h3>
+                <p>VAEs trained on face images allow smooth interpolation through the latent space, generating photorealistic intermediate faces. Researchers have demonstrated that individual latent dimensions can independently control attributes like perceived age, skin tone, or facial expression. These capabilities have legitimate research uses but have also been used to create manipulated imagery.</p>
+                <ul class="probing-questions">
+                    <li>Should the ability to controllably manipulate demographic attributes in generated images be considered a feature or a vulnerability? Does the answer change depending on the use case?</li>
+                    <li>If a VAE latent space entangles attributes in unexpected ways — for instance, if changing "apparent age" also changes "perceived gender" — what does that reveal about the training data?</li>
+                    <li>What technical or policy safeguards, if any, could reasonably limit misuse of generative latent spaces without preventing legitimate research?</li>
+                </ul>
+                <p class="activity-note">Try: Ask students to work in small groups to draft a one-paragraph acceptable-use policy for a generative face VAE tool — then compare the policies and discuss where they converge and where they reflect genuine value disagreements.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>When introducing the encoder-decoder architecture, draw the information bottleneck on the board and ask students to predict what the network will be forced to learn before revealing how autoencoders work. This activates prior knowledge about compression and feature selection.</li>
+                    <li>The VAE reparameterization trick is conceptually subtle — use a concrete analogy: instead of sampling directly (which blocks gradients), we sample noise separately and shift it by the learned mean and scale. Drawing this computation graph on the board helps students see exactly where the gradient flows.</li>
+                    <li>For the ethics topics (topics 1, 3, and 5), consider assigning roles before discussion — one student argues from a developer perspective, one from a regulator perspective, and one from an affected-user perspective. Role assignment reduces the tendency to converge on a single comfortable answer.</li>
+                    <li>Close the session by returning to the question of what "good" reconstruction means and who gets to decide — this threads through all five topics and helps students see autoencoders not just as neural architectures but as systems that encode assumptions about what is important in data.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

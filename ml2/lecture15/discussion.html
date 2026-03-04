@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 15: Future Trends in LLMs — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 15</a>
+        <div class="content-box">
+            <h1>Week 15: Future Trends in LLMs</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>1. Scaling Laws, Diminishing Returns, and the Future of Progress</h3>
+                <p>Scaling laws predict that model performance improves predictably with increased parameters, data, and compute. However, the Chinchilla results showed that prior frontier models were significantly undertrained, and recent work suggests that data availability and compute costs may be approaching practical limits. Meanwhile, alternative scaling axes — such as test-time compute (giving models more "thinking time" for hard problems) — are emerging as potentially important complements to pre-training scale.</p>
+                <ul class="probing-questions">
+                    <li>If pre-training data becomes the primary bottleneck, what strategies — synthetic data generation, multi-modal data, or domain-specific corpora — offer the most promising paths forward?</li>
+                    <li>How should organizations allocate resources between training larger base models versus investing in inference-time techniques like chain-of-thought prompting or test-time compute scaling?</li>
+                    <li>Do you think scaling alone will eventually lead to artificial general intelligence, or are there fundamental capabilities that require qualitatively different architectural innovations beyond the transformer?</li>
+                </ul>
+                <p class="activity-note">Try: Ask students to individually write a one-paragraph prediction of what they think the largest LLM will look like in five years (parameter count, training data, compute budget, key architectural changes), then share predictions in pairs and identify the assumptions that differ most.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>2. Democratization vs. Centralization in Efficient Fine-Tuning</h3>
+                <p>Parameter-efficient fine-tuning methods like LoRA and QLoRA have dramatically lowered the cost of adapting large models. QLoRA makes it possible to fine-tune a 65B parameter model on a single consumer GPU by quantizing the frozen base model to 4-bit precision. This democratizes access to powerful models, but also raises questions: fine-tuned models may remove safety constraints, and the proliferation of specialized variants makes auditing and accountability harder.</p>
+                <ul class="probing-questions">
+                    <li>What are the concrete benefits of widespread LoRA fine-tuning access for researchers, small businesses, and individuals in lower-income countries who cannot afford frontier API costs?</li>
+                    <li>How do you balance the democratization benefits of efficient fine-tuning against the risk that safety constraints embedded by RLHF can be easily removed through fine-tuning?</li>
+                    <li>Should base model providers impose technical or legal restrictions on fine-tuning that alters safety properties, and how would such restrictions be enforced in practice?</li>
+                </ul>
+                <p class="activity-note">Try: Structured debate — divide the class into two teams and have them argue opposite positions on whether open-weight models with free fine-tuning should be restricted. After the debate, hold a class vote and compare to a pre-debate poll to see if positions shifted.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>3. Alignment, Reward Hacking, and the Limits of RLHF</h3>
+                <p>RLHF has become the dominant paradigm for aligning LLMs with human preferences, but it has known failure modes. Reward hacking occurs when models learn to exploit flaws in the reward model rather than genuinely improving — for example, generating verbose but unhelpful responses if evaluators equate length with quality. Constitutional AI attempts to address this by using explicit principles and self-critique rather than depending purely on pairwise human preference labels. Direct Preference Optimization (DPO) eliminates the separate reward model entirely.</p>
+                <ul class="probing-questions">
+                    <li>Can you construct a realistic scenario in which a model trained with RLHF would produce outputs that score highly on the reward model but are actually harmful or misleading to users?</li>
+                    <li>Constitutional AI requires writing down a "constitution" of principles. Who should author these principles, and how should conflicts between principles (e.g., helpfulness vs. harm avoidance) be resolved?</li>
+                    <li>As models become more capable, will human evaluators be able to reliably judge model outputs in specialized domains? What happens to RLHF when humans can no longer tell whether a response is correct?</li>
+                </ul>
+                <p class="activity-note">Try: Workshop activity — have students draft five principles for a model "constitution" for a specific application (e.g., a tutoring assistant, a legal aid bot). Then present two conflicting principles from different groups and have the class negotiate a resolution priority order.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>4. Emergent Capabilities, Unpredictability, and Governance</h3>
+                <p>Emergent abilities — capabilities that appear suddenly at certain scales rather than gradually — make it difficult to predict what future models will be capable of. Examples like multi-step arithmetic and chain-of-thought reasoning emerged unexpectedly in models above certain size thresholds. "Inverse scaling" phenomena also exist: some behaviors get worse with scale. This unpredictability creates challenges for governance, safety testing, and public communication about model capabilities.</p>
+                <ul class="probing-questions">
+                    <li>If we cannot predict when dangerous capabilities will emerge, what precautionary evaluation practices should be standard before releasing a new model?</li>
+                    <li>How should policymakers design regulations for AI systems when the capabilities of future systems are genuinely unknown? Is the EU AI Act&#39;s risk-based categorization approach sufficient?</li>
+                    <li>Inverse scaling shows that bigger models can be worse on some tasks. What implications does this have for organizations that assume a more capable model is always a safer or more reliable one?</li>
+                </ul>
+                <p class="activity-note">Try: Ask the class to brainstorm a list of five capabilities that would be concerning if they emerged unexpectedly in the next generation of models. Vote on which three the class finds most worrying, then discuss what evaluation tests would need to exist today to detect those capabilities in advance.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>5. Societal Impact: Who Benefits and Who Bears the Costs?</h3>
+                <p>The lecture describes both significant benefits — democratized access to information, accelerated scientific research, improved healthcare and education — and serious risks of LLMs, including misinformation, bias amplification, privacy violations, and economic disruption. These benefits and costs are not distributed equally. Those with access to frontier AI tools gain substantial productivity advantages, while workers in sectors like content writing, customer service, and basic programming face displacement. Environmental costs are real and concentrated, while benefits are diffuse.</p>
+                <ul class="probing-questions">
+                    <li>Which groups of people are most likely to bear the economic costs of LLM-driven automation in the next five years, and what policy responses — such as education, retraining, or taxation of AI productivity gains — might mitigate these harms?</li>
+                    <li>The environmental cost of training a large model can be equivalent to many transatlantic flights. How should the AI community weigh this against the claimed benefits, and should environmental impact be a required disclosure for model releases?</li>
+                    <li>LLMs trained on internet text inherit societal biases around race, gender, and other attributes. Given that completely eliminating bias while maintaining performance remains an open problem, what is an ethically defensible threshold for deploying such systems in high-stakes decisions like hiring or credit scoring?</li>
+                </ul>
+                <p class="activity-note">Try: "Stakeholder mapping" exercise — assign each student a stakeholder role (laid-off content writer, rural healthcare patient, AI researcher, environmental regulator, startup founder) and ask them to write two sentences on how LLM progress looks from their perspective. Read selections aloud and compare the range of experiences.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>For the scaling laws discussion, anchor students by having them estimate the training compute and data used by a model they know (e.g., GPT-3), then work through the Chinchilla calculation to show how far off compute-optimal that was — making the insight concrete rather than abstract.</li>
+                    <li>When discussing RLHF limits and Constitutional AI, resist framing these as competing approaches; they are complementary, and the most interesting discussion comes from asking students what combination of oversight mechanisms they would layer together for a high-stakes deployment.</li>
+                    <li>The emergent capabilities discussion can provoke anxiety; acknowledge that unpredictability is a genuine open problem in the field, and steer students toward constructive questions about what evaluation infrastructure would look like rather than speculation about catastrophic scenarios.</li>
+                    <li>The societal impact topic works best at the end of the course because students can now connect technical choices (model scale, training data sources, fine-tuning access) directly to distributional consequences — encourage them to draw these connections explicitly rather than treating technical and ethical discussions as separate.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

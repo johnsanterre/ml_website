@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2: Neural Networks &amp; Backpropagation — Knowledge Check | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 1.5em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        #quiz-score { display: inline-flex; align-items: center; gap: 10px; background: #354CA1; color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 1.5em; }
+        .score-label { opacity: 0.85; }
+        .score-value { font-weight: 700; font-size: 1.05rem; }
+        .quiz-question { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #354CA1; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+        .question-number { font-size: 0.78rem; font-weight: 700; color: #354CA1; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; }
+        .quiz-question h4 { color: #222; font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+        .quiz-options { list-style: none; padding: 0; margin: 0 0 10px; }
+        .quiz-options li { margin: 4px 0; }
+        .quiz-options li label { display: block; padding: 8px 12px; border-radius: 4px; cursor: pointer; border: 1px solid #e0e0e0; background: white; transition: background 0.15s; font-size: 0.95rem; }
+        .quiz-options li label:hover { background: #f0f4ff; }
+        .quiz-options li.correct label { background: #d4edda; border-color: #28a745; color: #155724; cursor: default; }
+        .quiz-options li.incorrect label { background: #f8d7da; border-color: #dc3545; color: #721c24; cursor: default; }
+        .quiz-feedback { font-size: 0.875rem; margin-top: 8px; padding: 0; min-height: 0; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 12px; border-radius: 4px; }
+        .quiz-actions { margin-top: 1.5em; }
+        .btn { padding: 10px 22px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: #f0f4ff; color: #354CA1; border: 1px solid #dce3f0; }
+        .btn-secondary:hover { background: #e0e8ff; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 2</a>
+        <div class="content-box">
+            <h1>Week 2: Neural Networks &amp; Backpropagation</h1>
+            <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
+
+            <div id="quiz-score">
+                <span class="score-label">Questions</span>
+                <span class="score-value">10</span>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Incorrect. The weight matrix is denoted W, not A; they are distinct quantities in the forward pass equation.",
+                "b": "Incorrect. The raw input data is A at layer 0, but A^[l-1] more generally refers to the post-activation output of whichever layer precedes layer l.",
+                "c": "Correct. A^[l-1] is the post-activation output of the previous layer, which feeds into the weight multiplication to produce the next pre-activation.",
+                "d": "Incorrect. Loss gradients are computed during backpropagation, not stored in the A notation used during the forward pass."
+            }'>
+                <span class="question-number">Question 1</span>
+                <h4>In forward propagation, the pre-activation for layer l is written as Z<sup>[l]</sup> = W<sup>[l]</sup>A<sup>[l&minus;1]</sup> + b<sup>[l]</sup>. What does A<sup>[l&minus;1]</sup> represent?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q1" value="a"> The weight matrix of the previous layer</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> The raw input data to the network</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> The activated outputs (post-activation values) from the previous layer</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> The loss gradient for the previous layer</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. Forward pass activations are computed by applying weights and activation functions, not by the chain rule.",
+                "b": "Correct. The chain rule allows the gradient of the loss with respect to each weight to be computed as a product of local gradients propagated backward through each layer.",
+                "c": "Incorrect. The learning rate is a hyperparameter set by the practitioner, not determined automatically by the chain rule.",
+                "d": "Incorrect. Gradients can be positive or negative depending on the direction needed to reduce the loss; the chain rule does not enforce positivity."
+            }'>
+                <span class="question-number">Question 2</span>
+                <h4>Backpropagation relies on the chain rule of calculus. What is the chain rule&#39;s role in this context?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q2" value="a"> It computes the forward pass activations layer by layer</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> It allows the gradient of the loss with respect to early-layer weights to be computed by multiplying local gradients through each layer</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> It determines the learning rate automatically based on curvature</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> It ensures that gradients are always positive during training</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. A high learning rate leads to large, unstable updates, not slower but better training.",
+                "b": "Correct. A learning rate that is too high causes updates to overshoot the minimum, leading to oscillating or diverging loss.",
+                "c": "Incorrect. Vanishing gradients are caused by activation function saturation or poor initialization, not by a high learning rate.",
+                "d": "Incorrect. No learning rate guarantees immediate convergence to a global minimum; the loss landscape is non-convex."
+            }'>
+                <span class="question-number">Question 3</span>
+                <h4>The gradient descent update rule is &theta;<sub>t+1</sub> = &theta;<sub>t</sub> &minus; &eta; &middot; &nabla;<sub>&theta;</sub>J(&theta;<sub>t</sub>). If the learning rate &eta; is set too high, what is the most likely consequence?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q3" value="a"> The model will train more slowly but find a better minimum</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> The parameter updates may overshoot the minimum, causing the loss to oscillate or diverge</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> Gradients will vanish and the network will stop learning</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> The model will immediately converge to a global minimum</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. This description is reversed: full-batch (not SGD) uses the entire dataset per update.",
+                "b": "Correct. SGD uses a single randomly selected training example per update, while mini-batch uses a small fixed-size subset, providing a less noisy gradient estimate.",
+                "c": "Incorrect. Neither SGD nor mini-batch automatically schedules the learning rate; that is done by separate scheduling strategies.",
+                "d": "Incorrect. Mini-batch gradient descent typically produces better gradient estimates than pure SGD, though noisier than full-batch."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>What is the key difference between stochastic gradient descent (SGD) and mini-batch gradient descent?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> SGD uses the entire dataset per update; mini-batch uses a random subset</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> SGD updates parameters using a single random training example; mini-batch uses a small fixed-size subset of examples</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> SGD uses a fixed learning rate; mini-batch automatically schedules the learning rate</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> Mini-batch gradient descent always produces worse estimates than full-batch</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Incorrect. Multi-class classification tasks with softmax outputs use categorical cross-entropy, not MSE.",
+                "b": "Incorrect. Binary classification with sigmoid outputs is best served by binary cross-entropy, which aligns with probabilistic interpretation.",
+                "c": "Correct. MSE measures average squared prediction error and is the natural loss for regression tasks predicting continuous values.",
+                "d": "Incorrect. Sequence-to-sequence tasks use specialized losses such as cross-entropy over token distributions."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Mean Squared Error (MSE) is defined as (1/n) &Sigma;(y<sub>i</sub> &minus; &ycirc;<sub>i</sub>)<sup>2</sup>. For which type of task is MSE the most natural loss function?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> Multi-class classification with a softmax output</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> Binary classification with a sigmoid output</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> Regression tasks where the output is a continuous real-valued quantity</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> Sequence-to-sequence generation tasks</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. The loss contribution is small, not large, when the model makes a confident correct prediction.",
+                "b": "Correct. When the predicted probability approaches 1.0, -log(1) approaches 0, so the loss contribution for that correct prediction is near zero.",
+                "c": "Incorrect. The loss contribution varies with the predicted probability; it is not a constant value of 1.0.",
+                "d": "Incorrect. Cross-entropy is always non-negative because log of a probability (between 0 and 1) is non-positive, and the negative sign makes it non-negative."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>Categorical Cross-Entropy loss is defined as CCE = &minus;(1/N) &Sigma;<sub>i</sub> &Sigma;<sub>j</sub> y<sub>ij</sub> log(&ycirc;<sub>ij</sub>). What happens to the loss for a correct prediction when the model assigns probability close to 1.0?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> The loss contribution is large, penalizing confident correct predictions</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> The loss contribution approaches zero, since &minus;log(1) = 0</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> The loss contribution is exactly 1.0 regardless of the predicted probability</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> The loss contribution becomes negative, reducing the total loss below zero</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. A low learning rate slows convergence but does not cause gradients to vanish; vanishing is a backpropagation phenomenon.",
+                "b": "Correct. Gradients are multiplied together through each layer via the chain rule; when derivatives are small (as with sigmoid saturation), repeated multiplication shrinks them exponentially.",
+                "c": "Incorrect. Batch size affects gradient noise, not gradient magnitude decay through layers.",
+                "d": "Incorrect. Zero initialization causes symmetry issues but does not directly cause the vanishing gradient problem in the chain-rule sense."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>The vanishing gradient problem occurs during backpropagation. What is the primary cause of this issue in deep networks?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> The learning rate is set too low</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> Gradient values become very small as they are multiplied through many layers, especially when activation function derivatives are less than 1, making early-layer weights learn very slowly</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> The batch size is too large, diluting the gradient signal</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> The weight matrices are initialized to zero</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="a" data-explanations='{
+                "a": "Correct. Reverse-mode AD computes gradients of a scalar output (the loss) with respect to all inputs in a single backward pass, which is highly efficient for training networks with many parameters.",
+                "b": "Incorrect. Forward-mode is not always faster; it is efficient when there are many outputs relative to inputs, the opposite of most neural network training scenarios.",
+                "c": "Incorrect. Reverse-mode AD requires storing intermediate activations, not the training dataset; these are very different memory considerations.",
+                "d": "Incorrect. Both forward-mode and reverse-mode can in principle be used for training or inference; the choice is made based on efficiency."
+            }'>
+                <span class="question-number">Question 8</span>
+                <h4>Automatic differentiation (AD) is used in deep learning frameworks to compute gradients. How does reverse-mode AD (backpropagation) differ from forward-mode AD?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q8" value="a"> Reverse-mode computes gradients of outputs with respect to all inputs in one backward pass, making it efficient when there are many parameters and few outputs</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> Forward-mode is always faster because it runs in the same direction as the forward pass</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> Reverse-mode requires storing the entire training dataset in memory simultaneously</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> Forward-mode is used exclusively for training; reverse-mode only for inference</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="a" data-explanations='{
+                "a": "Correct. The noise introduced by random mini-batch sampling acts as a stochastic perturbation that can push parameters out of saddle points and shallow local minima.",
+                "b": "Incorrect. Mini-batch gradients are noisier, not more accurate, than full-batch gradients; the accuracy is a property of full-batch.",
+                "c": "Incorrect. Full-batch gradient descent follows the true gradient and can get stuck in saddle points precisely because it lacks stochastic noise.",
+                "d": "Incorrect. Mini-batches do not dynamically increase the learning rate; they introduce gradient noise that has an implicit regularizing effect."
+            }'>
+                <span class="question-number">Question 9</span>
+                <h4>One advantage of mini-batch gradient descent over full-batch gradient descent is that the stochasticity in gradient estimates can help escape local minima and saddle points. Why?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q9" value="a"> Random noise in the gradient introduces directional perturbations that can push parameters out of flat or locally optimal regions of the loss landscape</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> Mini-batch gradients are always more accurate than full-batch gradients</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> Full-batch gradient descent automatically avoids saddle points due to its use of the complete data</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> Mini-batches increase the learning rate dynamically to escape flat regions</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Incorrect. Computational graphs record operations, not training data; training data is stored in separate arrays.",
+                "b": "Correct. Computational graphs record which operations produced which intermediate values, enabling systematic application of the chain rule in reverse to compute all gradients.",
+                "c": "Incorrect. The loss function is separate from the computational graph, which records operations rather than encoding targets.",
+                "d": "Incorrect. Backpropagation computes gradients for all layers, not just the last one; the graph structure is what makes this efficient."
+            }'>
+                <span class="question-number">Question 10</span>
+                <h4>Computational graphs provide a structured representation of the operations in a neural network. Why are they essential for backpropagation?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q10" value="a"> They store the training data more efficiently than arrays</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> They explicitly record which operations produced which values, enabling the chain rule to be applied systematically in reverse to compute all gradients</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> They replace the need for a loss function by encoding the target directly</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> They ensure that only the last layer&#39;s gradients are computed, saving computation</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="reset-quiz">Reset Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="../quiz.js"></script>
+</body>
+</html>

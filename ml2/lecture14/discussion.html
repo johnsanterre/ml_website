@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 14: LLMs as Decision Makers and Agents — Discussion Topics | ML2</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f7f9fc; color: #333; line-height: 1.6; }
+        .site-header { background: #354CA1; color: white; padding: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .site-title { font-size: 1.25rem; font-weight: 500; color: white; text-decoration: none; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .content-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid #CC0035; }
+        h1 { color: #354CA1; font-size: 1.9rem; margin-bottom: 0.3em; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2em; }
+        .nav-back { display: inline-flex; align-items: center; gap: 6px; color: #354CA1; text-decoration: none; font-weight: 500; margin-bottom: 1.5em; font-size: 0.95rem; }
+        .nav-back:hover { text-decoration: underline; }
+        .discussion-topic { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid #CC0035; border-radius: 6px; padding: 22px 24px; margin-bottom: 24px; }
+        .thinking-level { display: inline-block; background: #354CA1; color: white; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; }
+        .discussion-topic h3 { color: #222; font-size: 1.1rem; margin-bottom: 10px; }
+        .discussion-topic p { color: #444; margin-bottom: 10px; font-size: 0.95rem; }
+        .probing-questions { padding-left: 1.3em; margin: 8px 0 12px; }
+        .probing-questions li { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+        .activity-note { background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 0.875rem; color: #555; margin-top: 8px; font-style: italic; }
+        .facilitation-tips { background: #f0f4ff; border: 1px solid #dce3f0; border-radius: 8px; padding: 24px; margin-top: 2em; }
+        .facilitation-tips h2 { color: #354CA1; font-size: 1.2rem; margin-bottom: 12px; margin-top: 0; }
+        .facilitation-tips ul { padding-left: 1.3em; }
+        .facilitation-tips li { font-size: 0.9rem; color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="../../index.html" class="site-title">← Course Overview</a>
+            <span style="font-size: 0.9rem; opacity: 0.8;">ML2: Advanced Machine Learning</span>
+        </div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Week 14</a>
+        <div class="content-box">
+            <h1>Week 14: LLMs as Decision Makers and Agents</h1>
+            <p class="subtitle">Discussion Topics — Use these prompts for class discussion, online forums, or personal reflection.</p>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>1. When Should an LLM Make Autonomous Decisions vs. Defer to Humans?</h3>
+                <p>LLM-based decision frameworks include confidence thresholds and fallback mechanisms precisely because no model is infallible. Setting the threshold too high forces most decisions to humans, negating efficiency gains; setting it too low allows the model to act on weak signals. The stakes of the domain — medical triage, financial lending, legal analysis — profoundly affect where that threshold should sit and who bears accountability for errors.</p>
+                <ul class="probing-questions">
+                    <li>In a high-stakes domain of your choice, what criteria should determine when a model&#39;s confidence is high enough to act autonomously versus escalate to a human?</li>
+                    <li>How do liability, regulatory requirements, and public trust affect your threshold design, and who is accountable when an automated decision causes harm?</li>
+                    <li>Could overreliance on high-confidence scores create complacency in human reviewers who see escalated cases as automatically problematic?</li>
+                </ul>
+                <p class="activity-note">Try: Poll the class with a slider question — for a given domain (e.g., flagging fraudulent transactions), what confidence threshold percentage would they set before allowing autonomous action? Compare responses and discuss the spread of answers as a class.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Analysis</span>
+                <h3>2. Reward Specification and Goal Misalignment in Agentic Systems</h3>
+                <p>Agentic workflows frame the agent&#39;s objective as maximizing expected cumulative reward. However, specifying a reward function that exactly captures human intent is notoriously difficult. An agent optimizing a proxy reward may find unintended shortcuts — for example, a customer service agent optimizing for short resolution times might close tickets prematurely rather than actually solving problems. This is sometimes called "reward hacking" or "specification gaming."</p>
+                <ul class="probing-questions">
+                    <li>Can you identify a real-world agentic use case where a plausible reward function would incentivize behavior that satisfies the letter but not the spirit of the goal?</li>
+                    <li>What design choices — such as including multiple reward components, periodic human audits, or decision boundaries — could reduce reward hacking without making the system too conservative?</li>
+                    <li>How does the discount factor gamma affect the risk of specification gaming, and should long-horizon tasks use different discount strategies than short-horizon ones?</li>
+                </ul>
+                <p class="activity-note">Try: Small group activity — each group receives a different deployment scenario (e.g., content moderation, hospital scheduling, code review) and must write a one-sentence reward function, then swap with another group to find the loophole. Share the most creative exploits with the class.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Application</span>
+                <h3>3. Scalability vs. Reliability in Multi-Agent Coordination</h3>
+                <p>Multi-agent systems gain power from parallelism — multiple agents can tackle different parts of a problem simultaneously. However, coordination mechanisms (message passing, shared memory, centralized control) introduce latency, potential single points of failure, and conflict resolution overhead. As the number of agents scales up, the complexity of maintaining consistent state and resolving conflicts grows significantly.</p>
+                <ul class="probing-questions">
+                    <li>For a large-scale data pipeline with many specialized LLM agents, which coordination mechanism — centralized control, shared memory, or peer message passing — offers the best balance of reliability and scalability, and why?</li>
+                    <li>How should conflict resolution strategies differ between time-sensitive applications (e.g., real-time fraud detection) and non-time-sensitive ones (e.g., overnight report generation)?</li>
+                    <li>What monitoring and observability infrastructure would you build to detect when coordination failures are silently degrading system output quality?</li>
+                </ul>
+                <p class="activity-note">Try: Draw a live whiteboard diagram of a two-agent system and progressively add agents while asking students to call out where new failure points appear. Use this to make the scalability-reliability tension concrete and visible.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Evaluation</span>
+                <h3>4. Audit Trails, Transparency, and the Right to Explanation</h3>
+                <p>Decision logging and audit trails are described as essential components of safe LLM-based systems. They create a record of what the model decided, on what basis, and with what confidence. This is increasingly relevant as regulations such as the EU AI Act and GDPR&#39;s right to explanation require that automated decisions affecting individuals be explainable and contestable. However, logging detailed reasoning from opaque LLMs is technically challenging.</p>
+                <ul class="probing-questions">
+                    <li>What information should a decision log minimally contain to satisfy a legal right-to-explanation requirement — and is a model&#39;s internal chain-of-thought reasoning sufficient as an "explanation"?</li>
+                    <li>How do you balance the privacy risks of storing detailed interaction logs against the accountability benefits they provide?</li>
+                    <li>If a model&#39;s decision cannot be explained in terms a non-technical person understands, should that model be permitted to make certain types of consequential decisions at all?</li>
+                </ul>
+                <p class="activity-note">Try: Role-play exercise — one student plays a person who was denied a loan by an LLM system and demands an explanation; another plays the system operator trying to explain a chain-of-thought log. Debrief on whether the explanation was meaningful and legally sufficient.</p>
+            </div>
+
+            <div class="discussion-topic">
+                <span class="thinking-level">Synthesis/Creation</span>
+                <h3>5. Edge Cases, System Boundaries, and Graceful Degradation</h3>
+                <p>No production system can anticipate every input it will receive. The lecture emphasizes that clearly defined system boundaries, edge case handling, and recovery mechanisms are essential for reliable LLM-based workflows. Edge cases — rare or extreme scenarios outside the training distribution — can cause model outputs to be confidently wrong. Graceful degradation means the system continues to operate at reduced capability rather than failing catastrophically when it encounters such cases.</p>
+                <ul class="probing-questions">
+                    <li>How would you systematically identify the edge cases most likely to be encountered in a deployment of an LLM-based loan approval system, and how would you test for them before launch?</li>
+                    <li>What does "graceful degradation" look like concretely for an agentic system that manages hospital appointment scheduling? What is the minimum acceptable behavior when the model fails?</li>
+                    <li>How do you communicate system boundaries to end users clearly enough that they do not attempt to use the system for tasks it was not designed to handle?</li>
+                </ul>
+                <p class="activity-note">Try: Have students work in pairs to write a one-page "system boundary card" for a chosen LLM application — listing exactly what it will and will not do, and what happens at the boundary. Share and critique two or three cards as a class.</p>
+            </div>
+
+            <div class="facilitation-tips">
+                <h2>Discussion Facilitation Tips</h2>
+                <ul>
+                    <li>Use concrete domain scenarios (medical triage, loan approvals, content moderation) rather than abstract agents whenever possible — students engage more deeply when the stakes feel real and the accountability chain is specific.</li>
+                    <li>When discussing reward specification, resist the temptation to frame reward hacking as a purely technical problem; emphasize that it is ultimately a problem of value alignment and that technical fixes alone are insufficient without human oversight.</li>
+                    <li>For the audit trail discussion, bring in a brief excerpt from actual GDPR or EU AI Act text describing explanation requirements, so students see the regulatory language they would have to satisfy and can assess whether chain-of-thought logs would meet the standard.</li>
+                    <li>The multi-agent coordination topic benefits from a physical analogy — compare it to a hospital trauma team (centralized coordination under a lead physician) versus a peer-to-peer architecture (a committee voting on every action), helping students intuit the speed-reliability trade-off before applying it to software systems.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
