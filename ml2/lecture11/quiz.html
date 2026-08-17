@@ -58,7 +58,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "High temperature values (0.7-0.9) encourage diverse, creative outputs. A temperature of 0.2-0.4 makes outputs more focused and deterministic, which is the opposite of what brainstorming needs.",
-                "b": "Correct. Low temperature (0.2-0.4) concentrates probability mass on the most likely tokens, producing focused and deterministic outputs ideal for structured extraction or code generation.",
+                "b": "Low temperature (0.2-0.4) concentrates probability mass on the most likely tokens, producing focused and deterministic outputs ideal for structured extraction or code generation.",
                 "c": "Temperature does not control response length. The max_tokens parameter governs output length; temperature governs output diversity and randomness.",
                 "d": "Temperature has no effect on API call cost. Cost is determined by the number of tokens consumed, not by the temperature setting."
             }'>
@@ -75,7 +75,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "System prompts work at inference time through the context window, not by updating model weights. Fine-tuning is the technique that modifies weights.",
-                "b": "Correct. System prompts set the role, behavioral constraints, tone, and output format at the start of an interaction, shaping how the model responds throughout the conversation.",
+                "b": "System prompts set the role, behavioral constraints, tone, and output format at the start of an interaction, shaping how the model responds throughout the conversation.",
                 "c": "System prompts can guide the model toward a topic, but they do not cause absolute refusal of all other queries. The model may still respond to off-topic requests.",
                 "d": "System prompts and few-shot examples are distinct tools. System prompts provide instructions; few-shot examples provide demonstrations. They complement rather than replace each other."
             }'>
@@ -92,7 +92,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Chain-of-thought prompting produces more tokens, not fewer. The intermediate reasoning steps increase output length rather than compressing it.",
-                "b": "Correct. CoT guides the model to show intermediate reasoning steps before reaching a final answer, making the reasoning process transparent, debuggable, and significantly more accurate on multi-step problems.",
+                "b": "CoT guides the model to show intermediate reasoning steps before reaching a final answer, making the reasoning process transparent, debuggable, and significantly more accurate on multi-step problems.",
                 "c": "CoT does not connect to a database. Retrieval-augmented generation (RAG) is the technique that adds external database access; CoT works entirely within the prompt.",
                 "d": "CoT does not eliminate hallucinations. It improves reasoning accuracy but the model can still produce incorrect intermediate steps or conclusions."
             }'>
@@ -110,7 +110,7 @@
             <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "Retrying immediately in a tight loop when rate limited will continue to trigger the same rate limit and may worsen the situation by sending even more requests.",
                 "b": "Switching providers for every request adds complexity and cost without addressing the underlying rate limit problem on the original provider.",
-                "c": "Correct. Exponential backoff waits progressively longer between retry attempts (e.g., 1s, 2s, 4s, 8s), giving the service time to recover and avoiding a flood of immediate retries.",
+                "c": "Exponential backoff waits progressively longer between retry attempts (e.g., 1s, 2s, 4s, 8s), giving the service time to recover and avoiding a flood of immediate retries.",
                 "d": "Canceling the request and telling the user the API is unavailable is unnecessarily disruptive. Rate limit errors are transient and a retry strategy should be attempted first."
             }'>
                 <span class="question-number">Question 4</span>
@@ -127,7 +127,7 @@
             <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "Using the maximum number of examples can crowd out the actual query and other useful information. More examples are not always better; representativeness matters more than quantity.",
                 "b": "Example length should match the desired output length. Using very long examples teaches the model to be verbose, which wastes tokens and may not suit the task.",
-                "c": "Correct. The key is selecting a small set of representative examples that clearly demonstrate the target pattern without overwhelming the context window or competing with the actual query.",
+                "c": "The key is selecting a small set of representative examples that clearly demonstrate the target pattern without overwhelming the context window or competing with the actual query.",
                 "d": "Using only negative examples (what not to do) does not give the model a clear positive target pattern to follow, making it an ineffective few-shot strategy."
             }'>
                 <span class="question-number">Question 5</span>
@@ -143,7 +143,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Verifying that a response is valid JSON or XML is structural or syntactic validation, not semantic validation. Semantic validation goes beyond format to check meaning and logic.",
-                "b": "Correct. Semantic validation checks that the response makes logical sense within the domain, such as verifying that a recommended treatment is compatible with a diagnosed condition in a medical system.",
+                "b": "Semantic validation checks that the response makes logical sense within the domain, such as verifying that a recommended treatment is compatible with a diagnosed condition in a medical system.",
                 "c": "Measuring cosine similarity between a prompt and response is a form of relevance scoring, not semantic validation. It does not check domain-specific logical correctness.",
                 "d": "Grammar checking verifies surface-level language quality, not the logical or factual correctness of the content within a specific domain."
             }'>
@@ -160,7 +160,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Temperature does not control response length and does not reduce cost. Higher temperature actually has no direct relationship with response token count.",
-                "b": "Correct. Caching frequent prompt responses avoids redundant API calls entirely, and prompt engineering to reduce token counts directly lowers the per-request cost since APIs charge per token.",
+                "b": "Caching frequent prompt responses avoids redundant API calls entirely, and prompt engineering to reduce token counts directly lowers the per-request cost since APIs charge per token.",
                 "c": "Batching can improve throughput but does not inherently reduce cost per token. Sending all requests in one large batch also introduces latency problems for time-sensitive queries.",
                 "d": "Disabling validation might save a small amount of compute but does not meaningfully reduce LLM API costs, which are driven by token consumption rather than validation overhead."
             }'>
@@ -177,7 +177,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Reformatting documents into a standard format before analysis is a preprocessing step, not the core role of the LLM in pattern recognition across documents.",
-                "b": "Correct. LLMs identify recurring structures and standard clauses across documents even when the language and phrasing varies, which is something rigid rule-based keyword systems cannot do robustly.",
+                "b": "LLMs identify recurring structures and standard clauses across documents even when the language and phrasing varies, which is something rigid rule-based keyword systems cannot do robustly.",
                 "c": "LLMs assist human lawyers and legal analysts; they do not replace them or render legally binding interpretations autonomously.",
                 "d": "Keyword matching on pre-specified terms describes a simple rule-based system, not the LLM pattern recognition capability being discussed."
             }'>
@@ -194,7 +194,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Reviewing every request would defeat the purpose of automation and make the system impractically slow and expensive. Human review is triggered selectively, not universally.",
-                "b": "Correct. Human-in-the-loop triggers are selective: they activate when model confidence is low, unusual patterns appear, or domain-specific risk factors are identified, not for every request.",
+                "b": "Human-in-the-loop triggers are selective: they activate when model confidence is low, unusual patterns appear, or domain-specific risk factors are identified, not for every request.",
                 "c": "JSON parse failures trigger structural validation errors, not necessarily human review. Human review is triggered by semantic or risk-based conditions, not just formatting issues.",
                 "d": "Context window limits are handled by summarization or chunking strategies, not by routing to a human reviewer. Human review addresses output quality and risk, not input length."
             }'>
@@ -211,7 +211,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Batching does not require identical system prompts. Requests in a batch can have different prompts; the challenge is latency and failure handling, not prompt uniformity.",
-                "b": "Correct. Grouping requests into batches can introduce unacceptable delays for time-sensitive queries that must wait for a batch to fill, and a failure in one request must be handled without corrupting others in the same batch.",
+                "b": "Grouping requests into batches can introduce unacceptable delays for time-sensitive queries that must wait for a batch to fill, and a failure in one request must be handled without corrupting others in the same batch.",
                 "c": "Batching does not cause the LLM to generate longer responses. Response length is determined by the task and the max_tokens setting, not by whether a request is batched.",
                 "d": "Batching does not prevent caching. Identical prompts can still be cached regardless of whether they are processed individually or in batches."
             }'>

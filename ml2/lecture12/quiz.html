@@ -60,7 +60,7 @@
                 "a": "Knowledge cutoffs are one of the three core limitations RAG addresses. LLMs cannot access information about events that occurred after their training date.",
                 "b": "Inability to access private or proprietary data at inference time is one of the three core limitations RAG addresses. RAG allows connecting an LLM to internal knowledge bases.",
                 "c": "Hallucination is one of the three core limitations RAG addresses. By grounding responses in retrieved documents, RAG can reduce the model tendency to fabricate facts.",
-                "d": "Correct. Multi-language support is not one of the three core limitations motivating RAG. LLMs typically acquire multilingual capability through pre-training on diverse text, not through retrieval."
+                "d": "Multi-language support is not one of the three core limitations motivating RAG. LLMs typically acquire multilingual capability through pre-training on diverse text, not through retrieval."
             }'>
                 <span class="question-number">Question 1</span>
                 <h4>RAG addresses fundamental limitations of standard LLMs. Which of the following is NOT one of the three core limitations described in the textbook?</h4>
@@ -76,7 +76,7 @@
             <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "Generating a draft response before retrieval inverts the RAG pipeline. Retrieval must happen first so that the retrieved context can inform the generation step.",
                 "b": "This sequence is incorrect because retrieval cannot happen before the query is embedded. The vector database search requires an embedded query to find similar documents.",
-                "c": "Correct. The standard RAG pipeline embeds the query, searches the vector database, retrieves relevant documents, augments the prompt with that context, and then generates a response from the augmented prompt.",
+                "c": "The standard RAG pipeline embeds the query, searches the vector database, retrieves relevant documents, augments the prompt with that context, and then generates a response from the augmented prompt.",
                 "d": "Retrieving documents after generating a response defeats the purpose of RAG. Post-processing with context is not the same as grounding the generation in retrieved information before responding."
             }'>
                 <span class="question-number">Question 2</span>
@@ -92,7 +92,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Storing two copies of every vector is not a requirement of brute-force search. The computational problem is the number of comparisons required, not the storage duplication.",
-                "b": "Correct. Brute-force search requires comparing the query vector against every stored vector, giving O(n * d) operations. For millions of high-dimensional vectors this becomes too slow for real-time use.",
+                "b": "Brute-force search requires comparing the query vector against every stored vector, giving O(n * d) operations. For millions of high-dimensional vectors this becomes too slow for real-time use.",
                 "c": "Brute-force search can use any distance metric including cosine similarity or Euclidean distance. The limitation is computational scale, not metric flexibility.",
                 "d": "While memory is a concern, the primary reason brute-force is prohibitive is the computational cost of performing millions of high-dimensional vector comparisons, not a hard GPU memory limit."
             }'>
@@ -110,7 +110,7 @@
             <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "Hashing similar vectors to shared buckets describes Locality-Sensitive Hashing (LSH), a different approximate nearest neighbor algorithm, not HNSW.",
                 "b": "Compressing vectors by quantizing subvectors with learned codebooks describes Product Quantization (PQ), another ANN technique distinct from HNSW.",
-                "c": "Correct. HNSW builds a multi-layer graph where upper layers have long-range connections for fast global navigation and lower layers have shorter-range connections for fine-grained local search, achieving logarithmic rather than linear complexity.",
+                "c": "HNSW builds a multi-layer graph where upper layers have long-range connections for fast global navigation and lower layers have shorter-range connections for fine-grained local search, achieving logarithmic rather than linear complexity.",
                 "d": "Pre-sorting by a principal component and binary searching describes an inverted index or tree-based approach. HNSW uses a graph structure with hierarchical layers, not a sorted list."
             }'>
                 <span class="question-number">Question 4</span>
@@ -126,7 +126,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Increasing the number of chunks is a side effect of overlap, not its purpose. More chunks alone do not improve retrieval quality if boundary information is still lost.",
-                "b": "Correct. Overlap ensures that text near chunk boundaries is present in both adjacent chunks, so no sentence or concept that spans a boundary is incomplete in either chunk.",
+                "b": "Overlap ensures that text near chunk boundaries is present in both adjacent chunks, so no sentence or concept that spans a boundary is incomplete in either chunk.",
                 "c": "Preventing identical input sequences is not a goal of overlap. Adjacent chunks with overlap will share content, making their embeddings more similar rather than distinct.",
                 "d": "Making adjacent chunk embeddings more similar so they are always co-retrieved would harm retrieval precision, not help it. Overlap is about preserving information, not forcing co-retrieval."
             }'>
@@ -143,7 +143,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Cross-encoders are actually slower than bi-encoders because they process each query-document pair jointly. Their value is accuracy, not speed.",
-                "b": "Correct. Cross-encoders take the query and document as joint input, enabling the model to capture fine-grained interaction signals between them that bi-encoders miss by encoding each independently.",
+                "b": "Cross-encoders take the query and document as joint input, enabling the model to capture fine-grained interaction signals between them that bi-encoders miss by encoding each independently.",
                 "c": "Cross-encoders do not reduce embedding dimensionality or lower storage costs. They operate on text pairs at inference time and produce a relevance score, not a compressed embedding.",
                 "d": "Cross-encoders produce a relevance score for a query-document pair, not a new document embedding. The vector database still uses the original pre-computed bi-encoder embeddings."
             }'>
@@ -160,7 +160,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Queries are not typically longer than documents, and the goal of HyDE is not length matching. The motivation is about where queries and answers sit in the embedding space.",
-                "b": "Correct. Queries and documents occupy different regions of the embedding space due to their different styles. A hypothetical answer resembles the documents in the knowledge base more closely than the question does, improving retrieval.",
+                "b": "Queries and documents occupy different regions of the embedding space due to their different styles. A hypothetical answer resembles the documents in the knowledge base more closely than the question does, improving retrieval.",
                 "c": "HyDE does not skip retrieval for simple questions. The hypothetical answer is used to improve the embedding for retrieval, not to bypass it.",
                 "d": "The goal of HyDE is to produce a better query embedding for retrieval, not to force the model to use its parametric knowledge before retrieval occurs."
             }'>
@@ -177,7 +177,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Speed and accuracy are measured by latency and correctness metrics, not Recall@k or Precision@k. These retrieval metrics measure document-level relevance, not response time.",
-                "b": "Correct. Recall@k measures what fraction of all relevant documents appear in the top-k results (coverage), while Precision@k measures what fraction of the top-k retrieved documents are actually relevant (purity).",
+                "b": "Recall@k measures what fraction of all relevant documents appear in the top-k results (coverage), while Precision@k measures what fraction of the top-k retrieved documents are actually relevant (purity).",
                 "c": "Recall@k and Precision@k are distinct metrics that capture different failure modes. Recall misses relevant documents; Precision returns irrelevant ones. They are not identical.",
                 "d": "Faithfulness of the generated response is a separate generation quality metric. Both Recall@k and Precision@k are retrieval metrics that evaluate which documents were returned, not what was generated."
             }'>
@@ -194,7 +194,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Dense embeddings can be stored in vector databases. That is precisely how RAG systems work. There is no fundamental incompatibility between dense embeddings and vector databases.",
-                "b": "Correct. Dense semantic search can underperform on rare terms, specialized jargon, or proper nouns that may not be well-represented in the embedding space. BM25 excels at exact keyword matching, so combining both approaches makes the system more robust.",
+                "b": "Dense semantic search can underperform on rare terms, specialized jargon, or proper nouns that may not be well-represented in the embedding space. BM25 excels at exact keyword matching, so combining both approaches makes the system more robust.",
                 "c": "BM25 is not faster than vector search in the general case, and it is not used as a caching layer for embedding model calls. It is a complementary retrieval method, not a performance optimization layer.",
                 "d": "Dense embeddings work for both queries and documents. The distinction is not between query type and document type but between semantic matching and exact keyword matching."
             }'>
@@ -211,7 +211,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Using the same vocabulary as the source documents is about phrasing style, not faithfulness. A response can be faithful while using different words, or unfaithful while using identical words.",
-                "b": "Correct. Faithfulness checks whether each claim in the generated response is supported by the retrieved context, not by the model parametric memory. A faithful response is fully attributable to and verifiable against the retrieved sources.",
+                "b": "Faithfulness checks whether each claim in the generated response is supported by the retrieved context, not by the model parametric memory. A faithful response is fully attributable to and verifiable against the retrieved sources.",
                 "c": "Semantic similarity between the query and response measures answer relevance, which is a separate metric. Faithfulness specifically concerns whether claims are grounded in retrieved documents.",
                 "d": "The proportion of retrieved documents used in generating a response is a coverage or utilization metric. Faithfulness does not measure document coverage; it measures whether the claims made are supported."
             }'>

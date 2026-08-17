@@ -58,7 +58,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Memory size is not the defining limitation of static embeddings. The real issue is how meaning is represented, not storage.",
-                "b": "Correct. Static embeddings assign a single fixed vector per word, so the word bank receives the same vector whether it refers to a financial institution or a riverbank.",
+                "b": "Static embeddings assign a single fixed vector per word, so the word bank receives the same vector whether it refers to a financial institution or a riverbank.",
                 "c": "Static embeddings are widely used in downstream NLP tasks. They were the standard approach for tasks like sentiment analysis for many years.",
                 "d": "Computation speed for lookup in a static embedding table is not the primary limitation compared to contextual models."
             }'>
@@ -73,26 +73,26 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "The scores do not become identical with larger representations — the opposite problem occurs: they become too extreme and peaked.",
-                "b": "Correct. With larger representations, the dot products between query and key vectors get very large, pushing the softmax output to near 0 or 1 and killing the gradient. Scaling prevents this.",
+                "b": "With larger representations, the dot products between query and key vectors get very large, pushing the softmax output to near 0 or 1 and killing the gradient. Scaling prevents this.",
                 "c": "The problem is scores getting too large, not too small.",
                 "d": "Softmax handles negative inputs fine — they produce small but non-zero outputs. The issue is scores becoming too large, not negative."
             }'>
                 <span class="question-number">Question 2</span>
                 <h4>In transformer attention, every word computes a relevance score against every other word. As the size of these representations grows larger, what problem can arise with those scores?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q2" value="a"> The scores become identical for all word pairs, making attention useless</label></li>
-                    <li><label><input type="radio" name="q2" value="b"> The scores can get very large, making the attention output so peaked that learning effectively stops</label></li>
-                    <li><label><input type="radio" name="q2" value="c"> The scores grow too slowly, making the model unable to distinguish between relevant and irrelevant words</label></li>
-                    <li><label><input type="radio" name="q2" value="d"> The scores become negative, causing the attention weights to sum to zero</label></li>
+                    <li><label><input type="radio" name="q2" value="a"> A) The scores become identical for all word pairs, making attention useless</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) The scores can get very large, making the attention output so peaked that learning effectively stops</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) The scores grow too slowly, making the model unable to distinguish between relevant and irrelevant words</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) The scores become negative, causing the attention weights to sum to zero</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Embedding dimension size has nothing to do with the need for positional encodings. The key issue is parallel vs. sequential processing.",
-                "b": "Correct. Transformers process all positions simultaneously via matrix operations and have no inherent notion of order, so position must be explicitly added to the input.",
+                "b": "Transformers process all positions simultaneously via matrix operations and have no inherent notion of order, so position must be explicitly added to the input.",
                 "c": "Positional encodings and multi-head attention serve different purposes. Positional encodings encode position; multi-head attention computes relationships between positions.",
                 "d": "RNNs process tokens one at a time in sequence, so each hidden state inherently encodes its position through the order of computation. No explicit positional encoding is needed."
             }'>
@@ -108,7 +108,7 @@
             </div>
 
             <div class="quiz-question" data-correct="a" data-explanations='{
-                "a": "Correct. Sinusoidal encodings are deterministic functions that add no trainable parameters and can generalize to sequence lengths beyond those seen during training.",
+                "a": "Sinusoidal encodings are deterministic functions that add no trainable parameters and can generalize to sequence lengths beyond those seen during training.",
                 "b": "Sinusoidal encodings do not avoid matrix multiplication. The computation cost difference is not the key advantage cited by the original paper.",
                 "c": "The paper found roughly comparable accuracy between sinusoidal and learned encodings. The main advantage of sinusoidal encodings is extrapolation, not superior task accuracy.",
                 "d": "Learned positional embeddings can handle variable-length sequences up to the maximum length they were trained on. The limitation is extrapolation beyond that maximum length."
@@ -126,7 +126,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Multi-head attention typically has more parameters than single-head attention of the same total dimension, due to multiple projection matrices.",
-                "b": "Correct. Each head projects inputs into a different subspace and performs independent attention, allowing the model to capture syntactic, semantic, and positional patterns simultaneously.",
+                "b": "Each head projects inputs into a different subspace and performs independent attention, allowing the model to capture syntactic, semantic, and positional patterns simultaneously.",
                 "c": "Heads are designed to learn diverse patterns, not converge to the same representation. Convergence would defeat the purpose of having multiple heads.",
                 "d": "The feed-forward layer is a separate component that serves a distinct purpose. Multi-head attention does not replace it."
             }'>
@@ -143,7 +143,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "The FFN does not compute attention weights. Attention weights are computed by the multi-head attention sub-layer that precedes the FFN.",
-                "b": "Correct. The FFN applies two linear transformations with a non-linearity in between at each position independently, adding representational capacity beyond what attention alone provides.",
+                "b": "The FFN applies two linear transformations with a non-linearity in between at each position independently, adding representational capacity beyond what attention alone provides.",
                 "c": "The FFN does not reduce dimensionality. It typically expands the hidden dimension (often 4x) and then projects back, and does not serve as a regularization mechanism.",
                 "d": "Aggregating across sequence positions is the role of attention, not the FFN. The FFN operates independently at each position without cross-position interaction."
             }'>
@@ -160,7 +160,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Padding masks address padding tokens in batched sequences, but the causal mask serves a different purpose: preventing access to future positions during training.",
-                "b": "Correct. The causal mask sets future-position attention scores to negative infinity before softmax, ensuring position t can only attend to positions 1 through t — matching inference-time conditions.",
+                "b": "The causal mask sets future-position attention scores to negative infinity before softmax, ensuring position t can only attend to positions 1 through t — matching inference-time conditions.",
                 "c": "Randomly dropping attention weights is a regularization technique called attention dropout, which is separate from causal masking.",
                 "d": "Identifying informative tokens via a classifier is not what attention masks do. Attention masks control which positions are accessible, not which are most informative."
             }'>
@@ -177,7 +177,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "This describes batch normalization, which normalizes across the batch dimension using running statistics. Layer normalization operates per-example across the feature dimension.",
-                "b": "Correct. Layer normalization computes mean and variance across the feature dimension for each token independently, then applies learnable scale (gamma) and shift (beta) parameters.",
+                "b": "Layer normalization computes mean and variance across the feature dimension for each token independently, then applies learnable scale (gamma) and shift (beta) parameters.",
                 "c": "Clipping activation values is gradient clipping, not normalization. Layer normalization rescales activations statistically but does not impose a hard range.",
                 "d": "Dropout randomly zeros activations during training, which is a separate regularization technique from layer normalization."
             }'>
@@ -194,7 +194,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Contextual embeddings require computing representations through the full model at inference time, which is more expensive than a simple table lookup — not faster.",
-                "b": "Correct. Because the same token receives different vectors depending on surrounding context, the model can correctly distinguish polysemous words such as the word bank in financial vs. geographical contexts.",
+                "b": "Because the same token receives different vectors depending on surrounding context, the model can correctly distinguish polysemous words such as the word bank in financial vs. geographical contexts.",
                 "c": "Contextual embeddings do not inherently extend the maximum sequence length. Length limits are imposed by the architecture, not the embedding type.",
                 "d": "Contextual models are larger and generally require more training data, not less. The benefit is richer representations, not reduced data requirements."
             }'>
@@ -211,7 +211,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Self-attention does not use a fixed window. It attends to all positions simultaneously, which is why it has quadratic rather than linear complexity in sequence length.",
-                "b": "Correct. Self-attention computes all pairwise query-key interactions as one matrix multiplication, so all positions are updated simultaneously. RNNs must process tokens one step at a time due to sequential state dependencies.",
+                "b": "Self-attention computes all pairwise query-key interactions as one matrix multiplication, so all positions are updated simultaneously. RNNs must process tokens one step at a time due to sequential state dependencies.",
                 "c": "Self-attention still requires backpropagation through the matrix operations during training. Avoiding backpropagation is not the source of its parallelizability.",
                 "d": "Self-attention actually has quadratic memory usage with respect to sequence length for the attention matrix, not constant memory usage."
             }'>

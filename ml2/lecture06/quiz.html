@@ -93,7 +93,7 @@
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Negative sampling does not generate hard examples for robustness. It randomly samples non-context words as negatives, which is primarily a computational efficiency technique.",
                 "b": "Computing the full softmax over the entire vocabulary at each training step is expensive. Negative sampling approximates this by treating the task as binary classification using only a few negative word samples per step.",
-                "c": "Negative sampling does not specifically target frequent words. Subword sampling (downsampling frequent words) is a separate technique used alongside negative sampling in Word2Vec.",
+                "c": "Negative sampling does not specifically target frequent words. Subsampling (randomly downsampling very frequent words) is a separate technique used alongside negative sampling in Word2Vec.",
                 "d": "Maintaining orthogonal embeddings is not a goal of Word2Vec training. Negative sampling is purely a computational approximation to the full softmax, with no constraint on embedding geometry."
             }'>
                 <span class="question-number">Question 3</span>

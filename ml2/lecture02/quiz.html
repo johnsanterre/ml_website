@@ -56,172 +56,172 @@
                 <span class="score-value">10</span>
             </div>
 
-                        <div class="quiz-question" data-correct="c" data-explanations='{
+            <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "The raw training data is only the input to the very first layer. After that, each layer receives the transformed outputs of the previous layer.",
                 "b": "The weight matrix is what the layer applies to its inputs — it is not the input itself.",
-                "c": "Correct. Each layer takes the activated outputs from the previous layer and applies its own weights and biases to produce the next representation.",
+                "c": "Each layer takes the activated outputs from the previous layer and applies its own weights and biases to produce the next representation.",
                 "d": "Error signals flow backward during backpropagation, not forward during the forward pass."
             }'>
                 <span class="question-number">Question 1</span>
                 <h4>When information flows forward through a neural network, each layer receives some input, transforms it, and passes the result to the next layer. What is the input to any given hidden layer?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q1" value="a"> The raw training data, always passed directly from the original inputs</label></li>
-                    <li><label><input type="radio" name="q1" value="b"> The weight matrix that will be applied at that layer</label></li>
-                    <li><label><input type="radio" name="q1" value="c"> The activated outputs from the previous layer</label></li>
-                    <li><label><input type="radio" name="q1" value="d"> The error signal computed during the backward pass</label></li>
+                    <li><label><input type="radio" name="q1" value="a"> A) The raw training data, always passed directly from the original inputs</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) The weight matrix that will be applied at that layer</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) The activated outputs from the previous layer</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) The error signal computed during the backward pass</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. Forward pass activations are computed by applying weights and activation functions, not by the chain rule.",
-                "b": "Correct. The chain rule allows the gradient of the loss with respect to each weight to be computed as a product of local gradients propagated backward through each layer.",
-                "c": "Incorrect. The learning rate is a hyperparameter set by the practitioner, not determined automatically by the chain rule.",
-                "d": "Incorrect. Gradients can be positive or negative depending on the direction needed to reduce the loss; the chain rule does not enforce positivity."
+                "a": "Forward pass activations are computed by applying weights and activation functions, not by the chain rule.",
+                "b": "The chain rule allows the gradient of the loss with respect to each weight to be computed as a product of local gradients propagated backward through each layer.",
+                "c": "The learning rate is a hyperparameter set by the practitioner, not determined automatically by the chain rule.",
+                "d": "Gradients can be positive or negative depending on the direction needed to reduce the loss; the chain rule does not enforce positivity."
             }'>
                 <span class="question-number">Question 2</span>
                 <h4>Backpropagation relies on the chain rule of calculus. What is the chain rule&#39;s role in this context?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q2" value="a"> It computes the forward pass activations layer by layer</label></li>
-                    <li><label><input type="radio" name="q2" value="b"> It allows the gradient of the loss with respect to early-layer weights to be computed by multiplying local gradients through each layer</label></li>
-                    <li><label><input type="radio" name="q2" value="c"> It determines the learning rate automatically based on curvature</label></li>
-                    <li><label><input type="radio" name="q2" value="d"> It ensures that gradients are always positive during training</label></li>
+                    <li><label><input type="radio" name="q2" value="a"> A) It computes the forward pass activations layer by layer</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) It allows the gradient of the loss with respect to early-layer weights to be computed by multiplying local gradients through each layer</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) It determines the learning rate automatically based on curvature</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) It ensures that gradients are always positive during training</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "A very high learning rate does not speed up learning usefully — it makes training unstable, not faster.",
-                "b": "Correct. Imagine a ball rolling downhill that keeps jumping over the valley. Steps that are too large cause the model to overshoot and oscillate instead of converging.",
+                "b": "Imagine a ball rolling downhill that keeps jumping over the valley. Steps that are too large cause the model to overshoot and oscillate instead of converging.",
                 "c": "Vanishing gradients are caused by deep networks with saturating activations, not by a high learning rate.",
                 "d": "No choice of learning rate guarantees immediate convergence — the loss landscape is complex and non-convex."
             }'>
                 <span class="question-number">Question 3</span>
                 <h4>During training, the model takes a step in a direction that should reduce its error. What happens if those steps are made too large?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q3" value="a"> The model trains faster and finds a better solution</label></li>
-                    <li><label><input type="radio" name="q3" value="b"> The model's updates overshoot the target, causing the loss to bounce around or get worse</label></li>
-                    <li><label><input type="radio" name="q3" value="c"> The gradients disappear and the network stops learning</label></li>
-                    <li><label><input type="radio" name="q3" value="d"> The model immediately settles on the perfect solution</label></li>
+                    <li><label><input type="radio" name="q3" value="a"> A) The model trains faster and finds a better solution</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) The model's updates overshoot the target, causing the loss to bounce around or get worse</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) The gradients disappear and the network stops learning</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) The model immediately settles on the perfect solution</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. This description is reversed: full-batch (not SGD) uses the entire dataset per update.",
-                "b": "Correct. SGD uses a single randomly selected training example per update, while mini-batch uses a small fixed-size subset, providing a less noisy gradient estimate.",
-                "c": "Incorrect. Neither SGD nor mini-batch automatically schedules the learning rate; that is done by separate scheduling strategies.",
-                "d": "Incorrect. Mini-batch gradient descent typically produces better gradient estimates than pure SGD, though noisier than full-batch."
+                "a": "This description is reversed: full-batch (not SGD) uses the entire dataset per update.",
+                "b": "SGD uses a single randomly selected training example per update, while mini-batch uses a small fixed-size subset, providing a less noisy gradient estimate.",
+                "c": "Neither SGD nor mini-batch automatically schedules the learning rate; that is done by separate scheduling strategies.",
+                "d": "Mini-batch gradient descent typically produces better gradient estimates than pure SGD, though noisier than full-batch."
             }'>
                 <span class="question-number">Question 4</span>
                 <h4>What is the key difference between stochastic gradient descent (SGD) and mini-batch gradient descent?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q4" value="a"> SGD uses the entire dataset per update; mini-batch uses a random subset</label></li>
-                    <li><label><input type="radio" name="q4" value="b"> SGD updates parameters using a single random training example; mini-batch uses a small fixed-size subset of examples</label></li>
-                    <li><label><input type="radio" name="q4" value="c"> SGD uses a fixed learning rate; mini-batch automatically schedules the learning rate</label></li>
-                    <li><label><input type="radio" name="q4" value="d"> Mini-batch gradient descent always produces worse estimates than full-batch</label></li>
+                    <li><label><input type="radio" name="q4" value="a"> A) SGD uses the entire dataset per update; mini-batch uses a random subset</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) SGD updates parameters using a single random training example; mini-batch uses a small fixed-size subset of examples</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) SGD uses a fixed learning rate; mini-batch automatically schedules the learning rate</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) Mini-batch gradient descent always produces worse estimates than full-batch</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="c" data-explanations='{
+            <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "Classification tasks use cross-entropy loss, which is designed for comparing predicted class probabilities against true labels, not MSE.",
                 "b": "Spam detection is binary classification — binary cross-entropy is the right tool, not MSE.",
-                "c": "Correct. MSE measures average squared prediction error, which is exactly what you want when predicting a continuous value like a price or temperature.",
+                "c": "MSE measures average squared prediction error, which is exactly what you want when predicting a continuous value like a price or temperature.",
                 "d": "Translation uses sequence-level cross-entropy losses, since the output is a sequence of words, not a single number."
             }'>
                 <span class="question-number">Question 5</span>
                 <h4>Different tasks need different ways to measure how wrong a model's predictions are. For which type of task is Mean Squared Error (MSE) the most natural choice?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q5" value="a"> Classifying images into categories like "cat" or "dog"</label></li>
-                    <li><label><input type="radio" name="q5" value="b"> Deciding whether an email is spam or not</label></li>
-                    <li><label><input type="radio" name="q5" value="c"> Predicting a continuous number, like a house price or tomorrow's temperature</label></li>
-                    <li><label><input type="radio" name="q5" value="d"> Generating a translation of a sentence into another language</label></li>
+                    <li><label><input type="radio" name="q5" value="a"> A) Classifying images into categories like "cat" or "dog"</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) Deciding whether an email is spam or not</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) Predicting a continuous number, like a house price or tomorrow's temperature</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) Generating a translation of a sentence into another language</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Confidence in correct predictions is rewarded, not penalized. The loss function is designed to push the model toward being confidently right.",
-                "b": "Correct. When the model correctly identifies the class with very high confidence, the loss contribution for that example is essentially zero — mission accomplished.",
+                "b": "When the model correctly identifies the class with very high confidence, the loss contribution for that example is essentially zero — mission accomplished.",
                 "c": "The loss depends on the predicted confidence level, not a fixed constant. A correct prediction at 51% confidence has a higher loss than one at 99%.",
                 "d": "Losses are always non-negative in classification. Individual losses cannot go negative."
             }'>
                 <span class="question-number">Question 6</span>
                 <h4>A model predicts that an image is a cat with 99% confidence — and it is correct. What does the loss for that prediction look like?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q6" value="a"> The loss is large, because the model should never be that confident</label></li>
-                    <li><label><input type="radio" name="q6" value="b"> The loss is close to zero — a confident correct prediction is exactly what we want</label></li>
-                    <li><label><input type="radio" name="q6" value="c"> The loss is exactly 1.0 regardless of confidence level</label></li>
-                    <li><label><input type="radio" name="q6" value="d"> The loss goes negative, pulling the overall total down</label></li>
+                    <li><label><input type="radio" name="q6" value="a"> A) The loss is large, because the model should never be that confident</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) The loss is close to zero — a confident correct prediction is exactly what we want</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) The loss is exactly 1.0 regardless of confidence level</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) The loss goes negative, pulling the overall total down</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. A low learning rate slows convergence but does not cause gradients to vanish; vanishing is a backpropagation phenomenon.",
-                "b": "Correct. Gradients are multiplied together through each layer via the chain rule; when derivatives are small (as with sigmoid saturation), repeated multiplication shrinks them exponentially.",
-                "c": "Incorrect. Batch size affects gradient noise, not gradient magnitude decay through layers.",
-                "d": "Incorrect. Zero initialization causes symmetry issues but does not directly cause the vanishing gradient problem in the chain-rule sense."
+                "a": "A low learning rate slows convergence but does not cause gradients to vanish; vanishing is a backpropagation phenomenon.",
+                "b": "Gradients are multiplied together through each layer via the chain rule; when derivatives are small (as with sigmoid saturation), repeated multiplication shrinks them exponentially.",
+                "c": "Batch size affects gradient noise, not gradient magnitude decay through layers.",
+                "d": "Zero initialization causes symmetry issues but does not directly cause the vanishing gradient problem in the chain-rule sense."
             }'>
                 <span class="question-number">Question 7</span>
                 <h4>The vanishing gradient problem occurs during backpropagation. What is the primary cause of this issue in deep networks?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q7" value="a"> The learning rate is set too low</label></li>
-                    <li><label><input type="radio" name="q7" value="b"> Gradient values become very small as they are multiplied through many layers, especially when activation function derivatives are less than 1, making early-layer weights learn very slowly</label></li>
-                    <li><label><input type="radio" name="q7" value="c"> The batch size is too large, diluting the gradient signal</label></li>
-                    <li><label><input type="radio" name="q7" value="d"> The weight matrices are initialized to zero</label></li>
+                    <li><label><input type="radio" name="q7" value="a"> A) The learning rate is set too low</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) Gradient values become very small as they are multiplied through many layers, especially when activation function derivatives are less than 1, making early-layer weights learn very slowly</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) The batch size is too large, diluting the gradient signal</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) The weight matrices are initialized to zero</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Backpropagation processes every layer, moving from the output back to the input. No layers are skipped.",
-                "b": "Correct. This is the elegant efficiency of backpropagation — one backward pass gives you the gradient for every single weight simultaneously, no matter how many layers there are.",
+                "b": "This is the elegant efficiency of backpropagation — one backward pass gives you the gradient for every single weight simultaneously, no matter how many layers there are.",
                 "c": "Backpropagation stores intermediate activations from the forward pass, not the training dataset. These are much smaller.",
                 "d": "Backpropagation is exclusively a training-time operation. At test time, only the forward pass is needed."
             }'>
                 <span class="question-number">Question 8</span>
                 <h4>During training, a neural network needs to figure out how much each weight contributed to the overall error so it can adjust them all. Why is working backward through the network (backpropagation) efficient for this?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q8" value="a"> It only needs to look at the final output layer, ignoring all hidden layers</label></li>
-                    <li><label><input type="radio" name="q8" value="b"> It computes how the loss depends on every single weight in one backward pass, regardless of how many weights there are</label></li>
-                    <li><label><input type="radio" name="q8" value="c"> It stores the entire training dataset in GPU memory to calculate gradients</label></li>
-                    <li><label><input type="radio" name="q8" value="d"> It is used only during testing, not during training</label></li>
+                    <li><label><input type="radio" name="q8" value="a"> A) It only needs to look at the final output layer, ignoring all hidden layers</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) It computes how the loss depends on every single weight in one backward pass, regardless of how many weights there are</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) It stores the entire training dataset in GPU memory to calculate gradients</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) It is used only during testing, not during training</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="a" data-explanations='{
-                "a": "Correct. The noise introduced by random mini-batch sampling acts as a stochastic perturbation that can push parameters out of saddle points and shallow local minima.",
-                "b": "Incorrect. Mini-batch gradients are noisier, not more accurate, than full-batch gradients; the accuracy is a property of full-batch.",
-                "c": "Incorrect. Full-batch gradient descent follows the true gradient and can get stuck in saddle points precisely because it lacks stochastic noise.",
-                "d": "Incorrect. Mini-batches do not dynamically increase the learning rate; they introduce gradient noise that has an implicit regularizing effect."
+                "a": "The noise introduced by random mini-batch sampling acts as a stochastic perturbation that can push parameters out of saddle points and shallow local minima.",
+                "b": "Mini-batch gradients are noisier, not more accurate, than full-batch gradients; the accuracy is a property of full-batch.",
+                "c": "Full-batch gradient descent follows the true gradient and can get stuck in saddle points precisely because it lacks stochastic noise.",
+                "d": "Mini-batches do not dynamically increase the learning rate; they introduce gradient noise that has an implicit regularizing effect."
             }'>
                 <span class="question-number">Question 9</span>
                 <h4>One advantage of mini-batch gradient descent over full-batch gradient descent is that the stochasticity in gradient estimates can help escape local minima and saddle points. Why?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q9" value="a"> Random noise in the gradient introduces directional perturbations that can push parameters out of flat or locally optimal regions of the loss landscape</label></li>
-                    <li><label><input type="radio" name="q9" value="b"> Mini-batch gradients are always more accurate than full-batch gradients</label></li>
-                    <li><label><input type="radio" name="q9" value="c"> Full-batch gradient descent automatically avoids saddle points due to its use of the complete data</label></li>
-                    <li><label><input type="radio" name="q9" value="d"> Mini-batches increase the learning rate dynamically to escape flat regions</label></li>
+                    <li><label><input type="radio" name="q9" value="a"> A) Random noise in the gradient introduces directional perturbations that can push parameters out of flat or locally optimal regions of the loss landscape</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) Mini-batch gradients are always more accurate than full-batch gradients</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) Full-batch gradient descent automatically avoids saddle points due to its use of the complete data</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) Mini-batches increase the learning rate dynamically to escape flat regions</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. Computational graphs record operations, not training data; training data is stored in separate arrays.",
-                "b": "Correct. Computational graphs record which operations produced which intermediate values, enabling systematic application of the chain rule in reverse to compute all gradients.",
-                "c": "Incorrect. The loss function is separate from the computational graph, which records operations rather than encoding targets.",
-                "d": "Incorrect. Backpropagation computes gradients for all layers, not just the last one; the graph structure is what makes this efficient."
+                "a": "Computational graphs record operations, not training data; training data is stored in separate arrays.",
+                "b": "Computational graphs record which operations produced which intermediate values, enabling systematic application of the chain rule in reverse to compute all gradients.",
+                "c": "The loss function is separate from the computational graph, which records operations rather than encoding targets.",
+                "d": "Backpropagation computes gradients for all layers, not just the last one; the graph structure is what makes this efficient."
             }'>
                 <span class="question-number">Question 10</span>
                 <h4>Computational graphs provide a structured representation of the operations in a neural network. Why are they essential for backpropagation?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q10" value="a"> They store the training data more efficiently than arrays</label></li>
-                    <li><label><input type="radio" name="q10" value="b"> They explicitly record which operations produced which values, enabling the chain rule to be applied systematically in reverse to compute all gradients</label></li>
-                    <li><label><input type="radio" name="q10" value="c"> They replace the need for a loss function by encoding the target directly</label></li>
-                    <li><label><input type="radio" name="q10" value="d"> They ensure that only the last layer&#39;s gradients are computed, saving computation</label></li>
+                    <li><label><input type="radio" name="q10" value="a"> A) They store the training data more efficiently than arrays</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) They explicitly record which operations produced which values, enabling the chain rule to be applied systematically in reverse to compute all gradients</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) They replace the need for a loss function by encoding the target directly</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) They ensure that only the last layer&#39;s gradients are computed, saving computation</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

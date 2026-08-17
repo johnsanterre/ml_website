@@ -56,26 +56,26 @@
                 <span class="score-value">10</span>
             </div>
 
-                        <div class="quiz-question" data-correct="c" data-explanations='{
+            <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "The type of data does not determine the model type — what the model does with the data does.",
                 "b": "This is reversed. A spam filter makes a decision between two categories — that is discriminative. An image generator creates new examples — that is generative.",
-                "c": "Correct. Discriminative models learn to classify or distinguish between categories. Generative models learn what the data looks like so they can produce new examples.",
+                "c": "Discriminative models learn to classify or distinguish between categories. Generative models learn what the data looks like so they can produce new examples.",
                 "d": "Every model produces some output, but generative specifically means the model can create new data similar to its training examples."
             }'>
                 <span class="question-number">Question 1</span>
                 <h4>A spam filter decides whether an email is spam or not. An image generator creates new photos of cats. Which is the generative model and which is the discriminative model?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q1" value="a"> Both are discriminative — they both operate on digital data</label></li>
-                    <li><label><input type="radio" name="q1" value="b"> The spam filter is generative; the image generator is discriminative</label></li>
-                    <li><label><input type="radio" name="q1" value="c"> The spam filter is discriminative (deciding between classes); the image generator is generative (creating new data)</label></li>
-                    <li><label><input type="radio" name="q1" value="d"> Both are generative — any model that produces an output is generative</label></li>
+                    <li><label><input type="radio" name="q1" value="a"> A) Both are discriminative — they both operate on digital data</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) The spam filter is generative; the image generator is discriminative</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) The spam filter is discriminative (deciding between classes); the image generator is generative (creating new data)</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) Both are generative — any model that produces an output is generative</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Storage cost for high-resolution images is a practical concern, but it is not the defining bottleneck that makes medical annotation uniquely difficult compared to other domains.",
-                "b": "Correct. Labeling a medical image — such as drawing tumor boundaries in a CT scan — requires expert clinical training that cannot be crowdsourced, making annotation both slow and expensive to scale.",
+                "b": "Labeling a medical image — such as drawing tumor boundaries in a CT scan — requires expert clinical training that cannot be crowdsourced, making annotation both slow and expensive to scale.",
                 "c": "Medical data sharing is restricted by privacy regulations (HIPAA, GDPR) but is not universally prohibited for research. Many curated medical datasets are publicly available for research purposes.",
                 "d": "File format incompatibilities (e.g., DICOM) add engineering overhead but are not the fundamental bottleneck. Conversion tools exist, and the harder problem is obtaining expert labels once data is accessible."
             }'>
@@ -92,7 +92,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Compression into a latent code describes a variational autoencoder (VAE), not the forward diffusion process. The forward process does not compress; it destroys structure by adding noise.",
-                "b": "Correct. The forward process is a fixed, non-learned procedure that adds small amounts of Gaussian noise at each of T steps, gradually converting the original data into approximately pure Gaussian noise.",
+                "b": "The forward process is a fixed, non-learned procedure that adds small amounts of Gaussian noise at each of T steps, gradually converting the original data into approximately pure Gaussian noise.",
                 "c": "Learning to transform noise into data is the reverse process, not the forward process. The forward process is fixed and runs in the opposite direction.",
                 "d": "Discretizing images into tokens describes vector-quantized models like VQ-VAE, not diffusion models. Diffusion models operate on continuous data."
             }'>
@@ -107,43 +107,43 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "The model still processes each step in order — the simplification is that each step only needs to look at the immediately previous noisy image, not the entire history.",
-                "b": "Correct. Because each step only depends on the immediately previous one, you can compute any intermediate noisy version directly without simulating every step before it. This makes the math tractable.",
+                "b": "Because each step only depends on the immediately previous one, you can compute any intermediate noisy version directly without simulating every step before it. This makes the math tractable.",
                 "c": "Different noise is added at each step — the structure is about dependency between steps, not reuse of noise.",
                 "d": "The structure does not say anything about skipping steps during training or inference."
             }'>
                 <span class="question-number">Question 4</span>
                 <h4>In a diffusion model's forward process, noise is added to an image step by step. At each step, the amount of noise added depends only on the current image — not on the full history of how it got there. Why is this useful?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q4" value="a"> It means the model only needs to see the very first step to predict what the final noisy image looks like</label></li>
-                    <li><label><input type="radio" name="q4" value="b"> It means each step can be computed from just the previous one, which massively simplifies the math and makes the process tractable</label></li>
-                    <li><label><input type="radio" name="q4" value="c"> It means the same noise pattern is reused at every step to save computation</label></li>
-                    <li><label><input type="radio" name="q4" value="d"> It means the model can skip most steps and only process every other one</label></li>
+                    <li><label><input type="radio" name="q4" value="a"> A) It means the model only needs to see the very first step to predict what the final noisy image looks like</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) It means each step can be computed from just the previous one, which massively simplifies the math and makes the process tractable</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) It means the same noise pattern is reused at every step to save computation</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) It means the model can skip most steps and only process every other one</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Predicting the final clean image in one leap would be too large a jump — the network instead makes small, incremental corrections over many steps.",
-                "b": "Correct. The network learns to estimate what noise is present in the current image so it can subtract it and recover a slightly cleaner version. This is then repeated hundreds of times to go from pure noise to a clean image.",
+                "b": "The network learns to estimate what noise is present in the current image so it can subtract it and recover a slightly cleaner version. This is then repeated hundreds of times to go from pure noise to a clean image.",
                 "c": "Score has a precise technical meaning in the mathematical literature, but the practical job of the network is predicting and removing noise — not assigning a quality rating.",
                 "d": "The network does not match the noisy image back to a specific training example — it learns the general pattern of what noise looks like at each level of noisiness."
             }'>
                 <span class="question-number">Question 5</span>
                 <h4>During the reverse process of a diffusion model, the network takes a noisy image and tries to clean it up step by step. What is the network actually predicting at each step?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q5" value="a"> The final clean image directly, in one step</label></li>
-                    <li><label><input type="radio" name="q5" value="b"> The noise that was added at that step, so it can be subtracted to recover a slightly cleaner image</label></li>
-                    <li><label><input type="radio" name="q5" value="c"> A quality score for how realistic the current noisy image looks</label></li>
-                    <li><label><input type="radio" name="q5" value="d"> Which specific training image the current noisy version originally came from</label></li>
+                    <li><label><input type="radio" name="q5" value="a"> A) The final clean image directly, in one step</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) The noise present in the current noisy image, so it can be subtracted to recover a slightly cleaner image</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) A quality score for how realistic the current noisy image looks</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) Which specific training image the current noisy version originally came from</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "A single shared network is used across all time steps; separate weights per step would be impractical given the number of steps (often hundreds to thousands). Time conditioning keeps a single model flexible.",
-                "b": "Correct. Without time conditioning, the network cannot distinguish high-noise from low-noise inputs and would apply the same denoising behavior everywhere. Conditioning on t lets one network handle the full spectrum from coarse to fine denoising.",
+                "b": "Without time conditioning, the network cannot distinguish high-noise from low-noise inputs and would apply the same denoising behavior everywhere. Conditioning on t lets one network handle the full spectrum from coarse to fine denoising.",
                 "c": "Each sample in a batch is processed independently. Time conditioning is about adapting denoising behavior to the noise level of each input, not about synchronizing samples across the batch.",
                 "d": "Skipping unnecessary denoising steps is addressed by accelerated sampling methods like DDIM, not by time conditioning itself. Time conditioning is about correctness of denoising, not speed."
             }'>
@@ -160,7 +160,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Masked language modeling requires no human annotators. The supervision signal is entirely derived from the original text, which is why it is called self-supervised.",
-                "b": "Correct. The original text tokens serve as the ground truth targets. The model predicts masked tokens from surrounding context, creating a self-supervised task that requires no manually labeled data.",
+                "b": "The original text tokens serve as the ground truth targets. The model predicts masked tokens from surrounding context, creating a self-supervised task that requires no manually labeled data.",
                 "c": "Standard BERT does not use knowledge distillation from a teacher model. The signal comes directly from comparing predictions against the original masked tokens in the raw text.",
                 "d": "Linguistic grammars are not used as supervision. The signal is empirical — the model is rewarded for predicting what the actual word was in the original text, regardless of grammatical rules."
             }'>
@@ -177,7 +177,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "This describes supervised classification, not contrastive learning. Contrastive learning does not use class labels; positive pairs are defined by augmentation, not by ground-truth labels.",
-                "b": "Correct. In SimCLR a positive pair is formed by two independently augmented crops of the same image. The model learns representations that are close for positive pairs and far apart for views from different images.",
+                "b": "In SimCLR a positive pair is formed by two independently augmented crops of the same image. The model learns representations that are close for positive pairs and far apart for views from different images.",
                 "c": "Contrastive learning methods like SimCLR are self-supervised and do not use class labels to define positive pairs. Knowing two images share a class is supervised information not available in self-supervised settings.",
                 "d": "This describes a denoising autoencoder objective, not contrastive learning. In contrastive learning, positive pairs are defined by augmentation of the same image, not by a noise-then-reconstruct process."
             }'>
@@ -194,7 +194,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Diffusion models do not use a discriminator. GANs use adversarial discriminators; diffusion models use a single denoising network trained with a regression objective.",
-                "b": "Correct. In BERT, masked tokens are the corruption and original tokens are the reconstruction target. In diffusion models, noise is the corruption and clean data is the target. Both define self-supervised tasks using data structure alone.",
+                "b": "In BERT, masked tokens are the corruption and original tokens are the reconstruction target. In diffusion models, noise is the corruption and clean data is the target. Both define self-supervised tasks using data structure alone.",
                 "c": "Diffusion models do not maximize likelihood directly during training; they optimize a denoising objective (evidence lower bound). Neither framework is the same as straightforward maximum likelihood estimation.",
                 "d": "Standard diffusion models are not trained with contrastive objectives. The link between diffusion and self-supervised learning is through the denoising/reconstruction pretext task, not through contrastive loss functions."
             }'>
@@ -209,19 +209,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Memorizing pairs would not generalize. Good representations work on new images the model has never seen during training.",
-                "b": "Correct. If the model can consistently recognize that two very different-looking crops of the same image are related, it must be capturing something real about the content — not just surface appearance.",
+                "b": "If the model can consistently recognize that two very different-looking crops of the same image are related, it must be capturing something real about the content — not just surface appearance.",
                 "c": "Contrastive learning is genuinely self-supervised — it creates useful representations without any class labels.",
                 "d": "The model does not memorize pairings — it learns a general representation that transfers to new tasks."
             }'>
                 <span class="question-number">Question 10</span>
                 <h4>Contrastive learning trains a model by showing it pairs of similar images (two crops of the same photo) and pairs of different images. What is the core idea behind why this teaches useful representations?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q10" value="a"> Similar images are always brighter, so the model learns to detect brightness and lighting</label></li>
-                    <li><label><input type="radio" name="q10" value="b"> By learning what makes two different views of the same thing "the same," the model is forced to capture real content rather than surface details</label></li>
-                    <li><label><input type="radio" name="q10" value="c"> The model memorizes which specific images are paired together during training</label></li>
-                    <li><label><input type="radio" name="q10" value="d"> Contrastive learning is just supervised classification without labels</label></li>
+                    <li><label><input type="radio" name="q10" value="a"> A) Similar images are always brighter, so the model learns to detect brightness and lighting</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) By learning what makes two different views of the same thing "the same," the model is forced to capture real content rather than surface details</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) The model memorizes which specific images are paired together during training</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) Contrastive learning is just supervised classification without labels</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

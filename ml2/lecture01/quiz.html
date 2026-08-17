@@ -57,171 +57,171 @@
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. Deep learning does not always train faster; in fact it often requires far more compute and time than classical methods.",
-                "b": "Correct. Deep learning automatically learns hierarchical feature representations from raw data, eliminating the need for manual feature engineering.",
-                "c": "Incorrect. Deep learning typically requires more data than traditional ML, not less, to achieve good performance.",
-                "d": "Incorrect. Deep learning models are generally far more complex and less interpretable than classical methods."
+                "a": "Deep learning does not always train faster; in fact it often requires far more compute and time than classical methods.",
+                "b": "Deep learning automatically learns hierarchical feature representations from raw data, eliminating the need for manual feature engineering.",
+                "c": "Deep learning typically requires more data than traditional ML, not less, to achieve good performance.",
+                "d": "Deep learning models are generally far more complex and less interpretable than classical methods."
             }'>
                 <span class="question-number">Question 1</span>
                 <h4>What is the primary advantage of deep learning over traditional machine learning approaches?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q1" value="a"> Deep learning always trains faster than classical algorithms</label></li>
-                    <li><label><input type="radio" name="q1" value="b"> Deep learning automatically learns hierarchical feature representations without manual feature engineering</label></li>
-                    <li><label><input type="radio" name="q1" value="c"> Deep learning requires less data than traditional ML methods</label></li>
-                    <li><label><input type="radio" name="q1" value="d"> Deep learning models are always simpler and more interpretable</label></li>
+                    <li><label><input type="radio" name="q1" value="a"> A) Deep learning always trains faster than classical algorithms</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) Deep learning automatically learns hierarchical feature representations without manual feature engineering</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) Deep learning requires less data than traditional ML methods</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) Deep learning models are always simpler and more interpretable</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Dataset size affects how long each epoch takes but does not directly control how big individual weight updates are.",
-                "b": "Correct. The learning rate is the single most important training hyperparameter — set it too high and the model overshoots; set it too low and training crawls.",
+                "b": "The learning rate is the single most important training hyperparameter — set it too high and the model overshoots; set it too low and training crawls.",
                 "c": "The number of layers determines the model capacity, not how aggressively weights are updated each step.",
                 "d": "Activation functions shape how signals flow through the network but have no direct role in controlling update size."
             }'>
                 <span class="question-number">Question 2</span>
                 <h4>During training, a neural network adjusts its weights step by step based on its mistakes. What controls how big each adjustment step is?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q2" value="a"> The number of training examples in the dataset</label></li>
-                    <li><label><input type="radio" name="q2" value="b"> The learning rate — a setting that determines how large or small each update to the weights is</label></li>
-                    <li><label><input type="radio" name="q2" value="c"> The number of layers in the network</label></li>
-                    <li><label><input type="radio" name="q2" value="d"> The activation function used in the output layer</label></li>
-                </ul>
-                <div class="quiz-feedback"></div>
-            </div>
-
-                        <div class="quiz-question" data-correct="c" data-explanations='{
-                "a": "An unbounded output describes a linear activation — useful for regression but not for producing probabilities.",
-                "b": "Sigmoid gives a smooth, continuous output between 0 and 1, not a hard 0 or 1. That hard cutoff is a separate step called thresholding.",
-                "c": "Correct. Sigmoid squashes any input into the range (0, 1), making it natural for interpreting outputs as probabilities.",
-                "d": "The range -1 to 1 describes tanh, a different but related activation function."
-            }'>
-                <span class="question-number">Question 3</span>
-                <h4>Sigmoid is an activation function often used in the output layer for binary classification. What kind of output does it produce?</h4>
-                <ul class="quiz-options">
-                    <li><label><input type="radio" name="q3" value="a"> Any number from negative to positive (unbounded)</label></li>
-                    <li><label><input type="radio" name="q3" value="b"> Only exactly 0 or 1 — a hard binary decision</label></li>
-                    <li><label><input type="radio" name="q3" value="c"> A number between 0 and 1, which can be interpreted as a probability</label></li>
-                    <li><label><input type="radio" name="q3" value="d"> A number between -1 and 1</label></li>
-                </ul>
-                <div class="quiz-feedback"></div>
-            </div>
-
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. Sigmoid outputs are indeed bounded between 0 and 1; that is one of its defining properties.",
-                "b": "Correct. Sigmoid saturates near 0 and 1, producing near-zero gradients in those regions, which causes gradients to vanish in deep networks.",
-                "c": "Incorrect. Sigmoid is not especially expensive to compute; the vanishing gradient issue is the dominant concern, not compute cost.",
-                "d": "Incorrect. Sigmoid is actually a natural choice for the output layer of binary classification networks."
-            }'>
-                <span class="question-number">Question 4</span>
-                <h4>Which of the following best describes a key limitation of the sigmoid activation function that motivated the adoption of ReLU?</h4>
-                <ul class="quiz-options">
-                    <li><label><input type="radio" name="q4" value="a"> Sigmoid outputs are not bounded between 0 and 1</label></li>
-                    <li><label><input type="radio" name="q4" value="b"> Sigmoid suffers from the vanishing gradient problem, slowing learning in deep networks</label></li>
-                    <li><label><input type="radio" name="q4" value="c"> Sigmoid is computationally more expensive than any other activation function</label></li>
-                    <li><label><input type="radio" name="q4" value="d"> Sigmoid cannot be used in the output layer of classification networks</label></li>
-                </ul>
-                <div class="quiz-feedback"></div>
-            </div>
-
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. MSE is designed for regression tasks; using it for classification produces poor gradient signal compared to cross-entropy.",
-                "b": "Correct. Binary Cross-Entropy is specifically designed to compare predicted probabilities with true binary labels (0 or 1).",
-                "c": "Incorrect. Categorical Cross-Entropy is used for multi-class classification with more than two classes, not binary tasks.",
-                "d": "Incorrect. MAE is a regression metric and does not align with the probabilistic interpretation needed for classification."
-            }'>
-                <span class="question-number">Question 5</span>
-                <h4>Which loss function is most appropriate for a binary classification task?</h4>
-                <ul class="quiz-options">
-                    <li><label><input type="radio" name="q5" value="a"> Mean Squared Error (MSE)</label></li>
-                    <li><label><input type="radio" name="q5" value="b"> Binary Cross-Entropy</label></li>
-                    <li><label><input type="radio" name="q5" value="c"> Categorical Cross-Entropy</label></li>
-                    <li><label><input type="radio" name="q5" value="d"> Mean Absolute Error (MAE)</label></li>
-                </ul>
-                <div class="quiz-feedback"></div>
-            </div>
-
-            <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. This reverses the comparison: static graphs (not dynamic) have historically offered inference-time optimization advantages.",
-                "b": "Correct. Dynamic graphs are built at runtime, so the network can be inspected or changed using ordinary Python debugging tools.",
-                "c": "Incorrect. Dynamic graphs do not inherently use less GPU memory; memory usage is more dependent on model size and batch size.",
-                "d": "Incorrect. Dynamic graphs do not have any automatic learning rate tuning capability."
-            }'>
-                <span class="question-number">Question 6</span>
-                <h4>PyTorch uses dynamic computation graphs, while early TensorFlow (before version 2.0) used static computation graphs. What is a key practical benefit of dynamic graphs?</h4>
-                <ul class="quiz-options">
-                    <li><label><input type="radio" name="q6" value="a"> Static graphs are always faster at inference time</label></li>
-                    <li><label><input type="radio" name="q6" value="b"> Dynamic graphs allow the network structure to be defined and modified on-the-fly, making debugging more intuitive</label></li>
-                    <li><label><input type="radio" name="q6" value="c"> Dynamic graphs require less GPU memory than static graphs</label></li>
-                    <li><label><input type="radio" name="q6" value="d"> Dynamic graphs automatically tune the learning rate</label></li>
+                    <li><label><input type="radio" name="q2" value="a"> A) The number of training examples in the dataset</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) The learning rate — a setting that determines how large or small each update to the weights is</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) The number of layers in the network</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) The activation function used in the output layer</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="c" data-explanations='{
-                "a": "Incorrect. Image classification with labeled data is supervised learning, since the labels guide the model.",
-                "b": "Incorrect. Predicting house prices from historical records with known prices is supervised regression.",
-                "c": "Correct. Discovering customer segments without predefined labels is unsupervised learning; the model finds structure on its own.",
-                "d": "Incorrect. Training with win/loss rewards is reinforcement learning, where an agent learns from environmental feedback."
+                "a": "An unbounded output describes a linear activation — useful for regression but not for producing probabilities.",
+                "b": "Sigmoid gives a smooth, continuous output between 0 and 1, not a hard 0 or 1. That hard cutoff is a separate step called thresholding.",
+                "c": "Sigmoid squashes any input into the range (0, 1), making it natural for interpreting outputs as probabilities.",
+                "d": "The range -1 to 1 describes tanh, a different but related activation function."
             }'>
-                <span class="question-number">Question 7</span>
-                <h4>Three major categories of machine learning are supervised, unsupervised, and reinforcement learning. Which of the following tasks is an example of unsupervised learning?</h4>
+                <span class="question-number">Question 3</span>
+                <h4>Sigmoid is an activation function often used in the output layer for binary classification. What kind of output does it produce?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q7" value="a"> Image classification using labeled training data</label></li>
-                    <li><label><input type="radio" name="q7" value="b"> Predicting house prices from historical sales records</label></li>
-                    <li><label><input type="radio" name="q7" value="c"> Discovering customer segments in purchase data without predefined labels</label></li>
-                    <li><label><input type="radio" name="q7" value="d"> Training a game-playing agent using win/loss rewards</label></li>
+                    <li><label><input type="radio" name="q3" value="a"> A) Any number from negative to positive (unbounded)</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) Only exactly 0 or 1 — a hard binary decision</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) A number between 0 and 1, which can be interpreted as a probability</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) A number between -1 and 1</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Sigmoid outputs are indeed bounded between 0 and 1; that is one of its defining properties.",
+                "b": "Sigmoid saturates near 0 and 1, producing near-zero gradients in those regions, which causes gradients to vanish in deep networks.",
+                "c": "Sigmoid is not especially expensive to compute; the vanishing gradient issue is the dominant concern, not compute cost.",
+                "d": "Sigmoid is actually a natural choice for the output layer of binary classification networks."
+            }'>
+                <span class="question-number">Question 4</span>
+                <h4>Which of the following best describes a key limitation of the sigmoid activation function that motivated the adoption of ReLU?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q4" value="a"> A) Sigmoid outputs are not bounded between 0 and 1</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> B) Sigmoid suffers from the vanishing gradient problem, slowing learning in deep networks</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> C) Sigmoid is computationally more expensive than any other activation function</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> D) Sigmoid cannot be used in the output layer of classification networks</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "MSE is designed for regression tasks; using it for classification produces poor gradient signal compared to cross-entropy.",
+                "b": "Binary Cross-Entropy is specifically designed to compare predicted probabilities with true binary labels (0 or 1).",
+                "c": "Categorical Cross-Entropy is used for multi-class classification with more than two classes, not binary tasks.",
+                "d": "MAE is a regression metric and does not align with the probabilistic interpretation needed for classification."
+            }'>
+                <span class="question-number">Question 5</span>
+                <h4>Which loss function is most appropriate for a binary classification task?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q5" value="a"> A) Mean Squared Error (MSE)</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> B) Binary Cross-Entropy</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> C) Categorical Cross-Entropy</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> D) Mean Absolute Error (MAE)</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "This reverses the comparison: static graphs (not dynamic) have historically offered inference-time optimization advantages.",
+                "b": "Dynamic graphs are built at runtime, so the network can be inspected or changed using ordinary Python debugging tools.",
+                "c": "Dynamic graphs do not inherently use less GPU memory; memory usage is more dependent on model size and batch size.",
+                "d": "Dynamic graphs do not have any automatic learning rate tuning capability."
+            }'>
+                <span class="question-number">Question 6</span>
+                <h4>PyTorch uses dynamic computation graphs, while early TensorFlow (before version 2.0) used static computation graphs. What is a key practical benefit of dynamic graphs?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q6" value="a"> A) Static graphs are always faster at inference time</label></li>
+                    <li><label><input type="radio" name="q6" value="b"> B) Dynamic graphs allow the network structure to be defined and modified on-the-fly, making debugging more intuitive</label></li>
+                    <li><label><input type="radio" name="q6" value="c"> C) Dynamic graphs require less GPU memory than static graphs</label></li>
+                    <li><label><input type="radio" name="q6" value="d"> D) Dynamic graphs automatically tune the learning rate</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="c" data-explanations='{
+                "a": "Image classification with labeled data is supervised learning, since the labels guide the model.",
+                "b": "Predicting house prices from historical records with known prices is supervised regression.",
+                "c": "Discovering customer segments without predefined labels is unsupervised learning; the model finds structure on its own.",
+                "d": "Training with win/loss rewards is reinforcement learning, where an agent learns from environmental feedback."
+            }'>
+                <span class="question-number">Question 7</span>
+                <h4>Three major categories of machine learning are supervised, unsupervised, and reinforcement learning. Which of the following tasks is an example of unsupervised learning?</h4>
+                <ul class="quiz-options">
+                    <li><label><input type="radio" name="q7" value="a"> A) Image classification using labeled training data</label></li>
+                    <li><label><input type="radio" name="q7" value="b"> B) Predicting house prices from historical sales records</label></li>
+                    <li><label><input type="radio" name="q7" value="c"> C) Discovering customer segments in purchase data without predefined labels</label></li>
+                    <li><label><input type="radio" name="q7" value="d"> D) Training a game-playing agent using win/loss rewards</label></li>
+                </ul>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Initialization matters a great deal. Starting too large causes exploding signals; starting too small causes them to vanish to nothing.",
-                "b": "Correct. Good initialization keeps signals flowing at a healthy scale through all the layers, giving training a fighting chance from the start.",
+                "b": "Good initialization keeps signals flowing at a healthy scale through all the layers, giving training a fighting chance from the start.",
                 "c": "Initialization sets the starting point but not the destination. The optimizer adjusts weights throughout training.",
                 "d": "Starting all weights at zero is actually a well-known mistake — every neuron would be identical and learn the same thing, making the network useless."
             }'>
                 <span class="question-number">Question 8</span>
                 <h4>When you first create a neural network, all the weights have to start at some initial values. Why does the choice of starting values actually matter?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q8" value="a"> It doesn't matter — the network will always learn the same thing regardless of where it starts</label></li>
-                    <li><label><input type="radio" name="q8" value="b"> Poor starting values can cause signals in the network to blow up or shrink to nothing, making it impossible to train</label></li>
-                    <li><label><input type="radio" name="q8" value="c"> The starting values permanently determine the final accuracy and cannot be improved by training</label></li>
-                    <li><label><input type="radio" name="q8" value="d"> Weights must always start at exactly zero to ensure fairness across neurons</label></li>
+                    <li><label><input type="radio" name="q8" value="a"> A) It doesn't matter — the network will always learn the same thing regardless of where it starts</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) Poor starting values can cause signals in the network to blow up or shrink to nothing, making it impossible to train</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) The starting values permanently determine the final accuracy and cannot be improved by training</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) Weights must always start at exactly zero to ensure fairness across neurons</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
-                "a": "Incorrect. PyTorch was released after TensorFlow and became dominant in research, not production, first.",
-                "b": "Correct. TensorFlow historically dominated production due to its static graph optimizations and tools like TensorFlow Serving and TensorFlow Lite.",
-                "c": "Incorrect. Static graphs, not dynamic graphs, are associated with PyTorch production use cases in this comparison.",
-                "d": "Incorrect. TensorFlow is widely used for research as well; this claim is false."
+                "a": "PyTorch was released after TensorFlow and became dominant in research, not production, first.",
+                "b": "TensorFlow historically dominated production due to its static graph optimizations and tools like TensorFlow Serving and TensorFlow Lite.",
+                "c": "PyTorch is known for dynamic graphs, not static ones. Static computation graphs are TensorFlow’s historical hallmark and a key reason it was preferred in production.",
+                "d": "TensorFlow is widely used for research as well; this claim is false."
             }'>
                 <span class="question-number">Question 9</span>
                 <h4>Which framework has historically been preferred in production and large-scale deployment environments, and why?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q9" value="a"> PyTorch, because it was released first and has the largest ecosystem</label></li>
-                    <li><label><input type="radio" name="q9" value="b"> TensorFlow, due to its static computation graph optimizations and tools like TensorFlow Serving and TensorFlow Lite</label></li>
-                    <li><label><input type="radio" name="q9" value="c"> PyTorch, because static graphs are better suited for production</label></li>
-                    <li><label><input type="radio" name="q9" value="d"> TensorFlow, because it cannot be used for research purposes</label></li>
+                    <li><label><input type="radio" name="q9" value="a"> A) PyTorch, because it was released first and has the largest ecosystem</label></li>
+                    <li><label><input type="radio" name="q9" value="b"> B) TensorFlow, due to its static computation graph optimizations and tools like TensorFlow Serving and TensorFlow Lite</label></li>
+                    <li><label><input type="radio" name="q9" value="c"> C) PyTorch, because static graphs are better suited for production</label></li>
+                    <li><label><input type="radio" name="q9" value="d"> D) TensorFlow, because it cannot be used for research purposes</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="c" data-explanations='{
+            <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "Squaring ensures all errors are positive, so they cannot cancel. Both over- and under-predictions add to the total loss.",
                 "b": "Squaring always produces non-negative values, so MSE is always non-negative — never negative.",
-                "c": "Correct. A small error of 1 contributes 1 to the loss; an error of 10 contributes 100. Squaring makes the model very sensitive to large errors and outliers.",
+                "c": "A small error of 1 contributes 1 to the loss; an error of 10 contributes 100. Squaring makes the model very sensitive to large errors and outliers.",
                 "d": "Squaring has no direct effect on compute speed — that is determined by hardware and batch size."
             }'>
                 <span class="question-number">Question 10</span>
                 <h4>Mean Squared Error (MSE) squares the difference between a prediction and the true value before averaging. What effect does squaring have on how the model treats errors?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q10" value="a"> It cancels out over-predictions and under-predictions so they balance each other</label></li>
-                    <li><label><input type="radio" name="q10" value="b"> It ensures the loss value is always negative, rewarding correct predictions</label></li>
-                    <li><label><input type="radio" name="q10" value="c"> It penalizes big errors much more heavily than small ones, making the model sensitive to outliers</label></li>
-                    <li><label><input type="radio" name="q10" value="d"> It makes the calculation run faster on the GPU</label></li>
+                    <li><label><input type="radio" name="q10" value="a"> A) It cancels out over-predictions and under-predictions so they balance each other</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) It ensures the loss value is always negative, rewarding correct predictions</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) It penalizes big errors much more heavily than small ones, making the model sensitive to outliers</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) It makes the calculation run faster on the GPU</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

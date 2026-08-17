@@ -58,7 +58,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Convolution is used in CNNs to process spatial data, not in transformer self-attention. Self-attention does not use learned filters sliding over a sequence.",
-                "b": "Correct. Self-attention computes Attention(Q,K,V) = softmax(QK^T / sqrt(d_k))V, which is a weighted sum of value vectors V where weights come from softmax-scaled query-key dot products.",
+                "b": "Self-attention computes Attention(Q,K,V) = softmax(QK^T / sqrt(d_k))V, which is a weighted sum of value vectors V where weights come from softmax-scaled query-key dot products.",
                 "c": "Recurrent hidden-state updates describe RNNs and LSTMs, not the transformer. Transformers process all tokens in parallel rather than sequentially.",
                 "d": "Feedforward projection of each token independently describes the FFN sublayer in a transformer, not the self-attention mechanism."
             }'>
@@ -76,7 +76,7 @@
             <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "N-gram models predate modern GPUs and did not depend on GPU availability. Their weakness was statistical, not hardware-related.",
                 "b": "N-gram models were trained on text data. The inability to train on text at all was not a limitation of these models.",
-                "c": "Correct. N-gram models only condition on a fixed window of n-1 words, making long-range dependencies impossible to capture. Rare n-grams also cause data sparsity problems.",
+                "c": "N-gram models only condition on a fixed window of n-1 words, making long-range dependencies impossible to capture. Rare n-grams also cause data sparsity problems.",
                 "d": "N-gram models actually produced very simple, often ungrammatical outputs. Excessive grammatical complexity was not a known failure mode."
             }'>
                 <span class="question-number">Question 2</span>
@@ -92,7 +92,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Scaling laws show diminishing returns as scale increases, not unlimited linear improvement. Performance curves follow a power law, not a straight line.",
-                "b": "Correct. Empirical scaling laws show test loss follows a power law with respect to model size, compute budget, and dataset size, with performance improving but at diminishing rates.",
+                "b": "Empirical scaling laws show test loss follows a power law with respect to model size, compute budget, and dataset size, with performance improving but at diminishing rates.",
                 "c": "Scaling laws show that both dataset size and model size jointly determine performance. Ignoring model size would contradict the empirical findings.",
                 "d": "Larger models do not always overfit; scaling laws show that increasing model size in proportion with data and compute actually improves test performance."
             }'>
@@ -109,7 +109,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "GPT-3 is a text-only model. Multimodal image-text processing came with later systems and was not what the parameter scale increase primarily unlocked.",
-                "b": "Correct. GPT-3 demonstrated remarkable few-shot learning, performing diverse tasks from just a few in-context examples without any gradient updates or task-specific fine-tuning.",
+                "b": "GPT-3 demonstrated remarkable few-shot learning, performing diverse tasks from just a few in-context examples without any gradient updates or task-specific fine-tuning.",
                 "c": "GPT-3 still hallucinates and produces factual errors. Perfect factual accuracy was not achieved and remains an unsolved challenge.",
                 "d": "Real-time internet access was not a feature of GPT-3. That capability requires additional infrastructure such as retrieval-augmented generation."
             }'>
@@ -126,7 +126,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Both MLM and CLM train on text, not images. The distinction is about how the training objective uses context, not the data modality.",
-                "b": "Correct. MLM (used in BERT) randomly masks tokens and predicts them using both left and right context (bidirectional). CLM (used in GPT) predicts the next token using only prior context (unidirectional).",
+                "b": "MLM (used in BERT) randomly masks tokens and predicts them using both left and right context (bidirectional). CLM (used in GPT) predicts the next token using only prior context (unidirectional).",
                 "c": "Both MLM and CLM are self-supervised objectives that do not require labeled data. The difference is in how context is used, not in supervision type.",
                 "d": "This reverses the descriptions. CLM is the autoregressive next-token prediction objective; MLM is the fill-in-the-blank (masked token prediction) objective."
             }'>
@@ -144,7 +144,7 @@
             <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "Data parallelism splits training data across multiple devices to speed up training. It does not specifically address memory by discarding and recomputing activations.",
                 "b": "Mixed-precision training uses lower-precision numerical formats (e.g., FP16) to reduce memory and speed up computation. It does not involve discarding and recomputing activations.",
-                "c": "Correct. Gradient checkpointing discards intermediate activations during the forward pass and recomputes them during backpropagation, trading extra compute for significantly reduced memory usage.",
+                "c": "Gradient checkpointing discards intermediate activations during the forward pass and recomputes them during backpropagation, trading extra compute for significantly reduced memory usage.",
                 "d": "Layer normalization is a normalization technique applied within the network to stabilize training. It does not involve discarding and recomputing activations."
             }'>
                 <span class="question-number">Question 6</span>
@@ -160,7 +160,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Refusing to answer out-of-domain questions is a refusal behavior, not hallucination. Hallucination specifically refers to generating confident but incorrect content.",
-                "b": "Correct. Hallucination refers to the model generating text that is fluent and plausible-sounding but factually incorrect or unsupported by reality, often because the model relies on learned patterns rather than grounded knowledge.",
+                "b": "Hallucination refers to the model generating text that is fluent and plausible-sounding but factually incorrect or unsupported by reality, often because the model relies on learned patterns rather than grounded knowledge.",
                 "c": "Reproducing training data verbatim is called memorization or data leakage, which is a distinct problem from hallucination.",
                 "d": "Failing to generate output for ambiguous prompts describes a refusal or abstention behavior. Hallucination is the opposite problem: generating confidently wrong output."
             }'>
@@ -175,26 +175,26 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-            <div class="quiz-question" data-correct="d" data-explanations='{
-                "a": "This ordering is incorrect. Zero-shot provides no task examples, which is the least context, not the most. In-context and few-shot are related terms, not a middle tier.",
-                "b": "This ordering is incorrect. Zero-shot provides the least context (no examples), so placing it in the middle is wrong.",
-                "c": "This ordering is also incorrect. In-context learning and few-shot learning are closely related and both involve providing task examples, so they cannot be neatly separated in this way.",
-                "d": "Correct. Few-shot and in-context learning both involve providing the model with task demonstrations or relevant context, making them similar in how much information is supplied. Zero-shot provides no examples at all, supplying the least context."
+            <div class="quiz-question" data-correct="b" data-explanations='{
+                "a": "Few-shot learning means the prompt includes a handful of worked examples (demonstrations) of the task. Here the prompt contains only an instruction and no examples.",
+                "b": "Zero-shot means the model receives only an instruction describing the task — no demonstrations at all — and must rely on capabilities acquired during pre-training.",
+                "c": "Fine-tuning updates the model’s weights using labeled training data. This scenario changes nothing about the model; it only writes a prompt.",
+                "d": "Providing demonstrations in the prompt is the few-shot form of in-context learning. This scenario provides no examples, only an instruction."
             }'>
                 <span class="question-number">Question 8</span>
-                <h4>In-context learning, few-shot learning, and zero-shot generalization are all emergent capabilities of large language models. Which of the following correctly orders them from most to least context provided to the model?</h4>
+                <h4>In-context learning, few-shot learning, and zero-shot generalization differ in how much task information the prompt provides. A colleague asks an LLM to classify support tickets using only a written instruction — no example tickets, no labels, no demonstrations. Which setting is this?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q8" value="a"> A) Zero-shot, in-context, few-shot</label></li>
-                    <li><label><input type="radio" name="q8" value="b"> B) Few-shot, zero-shot, in-context</label></li>
-                    <li><label><input type="radio" name="q8" value="c"> C) Few-shot, in-context, zero-shot</label></li>
-                    <li><label><input type="radio" name="q8" value="d"> D) In-context/few-shot (similar amounts of context), then zero-shot</label></li>
+                    <li><label><input type="radio" name="q8" value="a"> A) Few-shot learning</label></li>
+                    <li><label><input type="radio" name="q8" value="b"> B) Zero-shot generalization</label></li>
+                    <li><label><input type="radio" name="q8" value="c"> C) Fine-tuning</label></li>
+                    <li><label><input type="radio" name="q8" value="d"> D) In-context learning with demonstrations</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Training separate expert models per task and combining them at inference is a mixture-of-experts approach, not the Pathways vision. Pathways aims for unified multi-task training in a single model.",
-                "b": "Correct. The Pathways approach aims to train a single model capable of performing multiple tasks across different modalities by sharing learned knowledge, unlike conventional single-task or single-modality models.",
+                "b": "The Pathways approach aims to train a single model capable of performing multiple tasks across different modalities by sharing learned knowledge, unlike conventional single-task or single-modality models.",
                 "c": "Using reinforcement learning from human feedback (RLHF) as the primary training objective describes the InstructGPT/ChatGPT training approach, not the Pathways architecture.",
                 "d": "Pruning weights not used across tasks describes model compression or sparsification, not the Pathways multi-task training paradigm."
             }'>
@@ -209,19 +209,19 @@
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "If the model only looked at the most recent word, it would produce incoherent text — it needs the full context to understand what has been said.",
-                "b": "Correct. The final hidden state is a rich encoding of the whole context — who is speaking, what topic has been discussed, what the question was — all compressed into a single representation that drives the next word prediction.",
+                "b": "The final hidden state is a rich encoding of the whole context — who is speaking, what topic has been discussed, what the question was — all compressed into a single representation that drives the next word prediction.",
                 "c": "The internal state is not a lookup table of training frequencies — it is a learned representation that captures meaning, context, and intent.",
                 "d": "Attention weights are intermediate values computed inside the transformer layers. The final hidden state is the output after all those computations have run."
             }'>
                 <span class="question-number">Question 10</span>
                 <h4>When a language model is about to predict the next word, it first builds a rich internal representation of everything it has read so far. What does this final internal state capture?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q10" value="a"> Just the most recent word that appeared in the input</label></li>
-                    <li><label><input type="radio" name="q10" value="b"> A summary of all the context up to that point — what the model has understood about the full conversation so far</label></li>
-                    <li><label><input type="radio" name="q10" value="c"> The raw probabilities from training data for what word typically follows</label></li>
-                    <li><label><input type="radio" name="q10" value="d"> The specific attention weights used in the final transformer layer</label></li>
+                    <li><label><input type="radio" name="q10" value="a"> A) Just the most recent word that appeared in the input</label></li>
+                    <li><label><input type="radio" name="q10" value="b"> B) A summary of all the context up to that point — what the model has understood about the full conversation so far</label></li>
+                    <li><label><input type="radio" name="q10" value="c"> C) The raw probabilities from training data for what word typically follows</label></li>
+                    <li><label><input type="radio" name="q10" value="d"> D) The specific attention weights used in the final transformer layer</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>

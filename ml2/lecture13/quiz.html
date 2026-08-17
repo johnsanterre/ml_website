@@ -48,7 +48,7 @@
     <div class="container">
         <a href="index.html" class="nav-back">← Back to Week 13</a>
         <div class="content-box">
-            <h1>Week 13: Evaluating LLMs — Metrics and Methods</h1>
+            <h1>Week 13: Evaluating LLMs - Metrics and Methods</h1>
             <p class="subtitle">Knowledge Check — Select an answer to see immediate feedback.</p>
 
             <div id="quiz-score">
@@ -56,60 +56,60 @@
                 <span class="score-value">10</span>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Computation speed has nothing to do with this flaw — precision can be computed quickly for any output length.",
-                "b": "Correct. This is exactly why BLEU adds a brevity penalty — to ensure that suspiciously short outputs are penalized even if their word-level precision is technically high.",
+                "b": "This is exactly why BLEU adds a brevity penalty — to ensure that suspiciously short outputs are penalized even if their word-level precision is technically high.",
                 "c": "Precision actually favors shorter outputs, not longer ones — which is precisely the flaw being described.",
                 "d": "Precision-based metrics can be applied to any task where you compare n-gram overlap, not just multiple-choice."
             }'>
                 <span class="question-number">Question 1</span>
                 <h4>A translation model tries to cheat by outputting just one word that happens to appear in the correct translation — and gets 100% precision. What does this reveal about using precision alone to evaluate translation quality?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q1" value="a"> Precision is too slow to compute for long texts</label></li>
-                    <li><label><input type="radio" name="q1" value="b"> A one-word output that is technically correct is useless — precision alone does not check whether the translation is complete</label></li>
-                    <li><label><input type="radio" name="q1" value="c"> Precision favors longer translations and needs to be balanced against output speed</label></li>
-                    <li><label><input type="radio" name="q1" value="d"> Precision can only be applied to multiple-choice tasks, not open-ended generation</label></li>
+                    <li><label><input type="radio" name="q1" value="a"> A) Precision is too slow to compute for long texts</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> B) A one-word output that is technically correct is useless — precision alone does not check whether the translation is complete</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> C) Precision favors longer translations and needs to be balanced against output speed</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> D) Precision can only be applied to multiple-choice tasks, not open-ended generation</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "ROUGE would give credit here because several words appear in both outputs — it does not require exact word order.",
-                "b": "Correct. The words the, cat, and mat all appear in both. ROUGE counts overlapping words, so it gives partial credit. This is both its strength and its weakness — it can reward scrambled outputs.",
+                "b": "The words the, cat, and mat all appear in both. ROUGE counts overlapping words, so it gives partial credit. This is both its strength and its weakness — it can reward scrambled outputs.",
                 "c": "ROUGE counts all overlapping words throughout both texts, not just the first and last words.",
                 "d": "ROUGE is purely word-based and does not use semantic similarity. Synonyms like sat and rested would not be counted as equivalent."
             }'>
                 <span class="question-number">Question 2</span>
                 <h4>ROUGE measures how much of a reference summary is covered by a model's output. If the reference says "The cat sat on the mat" and the model outputs "The mat had a cat," ROUGE would still award partial credit because:</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q2" value="a"> ROUGE requires word-for-word matching, so this example would actually score zero</label></li>
-                    <li><label><input type="radio" name="q2" value="b"> ROUGE counts individual word overlap regardless of order, and several words appear in both outputs</label></li>
-                    <li><label><input type="radio" name="q2" value="c"> ROUGE only checks the first and last word of each sentence</label></li>
-                    <li><label><input type="radio" name="q2" value="d"> ROUGE uses semantic meaning, so synonyms like "sat" and "rested" count as equivalent</label></li>
+                    <li><label><input type="radio" name="q2" value="a"> A) ROUGE requires word-for-word matching, so this example would actually score zero</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> B) ROUGE counts individual word overlap regardless of order, and several words appear in both outputs</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> C) ROUGE only checks the first and last word of each sentence</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> D) ROUGE uses semantic meaning, so synonyms like "sat" and "rested" count as equivalent</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
-                        <div class="quiz-question" data-correct="b" data-explanations='{
+            <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Perplexity is a measure of prediction quality, not memory usage.",
-                "b": "Correct. Think of perplexity as how many choices the model feels equally uncertain between at each word. A perplexity of 10 means it is effectively choosing among 10 equally likely options. Lower is better.",
+                "b": "Think of perplexity as how many choices the model feels equally uncertain between at each word. A perplexity of 10 means it is effectively choosing among 10 equally likely options. Lower is better.",
                 "c": "Perplexity measures model quality on a given dataset — not the size of the dataset it was trained on.",
                 "d": "Perplexity has no relationship to how fast the model runs at inference time."
             }'>
                 <span class="question-number">Question 3</span>
                 <h4>Perplexity measures how surprised a language model is when it sees text it hasn't encountered before. What does a lower perplexity value indicate?</h4>
                 <ul class="quiz-options">
-                    <li><label><input type="radio" name="q3" value="a"> The model requires more memory to make predictions</label></li>
-                    <li><label><input type="radio" name="q3" value="b"> The model is better at predicting text — it is less surprised by typical word sequences</label></li>
-                    <li><label><input type="radio" name="q3" value="c"> The model was trained on a smaller dataset</label></li>
-                    <li><label><input type="radio" name="q3" value="d"> The model is slower but more accurate</label></li>
+                    <li><label><input type="radio" name="q3" value="a"> A) The model requires more memory to make predictions</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> B) The model is better at predicting text — it is less surprised by typical word sequences</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> C) The model was trained on a smaller dataset</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> D) The model is slower but more accurate</label></li>
                 </ul>
                 <div class="quiz-feedback"></div>
             </div>
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "The harmonic mean is not easier to compute based on class balance. Its value is its behavior when precision and recall are imbalanced.",
-                "b": "Correct. The harmonic mean is low whenever either precision or recall is low, so a model with 100% precision but 0% recall gets an F1 of 0, which the arithmetic mean would inflate to 50%.",
+                "b": "The harmonic mean is low whenever either precision or recall is low, so a model with 100% precision but 0% recall gets an F1 of 0, which the arithmetic mean would inflate to 50%.",
                 "c": "The harmonic mean always produces values less than or equal to the arithmetic mean, not higher. It is stricter, not more lenient.",
                 "d": "The harmonic mean and geometric mean are different operations and are not identical. The harmonic mean is specifically chosen for the precision-recall trade-off."
             }'>
@@ -127,7 +127,7 @@
             <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "GLUE and SuperGLUE are designed to measure language understanding, not training throughput or inference latency. Those are engineering metrics, not benchmark goals.",
                 "b": "GLUE and SuperGLUE are text-based benchmarks for language understanding. Image generation is outside their scope entirely.",
-                "c": "Correct. GLUE and SuperGLUE evaluate natural language understanding across tasks such as sentiment analysis, textual entailment, coreference resolution, and question answering.",
+                "c": "GLUE and SuperGLUE evaluate natural language understanding across tasks such as sentiment analysis, textual entailment, coreference resolution, and question answering.",
                 "d": "Code generation benchmarks such as HumanEval use unit test pass rates. GLUE and SuperGLUE focus on natural language understanding, not code."
             }'>
                 <span class="question-number">Question 5</span>
@@ -143,7 +143,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Vocabulary size is a surface property that does not capture semantic meaning. A large vocabulary does not indicate that outputs are semantically accurate.",
-                "b": "Correct. Metrics like BERTScore use contextualized embeddings from models like BERT to compare the semantic similarity of generated and reference text, going beyond word-level overlap.",
+                "b": "Metrics like BERTScore use contextualized embeddings from models like BERT to compare the semantic similarity of generated and reference text, going beyond word-level overlap.",
                 "c": "Counting unique sentences per second measures throughput, not semantic quality. It provides no information about meaning.",
                 "d": "Restricting evaluation to single-sentence outputs would limit applicability without solving the semantic alignment problem. It does not address meaning capture."
             }'>
@@ -160,7 +160,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Pearson&#39;s r measures linear correlation between continuous variables. It is not designed to measure annotator agreement on categorical ratings.",
-                "b": "Correct. Cohen&#39;s kappa (for two annotators) and Fleiss&#39; kappa (for multiple annotators) measure agreement above chance, providing a standardized inter-rater reliability score.",
+                "b": "Cohen&#39;s kappa (for two annotators) and Fleiss&#39; kappa (for multiple annotators) measure agreement above chance, providing a standardized inter-rater reliability score.",
                 "c": "The BLEU brevity penalty is a text generation metric, not a measure of annotator agreement. It has no role in inter-rater reliability.",
                 "d": "A paired t-test compares means of two groups and is not designed to quantify agreement between annotators on categorical labels."
             }'>
@@ -177,7 +177,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Generating text faster than a baseline is a latency or throughput metric, not a measure of chain-of-thought accuracy. Speed does not assess reasoning quality.",
-                "b": "Correct. Chain-of-thought accuracy evaluates whether the model provides step-by-step reasoning that is logically sound, not just whether the final answer is correct.",
+                "b": "Chain-of-thought accuracy evaluates whether the model provides step-by-step reasoning that is logically sound, not just whether the final answer is correct.",
                 "c": "Predicting masked tokens is a pre-training objective, not chain-of-thought evaluation. Chain-of-thought assesses reasoning quality in generative outputs.",
                 "d": "Grammatical error rate is a surface-level fluency metric. Chain-of-thought evaluation focuses on the logical validity of the reasoning process, not grammatical form."
             }'>
@@ -194,7 +194,7 @@
 
             <div class="quiz-question" data-correct="b" data-explanations='{
                 "a": "Skipping difficult examples would introduce systematic bias, not reduce it. Blind evaluation is about hiding source identity, not reducing annotation effort.",
-                "b": "Correct. Blind evaluation hides whether text is human-written or AI-generated, preventing evaluators from applying assumptions about AI quality that would bias their ratings.",
+                "b": "Blind evaluation hides whether text is human-written or AI-generated, preventing evaluators from applying assumptions about AI quality that would bias their ratings.",
                 "c": "Blind evaluation concerns the evaluator seeing the source, not the model seeing its own outputs. These are entirely different concerns in evaluation design.",
                 "d": "Blind evaluation addresses evaluator bias in human studies. It has nothing to do with reference translations or the BLEU metric."
             }'>
@@ -212,7 +212,7 @@
             <div class="quiz-question" data-correct="c" data-explanations='{
                 "a": "Architecture depth and attention head count are design choices, not evaluation dimensions. HELM measures holistic real-world performance, not internal model structure.",
                 "b": "HELM goes far beyond aggregating BLEU and ROUGE scores. It uses a wide range of tasks and includes non-accuracy dimensions like fairness and efficiency.",
-                "c": "Correct. HELM evaluates robustness under distribution shift, fairness across demographic groups, and efficiency alongside task accuracy, providing a multidimensional assessment.",
+                "c": "HELM evaluates robustness under distribution shift, fairness across demographic groups, and efficiency alongside task accuracy, providing a multidimensional assessment.",
                 "d": "Server geography is irrelevant to model evaluation. HELM focuses on model behavior, not the infrastructure used to run inference."
             }'>
                 <span class="question-number">Question 10</span>
