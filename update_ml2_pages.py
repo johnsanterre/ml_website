@@ -8,8 +8,9 @@ import os
 import re
 from pathlib import Path
 
-# Base directory for ML2 lectures
-ML2_BASE = Path("/Users/john/Dropbox/_______Cursor/ml_website_2/ml2")
+# Base directory for ML2 lectures — resolved relative to this file so the
+# repo can be relocated without editing paths (moved to _/ on 2026-08-17)
+ML2_BASE = Path(__file__).resolve().parent / "ml2"
 
 # CSS to add for top-resources
 TOP_RESOURCES_CSS = """        /* Top Resources Links */
